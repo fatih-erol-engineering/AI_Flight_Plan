@@ -22,6 +22,7 @@ public class WaypointCorrectorAgent : Agent
         float posZ = Mathf.Clamp(pos.z, -5, 5);
         bSplineDrawer.p1.localPosition = new Vector3(posX, 0f, posZ);
 
+
         moveX = actions.ContinuousActions[2] * moveScale;
         moveZ = actions.ContinuousActions[3] * moveScale;
         pos = bSplineDrawer.p2.localPosition + new Vector3(moveX, 0f, moveZ) * Time.deltaTime;
@@ -29,6 +30,13 @@ public class WaypointCorrectorAgent : Agent
         posZ = Mathf.Clamp(pos.z, -5, 5);
         bSplineDrawer.p2.localPosition = new Vector3(posX, 0f, posZ);
 
+        float rewardGain = -0.01f;
+        float r1 = Mathf.Abs(actions.ContinuousActions[0]) * rewardGain;
+        float r2 = Mathf.Abs(actions.ContinuousActions[1]) * rewardGain;
+        float r3 = Mathf.Abs(actions.ContinuousActions[2]) * rewardGain;
+        float r4 = Mathf.Abs(actions.ContinuousActions[3]) * rewardGain;
+        float totalR = r1+r2+r3+r4;
+        AddReward(totalR); // Control Effort
         if (Time.time - episodeStartTime >= episodeDuration)
         {
             EndEpisode();
