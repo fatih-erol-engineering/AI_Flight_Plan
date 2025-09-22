@@ -1,6 +1,7 @@
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.HableCurve;
 
 /// <summary>
 /// 4 kontrol noktasý ile derece-3 clamped B-spline çizer (tek segment).
@@ -8,16 +9,17 @@ using UnityEngine;
 /// </summary>
 [ExecuteAlways]
 [RequireComponent(typeof(LineRenderer))]
-public class BSplineDrawer : MonoBehaviour
+public class BSplineSegment
+    : MonoBehaviour
 {
     [Header("4 Control Points (Transforms)")]
-    public Transform p0;
-    public Transform p1;
-    public Transform p2;
-    public Transform p3;
+    public Transform startPoint;
+    public Transform controlPoint1;
+    public Transform controlPoint2;
+    public Transform endPoint;
 
     [Header("Sampling")]
-    [Range(4, 256)] public int samples = 64;
+    [Range(4, 256)] public int samples = 32;
 
     [Header("Gizmos")]
     public bool drawGizmos = true;
@@ -38,6 +40,9 @@ public class BSplineDrawer : MonoBehaviour
     void OnEnable()
     {
         lr = GetComponent<LineRenderer>();
+        var shader = Shader.Find("Universal Render Pipeline/Unlit");
+        var mat = new Material(shader);
+        lr.sharedMaterial = mat;
         UpdateCurve();
     }
 
@@ -53,13 +58,32 @@ public class BSplineDrawer : MonoBehaviour
         UpdateCurve();
         CheckCollision();
     }
+    public void CreateControlPoints()
+    {
+        if ((startPoint != null) && (endPoint != null))
+        {
+            GameObject controlPoint1GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            controlPoint1GO.name = "Control Point 1";
+            controlPoint1GO.transform.SetParent(transform, false);
+            controlPoint1GO.transform.localPosition = Vector3.Lerp(startPoint.localPosition, endPoint.localPosition, 0.1f);
 
+            GameObject controlPoint2GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            controlPoint2GO.name = "Control Point 2";
+            controlPoint2GO.transform.SetParent(transform, false);
+            controlPoint2GO.transform.localPosition = Vector3.Lerp(startPoint.localPosition, endPoint.localPosition, 0.9f);
+
+            controlPoint1 = controlPoint1GO.transform;
+            controlPoint2 = controlPoint2GO.transform;
+
+            
+        }
+    }
     void UpdateCurve()
     {
         if (!lr) return;
-        if (!(p0 && p1 && p2 && p3)) return;
+        if (!(startPoint && controlPoint1 && controlPoint2 && endPoint)) return;
 
-        Vector3[] P = new Vector3[4] { p0.position, p1.position, p2.position, p3.position };
+        Vector3[] P = new Vector3[4] { startPoint.position, controlPoint1.position, controlPoint2.position, endPoint.position };
         
         lr.positionCount = samples;
         for (int i = 0; i < samples; i++)
@@ -175,14 +199,14 @@ public class BSplineDrawer : MonoBehaviour
 
         Gizmos.color = Color.white;
 
-        if (p0) Gizmos.DrawSphere(p0.position, gizmoSize);
-        if (p1) Gizmos.DrawSphere(p1.position, gizmoSize);
-        if (p2) Gizmos.DrawSphere(p2.position, gizmoSize);
-        if (p3) Gizmos.DrawSphere(p3.position, gizmoSize);
+        if (startPoint) Gizmos.DrawSphere(startPoint.position, gizmoSize);
+        if (controlPoint1) Gizmos.DrawSphere(controlPoint1.position, gizmoSize);
+        if (controlPoint2) Gizmos.DrawSphere(controlPoint2.position, gizmoSize);
+        if (endPoint) Gizmos.DrawSphere(endPoint.position, gizmoSize);
 
         // Kontrol poligonu
-        if (p0 && p1) Gizmos.DrawLine(p0.position, p1.position);
-        if (p1 && p2) Gizmos.DrawLine(p1.position, p2.position);
-        if (p2 && p3) Gizmos.DrawLine(p2.position, p3.position);
+        if (startPoint && controlPoint1) Gizmos.DrawLine(startPoint.position, controlPoint1.position);
+        if (controlPoint1 && controlPoint2) Gizmos.DrawLine(controlPoint1.position, controlPoint2.position);
+        if (controlPoint2 && endPoint) Gizmos.DrawLine(controlPoint2.position, endPoint.position);
     }
 }
