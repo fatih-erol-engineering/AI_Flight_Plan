@@ -1,5 +1,8 @@
+using NUnit.Framework;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
+[ExecuteAlways]
 public class TrajectoryDrawer : MonoBehaviour
 {
     
@@ -7,7 +10,10 @@ public class TrajectoryDrawer : MonoBehaviour
     public Transform[] restrictedAreas;
     private Transform segmentParent;
     private BSplineSegment[] bSplineSegments;
-    
+    private Transform[,] controlPointPairs;
+    private Transform selectedControlPoint;
+    private Transform prev_selectedControlPoint;
+    private Transform pairOfSelectedControlPoint;
     public void CreateTrajectory()
     {
         int numSegments = waypoints.Length - 1;
@@ -15,7 +21,7 @@ public class TrajectoryDrawer : MonoBehaviour
         if (bSplineSegments == null || bSplineSegments.Length != numSegments)
             bSplineSegments = new BSplineSegment[numSegments];
 
-
+        controlPointPairs = new Transform[numSegments-1,2];
         if (segmentParent == null)
         {
             var parentGO = new GameObject("BSplineSegments");
@@ -49,7 +55,7 @@ public class TrajectoryDrawer : MonoBehaviour
             seg.CreateControlPoints();            
             bSplineSegments[i] = seg; // burada artýk null olmaz
         }
-        for (int i = 0; i < numSegments; i++)
+        for (int i = 0; i < numSegments-1; i++)
         {
             Vector3 delta1 = bSplineSegments[i].startPoint.localPosition - bSplineSegments[i].endPoint.localPosition;
             float len1 = (bSplineSegments[i].endPoint.localPosition - bSplineSegments[i].controlPoint2.localPosition).magnitude;
@@ -67,8 +73,48 @@ public class TrajectoryDrawer : MonoBehaviour
 
             bSplineSegments[i].controlPoint2.localPosition = bSplineSegments[i].endPoint.localPosition + len1 * controlPointDir1;
             bSplineSegments[i + 1].controlPoint1.localPosition = bSplineSegments[i].endPoint.localPosition + len2 * controlPointDir2;
+
+            // Save control point pairs for continuity
+            controlPointPairs[i, 0] = bSplineSegments[i].controlPoint2; 
+            controlPointPairs[i, 1] = bSplineSegments[i+1].controlPoint1;
         }
+    }
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (!UnityEditor.EditorApplication.isPlaying)
+        {
+            var go = UnityEditor.Selection.activeGameObject;
+            if (go != null)
+            {
+                if (go.tag == "ControlPoint")
+                {
+                    selectedControlPoint = go.GetComponent<Transform>();
+                    if (prev_selectedControlPoint != selectedControlPoint)
+                    {
+                        for (int i = 0; i < controlPointPairs.GetLength(0); i++)
+                        {
+                            if (selectedControlPoint == controlPointPairs[i, 0]) 
+                            { 
+                                pairOfSelectedControlPoint = controlPointPairs[i, 1];
+                            }
+                            else if (selectedControlPoint == controlPointPairs[i, 1])
+                            {
+                                pairOfSelectedControlPoint = controlPointPairs[i, 0];
+                            }
+                        }
+                    }                    
+
+                    prev_selectedControlPoint = selectedControlPoint;
+                }
+            }           
+        }
+    }
+#endif
+    void MoveControlPoint()
+    {
 
     }
+
 
 }

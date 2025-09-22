@@ -66,11 +66,13 @@ public class BSplineSegment
             controlPoint1GO.name = "Control Point 1";
             controlPoint1GO.transform.SetParent(transform, false);
             controlPoint1GO.transform.localPosition = Vector3.Lerp(startPoint.localPosition, endPoint.localPosition, 0.2f);
+            controlPoint1GO.tag = "ControlPoint";
 
             GameObject controlPoint2GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             controlPoint2GO.name = "Control Point 2";
             controlPoint2GO.transform.SetParent(transform, false);
             controlPoint2GO.transform.localPosition = Vector3.Lerp(startPoint.localPosition, endPoint.localPosition, 0.8f);
+            controlPoint2GO.tag = "ControlPoint";
 
             controlPoint1 = controlPoint1GO.transform;
             controlPoint2 = controlPoint2GO.transform;
