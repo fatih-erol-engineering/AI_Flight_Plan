@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.Rendering.HableCurve;
@@ -13,10 +14,11 @@ public class BSplineSegment
     : MonoBehaviour
 {
     [Header("4 Control Points (Transforms)")]
-    public Transform startPoint;
-    public Transform controlPoint1;
-    public Transform controlPoint2;
-    public Transform endPoint;
+    public Waypoint startPoint;
+    public ControlPoint controlPoint1;
+    public ControlPoint controlPoint2;
+    public Waypoint endPoint;
+    public float initialControlPointDistance = 3f;
 
     [Header("Sampling")]
     [Range(4, 256)] public int samples = 32;
@@ -60,24 +62,23 @@ public class BSplineSegment
     }
     public void CreateControlPoints()
     {
+        
         if ((startPoint != null) && (endPoint != null))
         {
             GameObject controlPoint1GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            controlPoint1GO.name = "Control Point 1";
+            controlPoint1GO.name = this.name + " Control Point 1";
             controlPoint1GO.transform.SetParent(transform, false);
-            controlPoint1GO.transform.localPosition = Vector3.Lerp(startPoint.localPosition, endPoint.localPosition, 0.2f);
-            controlPoint1GO.tag = "ControlPoint";
-
-            GameObject controlPoint2GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            controlPoint2GO.name = "Control Point 2";
-            controlPoint2GO.transform.SetParent(transform, false);
-            controlPoint2GO.transform.localPosition = Vector3.Lerp(startPoint.localPosition, endPoint.localPosition, 0.8f);
-            controlPoint2GO.tag = "ControlPoint";
-
-            controlPoint1 = controlPoint1GO.transform;
-            controlPoint2 = controlPoint2GO.transform;
-
+            controlPoint1GO.AddComponent<ControlPoint>();
+            controlPoint1GO.transform.localPosition = startPoint.transform.localPosition + (endPoint.transform.localPosition - startPoint.transform.localPosition).normalized * initialControlPointDistance;
             
+            GameObject controlPoint2GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            controlPoint2GO.name = this.name + " Control Point 2";
+            controlPoint2GO.transform.SetParent(transform, false);
+            controlPoint2GO.AddComponent<ControlPoint>();
+            controlPoint2GO.transform.localPosition = endPoint.transform.localPosition + (startPoint.transform.localPosition - endPoint.transform.localPosition).normalized * initialControlPointDistance;
+
+            controlPoint1 = controlPoint1GO.GetComponent<ControlPoint>();
+            controlPoint2 = controlPoint2GO.GetComponent<ControlPoint>();            
         }
     }
     void UpdateCurve()
@@ -85,7 +86,7 @@ public class BSplineSegment
         if (!lr) return;
         if (!(startPoint && controlPoint1 && controlPoint2 && endPoint)) return;
 
-        Vector3[] P = new Vector3[4] { startPoint.position, controlPoint1.position, controlPoint2.position, endPoint.position };
+        Vector3[] P = new Vector3[4] { startPoint.transform.position, controlPoint1.transform.position, controlPoint2.transform.position, endPoint.transform.position };
         
         lr.positionCount = samples;
         for (int i = 0; i < samples; i++)
@@ -201,14 +202,14 @@ public class BSplineSegment
 
         Gizmos.color = Color.white;
 
-        if (startPoint) Gizmos.DrawSphere(startPoint.position, gizmoSize);
-        if (controlPoint1) Gizmos.DrawSphere(controlPoint1.position, gizmoSize);
-        if (controlPoint2) Gizmos.DrawSphere(controlPoint2.position, gizmoSize);
-        if (endPoint) Gizmos.DrawSphere(endPoint.position, gizmoSize);
+        if (startPoint) Gizmos.DrawSphere(startPoint.transform.position, gizmoSize);
+        if (controlPoint1) Gizmos.DrawSphere(controlPoint1.transform.position, gizmoSize);
+        if (controlPoint2) Gizmos.DrawSphere(controlPoint2.transform.position, gizmoSize);
+        if (endPoint) Gizmos.DrawSphere(endPoint.transform.position, gizmoSize);
 
         // Kontrol poligonu
-        if (startPoint && controlPoint1) Gizmos.DrawLine(startPoint.position, controlPoint1.position);
-        if (controlPoint1 && controlPoint2) Gizmos.DrawLine(controlPoint1.position, controlPoint2.position);
-        if (controlPoint2 && endPoint) Gizmos.DrawLine(controlPoint2.position, endPoint.position);
+        if (startPoint && controlPoint1) Gizmos.DrawLine(startPoint.transform.position, controlPoint1.transform.position);
+        if (controlPoint1 && controlPoint2) Gizmos.DrawLine(controlPoint1.transform.position, controlPoint2.transform.position);
+        if (controlPoint2 && endPoint) Gizmos.DrawLine(controlPoint2.transform.position, endPoint.transform.position);
     }
 }

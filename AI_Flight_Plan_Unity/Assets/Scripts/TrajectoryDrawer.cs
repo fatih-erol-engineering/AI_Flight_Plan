@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -8,12 +9,16 @@ public class TrajectoryDrawer : MonoBehaviour
     
     public Transform[] waypoints;    
     public Transform[] restrictedAreas;
+    public float initialControlPointDistance=3f;
     private Transform segmentParent;
     private BSplineSegment[] bSplineSegments;
     private Transform[,] controlPointPairs;
     private Transform selectedControlPoint;
     private Transform prev_selectedControlPoint;
     private Transform pairOfSelectedControlPoint;
+    private Transform selectedWaypoint;
+    private Transform prev_SelectedWaypoint;
+    private Vector3 prev_WaypointPos;
     public void CreateTrajectory()
     {
         int numSegments = waypoints.Length - 1;
@@ -21,7 +26,7 @@ public class TrajectoryDrawer : MonoBehaviour
         if (bSplineSegments == null || bSplineSegments.Length != numSegments)
             bSplineSegments = new BSplineSegment[numSegments];
 
-        controlPointPairs = new Transform[numSegments-1,2];
+        
         if (segmentParent == null)
         {
             var parentGO = new GameObject("BSplineSegments");
@@ -48,21 +53,24 @@ public class TrajectoryDrawer : MonoBehaviour
             var seg = segmentGO.GetComponent<BSplineSegment>();
             if (seg == null)
                 seg = segmentGO.AddComponent<BSplineSegment>();
+            seg.initialControlPointDistance = initialControlPointDistance;
+            seg.startPoint = waypoints[i].GetComponent<Waypoint>();
+            seg.endPoint = waypoints[i+1].GetComponent<Waypoint>();
 
-            seg.startPoint = waypoints[i];
-            seg.endPoint = waypoints[i+1];
             seg.restrictedAreas = restrictedAreas;
-            seg.CreateControlPoints();            
+            seg.CreateControlPoints();
+ 
             bSplineSegments[i] = seg; // burada artýk null olmaz
         }
+
         for (int i = 0; i < numSegments-1; i++)
         {
-            Vector3 delta1 = bSplineSegments[i].startPoint.localPosition - bSplineSegments[i].endPoint.localPosition;
-            float len1 = (bSplineSegments[i].endPoint.localPosition - bSplineSegments[i].controlPoint2.localPosition).magnitude;
+            Vector3 delta1 = bSplineSegments[i].startPoint.transform.localPosition - bSplineSegments[i].endPoint.transform.localPosition;
+            float len1 = (bSplineSegments[i].endPoint.transform.localPosition - bSplineSegments[i].controlPoint2.transform.localPosition).magnitude;
             Vector3 dir1 = delta1.normalized;
 
-            Vector3 delta2 = bSplineSegments[i + 1].endPoint.localPosition - bSplineSegments[i + 1].startPoint.localPosition;
-            float len2 = (bSplineSegments[i + 1].startPoint.localPosition - bSplineSegments[i + 1].controlPoint1.localPosition).magnitude;
+            Vector3 delta2 = bSplineSegments[i + 1].endPoint.transform.localPosition - bSplineSegments[i + 1].startPoint.transform.localPosition;
+            float len2 = (bSplineSegments[i + 1].startPoint.transform.localPosition - bSplineSegments[i + 1].controlPoint1.transform.localPosition).magnitude;
             Vector3 dir2 = delta2.normalized;
 
             Vector3 dirNet = (dir1 + dir2).normalized;
@@ -71,13 +79,43 @@ public class TrajectoryDrawer : MonoBehaviour
             Vector3 controlPointDir1 = Vector3.Cross(dirNet, normVec).normalized;
             Vector3 controlPointDir2 = controlPointDir1 * (-1f);
 
-            bSplineSegments[i].controlPoint2.localPosition = bSplineSegments[i].endPoint.localPosition + len1 * controlPointDir1;
-            bSplineSegments[i + 1].controlPoint1.localPosition = bSplineSegments[i].endPoint.localPosition + len2 * controlPointDir2;
-
-            // Save control point pairs for continuity
-            controlPointPairs[i, 0] = bSplineSegments[i].controlPoint2; 
-            controlPointPairs[i, 1] = bSplineSegments[i+1].controlPoint1;
+            bSplineSegments[i].controlPoint2.transform.localPosition = bSplineSegments[i].endPoint.transform.localPosition + len1 * controlPointDir1;
+            bSplineSegments[i + 1].controlPoint1.transform.localPosition = bSplineSegments[i].endPoint.transform.localPosition + len2 * controlPointDir2;            
         }
+
+        // Declare Waypoint Relationships
+        for (int i = 0; i < waypoints.Length; i++)
+        {
+            if (i == 0)
+            {
+                waypoints[i].GetComponent<Waypoint>().type = WaypointType.Open;
+                waypoints[i].GetComponent<Waypoint>().controlPoints = new ControlPoint[1];
+                waypoints[i].GetComponent<Waypoint>().controlPoints[0] = segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1;
+                segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>().waypoint = waypoints[i].GetComponent<Waypoint>();
+            }
+            else if (i == waypoints.Length-1)
+            {
+                waypoints[i].GetComponent<Waypoint>().type = WaypointType.Open;
+                waypoints[i].GetComponent<Waypoint>().controlPoints = new ControlPoint[1];
+                waypoints[i].GetComponent<Waypoint>().controlPoints[0] = segmentParent.GetChild(i-1).gameObject.GetComponent<BSplineSegment>().controlPoint2;
+                segmentParent.GetChild(i-1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>().waypoint = waypoints[i].GetComponent<Waypoint>();
+            }
+            else
+            {
+                waypoints[i].GetComponent<Waypoint>().type = WaypointType.Close;
+                waypoints[i].GetComponent<Waypoint>().controlPoints = new ControlPoint[2];
+                waypoints[i].GetComponent<Waypoint>().controlPoints[0] = segmentParent.GetChild(i-1).gameObject.GetComponent<BSplineSegment>().controlPoint2;
+                waypoints[i].GetComponent<Waypoint>().controlPoints[1] = segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1;
+
+                segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>().waypoint = waypoints[i].GetComponent<Waypoint>();
+                segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>().waypoint = waypoints[i].GetComponent<Waypoint>();
+
+                segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>().pairCP = segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>();
+                segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>().pairCP = segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>();
+            }
+
+        }
+      
     }
 #if UNITY_EDITOR
     void Update()
@@ -87,34 +125,78 @@ public class TrajectoryDrawer : MonoBehaviour
             var go = UnityEditor.Selection.activeGameObject;
             if (go != null)
             {
-                if (go.tag == "ControlPoint")
+                if (go.GetComponent<ControlPoint>() != null)
                 {
-                    selectedControlPoint = go.GetComponent<Transform>();
-                    if (prev_selectedControlPoint != selectedControlPoint)
-                    {
-                        for (int i = 0; i < controlPointPairs.GetLength(0); i++)
-                        {
-                            if (selectedControlPoint == controlPointPairs[i, 0]) 
-                            { 
-                                pairOfSelectedControlPoint = controlPointPairs[i, 1];
-                            }
-                            else if (selectedControlPoint == controlPointPairs[i, 1])
-                            {
-                                pairOfSelectedControlPoint = controlPointPairs[i, 0];
-                            }
-                        }
-                    }                    
-
-                    prev_selectedControlPoint = selectedControlPoint;
+                    go.GetComponent<ControlPoint>().setPosition(go.transform.position);
+                }
+                if (go.GetComponent<Waypoint>() != null)
+                {
+                    go.GetComponent<Waypoint>().setPosition(go.transform.position);
                 }
             }           
         }
     }
 #endif
-    void MoveControlPoint()
+    void MoveWaypoint(Transform waypoint)
     {
+        selectedWaypoint = waypoint;
+        if (prev_SelectedWaypoint != selectedWaypoint) 
+        { 
+            for (int i = 0; i < controlPointPairs.GetLength(0); i++)
+            {
+                if (waypoint == controlPointPairs[i, 2])
+                {
+                    pairOfSelectedControlPoint = controlPointPairs[i, 1];
+                    selectedControlPoint = controlPointPairs[i, 0];
+                    break;
+                }
+            }
+        }
+        if ((prev_WaypointPos != null) && (prev_SelectedWaypoint == selectedWaypoint))
+        {            
+            Vector3 deltaPos = waypoint.localPosition - prev_WaypointPos;
+            selectedControlPoint.localPosition += deltaPos;
+            pairOfSelectedControlPoint.localPosition += deltaPos;
+        }
 
+        prev_WaypointPos = waypoint.localPosition;
+        prev_SelectedWaypoint = waypoint;
     }
 
-
+    void MoveControlPoint(Transform controlPoint)
+    {
+        selectedControlPoint = controlPoint;
+        if (prev_selectedControlPoint != selectedControlPoint)
+        {                    
+            selectedControlPoint = controlPoint;            
+                if (prev_selectedControlPoint != selectedControlPoint)
+                {
+                    for (int i = 0; i < controlPointPairs.GetLength(0); i++)
+                    {
+                        if (selectedControlPoint == controlPointPairs[i, 0])
+                        {
+                            pairOfSelectedControlPoint = controlPointPairs[i, 1];
+                            selectedWaypoint = controlPointPairs[i, 2];
+                            break;
+                        }
+                        else if (selectedControlPoint == controlPointPairs[i, 1])
+                        {
+                            pairOfSelectedControlPoint = controlPointPairs[i, 0];
+                            selectedWaypoint = controlPointPairs[i, 2];
+                            break;
+                        }
+                        else
+                        {
+                            pairOfSelectedControlPoint = null;
+                        }
+                    }
+                }
+        }
+        if (pairOfSelectedControlPoint != null)
+        {
+            Vector3 dir = selectedControlPoint.localPosition - selectedWaypoint.localPosition;
+            pairOfSelectedControlPoint.localPosition = selectedWaypoint.localPosition + dir.normalized * (-1f) * (selectedWaypoint.localPosition - pairOfSelectedControlPoint.localPosition).magnitude;            
+        }
+        prev_selectedControlPoint = selectedControlPoint;
+    }
 }
