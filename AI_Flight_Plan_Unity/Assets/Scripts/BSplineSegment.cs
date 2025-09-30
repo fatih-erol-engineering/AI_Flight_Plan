@@ -26,14 +26,17 @@ public class BSplineSegment
     [Header("Gizmos")]
     public bool drawGizmos = true;
     public float gizmoSize = 0.04f;
-
     
 
     [Header("Restricted Areas")]
     public Transform[] restrictedAreas;
     public bool isCollide{ get; private set; } = false;
     private LineRenderer lr;
-    
+
+    [Header("Time")]
+    public TimeGame startTime;
+    public TimeGame endTime;
+
 
     // Clamped uniform knot vector for n=3 (4 pts), degree p=3:
     // U = [0,0,0,0, 1,1,1,1]

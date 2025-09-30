@@ -2,9 +2,10 @@ using UnityEngine;
 using UnityEngine.U2D;
 
 public class Waypoint : MonoBehaviour
-{    
+{
+    public TimeGame time;
     public WaypointType type = WaypointType.Open;
-    public ControlPoint[] controlPoints;
+    public ControlPoint[] controlPoints;    
     private Vector3 oldPos;
     void Awake()
     {

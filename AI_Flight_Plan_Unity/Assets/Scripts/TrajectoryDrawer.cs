@@ -6,7 +6,10 @@ using UnityEngine;
 [ExecuteAlways]
 public class TrajectoryDrawer : MonoBehaviour
 {
-    
+
+    public TimeGame startTime;
+    public TimeGame endTime;
+
     public Transform[] waypoints;    
     public Transform[] restrictedAreas;
     public float initialControlPointDistance=3f;
@@ -19,6 +22,27 @@ public class TrajectoryDrawer : MonoBehaviour
     private Transform selectedWaypoint;
     private Transform prev_SelectedWaypoint;
     private Vector3 prev_WaypointPos;
+
+    public void DeleteAllWaypoints() 
+    { 
+        waypoints = null;
+    }
+    public void CreateWaypoints(Vector3 pos)
+    {
+
+
+
+    }
+    public void AddWaypoint(Transform waypoint)
+    {
+        Transform[] newWaypoints = new Transform[waypoints.Length + 1];
+        for (int i = 0; i < waypoints.Length; i++)          
+            newWaypoints[i] = waypoints[i];
+        newWaypoints[newWaypoints.Length - 1] = waypoint;       
+        waypoints = newWaypoints;
+    }
+
+
     public void CreateTrajectory()
     {
         int numSegments = waypoints.Length - 1;
@@ -114,8 +138,7 @@ public class TrajectoryDrawer : MonoBehaviour
                 segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>().pairCP = segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>();
             }
 
-        }
-      
+        }      
     }
 #if UNITY_EDITOR
     void Update()
@@ -137,66 +160,6 @@ public class TrajectoryDrawer : MonoBehaviour
         }
     }
 #endif
-    void MoveWaypoint(Transform waypoint)
-    {
-        selectedWaypoint = waypoint;
-        if (prev_SelectedWaypoint != selectedWaypoint) 
-        { 
-            for (int i = 0; i < controlPointPairs.GetLength(0); i++)
-            {
-                if (waypoint == controlPointPairs[i, 2])
-                {
-                    pairOfSelectedControlPoint = controlPointPairs[i, 1];
-                    selectedControlPoint = controlPointPairs[i, 0];
-                    break;
-                }
-            }
-        }
-        if ((prev_WaypointPos != null) && (prev_SelectedWaypoint == selectedWaypoint))
-        {            
-            Vector3 deltaPos = waypoint.localPosition - prev_WaypointPos;
-            selectedControlPoint.localPosition += deltaPos;
-            pairOfSelectedControlPoint.localPosition += deltaPos;
-        }
 
-        prev_WaypointPos = waypoint.localPosition;
-        prev_SelectedWaypoint = waypoint;
-    }
 
-    void MoveControlPoint(Transform controlPoint)
-    {
-        selectedControlPoint = controlPoint;
-        if (prev_selectedControlPoint != selectedControlPoint)
-        {                    
-            selectedControlPoint = controlPoint;            
-                if (prev_selectedControlPoint != selectedControlPoint)
-                {
-                    for (int i = 0; i < controlPointPairs.GetLength(0); i++)
-                    {
-                        if (selectedControlPoint == controlPointPairs[i, 0])
-                        {
-                            pairOfSelectedControlPoint = controlPointPairs[i, 1];
-                            selectedWaypoint = controlPointPairs[i, 2];
-                            break;
-                        }
-                        else if (selectedControlPoint == controlPointPairs[i, 1])
-                        {
-                            pairOfSelectedControlPoint = controlPointPairs[i, 0];
-                            selectedWaypoint = controlPointPairs[i, 2];
-                            break;
-                        }
-                        else
-                        {
-                            pairOfSelectedControlPoint = null;
-                        }
-                    }
-                }
-        }
-        if (pairOfSelectedControlPoint != null)
-        {
-            Vector3 dir = selectedControlPoint.localPosition - selectedWaypoint.localPosition;
-            pairOfSelectedControlPoint.localPosition = selectedWaypoint.localPosition + dir.normalized * (-1f) * (selectedWaypoint.localPosition - pairOfSelectedControlPoint.localPosition).magnitude;            
-        }
-        prev_selectedControlPoint = selectedControlPoint;
-    }
 }
