@@ -1,0 +1,6 @@
+VisualElement {
+}
+
+.VisualElement {
+    background-color: rgba(0, 0, 0, 0.32);
+}
