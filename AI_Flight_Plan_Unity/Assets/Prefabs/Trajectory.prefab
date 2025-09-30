@@ -58,4 +58,4 @@ MonoBehaviour:
     miliSecond: 0
   waypoints: []
   restrictedAreas: []
-  initialControlPointDistance: 6
+  initialControlPointDistance: 20

@@ -9,10 +9,11 @@ public class TrajectoryDrawer : MonoBehaviour
 
     public TimeGame startTime;
     public TimeGame endTime;
-
+    public TrajectoryType trajectoryType;
     public Transform[] waypoints;    
     public Transform[] restrictedAreas;
     public float initialControlPointDistance=3f;
+    public float lineWidth = 10f;
     private Transform segmentParent;
     private BSplineSegment[] bSplineSegments;
     private Transform[,] controlPointPairs;
@@ -82,8 +83,9 @@ public class TrajectoryDrawer : MonoBehaviour
             seg.endPoint = waypoints[i+1].GetComponent<Waypoint>();
 
             seg.restrictedAreas = restrictedAreas;
-            seg.CreateControlPoints();
- 
+            seg.CreateControlPoints();            
+            seg.GetComponent<LineRenderer>().startWidth = lineWidth;
+            seg.GetComponent<LineRenderer>().endWidth = lineWidth;
             bSplineSegments[i] = seg; // burada artýk null olmaz
         }
 
@@ -162,4 +164,11 @@ public class TrajectoryDrawer : MonoBehaviour
 #endif
 
 
+}
+
+
+public enum TrajectoryType
+{
+    Fixed,
+    Travel
 }

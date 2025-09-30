@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ab7999da17e7a43bc8368eef7de577, type: 3}
+  m_Name: MavicPro
+  m_EditorClassIdentifier: Assembly-CSharp::Aircraft
+  model: 1
+  minVelocity_m_s: 0
+  nominalVelocity_m_s: 80
+  maxVelocity_m_s: 100
+  minTurnRadious_m: 0
+  mass_kg: 2
+  color: {r: 0.35707366, g: 0.5604317, b: 0.86415094, a: 0}
+  prefab: {fileID: 8015347047131697815, guid: ee4cb55866bb94d44b5b038748079c98, type: 3}
