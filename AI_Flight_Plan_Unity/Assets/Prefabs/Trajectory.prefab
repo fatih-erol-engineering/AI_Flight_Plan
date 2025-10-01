@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5084967935425630650}
   m_Layer: 0
   m_Name: Trajectory
-  m_TagString: Untagged
+  m_TagString: Aircraft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,6 +56,8 @@ MonoBehaviour:
     minute: 0
     second: 0
     miliSecond: 0
+  trajectoryType: 0
   waypoints: []
   restrictedAreas: []
   initialControlPointDistance: 20
+  lineWidth: 10

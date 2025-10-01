@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class AircraftController : MonoBehaviour
 {
-    public AircraftSpec spec { get; private set; }   // runtime enjekte edilecek    
-    public TrajectoryDrawer trajectoryDrawer { get; private set; } = new TrajectoryDrawer();
+    public AircraftSpec spec;  // runtime enjekte edilecek    
+    public Trajectory trajectoryDrawer  = new Trajectory();
 
 
     public void Init(AircraftSpec s)

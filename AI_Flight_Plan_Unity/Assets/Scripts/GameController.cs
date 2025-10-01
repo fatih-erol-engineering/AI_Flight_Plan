@@ -1,5 +1,10 @@
 using CesiumForUnity;
+using UnityEditor.SearchService;
 using UnityEngine;
+
+[ExecuteAlways]
+[RequireComponent(typeof(ObjectSelector))]
+[RequireComponent(typeof(MapPopupSpawner))]
 
 public class GameController : MonoBehaviour
 {
@@ -15,19 +20,25 @@ public class GameController : MonoBehaviour
     public LayerMask hitMask = ~0; // default: her þey
 
     public CesiumCameraController cesiumController; // Kameradaki bileþeni atayýn
+    [HideInInspector]
+    public ObjectSelector objectSelector;
+    public MapPopupSpawner mapPopupSpawner;    
     
     private Camera cam;
     
     private void Awake()
     {
         cam = Camera.main;
-        mode = Mode.Create_Trajectory;
+        mode = Mode.Object_Mode;
+        objectSelector = gameObject.GetComponent<ObjectSelector>();
+        mapPopupSpawner = gameObject.GetComponent<MapPopupSpawner>();
         EnableCesiumControls(false);
+
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+
             //if (!cesiumController.enabled)
             //{                
             //    EnableCesiumControls(true);
@@ -40,11 +51,14 @@ public class GameController : MonoBehaviour
             //    mode = Mode.Create_Trajectory;
             //    Debug.Log("Create Trajectory Mode Activated.");
             //}
+
+
         switch (mode)
         {
             case Mode.Travel_Mode:                                    
                 break;
             case Mode.Object_Mode:
+                    objectSelector.UpdateCycle();
                 break;
             case Mode.Edit_Trajectory:
                 break;
@@ -66,7 +80,7 @@ public class GameController : MonoBehaviour
                 activeTrajectory = Spawn_Prefab_with_Raycast(trajectoryPrefab);
             }
             activeWaypoint = Spawn_Prefab_with_Raycast(waypointPrefab, activeTrajectory.transform);
-            activeTrajectory.GetComponent<TrajectoryDrawer>().AddWaypoint(activeWaypoint.transform);
+            activeTrajectory.GetComponent<Trajectory>().AddWaypoint(activeWaypoint.transform);
         }
         if (Input.GetMouseButtonDown(1)) 
         {
@@ -74,7 +88,7 @@ public class GameController : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Space)) 
         {
-            activeTrajectory.GetComponent<TrajectoryDrawer>().CreateTrajectory();
+            activeTrajectory.GetComponent<Trajectory>().CreateTrajectory();
         }
     }
 

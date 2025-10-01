@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f2e310e5c75c7544ac620f4e50a9c70, type: 3}
+  m_Name: Standart
+  m_EditorClassIdentifier: Assembly-CSharp::Theme
+  mouseDefault: {fileID: 2800000, guid: 4937a433c592ba9438a03cccf3d31dcc, type: 3}
+  mouseDrag: {fileID: 2800000, guid: 45e73d85c1de43c42961192cc9af1a0b, type: 3}
+  mouseHover: {fileID: 2800000, guid: 018309b22c026404b9c5dce8636758f3, type: 3}
+  highlightedMaterial: {fileID: 2100000, guid: 57fc93d593680074bb9e832a6f9f0118, type: 2}

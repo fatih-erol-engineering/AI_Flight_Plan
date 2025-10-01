@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8826279322337476503}
   m_Layer: 0
   m_Name: Mavic Pro
-  m_TagString: Untagged
+  m_TagString: Aircraft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -124,3 +124,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033256b7ab47820448239597476f1496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftController
+  spec: {fileID: 0}
+  trajectoryDrawer: {fileID: 0}

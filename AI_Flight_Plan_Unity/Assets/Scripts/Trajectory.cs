@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [ExecuteAlways]
-public class TrajectoryDrawer : MonoBehaviour
+public class Trajectory : MonoBehaviour
 {
 
     public TimeGame startTime;
@@ -30,9 +30,7 @@ public class TrajectoryDrawer : MonoBehaviour
     }
     public void CreateWaypoints(Vector3 pos)
     {
-
-
-
+        
     }
     public void AddWaypoint(Transform waypoint)
     {
@@ -42,7 +40,11 @@ public class TrajectoryDrawer : MonoBehaviour
         newWaypoints[newWaypoints.Length - 1] = waypoint;       
         waypoints = newWaypoints;
     }
-
+    public void DeleteTrajectory()
+    {
+        DestroyImmediate(segmentParent.gameObject);
+        bSplineSegments = null ;
+    }
 
     public void CreateTrajectory()
     {
@@ -161,6 +163,7 @@ public class TrajectoryDrawer : MonoBehaviour
             }           
         }
     }
+    
 #endif
 
 

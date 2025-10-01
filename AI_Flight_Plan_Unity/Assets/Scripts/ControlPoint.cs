@@ -12,8 +12,12 @@ public class ControlPoint : MonoBehaviour
     public void setPosition(Vector3 position)
     {        
         transform.position = position;
-        Vector3 relPosThis = transform.position - waypoint.transform.position;
-        Vector3 relPosPair = pairCP.transform.position - waypoint.transform.position;
-        pairCP.transform.position = waypoint.transform.position + relPosThis.normalized*(-1)* relPosPair.magnitude;
+        if (pairCP !=null)
+        {
+            Vector3 relPosThis = transform.position - waypoint.transform.position;
+            Vector3 relPosPair = pairCP.transform.position - waypoint.transform.position;
+            pairCP.transform.position = waypoint.transform.position + relPosThis.normalized * (-1) * relPosPair.magnitude;
+        }
+        
     }
 }

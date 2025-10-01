@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.U2D;
 
+
+[ExecuteAlways]
 public class Waypoint : MonoBehaviour
 {
     public TimeGame time;

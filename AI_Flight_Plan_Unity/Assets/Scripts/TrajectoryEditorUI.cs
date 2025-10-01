@@ -1,20 +1,24 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(TrajectoryDrawer))]
-public class TrajectoryDrawerEditorUI : Editor
+[CustomEditor(typeof(Trajectory))]
+public class TrajectoryEditorUI : Editor
 {
     public override void OnInspectorGUI()
     {
         // Normal inspector çiz
         DrawDefaultInspector();
 
-        TrajectoryDrawer myScript = (TrajectoryDrawer)target;
+        Trajectory myScript = (Trajectory)target;
 
         // Buton ekle
         if (GUILayout.Button("Create Trajectory"))
         {
             myScript.CreateTrajectory();
+        }
+        if (GUILayout.Button("Delete Trajectory"))
+        {
+            myScript.DeleteTrajectory();
         }
     }
 }
