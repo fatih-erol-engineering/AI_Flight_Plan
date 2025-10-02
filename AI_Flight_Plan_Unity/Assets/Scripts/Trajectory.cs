@@ -17,9 +17,7 @@ public class Trajectory : MonoBehaviour
     public Theme theme;
     private Transform segmentParent;
     private Transform waypointParent;
-    private BSplineSegment[] bSplineSegments;    
-    
-    
+    private BSplineSegment[] bSplineSegments;            
 
     public void DeleteAllWaypoints() 
     { 
@@ -36,6 +34,49 @@ public class Trajectory : MonoBehaviour
         }
 
         GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, Quaternion.identity, waypointParent);        
+        AddWaypoint(waypoint.transform);
+    }
+    public void CreateWaypoint(Vector3 globalPosition, float time_s)
+    {
+        if (waypointParent == null)
+        {
+            GameObject waypointGO = new GameObject("Waypoints");
+            waypointGO.transform.parent = transform;
+            waypointGO.transform.localPosition = Vector3.zero;
+            waypointParent = waypointGO.transform;
+        }
+
+        GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, Quaternion.identity, waypointParent);
+        Waypoint wp = waypoint.GetComponent<Waypoint>();
+        if (wp != null) 
+        {
+            wp.time.second = time_s;
+        }
+
+        if (startTime == null)
+        {
+            startTime.second = time_s;
+        }
+        else
+        {
+            if (time_s<startTime.second)
+            {
+                startTime.second = time_s;
+            }
+        }
+
+        if (endTime == null)
+        {
+            endTime.second = time_s;
+        }
+        else
+        {
+            if (time_s > endTime.second)
+            {
+                endTime.second = time_s;
+            }
+        }
+
         AddWaypoint(waypoint.transform);
     }
     private void AddWaypoint(Transform waypoint)
@@ -86,9 +127,8 @@ public class Trajectory : MonoBehaviour
             if (seg == null)
                 seg = segmentGO.AddComponent<BSplineSegment>();
             seg.initialControlPointDistance = initialControlPointDistance;
-            seg.startPoint = waypoints[i].GetComponent<Waypoint>();
-            seg.endPoint = waypoints[i+1].GetComponent<Waypoint>();
-
+            seg.SetStartAndEndWaypoints(waypoints[i].GetComponent<Waypoint>(), waypoints[i + 1].GetComponent<Waypoint>());
+            
             seg.restrictedAreas = restrictedAreas;
             seg.CreateControlPoints();            
             seg.GetComponent<LineRenderer>().startWidth = lineWidth;
@@ -146,7 +186,6 @@ public class Trajectory : MonoBehaviour
                 segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>().pairCP = segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>();
                 segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>().pairCP = segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>();
             }
-
         }      
     }
 #if UNITY_EDITOR

@@ -14,10 +14,10 @@ public class BSplineSegment
     : SelectableMonoBehaviour
 {
     [Header("4 Control Points (Transforms)")]
-    public Waypoint startPoint;
+    public Waypoint startPoint { get; private set; }
     public ControlPoint controlPoint1;
     public ControlPoint controlPoint2;
-    public Waypoint endPoint;
+    public Waypoint endPoint { get; private set; }
     public float initialControlPointDistance = 3f;
 
     [Header("Sampling")]
@@ -59,6 +59,19 @@ public class BSplineSegment
         UpdateCurve();
     }
 
+    public void SetStartAndEndTime(TimeGame startTime_, TimeGame endTime_)
+    {
+        startTime = startTime_;
+        endTime = endTime_;
+    }
+    public void SetStartAndEndWaypoints(Waypoint startWP , Waypoint endWP)
+    {
+
+        startPoint = startWP;
+        endPoint = endWP;
+
+        SetStartAndEndTime(startWP.time, endWP.time);
+    }
     void Update()
     {
         // Editörde sürüklerken de canlý güncelle

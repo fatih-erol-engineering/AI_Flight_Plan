@@ -18,9 +18,12 @@ public class MapPopupSpawner : MonoBehaviour
     public AircraftFactory factory;          // Daha önce verdiðimiz factory
 
     // UI refs
-    VisualElement root, ctxRoot, aircraftRoot, mainActions;
+    VisualElement root, ctxRoot, aircraftRoot, mainActions,waypointInfoRoot;
     Button btnAddAircraft, btnAddRestricted, btnCreateAircraft;
+    private FloatField fieldX_m, fieldY_m, fieldZ_m, fieldTime_s, fieldVel_m_s;
+    private Plane plane;
     DropdownField ddAircraft;
+
 
     // Dahili durum
     Vector2 lastClickScreen;
@@ -36,11 +39,22 @@ public class MapPopupSpawner : MonoBehaviour
         root = uiDocument.rootVisualElement;
         ctxRoot = root.Q<VisualElement>("ContextRoot");
         aircraftRoot = root.Q<VisualElement>("AircraftRoot");
+        waypointInfoRoot = root.Q<VisualElement>("WaypointInfoRoot");
+
+
         mainActions = root.Q<VisualElement>("MainActions");
         btnAddAircraft = root.Q<Button>("BtnAddAircraft");
         btnAddRestricted = root.Q<Button>("BtnAddRestricted");
         btnCreateAircraft = root.Q<Button>("BtnCreateAircraft");
         ddAircraft = root.Q<DropdownField>("DdAircraft");
+
+       
+        fieldX_m = root.Q<FloatField>("X_m");
+        fieldY_m = root.Q<FloatField>("Y_m");
+        fieldZ_m = root.Q<FloatField>("Z_m");
+        fieldTime_s = root.Q<FloatField>("Time_s");
+        fieldVel_m_s = root.Q<FloatField>("Vel_m_s");
+
 
         // Baðlantýlar
         btnAddAircraft.clicked += OnAddAircraftClicked;
@@ -49,18 +63,15 @@ public class MapPopupSpawner : MonoBehaviour
 
         // Dýþarý týklayýnca menüleri kapat
         root.RegisterCallback<PointerDownEvent>(OnRootPointerDown, TrickleDown.TrickleDown);
+        
     }
 
     void Update()
     {
-       
+
         if (Input.GetMouseButtonDown(1))
         {
             lastClickScreen = Input.mousePosition;
-
-            if (TryScreenToWorld(lastClickScreen, out var hitPos))
-                lastClickWorld = hitPos;
-
             ShowContextAt(lastClickScreen);
         }
         
@@ -68,8 +79,31 @@ public class MapPopupSpawner : MonoBehaviour
         {
             HideAll();
         }
+
     }
 
+    public void StartWaypointInfo(Aircraft aircarft)
+    {
+        waypointInfoRoot.style.display = DisplayStyle.Flex;
+        fieldVel_m_s.value = aircarft.spec.nominalVelocity_m_s;
+        UpdateWaypointInfo();
+    }
+    public void UpdateWaypointInfo()
+    {
+        lastClickScreen = Input.mousePosition;
+
+        if (TryScreenToWorld(lastClickScreen, out Vector3 hitPos))
+            lastClickWorld = hitPos;
+
+        fieldX_m.value = Round(hitPos.x,3);
+        fieldY_m.value = Round(hitPos.y,3);
+        fieldZ_m.value = Round(hitPos.z,3);
+    }
+    private float Round(float val,int dec)
+    {
+        float roundedVal = Mathf.Round(val * Mathf.Pow(10,dec)) / Mathf.Pow(10, dec);
+        return roundedVal;
+    }
     void OnAddAircraftClicked()
     {
         ShowContextPanel(false);
@@ -100,8 +134,6 @@ public class MapPopupSpawner : MonoBehaviour
 
         HideAll();
     }
-
-    // --- UI Yardýmcýlarý ---
 
     void ShowContextAt(Vector2 screenPos)
     {
@@ -162,7 +194,6 @@ public class MapPopupSpawner : MonoBehaviour
         if (!insideAny) HideAll();
     }
 
-    // --- Veri ---
 
     void PopulateAircraftDropdown()
     {
@@ -188,7 +219,6 @@ public class MapPopupSpawner : MonoBehaviour
         ddAircraft.index = Mathf.Clamp(ddAircraft.index, 0, aircraftLabels.Count - 1);
     }
 
-    // --- Ray yardýmcýlarý ---
 
     bool TryScreenToWorld(Vector2 screen, out Vector3 world)
     {

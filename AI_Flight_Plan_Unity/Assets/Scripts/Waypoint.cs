@@ -24,6 +24,19 @@ public class Waypoint : SelectableMonoBehaviour
 
         oldPos = globalPosition;
     }
+    public void setPosition(Vector3 globalPosition, float time_s)
+    {
+        transform.position = globalPosition;
+        Vector3 deltaPos = globalPosition - oldPos;
+        foreach (ControlPoint controlPoint in controlPoints)
+        {
+            controlPoint.transform.position += deltaPos;
+        }
+
+        oldPos = globalPosition;
+        time.second = time_s;
+    }
+
 }
 
 

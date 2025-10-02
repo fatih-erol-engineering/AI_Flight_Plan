@@ -49,16 +49,22 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+
             nextState = true;
             testState++;
-            if (testState > 4)
+
+            if (testState > 3)
             {
+
                 testState = 0;
+
             }
+
         }
 
         if (nextState)
         {
+
             if (testState == 0)
             {
 
@@ -67,30 +73,51 @@ public class GameController : MonoBehaviour
                     selectedAircarft = aircraftFactory.Spawn(AircraftModel.Mavic_Pro, hitPos, Quaternion.Euler(0, 0, 0));
                     selectedAircarft.CreateWaypoint(selectedAircarft.transform.position);
                 }
-                    
+                mapPopupSpawner.StartWaypointInfo(selectedAircarft);
+
             }
+
+
             if (testState == 1)
             {
+                
                 if (TryScreenToWorld(Input.mousePosition, out var hitPos))
                 {
                     selectedAircarft.CreateWaypoint(hitPos); 
-                }                               
+                }   
+                
             }
-                if (testState == 2)
+
+
+            if (testState == 2)
             {
+
+
                 if (TryScreenToWorld(Input.mousePosition, out var hitPos))
                 {
                     selectedAircarft.CreateWaypoint(hitPos);
-                }                
+                }   
+                
+
             }
+
+
             if (testState == 3)
             {
+
                 if (TryScreenToWorld(Input.mousePosition, out var hitPos))
                 {
                     selectedAircarft.CreateWaypoint(hitPos);
                     selectedAircarft.trajectory.CreateTrajectory();
-                }                
+                }   
+
             }
+
+        }
+
+        if (testState == 0)
+        {
+            mapPopupSpawner.UpdateWaypointInfo();
         }
 
 
