@@ -3,15 +3,16 @@ using UnityEngine.U2D;
 
 
 [ExecuteAlways]
-public class Waypoint : MonoBehaviour
+public class Waypoint : SelectableMonoBehaviour
 {
     public TimeGame time;
     public WaypointType type = WaypointType.Open;
     public ControlPoint[] controlPoints;    
     private Vector3 oldPos;
-    void Awake()
+    void Start()
     {
-        oldPos = transform.position;
+        oldPos = transform.position;           
+        base.Init(GetComponent<Renderer>().material);
     }
     public void setPosition(Vector3 position)
     {

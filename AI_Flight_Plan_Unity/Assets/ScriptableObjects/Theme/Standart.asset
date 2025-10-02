@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Standart
   m_EditorClassIdentifier: Assembly-CSharp::Theme
   mouseDefault: {fileID: 2800000, guid: 4937a433c592ba9438a03cccf3d31dcc, type: 3}
-  mouseDrag: {fileID: 2800000, guid: 45e73d85c1de43c42961192cc9af1a0b, type: 3}
   mouseHover: {fileID: 2800000, guid: 018309b22c026404b9c5dce8636758f3, type: 3}
   highlightedMaterial: {fileID: 2100000, guid: 57fc93d593680074bb9e832a6f9f0118, type: 2}
+  hoverMaterial: {fileID: 2100000, guid: 920f933c7b786314dad2557d870b37bf, type: 2}

@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
     
     private Camera cam;
     
-    private void Awake()
+    private void Start()
     {
         cam = Camera.main;
         mode = Mode.Object_Mode;

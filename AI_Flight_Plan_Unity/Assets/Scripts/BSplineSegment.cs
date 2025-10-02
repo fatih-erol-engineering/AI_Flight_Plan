@@ -11,7 +11,7 @@ using static UnityEngine.Rendering.HableCurve;
 [ExecuteAlways]
 [RequireComponent(typeof(LineRenderer))]
 public class BSplineSegment
-    : MonoBehaviour
+    : SelectableMonoBehaviour
 {
     [Header("4 Control Points (Transforms)")]
     public Waypoint startPoint;
@@ -48,6 +48,7 @@ public class BSplineSegment
         var shader = Shader.Find("Universal Render Pipeline/Unlit");
         var mat = new Material(shader);
         lr.sharedMaterial = mat;
+        base.Init(mat);
         UpdateCurve();
     }
 
