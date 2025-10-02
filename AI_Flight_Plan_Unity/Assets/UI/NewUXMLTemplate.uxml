@@ -4,14 +4,14 @@
         <ui:Button name="BtnAddAircraft" text="Add Aircraft" class="btn" style="background-color: rgb(37, 99, 235); color: rgb(255, 255, 255);" />
         <ui:Button name="BtnAddRestricted" text="Add Restricted Area" class="btn" style="background-color: rgb(37, 99, 235); color: rgb(255, 255, 255);" />
     </ui:VisualElement>
-    <ui:VisualElement name="AircraftRoot" class="ctx-root hidden" style="display: none; height: 126px;">
+    <ui:VisualElement name="AircraftRoot" class="ctx-root hidden" style="display: none; height: 141px; width: 226px; min-width: 226px; min-height: 141px; align-items: stretch; align-self: flex-start; align-content: stretch;">
         <ui:VisualElement class="section">
-            <ui:Label text="Select Aircraft" class="title" />
+            <ui:Label text="Select Aircraft" name="Title" class="title" />
             <ui:DropdownField name="DdAircraft" class="DropDown" style="background-color: rgb(255, 255, 255); -unity-background-image-tint-color: rgb(255, 255, 255); border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; -unity-text-outline-color: rgb(0, 0, 0); color: rgb(0, 0, 0); background-repeat: no-repeat no-repeat; -unity-background-scale-mode: stretch-to-fill; -unity-slice-type: sliced; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);" />
-            <ui:Button name="BtnCreateAircraft" text="Create" class="primary btn" />
+            <ui:Button name="BtnCreateAircraft" text="Create" class="primary btn" style="width: auto;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="WaypointInfoRoot" class="ctx-root" style="width: 229px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: flex-start; align-content: stretch; display: flex; height: 334px; align-self: auto; position: absolute; flex-grow: 1; min-width: 187px; min-height: 332px;">
+    <ui:VisualElement name="WaypointInfoRoot" class="ctx-root" style="width: 229px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: flex-start; align-content: stretch; display: none; height: 334px; align-self: auto; position: absolute; flex-grow: 1; min-width: 187px; min-height: 332px;">
         <ui:Label text="Waypoint" name="Title" class="title" style="-unity-text-align: upper-center; white-space: nowrap; text-overflow: clip; flex-shrink: 0; flex-grow: 0; align-items: stretch; align-self: stretch; -unity-font-style: bold; color: rgb(37, 99, 235); background-color: rgba(255, 255, 255, 0);" />
         <ui:VisualElement name="Divider" style="flex-grow: 0; align-self: stretch; height: 1px; background-color: rgb(0, 0, 0); margin-bottom: 5px; margin-top: 0; flex-shrink: 0;" />
         <ui:FloatField label="X [m]" value="42.2" name="X_m" class="FloatInput" style="align-self: flex-end; align-content: flex-start; justify-content: flex-start; align-items: auto; width: 256px; min-width: 256px; max-width: 256px;" />
@@ -19,6 +19,6 @@
         <ui:FloatField label="Z [m]" value="42.2" name="Z_m" class="FloatInput" />
         <ui:FloatField label="Time [s]" value="42.2" name="Time_s" class="FloatInput" />
         <ui:FloatField label="Velocity [m/s]" value="42.2" name="Vel_m_s" class="FloatInput" />
-        <ui:Button text="Create" name="CreateWaypoint" class="btn" style="align-self: stretch; color: rgb(255, 255, 255); background-color: rgb(0, 118, 255);" />
+        <ui:Button text="Create" name="BtnCreateWaypoint" class="btn" style="align-self: stretch; color: rgb(255, 255, 255); background-color: rgb(0, 118, 255);" />
     </ui:VisualElement>
 </ui:UXML>

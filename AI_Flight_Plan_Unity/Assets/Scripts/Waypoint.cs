@@ -1,8 +1,6 @@
 using UnityEngine;
-using UnityEngine.U2D;
 
 
-[ExecuteAlways]
 public class Waypoint : SelectableMonoBehaviour
 {
     public TimeGame time;
@@ -16,23 +14,33 @@ public class Waypoint : SelectableMonoBehaviour
     public void setPosition(Vector3 globalPosition)
     {
         transform.position = globalPosition;  
-        Vector3 deltaPos = globalPosition - oldPos;
-        foreach (ControlPoint controlPoint in controlPoints)
-        {
-            controlPoint.transform.position += deltaPos;
-        }        
-
+        Vector3 deltaPos = globalPosition - oldPos;;
+        if(controlPoints != null) 
+        {            
+            foreach (ControlPoint controlPoint in controlPoints)
+            {
+                if (controlPoint != null)
+                {
+                    controlPoint.transform.position += deltaPos;
+                }
+            }
+        }
         oldPos = globalPosition;
     }
     public void setPosition(Vector3 globalPosition, float time_s)
     {
         transform.position = globalPosition;
         Vector3 deltaPos = globalPosition - oldPos;
-        foreach (ControlPoint controlPoint in controlPoints)
+        if (controlPoints != null)
         {
-            controlPoint.transform.position += deltaPos;
+            foreach (ControlPoint controlPoint in controlPoints)
+            {
+                if (controlPoint != null)
+                {
+                    controlPoint.transform.position += deltaPos;
+                }
+            }
         }
-
         oldPos = globalPosition;
         time.second = time_s;
     }

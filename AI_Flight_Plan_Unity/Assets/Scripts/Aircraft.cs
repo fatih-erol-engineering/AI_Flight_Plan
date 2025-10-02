@@ -13,13 +13,12 @@ public class Aircraft : SelectableMonoBehaviour
         UpdateColor();
     }
 
-    public void CreateWaypoint(Vector3 globalPosition)
+    public Waypoint CreateWaypoint(Vector3 globalPosition)
     {
         if (trajectory == null)
         {
-            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, this.transform);
-            trajParentGO.transform.localPosition = Vector3.zero;
-            trajParentGO.transform.localRotation = Quaternion.identity;
+            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab,transform.position, transform.rotation, this.transform);
+            
             trajectory = trajParentGO.GetComponent<Trajectory>();
             if (trajectory == null)
             {
@@ -27,15 +26,14 @@ public class Aircraft : SelectableMonoBehaviour
                 trajectory.theme = theme;
             }
         }        
-        trajectory.CreateWaypoint(globalPosition);
+        Waypoint wp = trajectory.CreateWaypoint(globalPosition);
+        return wp;
     }
-    public void CreateWaypoint(Vector3 globalPosition,float time_s)
+    public Waypoint CreateWaypoint(Vector3 globalPosition,float time_s)
     {
         if (trajectory == null)
         {
-            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, this.transform);
-            trajParentGO.transform.localPosition = Vector3.zero;
-            trajParentGO.transform.localRotation = Quaternion.identity;
+            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);                        
             trajectory = trajParentGO.GetComponent<Trajectory>();
             if (trajectory == null)
             {
@@ -43,7 +41,8 @@ public class Aircraft : SelectableMonoBehaviour
                 trajectory.theme = theme;
             }
         }
-        trajectory.CreateWaypoint(globalPosition,time_s);
+        Waypoint wp = trajectory.CreateWaypoint(globalPosition,time_s);        
+        return wp;
     }
     public void UpdateColor()
     {

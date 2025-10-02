@@ -19,4 +19,4 @@ MonoBehaviour:
   minTurnRadious_m: 20
   mass_kg: 4
   color: {r: 0.5773585, g: 0, b: 0.06606765, a: 0}
-  prefab: {fileID: 8015347047131697815, guid: 2a2697a5ccd81e447975afaeedf59755, type: 3}
+  prefab: {fileID: 5697215273144170777, guid: 1ffd0ed19773b144cb695defdf574c36, type: 3}

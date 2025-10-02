@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[ExecuteAlways]
 public class ControlPoint : SelectableMonoBehaviour
 {
     public ControlPoint pairCP;

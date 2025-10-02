@@ -16,11 +16,12 @@ public class MapPopupSpawner : MonoBehaviour
     [Header("Factories & Data")]
     public AircraftSpecRegistry registry;    // Registry (ScriptableObject)
     public AircraftFactory factory;          // Daha önce verdiðimiz factory
+    public GameController gameController;
 
     // UI refs
     VisualElement root, ctxRoot, aircraftRoot, mainActions,waypointInfoRoot;
-    Button btnAddAircraft, btnAddRestricted, btnCreateAircraft;
-    private FloatField fieldX_m, fieldY_m, fieldZ_m, fieldTime_s, fieldVel_m_s;
+    public Button btnAddAircraft, btnAddRestricted, btnCreateAircraft, btnCreateWaypoint;
+    public FloatField fieldX_m, fieldY_m, fieldZ_m, fieldTime_s, fieldVel_m_s;
     private Plane plane;
     DropdownField ddAircraft;
 
@@ -46,6 +47,7 @@ public class MapPopupSpawner : MonoBehaviour
         btnAddAircraft = root.Q<Button>("BtnAddAircraft");
         btnAddRestricted = root.Q<Button>("BtnAddRestricted");
         btnCreateAircraft = root.Q<Button>("BtnCreateAircraft");
+        btnCreateWaypoint = root.Q<Button>("BtnCreateWaypoint");
         ddAircraft = root.Q<DropdownField>("DdAircraft");
 
        
@@ -60,6 +62,7 @@ public class MapPopupSpawner : MonoBehaviour
         btnAddAircraft.clicked += OnAddAircraftClicked;
         btnAddRestricted.clicked += OnAddRestrictedClicked;
         btnCreateAircraft.clicked += OnCreateAircraftClicked;
+        btnCreateWaypoint.clicked += OnCreateWaypointClicked;
 
         // Dýþarý týklayýnca menüleri kapat
         root.RegisterCallback<PointerDownEvent>(OnRootPointerDown, TrickleDown.TrickleDown);
@@ -133,6 +136,17 @@ public class MapPopupSpawner : MonoBehaviour
         if (ctrl) Debug.Log($"Spawned aircraft: {ctrl.spec?.name ?? type.ToString()}");
 
         HideAll();
+    }
+    void OnCreateWaypointClicked()
+    {
+        if (gameController != null)
+        {
+            if (gameController.selectedAircarft != null)
+            {
+                Vector3 globalPosition = new Vector3(fieldX_m.value, fieldY_m.value, fieldZ_m.value);                               
+                gameController.selectedWaypoint.setPosition(globalPosition, fieldTime_s.value);
+            }
+        }
     }
 
     void ShowContextAt(Vector2 screenPos)

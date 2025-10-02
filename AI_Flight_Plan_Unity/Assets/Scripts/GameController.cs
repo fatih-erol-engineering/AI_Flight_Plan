@@ -1,16 +1,14 @@
 using CesiumForUnity;
-using Unity.VisualScripting;
-using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-[ExecuteAlways]
 [RequireComponent(typeof(ObjectSelector))]
 [RequireComponent(typeof(MapPopupSpawner))]
 [RequireComponent(typeof(AircraftFactory))]
 
 public class GameController : MonoBehaviour
 {
-    
+
     public Mode mode;
     [Tooltip("Týklanýnca çýkacak obje (Prefab)")]
     public GameObject waypointPrefab;
@@ -24,114 +22,126 @@ public class GameController : MonoBehaviour
     public CesiumCameraController cesiumController; // Kameradaki bileþeni atayýn
     [HideInInspector]
     public ObjectSelector objectSelector;
-    public MapPopupSpawner mapPopupSpawner;    
-    
+    public MapPopupSpawner mapPopupSpawner;
+
     private Camera cam;
     private bool nextState;
     private int testState = -1;
 
     private AircraftFactory aircraftFactory;
     public Aircraft selectedAircarft;
+    public Waypoint selectedWaypoint;
+    private bool flag_Create_Aircraft;
+    private bool flag_Create_Waypoint;
+    private bool flag_Edit_Waypoint;
+    private bool flag_Mode_Change;
 
     private void Start()
     {
         cam = Camera.main;
-        mode = Mode.Object_Mode;
         objectSelector = gameObject.GetComponent<ObjectSelector>();
         mapPopupSpawner = gameObject.GetComponent<MapPopupSpawner>();
         aircraftFactory = gameObject.GetComponent<AircraftFactory>();
-
+        mode = Mode.Create_Aircraft;
         EnableCesiumControls(false);
     }
 
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        switch (mode)
         {
-
-            nextState = true;
-            testState++;
-
-            if (testState > 3)
-            {
-
-                testState = 0;
-
-            }
-
+            case Mode.Free_Mode:
+                Update_in_Free_Mode();
+                break;
+            case Mode.Create_Aircraft:
+                Update_in_Create_Aircraft();
+                break;
+            case Mode.Create_Waypoint:
+                Update_in_Create_Waypoint();
+                break;
+            case Mode.Edit_Waypoint:
+                Update_in_Edit_Waypoint();
+                break;
+            default:
+                break;
         }
 
-        if (nextState)
-        {
+        //if (Input.GetMouseButtonDown(0))
+        //{
 
-            if (testState == 0)
-            {
+        //    nextState = true;
+        //    testState++;
 
-                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
-                {
-                    selectedAircarft = aircraftFactory.Spawn(AircraftModel.Mavic_Pro, hitPos, Quaternion.Euler(0, 0, 0));
-                    selectedAircarft.CreateWaypoint(selectedAircarft.transform.position);
-                }
-                mapPopupSpawner.StartWaypointInfo(selectedAircarft);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Return))
+        //{
 
-            }
+        //    nextState = true;
+        //    testState = -1;
 
+        //}
 
-            if (testState == 1)
-            {
-                
-                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
-                {
-                    selectedAircarft.CreateWaypoint(hitPos); 
-                }   
-                
-            }
+        //if (nextState)
+        //{
 
+        //    if (testState == 0)
+        //    {
 
-            if (testState == 2)
-            {
-
-
-                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
-                {
-                    selectedAircarft.CreateWaypoint(hitPos);
-                }   
-                
-
-            }
+        //        if (TryScreenToWorld(Input.mousePosition, out var hitPos))
+        //        {
+        //            selectedAircarft = aircraftFactory.Spawn(AircraftModel.Mavic_Pro, hitPos, Quaternion.Euler(0, 0, 0));
+        //            selectedWaypoint = selectedAircarft.CreateWaypoint(selectedAircarft.transform.position);
+        //        }
+        //        mapPopupSpawner.StartWaypointInfo(selectedAircarft);
+        //    }
 
 
-            if (testState == 3)
-            {
-
-                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
-                {
-                    selectedAircarft.CreateWaypoint(hitPos);
-                    selectedAircarft.trajectory.CreateTrajectory();
-                }   
-
-            }
-
-        }
-
-        if (testState == 0)
-        {
-            mapPopupSpawner.UpdateWaypointInfo();
-        }
+        //    else if (testState == -1) // Finish and Create Traj
+        //    {
+        //        selectedAircarft.trajectory.CreateTrajectory();                                
+        //    }
 
 
+        //    else // Waypoint Loop
+        //    {                
+        //        if (createWayPointIdx == 0)
+        //        {
+        //            Vector3 mousePos = MouseHitPos();
+        //            selectedWaypoint = selectedAircarft.trajectory.CreateWaypoint(mousePos);
+        //            createWayPointIdx=1;
+        //        }
+        //        else if(createWayPointIdx == 1)
+        //        {
+        //            // Edit Popup
+        //            selectedWaypoint.setPosition(new Vector3(mapPopupSpawner.fieldX_m.value, mapPopupSpawner.fieldY_m.value, mapPopupSpawner.fieldZ_m.value));
+        //            Debug.Log("Noliy");
+        //            createWayPointIdx = 0;
+        //        }                
 
+        //    }
 
+        //}
 
-
-
-
+        //if (testState != -1)
+        //{
+        //    if (createWayPointIdx == 0)
+        //    {
+        //        mapPopupSpawner.UpdateWaypointInfo();
+        //    }
+        //}
 
 
 
 
-        nextState = false;
+
+
+
+
+
+
+
+
+        //nextState = false;
         //if (!cesiumController.enabled)
         //{                
         //    EnableCesiumControls(true);
@@ -163,7 +173,11 @@ public class GameController : MonoBehaviour
         //}
 
     }
-
+    public Vector3 MouseHitPos()
+    {
+        TryScreenToWorld(Input.mousePosition, out Vector3 hitPos);
+        return hitPos;
+    }
     bool TryScreenToWorld(Vector2 screen, out Vector3 world)
     {
         var ray = cam.ScreenPointToRay(screen);
@@ -213,19 +227,74 @@ public class GameController : MonoBehaviour
         if (cesiumController) cesiumController.enabled = on;
 
         // (Ýsteðe baðlý) imleç kilidini de yönetmek isteyebilirsiniz:
-        Cursor.lockState = on ? CursorLockMode.Locked : CursorLockMode.None;
-        Cursor.visible = !on;
+        UnityEngine.Cursor.lockState = on ? CursorLockMode.Locked : CursorLockMode.None;
+        UnityEngine.Cursor.visible = !on;
     }
 
+    void Update_in_Create_Aircraft()
+    {
+        flag_Create_Aircraft = false;
+        if (Input.GetMouseButtonDown(0))
+        {
+            flag_Create_Aircraft = true;
+        }
+
+        if (flag_Create_Aircraft)
+        {
+            Vector3 hitPos = MouseHitPos();
+            selectedAircarft = aircraftFactory.Spawn(AircraftModel.Mavic_Pro, hitPos, Quaternion.Euler(0, 0, 0));
+            Vector3 altitudeOffset = new Vector3(0f, 5f, 0f);
+            selectedWaypoint = selectedAircarft.CreateWaypoint(selectedAircarft.transform.position + altitudeOffset);
+            mapPopupSpawner.StartWaypointInfo(selectedAircarft);
+            mode = Mode.Create_Waypoint;
+        }
+    }
+    void Update_in_Create_Waypoint()
+    {
+        flag_Create_Waypoint = false;
+        if (Input.GetMouseButtonDown(0))
+        {
+            flag_Create_Waypoint = true;
+        }
+        mapPopupSpawner.UpdateWaypointInfo();
+        if (flag_Create_Waypoint)
+        {
+            Vector3 hitPos = MouseHitPos();
+            Vector3 altitudeOffset = new Vector3(0f, 5f, 0f);
+            selectedWaypoint = selectedAircarft.CreateWaypoint(hitPos+ altitudeOffset) ;
+        }
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            selectedAircarft.trajectory.CreateTrajectory();
+            mode = Mode.Free_Mode;
+        }
+    }
+    void Update_in_Edit_Waypoint()
+    {
+        //flag_Edit_Waypoint = false;
+        //mapPopupSpawner.fieldY_m.Focus();
+        //if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        //{            
+        //    Vector3 globalPosition = new Vector3(mapPopupSpawner.fieldX_m.value, mapPopupSpawner.fieldY_m.value, mapPopupSpawner.fieldZ_m.value);
+        //    selectedWaypoint.setPosition(globalPosition, mapPopupSpawner.fieldTime_s.value);
+        //    mode = Mode.Create_Waypoint;
+        //}
+
+
+    }
+    void Update_in_Free_Mode()
+    {
+
+    }
 }
 
 
 
 public enum Mode
 {
-    Travel_Mode,
-    Object_Mode,
-    Create_Trajectory,
-    Edit_Trajectory,
-    Train_AI
+    Free_Mode,
+    Create_Aircraft,
+    Create_Waypoint,
+    Edit_Waypoint,    
+    Create_Trajectory
 }

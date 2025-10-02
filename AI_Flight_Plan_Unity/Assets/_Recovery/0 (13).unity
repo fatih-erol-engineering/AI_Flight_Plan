@@ -272,8 +272,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
-  orthographic size: 202.42
+  orthographic: 0
+  orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c243699750da3f46b864b90d90b0243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
-  mode: 0
+  mode: 1
   waypointPrefab: {fileID: 517102805373364547, guid: 1194e48d07239fb459e25332f73f8806, type: 3}
   trajectoryPrefab: {fileID: 8064563952328812410, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
   hitMask:
@@ -375,15 +375,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapPopupSpawner
   uiDocument: {fileID: 2113633963}
-  cam: {fileID: 315456361}
+  cam: {fileID: 0}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
   groundY: 0
   useGroundPlaneIfNoHit: 1
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
-  factory: {fileID: 521860496}
-  gameController: {fileID: 521860493}
+  factory: {fileID: 0}
 --- !u!114 &521860495
 MonoBehaviour:
   m_ObjectHideFlags: 0

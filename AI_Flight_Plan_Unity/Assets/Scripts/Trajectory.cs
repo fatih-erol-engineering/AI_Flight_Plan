@@ -1,9 +1,6 @@
-using NUnit.Framework;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-[ExecuteAlways]
+
 public class Trajectory : MonoBehaviour
 {
 
@@ -23,7 +20,7 @@ public class Trajectory : MonoBehaviour
     { 
         waypoints = null;
     }
-    public void CreateWaypoint(Vector3 globalPosition)
+    public Waypoint CreateWaypoint(Vector3 globalPosition)
     {
         if (waypointParent == null)
         {
@@ -33,10 +30,12 @@ public class Trajectory : MonoBehaviour
             waypointParent = waypointGO.transform;
         }
 
-        GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, Quaternion.identity, waypointParent);        
+        GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, transform.rotation, waypointParent);
+        Waypoint wp = waypoint.GetComponent<Waypoint>();
         AddWaypoint(waypoint.transform);
+        return wp;
     }
-    public void CreateWaypoint(Vector3 globalPosition, float time_s)
+    public Waypoint CreateWaypoint(Vector3 globalPosition, float time_s)
     {
         if (waypointParent == null)
         {
@@ -46,7 +45,7 @@ public class Trajectory : MonoBehaviour
             waypointParent = waypointGO.transform;
         }
 
-        GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, Quaternion.identity, waypointParent);
+        GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, transform.rotation, waypointParent);
         Waypoint wp = waypoint.GetComponent<Waypoint>();
         if (wp != null) 
         {
@@ -78,6 +77,7 @@ public class Trajectory : MonoBehaviour
         }
 
         AddWaypoint(waypoint.transform);
+        return wp;
     }
     private void AddWaypoint(Transform waypoint)
     {
@@ -104,7 +104,7 @@ public class Trajectory : MonoBehaviour
         if (segmentParent == null)
         {
             var parentGO = new GameObject("BSplineSegments");
-            parentGO.transform.SetParent(transform,false);
+            parentGO.transform.parent = transform;
             segmentParent = parentGO.transform;
         }
 
@@ -119,7 +119,7 @@ public class Trajectory : MonoBehaviour
             }
             else
             {
-                segmentGO = Instantiate(theme.BSplineSegmentPrefab, segmentParent);                
+                segmentGO = Instantiate(theme.BSplineSegmentPrefab,transform.position,transform.rotation, segmentParent);                
             }
 
             // Component’i al, yoksa ekle

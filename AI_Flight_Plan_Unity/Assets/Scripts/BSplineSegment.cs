@@ -1,14 +1,12 @@
 using System.Linq;
-using System.Net;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.Rendering.HableCurve;
+
 
 /// <summary>
 /// 4 kontrol noktasý ile derece-3 clamped B-spline çizer (tek segment).
 /// LineRenderer üzerinden örnekleyip gösterir.
 /// </summary>
-[ExecuteAlways]
 [RequireComponent(typeof(LineRenderer))]
 public class BSplineSegment
     : SelectableMonoBehaviour
@@ -83,12 +81,12 @@ public class BSplineSegment
         
         if ((startPoint != null) && (endPoint != null))
         {            
-            GameObject controlPoint1GO = Instantiate(theme.controlPointPrefab,transform);
+            GameObject controlPoint1GO = Instantiate(theme.controlPointPrefab,transform, true);            
             controlPoint1GO.name = this.name + " Control Point 1";                        
-            controlPoint1GO.transform.position = startPoint.transform.position + (endPoint.transform.position - startPoint.transform.position).normalized * initialControlPointDistance;
+            controlPoint1GO.transform.position = startPoint.transform.position + (endPoint.transform.position - startPoint.transform.position).normalized * initialControlPointDistance;            
             
-            
-            GameObject controlPoint2GO = Instantiate(theme.controlPointPrefab, transform);
+            GameObject controlPoint2GO = Instantiate(theme.controlPointPrefab, transform, true);
+            controlPoint2GO.transform.parent= transform;
             controlPoint2GO.name = this.name + " Control Point 2";                        
             controlPoint2GO.transform.position = endPoint.transform.position + (startPoint.transform.position - endPoint.transform.position).normalized * initialControlPointDistance;
 

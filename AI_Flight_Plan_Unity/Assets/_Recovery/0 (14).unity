@@ -272,8 +272,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
-  orthographic size: 202.42
+  orthographic: 0
+  orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -375,15 +375,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapPopupSpawner
   uiDocument: {fileID: 2113633963}
-  cam: {fileID: 315456361}
+  cam: {fileID: 0}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
   groundY: 0
   useGroundPlaneIfNoHit: 1
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
-  factory: {fileID: 521860496}
-  gameController: {fileID: 521860493}
+  factory: {fileID: 0}
 --- !u!114 &521860495
 MonoBehaviour:
   m_ObjectHideFlags: 0
