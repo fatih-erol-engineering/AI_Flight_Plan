@@ -14,25 +14,31 @@ public class Trajectory : MonoBehaviour
     public Transform[] restrictedAreas;
     public float initialControlPointDistance=3f;
     public float lineWidth = 10f;
+    public Theme theme;
     private Transform segmentParent;
-    private BSplineSegment[] bSplineSegments;
-    private Transform[,] controlPointPairs;
-    private Transform selectedControlPoint;
-    private Transform prev_selectedControlPoint;
-    private Transform pairOfSelectedControlPoint;
-    private Transform selectedWaypoint;
-    private Transform prev_SelectedWaypoint;
-    private Vector3 prev_WaypointPos;
+    private Transform waypointParent;
+    private BSplineSegment[] bSplineSegments;    
+    
+    
 
     public void DeleteAllWaypoints() 
     { 
         waypoints = null;
     }
-    public void CreateWaypoints(Vector3 pos)
+    public void CreateWaypoint(Vector3 globalPosition)
     {
-        
+        if (waypointParent == null)
+        {
+            GameObject waypointGO = new GameObject("Waypoints");
+            waypointGO.transform.parent = transform;
+            waypointGO.transform.localPosition = Vector3.zero;
+            waypointParent = waypointGO.transform;
+        }
+
+        GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, Quaternion.identity, waypointParent);        
+        AddWaypoint(waypoint.transform);
     }
-    public void AddWaypoint(Transform waypoint)
+    private void AddWaypoint(Transform waypoint)
     {
         Transform[] newWaypoints = new Transform[waypoints.Length + 1];
         for (int i = 0; i < waypoints.Length; i++)          
@@ -72,8 +78,7 @@ public class Trajectory : MonoBehaviour
             }
             else
             {
-                segmentGO = new GameObject($"B Segment {i}");
-                segmentGO.transform.SetParent(segmentParent, false);
+                segmentGO = Instantiate(theme.BSplineSegmentPrefab, segmentParent);                
             }
 
             // Component’i al, yoksa ekle
@@ -160,10 +165,10 @@ public class Trajectory : MonoBehaviour
                 {
                     go.GetComponent<Waypoint>().setPosition(go.transform.position);
                 }
-            }           
+            }
         }
     }
-    
+
 #endif
 
 

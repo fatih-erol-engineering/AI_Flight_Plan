@@ -1,14 +1,16 @@
 using CesiumForUnity;
+using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
 
 [ExecuteAlways]
 [RequireComponent(typeof(ObjectSelector))]
 [RequireComponent(typeof(MapPopupSpawner))]
+[RequireComponent(typeof(AircraftFactory))]
 
 public class GameController : MonoBehaviour
 {
-
+    
     public Mode mode;
     [Tooltip("Týklanýnca çýkacak obje (Prefab)")]
     public GameObject waypointPrefab;
@@ -25,101 +27,159 @@ public class GameController : MonoBehaviour
     public MapPopupSpawner mapPopupSpawner;    
     
     private Camera cam;
-    
+    private bool nextState;
+    private int testState = -1;
+
+    private AircraftFactory aircraftFactory;
+    public Aircraft selectedAircarft;
+
     private void Start()
     {
         cam = Camera.main;
         mode = Mode.Object_Mode;
         objectSelector = gameObject.GetComponent<ObjectSelector>();
         mapPopupSpawner = gameObject.GetComponent<MapPopupSpawner>();
-        EnableCesiumControls(false);
+        aircraftFactory = gameObject.GetComponent<AircraftFactory>();
 
+        EnableCesiumControls(false);
     }
 
     void Update()
     {
 
-            //if (!cesiumController.enabled)
-            //{                
-            //    EnableCesiumControls(true);
-            //    mode = Mode.Travel_Mode;
-            //    Debug.Log("Travel Mode Activated.");
-            //}
-            //else
-            //{
-            //    EnableCesiumControls(false);
-            //    mode = Mode.Create_Trajectory;
-            //    Debug.Log("Create Trajectory Mode Activated.");
-            //}
-
-
-        switch (mode)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            case Mode.Travel_Mode:                                    
-                break;
-            case Mode.Object_Mode:
-                    objectSelector.UpdateCycle();
-                break;
-            case Mode.Edit_Trajectory:
-                break;
-            case Mode.Create_Trajectory:                
-                //Control_with_Create_Trajectory_Mode();
-                break;
-            case Mode.Train_AI:
-                break;            
+            nextState = true;
+            testState++;
+            if (testState > 4)
+            {
+                testState = 0;
+            }
         }
 
+        if (nextState)
+        {
+            if (testState == 0)
+            {
+
+                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
+                {
+                    selectedAircarft = aircraftFactory.Spawn(AircraftModel.Mavic_Pro, hitPos, Quaternion.Euler(0, 0, 0));
+                    selectedAircarft.CreateWaypoint(selectedAircarft.transform.position);
+                }
+                    
+            }
+            if (testState == 1)
+            {
+                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
+                {
+                    selectedAircarft.CreateWaypoint(hitPos); 
+                }                               
+            }
+                if (testState == 2)
+            {
+                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
+                {
+                    selectedAircarft.CreateWaypoint(hitPos);
+                }                
+            }
+            if (testState == 3)
+            {
+                if (TryScreenToWorld(Input.mousePosition, out var hitPos))
+                {
+                    selectedAircarft.CreateWaypoint(hitPos);
+                    selectedAircarft.trajectory.CreateTrajectory();
+                }                
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        nextState = false;
+        //if (!cesiumController.enabled)
+        //{                
+        //    EnableCesiumControls(true);
+        //    mode = Mode.Travel_Mode;
+        //    Debug.Log("Travel Mode Activated.");
+        //}
+        //else
+        //{
+        //    EnableCesiumControls(false);
+        //    mode = Mode.Create_Trajectory;
+        //    Debug.Log("Create Trajectory Mode Activated.");
+        //}
+
+
+        //switch (mode)
+        //{
+        //    case Mode.Travel_Mode:                                    
+        //        break;
+        //    case Mode.Object_Mode:
+        //            objectSelector.UpdateCycle();
+        //        break;
+        //    case Mode.Edit_Trajectory:
+        //        break;
+        //    case Mode.Create_Trajectory:                
+        //        //Control_with_Create_Trajectory_Mode();
+        //        break;
+        //    case Mode.Train_AI:
+        //        break;            
+        //}
+
+    }
+
+    bool TryScreenToWorld(Vector2 screen, out Vector3 world)
+    {
+        var ray = cam.ScreenPointToRay(screen);
+        if (Physics.Raycast(ray, out var hit, 100000f, hitMask, QueryTriggerInteraction.Collide))
+        {
+            world = hit.point;
+            return true;
+        }
+        else
+        {
+            var plane = new Plane(Vector3.up, new Vector3(0, 0, 0));
+            if (plane.Raycast(ray, out float enter))
+            {
+                world = ray.GetPoint(enter);
+                return true;
+            }
+        }
+        world = default;
+        return false;
     }
 
     void Control_with_Create_Trajectory_Mode()
     {
-        if (Input.GetMouseButtonDown(0)) 
-        {
-            if (activeTrajectory == null)
-            {
-                activeTrajectory = Spawn_Prefab_with_Raycast(trajectoryPrefab);
-            }
-            activeWaypoint = Spawn_Prefab_with_Raycast(waypointPrefab, activeTrajectory.transform);
-            activeTrajectory.GetComponent<Trajectory>().AddWaypoint(activeWaypoint.transform);
-        }
-        if (Input.GetMouseButtonDown(1)) 
-        {
-            activeTrajectory =  Spawn_Prefab_with_Raycast(trajectoryPrefab);
-        }
-        if (Input.GetKey(KeyCode.Space)) 
-        {
-            activeTrajectory.GetComponent<Trajectory>().CreateTrajectory();
-        }
+        //if (Input.GetMouseButtonDown(0)) 
+        //{
+        //    if (activeTrajectory == null)
+        //    {
+        //        activeTrajectory = Spawn_Prefab_with_Raycast(trajectoryPrefab);
+        //    }
+        //    activeWaypoint = Spawn_Prefab_with_Raycast(waypointPrefab, activeTrajectory.transform);
+        //    activeTrajectory.GetComponent<Trajectory>().AddWaypoint(activeWaypoint.transform);
+        //}
+        //if (Input.GetMouseButtonDown(1)) 
+        //{
+        //    activeTrajectory =  Spawn_Prefab_with_Raycast(trajectoryPrefab);
+        //}
+        //if (Input.GetKey(KeyCode.Space)) 
+        //{
+        //    activeTrajectory.GetComponent<Trajectory>().CreateTrajectory();
+        //}
     }
 
 
-    private GameObject Spawn_Prefab_with_Raycast(GameObject prefab)
-    {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        GameObject instantiatedGO = null;
-        if (Physics.Raycast(ray, out hit, 1000f, hitMask))
-        {
-            // Týklanan noktada prefab spawn et
-            Vector3 pos = hit.point + new Vector3(0f, 5f, 0f);
-            instantiatedGO = Instantiate(prefab, pos, Quaternion.identity);
-        }
-        return instantiatedGO;
-    }
-
-    private GameObject Spawn_Prefab_with_Raycast(GameObject prefab,Transform parent)
-    {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        GameObject instantiatedGO = null;
-        if (Physics.Raycast(ray, out hit, 1000f, hitMask))
-        {
-            // Týklanan noktada prefab spawn et
-            Vector3 pos = hit.point + new Vector3(0f, 5f, 0f);
-            instantiatedGO = Instantiate(prefab, pos, Quaternion.identity, parent);
-        }        
-        return instantiatedGO;
-    }
 
     public void EnableCesiumControls(bool on)
     {

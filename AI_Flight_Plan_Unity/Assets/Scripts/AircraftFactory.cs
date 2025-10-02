@@ -2,10 +2,19 @@ using UnityEngine;
 
 public class AircraftFactory : MonoBehaviour
 {
-    public AircraftSpecRegistry registry;
+    public AircraftSpecRegistry registry;    
+    private Transform aircraftParent;
 
-    public Aircraft Spawn(AircraftModel type, Vector3 pos, Quaternion rot)
+
+    public Aircraft Spawn(AircraftModel type, Vector3 globalPosition, Quaternion globalRotation)
     {
+        if (aircraftParent == null)
+        {
+            GameObject aircraftParentObj = new GameObject("Aircrafts");
+            aircraftParentObj.transform.parent = this.transform;
+            aircraftParentObj.transform.localPosition = Vector3.zero;
+            aircraftParent = aircraftParentObj.transform;
+        }
         var spec = registry.Get(type);
         if (spec == null || spec.prefab == null)
         {
@@ -13,10 +22,11 @@ public class AircraftFactory : MonoBehaviour
             return null;
         }
 
-        var go = Instantiate(spec.prefab, pos, rot,transform);
+        var go = Instantiate(spec.prefab, globalPosition, globalRotation, aircraftParent);        
         var ctrl = go.GetComponent<Aircraft>();
         if (!ctrl) ctrl = go.AddComponent<Aircraft>();
-        ctrl.Init(spec);
+        ctrl.UpdateColor(spec);
         return ctrl;
     }
+    
 }

@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/NewUSSFile.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#NewUSSFile" />
-    <ui:VisualElement name="ContextRoot" class="ctx-root" style="width: 222px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: center; align-content: stretch;">
+    <ui:VisualElement name="ContextRoot" class="ctx-root" style="width: 222px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: center; align-content: stretch; display: none;">
         <ui:Button name="BtnAddAircraft" text="Add Aircraft" class="btn" />
         <ui:Button name="BtnAddRestricted" text="Add Restricted Area" class="btn" />
     </ui:VisualElement>
@@ -8,10 +8,11 @@
         <ui:VisualElement class="section">
             <ui:Label text="Select Aircraft" class="title" />
             <ui:DropdownField name="DdAircraft" style="background-color: rgb(255, 255, 255); -unity-background-image-tint-color: rgb(255, 255, 255); border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;" />
-            <ui:Button name="BtnCreate" text="Create" class="primary" />
+            <ui:Button name="BtnCreateAircraft" text="Create" class="primary" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="TrajRoot" class="ctx-root" style="width: 222px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: center; align-content: stretch; display: none;">
+    <ui:VisualElement name="Attributes" class="ctx-root" style="width: 222px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: center; align-content: stretch; display: none;">
         <ui:Button name="BtnCreateTraj" text="Create Trajectory" class="btn" />
+        <ui:Button name="BtnCreateArea" text="Create Area" class="btn" />
     </ui:VisualElement>
 </ui:UXML>

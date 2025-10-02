@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &250919533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,7 +298,7 @@ Transform:
   m_GameObject: {fileID: 315456358}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710665, y: -0, z: -0, w: 0.70710695}
-  m_LocalPosition: {x: -62.939632, y: 387.52737, z: -45.73069}
+  m_LocalPosition: {x: 184.18434, y: 409.33792, z: -56.163177}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -332,8 +332,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 521860487}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.9823259, z: -0, w: -0.18717863}
-  m_LocalPosition: {x: 56.134094, y: 0, z: 37.421448}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -360,7 +360,6 @@ MonoBehaviour:
   cesiumController: {fileID: 0}
   objectSelector: {fileID: 521860495}
   mapPopupSpawner: {fileID: 521860494}
-  selectedAircarft: {fileID: 0}
 --- !u!114 &521860494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,7 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapPopupSpawner
   uiDocument: {fileID: 2113633963}
-  cam: {fileID: 0}
+  cam: {fileID: 315456361}
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -407,6 +406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  aircraftParent: {fileID: 0}
 --- !u!1 &589676896
 GameObject:
   m_ObjectHideFlags: 0

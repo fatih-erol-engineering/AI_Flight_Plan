@@ -4,5 +4,9 @@ using UnityEngine;
 public class Theme : ScriptableObject
 {
     public Texture2D mouseDefault;    
-    public Texture2D mouseHover;    
+    public Texture2D mouseDrag;
+    public GameObject waypointPrefab;
+    public GameObject controlPointPrefab;
+    public GameObject trajectoryPrefab;
+    public GameObject BSplineSegmentPrefab;
 }

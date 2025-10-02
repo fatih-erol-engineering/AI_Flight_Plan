@@ -37,6 +37,8 @@ public class BSplineSegment
     public TimeGame startTime;
     public TimeGame endTime;
 
+    public Theme theme;
+
 
     // Clamped uniform knot vector for n=3 (4 pts), degree p=3:
     // U = [0,0,0,0, 1,1,1,1]
@@ -67,18 +69,15 @@ public class BSplineSegment
     {
         
         if ((startPoint != null) && (endPoint != null))
-        {
-            GameObject controlPoint1GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            controlPoint1GO.name = this.name + " Control Point 1";
-            controlPoint1GO.transform.SetParent(transform, false);
-            controlPoint1GO.AddComponent<ControlPoint>();
-            controlPoint1GO.transform.localPosition = startPoint.transform.localPosition + (endPoint.transform.localPosition - startPoint.transform.localPosition).normalized * initialControlPointDistance;
+        {            
+            GameObject controlPoint1GO = Instantiate(theme.controlPointPrefab,transform);
+            controlPoint1GO.name = this.name + " Control Point 1";                        
+            controlPoint1GO.transform.position = startPoint.transform.position + (endPoint.transform.position - startPoint.transform.position).normalized * initialControlPointDistance;
             
-            GameObject controlPoint2GO = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            controlPoint2GO.name = this.name + " Control Point 2";
-            controlPoint2GO.transform.SetParent(transform, false);
-            controlPoint2GO.AddComponent<ControlPoint>();
-            controlPoint2GO.transform.localPosition = endPoint.transform.localPosition + (startPoint.transform.localPosition - endPoint.transform.localPosition).normalized * initialControlPointDistance;
+            
+            GameObject controlPoint2GO = Instantiate(theme.controlPointPrefab, transform);
+            controlPoint2GO.name = this.name + " Control Point 2";                        
+            controlPoint2GO.transform.position = endPoint.transform.position + (startPoint.transform.position - endPoint.transform.position).normalized * initialControlPointDistance;
 
             controlPoint1 = controlPoint1GO.GetComponent<ControlPoint>();
             controlPoint2 = controlPoint2GO.GetComponent<ControlPoint>();            
@@ -97,8 +96,7 @@ public class BSplineSegment
             float t = (samples == 1) ? 0f : (float)i / (samples - 1); // [0,1]
             Vector3 C = BSplinePointDegree3(P, t);
             lr.SetPosition(i, C);
-        }
-        
+        }        
     }
     
     public bool[] CheckCollision()

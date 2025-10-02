@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5137544199517445422}
   - component: {fileID: 4658639859099626979}
   m_Layer: 0
-  m_Name: Ehang
+  m_Name: Mavic_Pro
   m_TagString: Aircraft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftController
   isSelected: 0
-  spec: {fileID: 11400000, guid: f1057860b63009e4aa8b26b830b55b88, type: 2}
+  spec: {fileID: 11400000, guid: 8eb245aeb8b4a0a40a9a63ba36dfebfe, type: 2}
   trajectory: {fileID: 0}
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
 --- !u!1 &9151605782524171099

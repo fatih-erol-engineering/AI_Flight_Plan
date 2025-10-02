@@ -13,16 +13,16 @@ public class Waypoint : SelectableMonoBehaviour
     {
         oldPos = transform.position;                   
     }
-    public void setPosition(Vector3 position)
+    public void setPosition(Vector3 globalPosition)
     {
-        transform.position = position;  
-        Vector3 deltaPos = position - oldPos;
+        transform.position = globalPosition;  
+        Vector3 deltaPos = globalPosition - oldPos;
         foreach (ControlPoint controlPoint in controlPoints)
         {
             controlPoint.transform.position += deltaPos;
         }        
 
-        oldPos = position;
+        oldPos = globalPosition;
     }
 }
 

@@ -19,7 +19,7 @@ public class MapPopupSpawner : MonoBehaviour
 
     // UI refs
     VisualElement root, ctxRoot, aircraftRoot, mainActions;
-    Button btnAddAircraft, btnAddRestricted, btnCreate;
+    Button btnAddAircraft, btnAddRestricted, btnCreateAircraft;
     DropdownField ddAircraft;
 
     // Dahili durum
@@ -39,13 +39,13 @@ public class MapPopupSpawner : MonoBehaviour
         mainActions = root.Q<VisualElement>("MainActions");
         btnAddAircraft = root.Q<Button>("BtnAddAircraft");
         btnAddRestricted = root.Q<Button>("BtnAddRestricted");
-        btnCreate = root.Q<Button>("BtnCreate");
+        btnCreateAircraft = root.Q<Button>("BtnCreateAircraft");
         ddAircraft = root.Q<DropdownField>("DdAircraft");
 
         // Baðlantýlar
         btnAddAircraft.clicked += OnAddAircraftClicked;
         btnAddRestricted.clicked += OnAddRestrictedClicked;
-        btnCreate.clicked += OnCreateClicked;
+        btnCreateAircraft.clicked += OnCreateAircraftClicked;
 
         // Dýþarý týklayýnca menüleri kapat
         root.RegisterCallback<PointerDownEvent>(OnRootPointerDown, TrickleDown.TrickleDown);
@@ -63,8 +63,7 @@ public class MapPopupSpawner : MonoBehaviour
 
             ShowContextAt(lastClickScreen);
         }
-
-        // ESC kapanýþ
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             HideAll();
@@ -73,9 +72,9 @@ public class MapPopupSpawner : MonoBehaviour
 
     void OnAddAircraftClicked()
     {
-        // Yan paneli aç (ayný boyutta, sað yanýnda)
+        ShowContextPanel(false);
         PopulateAircraftDropdown();
-        PositionAircraftPanelBesideContext();
+        PositionAircraftPanelContext();
         ShowAircraftPanel(true);
     }
 
@@ -85,7 +84,7 @@ public class MapPopupSpawner : MonoBehaviour
         HideAll();
     }
 
-    void OnCreateClicked()
+    void OnCreateAircraftClicked()
     {
         if (ddAircraft.index < 0 || ddAircraft.index >= aircraftTypes.Count)
         {
@@ -125,9 +124,21 @@ public class MapPopupSpawner : MonoBehaviour
         aircraftRoot.style.top = ctxBounds.y;
     }
 
+    void PositionAircraftPanelContext()
+    {
+        // Aircraft panelini context panelinin saðýna, ayný top’la koy
+        var ctxBounds = ctxRoot.worldBound;
+        aircraftRoot.style.left = ctxBounds.x;  // 8px boþluk
+        aircraftRoot.style.top = ctxBounds.y;
+    }
+
     void ShowAircraftPanel(bool on)
     {
         aircraftRoot.style.display = on ? DisplayStyle.Flex : DisplayStyle.None;
+    }
+    void ShowContextPanel(bool on)
+    {
+        ctxRoot.style.display = on ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
     void HideAll()

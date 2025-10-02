@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2e310e5c75c7544ac620f4e50a9c70, type: 3}
   m_Name: Standart
   m_EditorClassIdentifier: Assembly-CSharp::Theme
-  mouseDefault: {fileID: 2800000, guid: 4937a433c592ba9438a03cccf3d31dcc, type: 3}
-  mouseHover: {fileID: 2800000, guid: 018309b22c026404b9c5dce8636758f3, type: 3}
-  highlightedMaterial: {fileID: 2100000, guid: 57fc93d593680074bb9e832a6f9f0118, type: 2}
-  hoverMaterial: {fileID: 2100000, guid: 920f933c7b786314dad2557d870b37bf, type: 2}
+  mouseDefault: {fileID: 2800000, guid: 702391605d531a34497536297c9cb38a, type: 3}
+  mouseDrag: {fileID: 2800000, guid: d85790bdfb137734ebb87cd4abc3e119, type: 3}
+  waypointPrefab: {fileID: 517102805373364547, guid: 1194e48d07239fb459e25332f73f8806, type: 3}
+  controlPointPrefab: {fileID: 517102805373364547, guid: 0d2f4b3517351b24db17f5cfb1533c76, type: 3}
+  trajectoryPrefab: {fileID: 8064563952328812410, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+  BSplineSegmentPrefab: {fileID: 517102805373364547, guid: e53a0a863f1bb5e4d8083c93fbfcd4a2, type: 3}

@@ -10,9 +10,9 @@ public class ControlPoint : SelectableMonoBehaviour
     {
         pairCP = pairCP_;
     }
-    public void setPosition(Vector3 position)
+    public void setPosition(Vector3 globalPosition)
     {        
-        transform.position = position;
+        transform.position = globalPosition;
         if (pairCP !=null)
         {
             Vector3 relPosThis = transform.position - waypoint.transform.position;
