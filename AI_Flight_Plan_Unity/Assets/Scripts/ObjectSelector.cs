@@ -10,7 +10,7 @@ public class ObjectSelector : MonoBehaviour
 
     public void UpdateCycle()
     {
-        SelectableMonoBehaviour sMB = new SelectableMonoBehaviour();
+        SelectableMonoBehaviour sMB = null;
         if (Input.GetMouseButtonDown(0))
         {
 
