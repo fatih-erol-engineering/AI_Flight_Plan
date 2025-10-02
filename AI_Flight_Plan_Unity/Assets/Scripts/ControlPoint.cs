@@ -5,10 +5,7 @@ public class ControlPoint : SelectableMonoBehaviour
 {
     public ControlPoint pairCP;
     public Waypoint waypoint;
-    public void Start()
-    {
-        base.Init(GetComponent<Renderer>().material);
-    }
+    
     public void PairWith(ControlPoint pairCP_) 
     {
         pairCP = pairCP_;

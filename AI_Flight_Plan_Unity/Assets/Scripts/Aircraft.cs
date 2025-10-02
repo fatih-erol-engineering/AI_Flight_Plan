@@ -17,8 +17,7 @@ public class Aircraft : SelectableMonoBehaviour
     }
     public void Init(AircraftSpec s)
     {
-        Renderer rend = GetComponent<Renderer>();
-        base.Init(rend.material);
+        Renderer rend = GetComponent<Renderer>();        
         spec = s;
         rend.material.color = spec.color;        
     }

@@ -4,7 +4,5 @@ using UnityEngine;
 public class Theme : ScriptableObject
 {
     public Texture2D mouseDefault;    
-    public Texture2D mouseHover;
-    public Material highlightedMaterial;
-    public Material hoverMaterial;
+    public Texture2D mouseHover;    
 }

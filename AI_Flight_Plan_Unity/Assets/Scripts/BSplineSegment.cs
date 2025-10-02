@@ -48,7 +48,6 @@ public class BSplineSegment
         var shader = Shader.Find("Universal Render Pipeline/Unlit");
         var mat = new Material(shader);
         lr.sharedMaterial = mat;
-        base.Init(mat);
         UpdateCurve();
     }
 

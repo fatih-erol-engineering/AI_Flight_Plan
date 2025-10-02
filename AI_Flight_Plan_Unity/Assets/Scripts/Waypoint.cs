@@ -11,8 +11,7 @@ public class Waypoint : SelectableMonoBehaviour
     private Vector3 oldPos;
     void Start()
     {
-        oldPos = transform.position;           
-        base.Init(GetComponent<Renderer>().material);
+        oldPos = transform.position;                   
     }
     public void setPosition(Vector3 position)
     {
