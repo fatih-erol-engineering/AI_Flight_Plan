@@ -47,7 +47,7 @@ public class BSplineSegment
     {
         lr = GetComponent<LineRenderer>();
         lr.colorGradient = new Gradient();
-        var shader = Shader.Find("Universal Render Pipeline/Unlit");
+        var shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply");
         var mat = new Material(shader);
         lr.sharedMaterial = mat;
         UpdateCurve();

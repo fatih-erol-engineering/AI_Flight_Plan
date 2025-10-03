@@ -1,6 +1,5 @@
 using CesiumForUnity;
 using System;
-using Unity.Android.Gradle;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -93,30 +92,30 @@ public class GameController : MonoBehaviour
         }
 
         // Update Trajectory Colors
-        //if (colorTrajWithTime)
-        //{
-        //    if (aircraftFactory.aircraftList != null)
-        //    {                            
-        //        foreach (Aircraft aircraft in aircraftFactory.aircraftList)
-        //        {
-        //            if ((aircraft.trajectory!=null)&& (aircraft.trajectory.bSplineSegments != null))
-        //            { 
-        //                foreach (BSplineSegment segment in aircraft.trajectory.bSplineSegments)
-        //                {
-        //                    float globalTimeInterval_s = (timeManager.endTime_s - timeManager.startTime_s);
+        if (colorTrajWithTime)
+        {
+            if (aircraftFactory.aircraftList != null)
+            {
+                foreach (Aircraft aircraft in aircraftFactory.aircraftList)
+                {
+                    if ((aircraft.trajectory != null) && (aircraft.trajectory.bSplineSegments != null))
+                    {
+                        foreach (BSplineSegment segment in aircraft.trajectory.bSplineSegments)
+                        {
+                            float globalTimeInterval_s = (timeManager.endTime_s - timeManager.startTime_s);
 
-        //                    float lerpValStart = segment.startTime.second / globalTimeInterval_s;
-        //                    Color segmentStartColor = Color.Lerp(Color.blue, Color.red, lerpValStart);
-        //                    segment.lr.startColor = segmentStartColor;
+                            float lerpValStart = segment.startTime.second / globalTimeInterval_s;
+                            Color segmentStartColor = Color.Lerp(Color.blue, Color.red, lerpValStart);
+                            segment.lr.startColor = segmentStartColor;
 
-        //                    float lerpValEnd = segment.endTime.second / globalTimeInterval_s;
-        //                    Color segmentEndColor = Color.Lerp(Color.blue, Color.red, lerpValEnd);
-        //                    segment.lr.endColor = segmentEndColor;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+                            float lerpValEnd = segment.endTime.second / globalTimeInterval_s;
+                            Color segmentEndColor = Color.Lerp(Color.blue, Color.red, lerpValEnd);
+                            segment.lr.endColor = segmentEndColor;
+                        }
+                    }
+                }
+            }
+        }
 
     }
     public Vector3 MouseHitPos()
