@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AircraftFactory : MonoBehaviour
 {
     public AircraftSpecRegistry registry;    
     private Transform aircraftParent;
+    public List<Aircraft> aircraftList;
 
 
     public Aircraft Spawn(AircraftModel type, Vector3 globalPosition, Quaternion globalRotation)
@@ -26,6 +28,8 @@ public class AircraftFactory : MonoBehaviour
         var ctrl = go.GetComponent<Aircraft>();
         if (!ctrl) ctrl = go.AddComponent<Aircraft>();
         ctrl.UpdateColor(spec);
+
+        aircraftList.Add(ctrl);
         return ctrl;
     }
     

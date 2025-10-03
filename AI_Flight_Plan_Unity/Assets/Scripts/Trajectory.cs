@@ -14,7 +14,8 @@ public class Trajectory : MonoBehaviour
     public Theme theme;
     private Transform segmentParent;
     private Transform waypointParent;
-    private BSplineSegment[] bSplineSegments;            
+    public BSplineSegment[] bSplineSegments;    
+
 
     public void DeleteAllWaypoints() 
     { 

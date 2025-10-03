@@ -1,5 +1,6 @@
 using CesiumForUnity;
 using System;
+using Unity.Android.Gradle;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,6 +38,7 @@ public class GameController : MonoBehaviour
 
     [Header("Time")]
     public TimeManager timeManager;
+    public bool colorTrajWithTime = true;
 
     private void Start()
     {
@@ -46,10 +48,6 @@ public class GameController : MonoBehaviour
         aircraftFactory = gameObject.GetComponent<AircraftFactory>();
         mode = Mode.Free_Mode;
         EnableCesiumControls(false);
-    }
-    public void Deneme()
-    {
-        Debug.Log("Denendi.");
     }
 
     void Update()
@@ -94,6 +92,32 @@ public class GameController : MonoBehaviour
                 break;
         }
 
+        // Update Trajectory Colors
+        //if (colorTrajWithTime)
+        //{
+        //    if (aircraftFactory.aircraftList != null)
+        //    {                            
+        //        foreach (Aircraft aircraft in aircraftFactory.aircraftList)
+        //        {
+        //            if ((aircraft.trajectory!=null)&& (aircraft.trajectory.bSplineSegments != null))
+        //            { 
+        //                foreach (BSplineSegment segment in aircraft.trajectory.bSplineSegments)
+        //                {
+        //                    float globalTimeInterval_s = (timeManager.endTime_s - timeManager.startTime_s);
+
+        //                    float lerpValStart = segment.startTime.second / globalTimeInterval_s;
+        //                    Color segmentStartColor = Color.Lerp(Color.blue, Color.red, lerpValStart);
+        //                    segment.lr.startColor = segmentStartColor;
+
+        //                    float lerpValEnd = segment.endTime.second / globalTimeInterval_s;
+        //                    Color segmentEndColor = Color.Lerp(Color.blue, Color.red, lerpValEnd);
+        //                    segment.lr.endColor = segmentEndColor;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
     }
     public Vector3 MouseHitPos()
     {
@@ -121,28 +145,7 @@ public class GameController : MonoBehaviour
         return false;
     }
 
-    void Control_with_Create_Trajectory_Mode()
-    {
-        //if (Input.GetMouseButtonDown(0)) 
-        //{
-        //    if (activeTrajectory == null)
-        //    {
-        //        activeTrajectory = Spawn_Prefab_with_Raycast(trajectoryPrefab);
-        //    }
-        //    activeWaypoint = Spawn_Prefab_with_Raycast(waypointPrefab, activeTrajectory.transform);
-        //    activeTrajectory.GetComponent<Trajectory>().AddWaypoint(activeWaypoint.transform);
-        //}
-        //if (Input.GetMouseButtonDown(1)) 
-        //{
-        //    activeTrajectory =  Spawn_Prefab_with_Raycast(trajectoryPrefab);
-        //}
-        //if (Input.GetKey(KeyCode.Space)) 
-        //{
-        //    activeTrajectory.GetComponent<Trajectory>().CreateTrajectory();
-        //}
-    }
-
-
+ 
 
     public void EnableCesiumControls(bool on)
     {
@@ -152,46 +155,7 @@ public class GameController : MonoBehaviour
         UnityEngine.Cursor.lockState = on ? CursorLockMode.Locked : CursorLockMode.None;
         UnityEngine.Cursor.visible = !on;
     }
-
-    //void Update_in_Create_Aircraft()
-    //{
-    //    flag_Create_Aircraft = false;
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        flag_Create_Aircraft = true;
-    //    }
-
-    //    if (flag_Create_Aircraft)
-    //    {
-    //        Vector3 hitPos = MouseHitPos();
-    //        selectedAircarft = aircraftFactory.Spawn(AircraftModel.Mavic_Pro, hitPos, Quaternion.Euler(0, 0, 0));
-    //        Vector3 altitudeOffset = new Vector3(0f, 5f, 0f);
-    //        selectedWaypoint = selectedAircarft.CreateWaypoint(selectedAircarft.transform.position + altitudeOffset);
-    //        mapPopupSpawner.StartWaypointInfo(selectedAircarft);
-    //        mode = Mode.Create_Waypoint;
-    //    }
-    //}
-    //void Update_in_Create_Waypoint()
-    //{
-    //    flag_Create_Waypoint = false;
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        flag_Create_Waypoint = true;
-    //    }
-    //    mapPopupSpawner.UpdateWaypointInfo();
-    //    if (flag_Create_Waypoint)
-    //    {
-    //        Vector3 hitPos = MouseHitPos();
-    //        Vector3 altitudeOffset = new Vector3(0f, 5f, 0f);
-    //        selectedWaypoint = selectedAircarft.CreateWaypoint(hitPos+ altitudeOffset) ;
-    //    }
-    //    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-    //    {
-    //        selectedAircarft.trajectory.CreateTrajectory();
-    //        mode = Mode.Free_Mode;
-    //    }
-    //}
-
+    
 }
 
 

@@ -366,6 +366,7 @@ MonoBehaviour:
   selectedWaypoint: {fileID: 0}
   selectedAircraftModel: 0
   timeManager: {fileID: 521860497}
+  colorTrajWithTime: 1
 --- !u!114 &521860494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,6 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  aircraftList: []
 --- !u!114 &521860497
 MonoBehaviour:
   m_ObjectHideFlags: 0

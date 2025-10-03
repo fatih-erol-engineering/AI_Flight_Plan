@@ -29,11 +29,12 @@ public class BSplineSegment
     [Header("Restricted Areas")]
     public Transform[] restrictedAreas;
     public bool isCollide{ get; private set; } = false;
-    private LineRenderer lr;
+    public LineRenderer lr;
 
     [Header("Time")]
     public TimeGame startTime;
-    public TimeGame endTime;
+    public TimeGame endTime;    
+
 
     public Theme theme;
 
@@ -45,6 +46,7 @@ public class BSplineSegment
     void OnEnable()
     {
         lr = GetComponent<LineRenderer>();
+        lr.colorGradient = new Gradient();
         var shader = Shader.Find("Universal Render Pipeline/Unlit");
         var mat = new Material(shader);
         lr.sharedMaterial = mat;
@@ -127,16 +129,16 @@ public class BSplineSegment
                 collisionFlag[i] = CheckCollision(posList[i], radList[i]);
             }
         }
-        if (collisionFlag.Contains(true))
-        {
-            lr.sharedMaterial.color = Color.red;
-            isCollide = true;
-        }
-        else
-        {
-            lr.sharedMaterial.color = Color.green;
-            isCollide = false;
-        };
+        //if (collisionFlag.Contains(true))
+        //{
+        //    lr.sharedMaterial.color = Color.red;
+        //    isCollide = true;
+        //}
+        //else
+        //{
+        //    lr.sharedMaterial.color = Color.green;
+        //    isCollide = false;
+        //};
 
 
         return collisionFlag;
