@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(ObjectSelector))]
 [RequireComponent(typeof(MapPopupSpawner))]
 [RequireComponent(typeof(AircraftFactory))]
+[RequireComponent(typeof(TimeManager))]
 
 public class GameController : MonoBehaviour
 {
@@ -33,6 +34,9 @@ public class GameController : MonoBehaviour
     public Aircraft selectedAircarft;
     public Waypoint selectedWaypoint;
     public AircraftModel selectedAircraftModel;
+
+    [Header("Time")]
+    public TimeManager timeManager;
 
     private void Start()
     {

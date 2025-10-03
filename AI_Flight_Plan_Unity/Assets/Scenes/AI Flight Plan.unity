@@ -317,6 +317,7 @@ GameObject:
   - component: {fileID: 521860495}
   - component: {fileID: 521860494}
   - component: {fileID: 521860496}
+  - component: {fileID: 521860497}
   m_Layer: 0
   m_Name: Game Environment
   m_TagString: Untagged
@@ -360,9 +361,11 @@ MonoBehaviour:
   cesiumController: {fileID: 0}
   objectSelector: {fileID: 521860495}
   mapPopupSpawner: {fileID: 521860494}
+  aircraftFactory: {fileID: 0}
   selectedAircarft: {fileID: 0}
   selectedWaypoint: {fileID: 0}
   selectedAircraftModel: 0
+  timeManager: {fileID: 521860497}
 --- !u!114 &521860494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +388,7 @@ MonoBehaviour:
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
   factory: {fileID: 521860496}
   gameController: {fileID: 521860493}
+  flag_Create_Waypoint: 0
 --- !u!114 &521860495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,6 +414,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+--- !u!114 &521860497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521860487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e143a8a99477fd4e9f016d57e6626dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeManager
+  currentTime_s: 0
+  startTime_s: 0
+  endTime_s: 0
 --- !u!1 &589676896
 GameObject:
   m_ObjectHideFlags: 0

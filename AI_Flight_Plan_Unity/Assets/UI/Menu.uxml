@@ -41,4 +41,5 @@
         <ui:FloatField label="Time [s]" value="42.2" name="Time_s" class="FloatInput" />
         <ui:FloatField label="Above Ground &#10;Level [m]" value="42.2" name="AGL_m" class="FloatInput" />
     </ui:VisualElement>
+    <ui:Slider label="Time [s]" value="32.61" high-value="100" name="TimeSlider" fill="true" style="font-size: 30px; -unity-text-outline-color: rgb(255, 0, 0); -unity-text-outline-width: 0; color: rgb(37, 99, 235); background-color: rgb(255, 255, 255); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; border-top-width: 1px; border-right-width: 20px; border-bottom-width: 1px; border-left-width: 20px; background-size: 139% 100%; height: auto; align-content: auto; align-self: auto; justify-content: space-around; align-items: center; flex-direction: row; margin-top: 50px; margin-right: 50px; margin-bottom: 50px; margin-left: 50px; -unity-text-align: middle-center; white-space: nowrap; flex-shrink: 0; flex-grow: 0; position: absolute; bottom: 0; left: 0; right: 0; top: auto;" />
 </ui:UXML>

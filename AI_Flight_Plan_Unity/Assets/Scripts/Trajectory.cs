@@ -186,6 +186,10 @@ public class Trajectory : MonoBehaviour
                 segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>().pairCP = segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>();
                 segmentParent.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>().pairCP = segmentParent.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>();
             }
+
+
+
+            
         }      
     }
 #if UNITY_EDITOR

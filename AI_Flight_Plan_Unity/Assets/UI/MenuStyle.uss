@@ -65,3 +65,17 @@
 .DropDown {
     background-color: rgb(255, 255, 255);
 }
+
+#unity-dragger {
+    width: 30px;
+    height: 70px;
+    align-self: auto;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    top: -10px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}

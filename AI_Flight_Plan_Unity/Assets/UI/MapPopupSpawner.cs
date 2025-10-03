@@ -24,9 +24,11 @@ public class MapPopupSpawner : MonoBehaviour
     public VisualElement[] visualElementRoots;
     public Button btnAddAircraft, btnAddRestricted, btnCreateAircraft;
     public FloatField fieldX_m, fieldY_m, fieldZ_m, fieldTime_s, fieldVel_m_s;
+    public Slider timeSlider;
     private Plane plane;
     DropdownField ddAircraft;
     public bool flag_Create_Waypoint;
+
 
 
     // Dahili durum
@@ -47,6 +49,13 @@ public class MapPopupSpawner : MonoBehaviour
         aircraftInfoRoot = root.Q<VisualElement>("AircraftInfoRoot");
         selectProjectedPositionRoot = root.Q<VisualElement>("SelectProjectedPositionRoot");
         selectAltitudeandTimeRoot = root.Q<VisualElement>("SelectAltitudeAndTimeRoot");
+        timeSlider = root.Q<Slider>("TimeSlider");
+        timeSlider.lowValue = 0f;
+        timeSlider.highValue = 10f;
+        timeSlider.RegisterValueChangedCallback(evt =>
+        {
+            gameController.timeManager.currentTime_s = evt.newValue;
+        });
 
         visualElementRoots = new VisualElement[6];
         visualElementRoots[0] = ctxRoot;
@@ -76,7 +85,24 @@ public class MapPopupSpawner : MonoBehaviour
         root.RegisterCallback<PointerDownEvent>(OnRootPointerDown, TrickleDown.TrickleDown);
         
     }
+    private void Update()
+    {
+        timeSlider.value = gameController.timeManager.currentTime_s;
+        if((gameController.selectedAircarft != null)&&(gameController.selectedAircarft.trajectory != null)) 
+        { 
+            if (gameController.selectedAircarft.trajectory.startTime.second < gameController.timeManager.startTime_s)
+            {
+                gameController.timeManager.startTime_s = gameController.selectedAircarft.trajectory.startTime.second;
+                timeSlider.lowValue = gameController.timeManager.startTime_s;
+            }
+            if (gameController.timeManager.endTime_s < gameController.selectedAircarft.trajectory.endTime.second)
+            {
+                gameController.timeManager.endTime_s = gameController.selectedAircarft.trajectory.endTime.second;
+                timeSlider.highValue = gameController.timeManager.endTime_s;
+            }
+        }
 
+    }
 
 
 
@@ -150,8 +176,9 @@ public class MapPopupSpawner : MonoBehaviour
         ShowVisualElementtAt(selectedVisualElement, Input.mousePosition);
 
         fieldZ_m = selectedVisualElement.Q<FloatField>("Z_m");
+        fieldTime_s = selectedVisualElement.Q<FloatField>("Time_s");
         gameController.mode = Mode.Select_Aircraft_Altitude_and_Time;
-        fieldZ_m.value = gameController.MouseHitPos().y;
+        fieldZ_m.value = gameController.MouseHitPos().y;        
         fieldZ_m.Focus();
     }
 
@@ -174,7 +201,7 @@ public class MapPopupSpawner : MonoBehaviour
     {
         Vector3 hitPos = new Vector3(fieldX_m.value, fieldZ_m.value, fieldY_m.value);
         gameController.selectedAircarft = gameController.aircraftFactory.Spawn(gameController.selectedAircraftModel, hitPos, Quaternion.Euler(0, 0, 0));
-        gameController.selectedWaypoint = gameController.selectedAircarft.CreateWaypoint(gameController.selectedAircarft.transform.position);
+        gameController.selectedWaypoint = gameController.selectedAircarft.CreateWaypoint(gameController.selectedAircarft.transform.position, fieldTime_s.value);
         StartWaypointInfo(gameController.selectedAircarft);        
         Start_in_Select_Waypoint_Projected_Position();
     }
@@ -224,6 +251,7 @@ public class MapPopupSpawner : MonoBehaviour
         ShowVisualElementtAt(selectedVisualElement, Input.mousePosition);
 
         fieldZ_m = selectedVisualElement.Q<FloatField>("Z_m");
+        fieldTime_s = selectedVisualElement.Q<FloatField>("Time_s");
         gameController.mode = Mode.Select_Waypoint_Altitude_and_Time;
         fieldZ_m.value = gameController.MouseHitPos().y;
         fieldZ_m.Focus();
@@ -247,7 +275,7 @@ public class MapPopupSpawner : MonoBehaviour
     public void Create_Waypoint()
     {
         Vector3 hitPos = new Vector3(fieldX_m.value, fieldZ_m.value, fieldY_m.value);
-        gameController.selectedWaypoint = gameController.selectedAircarft.CreateWaypoint(hitPos);
+        gameController.selectedWaypoint = gameController.selectedAircarft.CreateWaypoint(hitPos,fieldTime_s.value);
     }
   
 
