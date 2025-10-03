@@ -1,0 +1,1 @@
+GameController Update icerisindeki trajectory renk atamalari cok verimsiz oldu onu duzeltecegim.

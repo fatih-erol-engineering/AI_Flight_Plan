@@ -15,6 +15,7 @@ public class AircraftSpec : ScriptableObject
     public float mass_kg;
     public Color color;
     public GameObject prefab;
+    public float noise_dBA;
 }
 public enum AircraftModel
 {

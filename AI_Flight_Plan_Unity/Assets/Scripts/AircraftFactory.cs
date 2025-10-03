@@ -26,8 +26,9 @@ public class AircraftFactory : MonoBehaviour
 
         var go = Instantiate(spec.prefab, globalPosition, globalRotation, aircraftParent);        
         var ctrl = go.GetComponent<Aircraft>();
+        ctrl.spec = spec;
         if (!ctrl) ctrl = go.AddComponent<Aircraft>();
-        ctrl.UpdateColor(spec);
+        ctrl.UpdateColor();
 
         aircraftList.Add(ctrl);
         return ctrl;

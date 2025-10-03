@@ -51,6 +51,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        objectSelector.UpdateCycle();
         //mapPopupSpawner.ctxRoot.style.visibility = Visibility.Visible;
         //mapPopupSpawner.ctxRoot.style.display = DisplayStyle.Flex;
         //mapPopupSpawner.ctxRoot.style.position = Position.Absolute;
@@ -116,7 +117,10 @@ public class GameController : MonoBehaviour
                 }
             }
         }
-
+        foreach ( Aircraft aircraft in aircraftFactory.aircraftList)
+        {
+            aircraft.MoveAircraftWithTime(timeManager.currentTime_s);
+        }
     }
     public Vector3 MouseHitPos()
     {
