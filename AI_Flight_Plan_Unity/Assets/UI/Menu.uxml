@@ -1,0 +1,44 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
+    <ui:VisualElement name="ContextRoot" class="ctx-root" style="width: 222px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: center; align-content: stretch; display: none; visibility: visible;">
+        <ui:Button name="BtnAddAircraft" text="Add Aircraft" class="btn" style="background-color: rgb(37, 99, 235); color: rgb(255, 255, 255);" />
+        <ui:Button name="BtnAddRestricted" text="Add Restricted Area" class="btn" style="background-color: rgb(37, 99, 235); color: rgb(255, 255, 255);" />
+    </ui:VisualElement>
+    <ui:VisualElement name="AircraftRoot" class="ctx-root hidden" style="display: none; height: 141px; width: 226px; min-width: 226px; min-height: 141px; align-items: stretch; align-self: flex-start; align-content: stretch;">
+        <ui:VisualElement class="section">
+            <ui:Label text="Select Aircraft" name="Title" class="title" />
+            <ui:DropdownField name="DdAircraft" class="DropDown" style="background-color: rgb(255, 255, 255); -unity-background-image-tint-color: rgb(255, 255, 255); border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; -unity-text-outline-color: rgb(0, 0, 0); color: rgb(0, 0, 0); background-repeat: no-repeat no-repeat; -unity-background-scale-mode: stretch-to-fill; -unity-slice-type: sliced; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);" />
+            <ui:Button name="BtnCreateAircraft" text="Create" class="primary btn" style="width: auto;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="AircraftInfoRoot" class="ctx-root" style="width: 220px; padding-right: 8px; align-items: flex-end; flex-wrap: nowrap; flex-direction: column; justify-content: flex-start; align-content: stretch; display: none; height: 356px; align-self: flex-start; position: absolute; flex-grow: 1; min-width: 220px; min-height: 356px;">
+        <ui:Label text="Aircraft" name="Title" class="title" style="-unity-text-align: upper-center; white-space: nowrap; text-overflow: clip; flex-shrink: 0; flex-grow: 0; align-items: stretch; align-self: stretch; -unity-font-style: bold; color: rgb(37, 99, 235); background-color: rgba(255, 255, 255, 0);" />
+        <ui:VisualElement name="Divider" style="flex-grow: 0; align-self: stretch; height: 1px; background-color: rgb(0, 0, 0); margin-bottom: 5px; margin-top: 0; flex-shrink: 0;" />
+        <ui:TextField label="Model" placeholder-text="filler text" name="ModelName" class="FloatInput" />
+        <ui:FloatField label="X [m]" value="42.2" name="X_m" class="FloatInput" />
+        <ui:FloatField label="Y [m]" value="42.2" name="Y_m" class="FloatInput" />
+        <ui:FloatField label="Z [m]" value="42.2" name="Z_m" class="FloatInput" />
+        <ui:FloatField label="Time [s]" value="42.2" name="Time_s" class="FloatInput" />
+        <ui:FloatField label="Velocity [m/s]" value="42.2" name="Vel_m_s" class="FloatInput" />
+    </ui:VisualElement>
+    <ui:VisualElement name="WaypointInfoRoot" class="ctx-root" style="width: 220px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: flex-start; align-content: auto; display: none; height: 310px; align-self: flex-start; position: absolute; flex-grow: 1; min-width: 220px; min-height: 310px;">
+        <ui:Label text="Waypoint" name="Title" class="title" style="-unity-text-align: upper-center; white-space: nowrap; text-overflow: clip; flex-shrink: 0; flex-grow: 0; align-items: stretch; align-self: stretch; -unity-font-style: bold; color: rgb(37, 99, 235); background-color: rgba(255, 255, 255, 0);" />
+        <ui:VisualElement name="Divider" style="flex-grow: 0; align-self: stretch; height: 1px; background-color: rgb(0, 0, 0); margin-bottom: 5px; margin-top: 0; flex-shrink: 0;" />
+        <ui:FloatField label="X [m]" value="42.2" name="X_m" class="FloatInput" />
+        <ui:FloatField label="Y [m]" value="42.2" name="Y_m" class="FloatInput" />
+        <ui:FloatField label="Z [m]" value="42.2" name="Z_m" class="FloatInput" />
+        <ui:FloatField label="Time [s]" value="42.2" name="Time_s" class="FloatInput" />
+        <ui:FloatField label="Velocity [m/s]" value="42.2" name="Vel_m_s" class="FloatInput" />
+    </ui:VisualElement>
+    <ui:VisualElement name="SelectProjectedPositionRoot" class="ctx-root" style="width: 179px; padding-right: 8px; align-items: center; flex-wrap: nowrap; flex-direction: column; justify-content: flex-start; align-content: stretch; display: none; height: 114px; align-self: flex-start; position: absolute; flex-grow: 1; min-width: auto; min-height: 114px;">
+        <ui:FloatField label="X [m]" value="42.2" name="X_m" class="FloatInput" style="align-self: stretch; justify-content: flex-start; margin-left: -100px;" />
+        <ui:FloatField label="Y [m]" value="42.2" name="Y_m" class="FloatInput" style="margin-left: -100px;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="SelectAltitudeAndTimeRoot" class="ctx-root" style="width: 303px; padding-right: 8px; align-items: flex-end; flex-wrap: nowrap; flex-direction: column; justify-content: flex-start; align-content: stretch; display: none; height: 218px; align-self: flex-start; position: absolute; flex-grow: 1; min-width: 303px; min-height: 218px;">
+        <ui:Label text="Select Altitude and Time" name="Title" class="title" style="-unity-text-align: upper-center; white-space: nowrap; text-overflow: clip; flex-shrink: 0; flex-grow: 0; align-items: stretch; align-self: stretch; -unity-font-style: bold; color: rgb(37, 99, 235); background-color: rgba(255, 255, 255, 0);" />
+        <ui:VisualElement name="Divider" style="flex-grow: 0; align-self: stretch; height: 1px; background-color: rgb(0, 0, 0); margin-bottom: 5px; margin-top: 0; flex-shrink: 0;" />
+        <ui:FloatField label="Z [m]" value="42.2" name="Z_m" class="FloatInput" />
+        <ui:FloatField label="Time [s]" value="42.2" name="Time_s" class="FloatInput" />
+        <ui:FloatField label="Above Ground &#10;Level [m]" value="42.2" name="AGL_m" class="FloatInput" />
+    </ui:VisualElement>
+</ui:UXML>

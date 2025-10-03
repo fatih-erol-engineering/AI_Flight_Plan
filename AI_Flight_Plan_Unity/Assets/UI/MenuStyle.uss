@@ -52,10 +52,14 @@
     left: auto;
     align-items: stretch;
     justify-content: flex-start;
-    align-self: flex-end;
-    width: 256px;
-    min-width: 256px;
-    max-width: 256px;
+    align-self: stretch;
+    width: auto;
+    min-width: auto;
+    max-width: none;
+    padding-left: 0;
+    margin-left: -45px;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .DropDown {

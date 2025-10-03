@@ -363,6 +363,7 @@ MonoBehaviour:
   selectedAircarft: {fileID: 0}
   selectedWaypoint: {fileID: 0}
   selectedAircraftModel: 0
+  nextModeFlag: 0
 --- !u!114 &521860494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +386,7 @@ MonoBehaviour:
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
   factory: {fileID: 521860496}
   gameController: {fileID: 521860493}
+  nextModeFlag: 0
 --- !u!114 &521860495
 MonoBehaviour:
   m_ObjectHideFlags: 0

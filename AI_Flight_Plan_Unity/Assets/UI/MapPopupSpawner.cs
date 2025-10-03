@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -19,11 +20,13 @@ public class MapPopupSpawner : MonoBehaviour
     public GameController gameController;
 
     // UI refs
-    VisualElement root, ctxRoot, aircraftRoot, mainActions,waypointInfoRoot;
-    public Button btnAddAircraft, btnAddRestricted, btnCreateAircraft, btnCreateWaypoint;
+    public VisualElement root, ctxRoot, aircraftRoot, mainActions, waypointInfoRoot, aircraftInfoRoot, selectProjectedPositionRoot, selectAltitudeandTimeRoot;
+    public VisualElement[] visualElementRoots;
+    public Button btnAddAircraft, btnAddRestricted, btnCreateAircraft;
     public FloatField fieldX_m, fieldY_m, fieldZ_m, fieldTime_s, fieldVel_m_s;
     private Plane plane;
     DropdownField ddAircraft;
+    public bool flag_Create_Waypoint;
 
 
     // Dahili durum
@@ -41,66 +44,310 @@ public class MapPopupSpawner : MonoBehaviour
         ctxRoot = root.Q<VisualElement>("ContextRoot");
         aircraftRoot = root.Q<VisualElement>("AircraftRoot");
         waypointInfoRoot = root.Q<VisualElement>("WaypointInfoRoot");
+        aircraftInfoRoot = root.Q<VisualElement>("AircraftInfoRoot");
+        selectProjectedPositionRoot = root.Q<VisualElement>("SelectProjectedPositionRoot");
+        selectAltitudeandTimeRoot = root.Q<VisualElement>("SelectAltitudeAndTimeRoot");
+
+        visualElementRoots = new VisualElement[6];
+        visualElementRoots[0] = ctxRoot;
+        visualElementRoots[1] = aircraftRoot;
+        visualElementRoots[2] = waypointInfoRoot;
+        visualElementRoots[3] = aircraftInfoRoot;
+        visualElementRoots[4] = selectProjectedPositionRoot;
+        visualElementRoots[5] = selectAltitudeandTimeRoot;
+
 
 
         mainActions = root.Q<VisualElement>("MainActions");
         btnAddAircraft = root.Q<Button>("BtnAddAircraft");
         btnAddRestricted = root.Q<Button>("BtnAddRestricted");
         btnCreateAircraft = root.Q<Button>("BtnCreateAircraft");
-        btnCreateWaypoint = root.Q<Button>("BtnCreateWaypoint");
         ddAircraft = root.Q<DropdownField>("DdAircraft");
 
-       
-        fieldX_m = root.Q<FloatField>("X_m");
-        fieldY_m = root.Q<FloatField>("Y_m");
-        fieldZ_m = root.Q<FloatField>("Z_m");
-        fieldTime_s = root.Q<FloatField>("Time_s");
-        fieldVel_m_s = root.Q<FloatField>("Vel_m_s");
 
 
         // Baðlantýlar
         btnAddAircraft.clicked += OnAddAircraftClicked;
         btnAddRestricted.clicked += OnAddRestrictedClicked;
         btnCreateAircraft.clicked += OnCreateAircraftClicked;
-        btnCreateWaypoint.clicked += OnCreateWaypointClicked;
+        
 
         // Dýþarý týklayýnca menüleri kapat
         root.RegisterCallback<PointerDownEvent>(OnRootPointerDown, TrickleDown.TrickleDown);
         
     }
 
-    void Update()
-    {
 
+
+
+    /// <summary>
+    /// Free Mode
+    /// </summary>
+
+    public void Update_in_Free_Mode()
+    {        
         if (Input.GetMouseButtonDown(1))
         {
             lastClickScreen = Input.mousePosition;
             ShowContextAt(lastClickScreen);
+            
         }
         
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             HideAll();
+            gameController.mode = Mode.Free_Mode;
         }
+    }
+
+
+    /// <summary>
+    /// Select Aircraft Projected Position Phase
+    /// </summary>
+    public void Start_in_Select_Aircraft_Projected_Position()
+    {
+        
+        VisualElement selectedVisualElement = selectProjectedPositionRoot;
+        HideAll();
+        ShowVisualElementtAt(selectedVisualElement, Input.mousePosition);
+        
+        fieldX_m = selectedVisualElement.Q<FloatField>("X_m");
+        fieldY_m = selectedVisualElement.Q<FloatField>("Y_m");
+        gameController.mode = Mode.Select_Aircraft_Projected_Position;        
+    }
+    public void Update_in_Select_Aircraft_Projected_Position()
+    {
+                 
+            ShowVisualElementtAt(selectProjectedPositionRoot, Input.mousePosition);
+
+            Vector3 hitPos = gameController.MouseHitPos();
+            fieldX_m.value = hitPos.x; 
+            fieldY_m.value = hitPos.z; // Especially Change with Y        
+
+            if (Input.GetMouseButtonDown(0))
+            {            
+                Start_in_Select_Aircraft_Altitude_and_Time();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                HideAll();
+                gameController.mode = Mode.Free_Mode;
+            }
+
 
     }
+
+
+
+    /// <summary>
+    /// Select Aircraft Altitude and Time Phase
+    /// </summary>
+    public void Start_in_Select_Aircraft_Altitude_and_Time()
+    {
+        VisualElement selectedVisualElement = selectAltitudeandTimeRoot;
+        HideAll();
+        ShowVisualElementtAt(selectedVisualElement, Input.mousePosition);
+
+        fieldZ_m = selectedVisualElement.Q<FloatField>("Z_m");
+        gameController.mode = Mode.Select_Aircraft_Altitude_and_Time;
+        fieldZ_m.value = gameController.MouseHitPos().y;
+        fieldZ_m.Focus();
+    }
+
+    public void Update_in_Select_Aircraft_Altitude_and_Time()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            HideAll();
+            gameController.mode = Mode.Create_Aircraft;
+            Start_in_Create_Aircraft();
+        }
+    }
+
+
+
+    /// <summary>
+    /// Create Aircraft Phase
+    /// </summary>
+    public void Start_in_Create_Aircraft()
+    {
+        Vector3 hitPos = new Vector3(fieldX_m.value, fieldZ_m.value, fieldY_m.value);
+        gameController.selectedAircarft = gameController.aircraftFactory.Spawn(gameController.selectedAircraftModel, hitPos, Quaternion.Euler(0, 0, 0));
+        gameController.selectedWaypoint = gameController.selectedAircarft.CreateWaypoint(gameController.selectedAircarft.transform.position);
+        StartWaypointInfo(gameController.selectedAircarft);        
+        Start_in_Select_Waypoint_Projected_Position();
+    }
+    public void Update_in_Create_Aircraft()
+    {
+
+    }
+
+
+
+    public void Start_in_Select_Waypoint_Projected_Position()
+    {
+        VisualElement selectedVisualElement = selectProjectedPositionRoot;
+        HideAll();
+        ShowVisualElementtAt(selectedVisualElement, Input.mousePosition);
+
+        fieldX_m = selectedVisualElement.Q<FloatField>("X_m");
+        fieldY_m = selectedVisualElement.Q<FloatField>("Y_m");
+        gameController.mode = Mode.Select_Waypoint_Projected_Position;
+    }
+    public void Update_in_Select_Waypoint_Projected_Position()
+    {
+        ShowVisualElementtAt(selectProjectedPositionRoot, Input.mousePosition);
+
+        Vector3 hitPos = gameController.MouseHitPos();
+        fieldX_m.value = hitPos.x;
+        fieldY_m.value = hitPos.z; // Especially Change with Y        
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Start_in_Select_Waypoint_Altitude_and_Time();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            HideAll();
+            gameController.mode = Mode.Free_Mode;
+        }
+    }
+
+
+
+    public void Start_in_Select_Waypoint_Altitude_and_Time()
+    {
+        VisualElement selectedVisualElement = selectAltitudeandTimeRoot;
+        HideAll();
+        ShowVisualElementtAt(selectedVisualElement, Input.mousePosition);
+
+        fieldZ_m = selectedVisualElement.Q<FloatField>("Z_m");
+        gameController.mode = Mode.Select_Waypoint_Altitude_and_Time;
+        fieldZ_m.value = gameController.MouseHitPos().y;
+        fieldZ_m.Focus();
+
+    }
+    public void Update_in_Select_Waypoint_Altitude_and_Time()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            HideAll();            
+            Create_Waypoint();
+            Start_in_Select_Waypoint_Projected_Position();
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {            
+            Create_Waypoint();
+            Start_in_Create_Trajectory();
+        }
+    }
+
+    public void Create_Waypoint()
+    {
+        Vector3 hitPos = new Vector3(fieldX_m.value, fieldZ_m.value, fieldY_m.value);
+        gameController.selectedWaypoint = gameController.selectedAircarft.CreateWaypoint(hitPos);
+    }
+  
+
+    public void Start_in_Create_Trajectory()
+    {
+        gameController.mode = Mode.Create_Trajectory;
+    }
+    public void Update_in_Create_Trajectory()
+    {
+        gameController.selectedAircarft.trajectory.CreateTrajectory();
+        gameController.mode = Mode.Free_Mode;
+        HideAll();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void StartWaypointInfo(Aircraft aircarft)
     {
-        waypointInfoRoot.style.display = DisplayStyle.Flex;
-        fieldVel_m_s.value = aircarft.spec.nominalVelocity_m_s;
-        UpdateWaypointInfo();
+
+        VisualElement selectedVisualElement = waypointInfoRoot;
+        Action selectedUpdateInfo = UpdateWaypointInfo; 
+
+
+        selectedVisualElement.style.display = DisplayStyle.Flex;
+        selectedVisualElement.Q<FloatField>("X_m").value = 0;
+        selectedVisualElement.Q<FloatField>("Y_m").value = 0;
+        selectedVisualElement.Q<FloatField>("Z_m").value = 0;
+        selectedVisualElement.Q<FloatField>("Time_s").value = 0;
+        selectedVisualElement.Q<FloatField>("Vel_m_s").value = aircarft.spec.nominalVelocity_m_s;
+        selectedUpdateInfo();
     }
+
+    public void StartAircraftInfo(Aircraft aircarft)
+    {
+        VisualElement selectedVisualElement = aircraftInfoRoot;
+        Action selectedUpdateInfo = UpdateAircraftInfo;
+
+        selectedVisualElement.style.display = DisplayStyle.Flex;
+        selectedVisualElement.Q<FloatField>("X_m").value = 0;
+        selectedVisualElement.Q<FloatField>("Y_m").value = 0;
+        selectedVisualElement.Q<FloatField>("Z_m").value = 0;
+        selectedVisualElement.Q<FloatField>("Time_s").value = 0;
+        selectedVisualElement.Q<FloatField>("Vel_m_s").value = aircarft.spec.nominalVelocity_m_s;
+        selectedUpdateInfo();
+    }
+
     public void UpdateWaypointInfo()
     {
+        VisualElement selectedVisualElement = waypointInfoRoot;
+
         lastClickScreen = Input.mousePosition;
 
         if (TryScreenToWorld(lastClickScreen, out Vector3 hitPos))
             lastClickWorld = hitPos;
+        selectedVisualElement.Q<FloatField>("X_m").value = Round(hitPos.x, 3);
+        selectedVisualElement.Q<FloatField>("Y_m").value = Round(hitPos.y, 3);
+        selectedVisualElement.Q<FloatField>("Z_m").value = Round(hitPos.z, 3);
+    }
 
-        fieldX_m.value = Round(hitPos.x,3);
-        fieldY_m.value = Round(hitPos.y,3);
-        fieldZ_m.value = Round(hitPos.z,3);
+    public void UpdateAircraftInfo()
+    {
+        VisualElement selectedVisualElement = aircraftInfoRoot;
+
+        lastClickScreen = Input.mousePosition;
+
+        if (TryScreenToWorld(lastClickScreen, out Vector3 hitPos))
+            lastClickWorld = hitPos;
+        selectedVisualElement.Q<FloatField>("X_m").value = Round(hitPos.x, 3);
+        selectedVisualElement.Q<FloatField>("Y_m").value = Round(hitPos.y, 3);
+        selectedVisualElement.Q<FloatField>("Z_m").value = Round(hitPos.z, 3);
     }
     private float Round(float val,int dec)
     {
@@ -109,10 +356,11 @@ public class MapPopupSpawner : MonoBehaviour
     }
     void OnAddAircraftClicked()
     {
-        ShowContextPanel(false);
+        HideAll();        
         PopulateAircraftDropdown();
         PositionAircraftPanelContext();
-        ShowAircraftPanel(true);
+        ShowVisualElementtAt(aircraftRoot, Input.mousePosition);
+        
     }
 
     void OnAddRestrictedClicked()
@@ -123,30 +371,17 @@ public class MapPopupSpawner : MonoBehaviour
 
     void OnCreateAircraftClicked()
     {
+        
         if (ddAircraft.index < 0 || ddAircraft.index >= aircraftTypes.Count)
         {
             Debug.LogWarning("Geçerli bir aircraft seçilmedi.");
             return;
         }
 
-        var type = aircraftTypes[ddAircraft.index];
-
-        // Spawn noktasý: týklanan dünya noktasý (lastClickWorld)
-        var ctrl = factory.Spawn(type, lastClickWorld + Vector3.up * 2f, Quaternion.identity);
-        if (ctrl) Debug.Log($"Spawned aircraft: {ctrl.spec?.name ?? type.ToString()}");
-
+        AircraftModel model = aircraftTypes[ddAircraft.index];        
+        gameController.selectedAircraftModel = model;
         HideAll();
-    }
-    void OnCreateWaypointClicked()
-    {
-        if (gameController != null)
-        {
-            if (gameController.selectedAircarft != null)
-            {
-                Vector3 globalPosition = new Vector3(fieldX_m.value, fieldY_m.value, fieldZ_m.value);                               
-                gameController.selectedWaypoint.setPosition(globalPosition, fieldTime_s.value);
-            }
-        }
+        Start_in_Select_Aircraft_Projected_Position();                
     }
 
     void ShowContextAt(Vector2 screenPos)
@@ -157,9 +392,15 @@ public class MapPopupSpawner : MonoBehaviour
         ctxRoot.style.left = panelPos.x;
         ctxRoot.style.top = panelPos.y;
         ctxRoot.style.display = DisplayStyle.Flex;
+                
+    }
+    void ShowVisualElementtAt(VisualElement visualElement,Vector2 screenPos)
+    {
+        Vector2 panelPos = new Vector2(screenPos.x, Screen.height - screenPos.y);
 
-        // Yan paneli resetle & gizle
-        ShowAircraftPanel(false);
+        visualElement.style.left = panelPos.x;
+        visualElement.style.top = panelPos.y;
+        visualElement.style.display = DisplayStyle.Flex;
     }
 
     void PositionAircraftPanelBesideContext()
@@ -189,8 +430,10 @@ public class MapPopupSpawner : MonoBehaviour
 
     void HideAll()
     {
-        ctxRoot.style.display = DisplayStyle.None;
-        aircraftRoot.style.display = DisplayStyle.None;
+        foreach (VisualElement vis in visualElementRoots)
+        {
+            vis.style.display = DisplayStyle.None;
+        }        
     }
 
     void OnRootPointerDown(PointerDownEvent evt)

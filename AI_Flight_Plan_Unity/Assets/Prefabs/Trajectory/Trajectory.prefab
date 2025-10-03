@@ -51,6 +51,6 @@ MonoBehaviour:
   trajectoryType: 0
   waypoints: []
   restrictedAreas: []
-  initialControlPointDistance: 5
+  initialControlPointDistance: 20
   lineWidth: 10
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
