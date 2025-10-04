@@ -1,0 +1,5 @@
+https://www.svgrepo.com/
+
+Unity de SVG'ler nasıl açılır ondan bahsediyor:
+com.unity.vectorgraphics
+https://www.youtube.com/watch?v=EwWMt9viveQ
