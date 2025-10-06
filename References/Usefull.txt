@@ -3,3 +3,14 @@ https://www.svgrepo.com/
 Unity de SVG'ler nasıl açılır ondan bahsediyor:
 com.unity.vectorgraphics
 https://www.youtube.com/watch?v=EwWMt9viveQ
+
+UI pseudo classes:
+:hover			The cursor is positioned over the element.
+:active			A user interacts with the element.
+:inactive		A user stops to interact with the element.
+:focus			The element has focus.
+:selected		USS doesn’t support this pseudo-state. Use :checked instead.
+:disabled		The element is in a disabled state.
+:enabled		The element is in an enabled state.
+:checked		The element is a Toggle or RadioButton element and it’s selected.
+:root			The element is the highest-level element in the visual tree that has the stylesheet applied.
