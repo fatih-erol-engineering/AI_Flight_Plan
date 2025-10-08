@@ -4,7 +4,8 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "AircraftSpec", menuName = "Flight/AircraftSpec")]
 public class AircraftSpec : ScriptableObject
 {
-    public AircraftModel model;        
+    public AircraftModel model;
+    public AircraftType type;   
     public float minVelocity_m_s;
     [Range(0,500)]
     public float nominalVelocity_m_s;
@@ -24,5 +25,11 @@ public enum AircraftModel
     Hawk,
     Parrot,                                        
 }
+public enum AircraftType
+{
+    Rotor,
+    FixedWing,
+}
+
 
 

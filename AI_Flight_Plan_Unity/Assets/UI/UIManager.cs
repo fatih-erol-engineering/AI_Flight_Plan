@@ -2,6 +2,7 @@
 using UnityEngine.UIElements;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 
 
@@ -11,6 +12,7 @@ public class UIManager : MonoBehaviour
 
     public UIDocument uiDocument;
     public Camera cam;
+    public AircraftSpecRegistry aircraftSpecRegistry;
 
     private VisualElement root, mainMenuRoot, addRoot;
     private ToggleButtonGroup mainMenuTBG, addTBG;
@@ -63,6 +65,13 @@ public class UIManager : MonoBehaviour
         fixedWingBtn.RegisterCallback<ClickEvent>(OnFixedWingBtnClicked);        
         editBtn.RegisterCallback<ClickEvent>(OnEditBtnClicked);
         ResetToDefault();
+
+
+
+
+        
+
+        // 
     }
     void ResetToDefault()
     {
@@ -86,11 +95,13 @@ public class UIManager : MonoBehaviour
         bool isSelected = mainMenuTBG.value[0];
         if (isSelected)
         {
-            addRoot.RemoveFromClassList("submenusHidden");            
+            addRoot.RemoveFromClassList("submenusHidden");                        
         }
         else
         {
-            addRoot.AddToClassList("submenusHidden");            
+            addRoot.AddToClassList("submenusHidden");
+            aircraftListDDM.AddToClassList("submenusHidden");
+            ResetToggleButtonGroups(addTBG);
         }
     }
     void OnRotorBtnClicked(ClickEvent clickEvent)
@@ -104,6 +115,17 @@ public class UIManager : MonoBehaviour
         {
             aircraftListDDM.AddToClassList("submenusHidden");
         }
+
+        List<string> _labels = new List<string>();
+
+        foreach (AircraftSpec rotorAircrafts in aircraftSpecRegistry.rotorAircrafts)
+        {
+            _labels.Add(rotorAircrafts.model.ToString());
+        }
+        aircraftListDDM.choices = _labels;
+        aircraftListDDM.index = 0;
+        //aircraftListDDM.value = _labels[aircraftListDDM.index];
+
     }
     void OnFixedWingBtnClicked(ClickEvent clickEvent)
     {
@@ -116,6 +138,15 @@ public class UIManager : MonoBehaviour
         {
             aircraftListDDM.AddToClassList("submenusHidden");
         }
+        List<string> _labels = new List<string>();
+
+        foreach (AircraftSpec fixedWingAircrafts in aircraftSpecRegistry.fixedWingAircrafts)
+        {
+            _labels.Add(fixedWingAircrafts.model.ToString());
+        }
+        aircraftListDDM.choices = _labels;
+        aircraftListDDM.index = 0;
+        //aircraftListDDM.value = _labels[aircraftListDDM.index];
     }
 
     void OnEditBtnClicked(ClickEvent clickEvent)

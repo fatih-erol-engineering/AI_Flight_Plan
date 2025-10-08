@@ -287,7 +287,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   uiDocument: {fileID: 2113633963}
   cam: {fileID: 192251732}
-  aircraftSpecRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
 --- !u!4 &563892070
 Transform:
   m_ObjectHideFlags: 0

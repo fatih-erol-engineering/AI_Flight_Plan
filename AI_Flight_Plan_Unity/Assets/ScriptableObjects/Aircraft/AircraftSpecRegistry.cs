@@ -6,15 +6,31 @@ public class AircraftSpecRegistry : ScriptableObject
 {
     public List<AircraftSpec> specs = new();
 
-    Dictionary<AircraftModel, AircraftSpec> _map;
+    Dictionary<AircraftModel, AircraftSpec> _map;  
+    
+    public List<AircraftSpec> rotorAircrafts { get;  private set; }
+    public List<AircraftSpec> fixedWingAircrafts { get; private set; }
 
     void OnEnable()
     {
         _map = new Dictionary<AircraftModel, AircraftSpec>();
+        rotorAircrafts.Clear();
+        fixedWingAircrafts.Clear();
         foreach (var s in specs)
         {
             if (!s) continue;
             _map[s.model] = s; // son eklenen kazanýr (bilinçli)
+            switch (s.type)
+            {
+                case AircraftType.Rotor:
+                    rotorAircrafts.Add(s);
+                    break;
+                case AircraftType.FixedWing:
+                    fixedWingAircrafts.Add(s);
+                    break;
+                default:
+                    break;
+            }            
         }
     }
 

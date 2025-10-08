@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hawk
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
   model: 2
+  type: 1
   minVelocity_m_s: 20
   nominalVelocity_m_s: 40
   maxVelocity_m_s: 60
