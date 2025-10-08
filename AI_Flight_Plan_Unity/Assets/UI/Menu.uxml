@@ -7,12 +7,12 @@
             <ui:Button name="listenBtn" icon-image="project://database/Assets/Icons/Listen.png?fileID=2800000&amp;guid=df64452fdc7d6954eb9eb7d5dc2ddfc0&amp;type=3#Listen" class="button" />
             <ui:Button name="settingsBtn" icon-image="project://database/Assets/Icons/Settings.png?fileID=2800000&amp;guid=44d100d5cff7b214aba1823b09cb11b8&amp;type=3#Settings" class="button buttonEnd" />
         </ui:ToggleButtonGroup>
-        <ui:VisualElement name="addRoot" class="hidden" style="flex-grow: 1;">
+        <ui:VisualElement name="addRoot" class="hidden submenus submenusHidden" style="flex-grow: 1;">
             <ui:ToggleButtonGroup allow-empty-selection="true" value="0000" name="addTBG" class="toggleButtonGroup mainMenuItems">
                 <ui:Button name="rotorBtn" icon-image="project://database/Assets/Icons/RotorType.png?fileID=2800000&amp;guid=fdb3c61cb9365f846a06d2b7975338e2&amp;type=3#RotorType" class="button buttonStart" />
                 <ui:Button name="fixedWingBtn" icon-image="project://database/Assets/Icons/Fixed%20Wing%20Type.png?fileID=2800000&amp;guid=8191d99e70fa840488e94e9dd44c897e&amp;type=3#Fixed Wing Type" class="button buttonEnd" />
             </ui:ToggleButtonGroup>
-            <ui:DropdownField name="aircraftListDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems" />
+            <ui:DropdownField name="aircraftListDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus submenusHidden" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

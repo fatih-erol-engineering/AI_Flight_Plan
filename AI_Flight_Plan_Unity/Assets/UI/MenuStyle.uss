@@ -147,6 +147,14 @@
     -unity-background-image-tint-color: var(--colorIcon);
 }
 
-.hidden {
-    display: none;
+.submenus {
+    display: flex;
+    transition-duration: 0.25s;
+}
+
+.submenusHidden {
+    display: flex;
+    translate: 219px 0;
+    opacity: 0;
+    transition-duration: 0.25s;
 }
