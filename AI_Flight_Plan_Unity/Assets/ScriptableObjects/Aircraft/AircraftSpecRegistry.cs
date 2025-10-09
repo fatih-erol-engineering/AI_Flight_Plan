@@ -14,8 +14,8 @@ public class AircraftSpecRegistry : ScriptableObject
     void OnEnable()
     {
         _map = new Dictionary<AircraftModel, AircraftSpec>();
-        rotorAircrafts.Clear();
-        fixedWingAircrafts.Clear();
+        rotorAircrafts?.Clear();
+        fixedWingAircrafts?.Clear();
         foreach (var s in specs)
         {
             if (!s) continue;
@@ -44,6 +44,19 @@ public class AircraftSpecRegistry : ScriptableObject
     {
         if (TryGet(t, out var s)) return s;
         Debug.LogError($"[AircraftSpecRegistry] Spec not found for type {t}");
+        return null;
+    }
+    public AircraftSpec Get(string modelName)
+    {
+        foreach (var s in specs)
+        {
+            if (!s) continue;
+            if (s.model.ToString() == modelName)
+            {
+                return s;
+            }
+        }
+        Debug.LogError($"[AircraftSpecRegistry] Spec not found for type {modelName}");
         return null;
     }
 }

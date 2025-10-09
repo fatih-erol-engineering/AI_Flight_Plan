@@ -1,6 +1,6 @@
+using Unity.MLAgents;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.Rendering.HableCurve;
 
 
 public class Aircraft : SelectableMonoBehaviour
@@ -8,12 +8,16 @@ public class Aircraft : SelectableMonoBehaviour
     public AircraftSpec spec;
     public Trajectory trajectory;
     public Theme theme;
-    public GameObject aircraftMeshObject;
-    private MeshRenderer aircraftMeshRenderer;
+    public GameObject aircraftVisualObject;
+    protected MeshRenderer aircraftMeshRenderer;
 
-    private void OnEnable()
+    protected void OnEnable()
     {
-        aircraftMeshRenderer = aircraftMeshObject.GetComponent<MeshRenderer>();
+        if (aircraftMeshRenderer == null)
+        {
+            aircraftVisualObject = transform.Find("Aircraft").gameObject;
+        }
+        aircraftMeshRenderer = aircraftVisualObject.GetComponent<MeshRenderer>();        
         UpdateColor();
     }
     public void MoveAircraftWithTime(float sec)
@@ -31,7 +35,7 @@ public class Aircraft : SelectableMonoBehaviour
                 lerpVal = Mathf.Clamp(lerpVal, 0, 1);
                 float currentIdxFloat = Mathf.Lerp(0, n-1, lerpVal);
                 int currentIdx = Mathf.RoundToInt(currentIdxFloat);
-                aircraftMeshObject.transform.position = segment.lr.GetPosition(currentIdx);
+                aircraftVisualObject.transform.position = segment.lr.GetPosition(currentIdx);
                 break;
             }
             ct++;
@@ -69,10 +73,11 @@ public class Aircraft : SelectableMonoBehaviour
         Waypoint wp = trajectory.CreateWaypoint(globalPosition,time_s);        
         return wp;
     }
-    public void UpdateColor()
+    public virtual void UpdateColor()
     {        
         aircraftMeshRenderer.material.color = spec.color;
     }
+
 
 }
 

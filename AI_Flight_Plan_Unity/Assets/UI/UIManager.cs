@@ -1,10 +1,5 @@
-
 using UnityEngine.UIElements;
 using UnityEngine;
-using System.Linq;
-using System.Collections.Generic;
-
-
 
 
 public class UIManager : MonoBehaviour
@@ -12,33 +7,41 @@ public class UIManager : MonoBehaviour
 
     public UIDocument uiDocument;
     public Camera cam;
-    public AircraftSpecRegistry aircraftSpecRegistry;
+    public AircraftFactory aircraftFactory;
+    private AircraftSpecRegistry aircraftSpecRegistry;
+    [SerializeField]
+    private GameManager gameManager;
 
-    private VisualElement root, mainMenuRoot, addRoot;
-    private ToggleButtonGroup mainMenuTBG, addTBG;
-    private DropdownField aircraftListDDM;
-    private Button addBtn, editBtn, listenBtn, settingsBtn, rotorBtn, fixedWingBtn;    
-    private Slider timeSlider;
-    
+    private VisualElement root, mainMenuRoot, createRoot;
+    private VisualElement mainMenuTBG, createTBG; // As Toggle Group
+    private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;    
+    private DropdownField createDDM;    
+
+    public GameControllerMode gameControllerMode;
+
+    // Aircraft Factory Icin
+    public string selectedAircraftModelName;
+
 
     void Start()
     {
-        BindData();        
+        AssignData();
     }
-    void Update()
-    {
-        ResetToDefault_Check();      
-    }
+    //void Update()
+    //{
+    //    ResetToDefault_Check();
+    //    mainMenuTBG.value = 1;
+    //}
 
 
-    void ResetToDefault_Check()
-    {
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            ResetToDefault();
-        }
-    }
-    void BindData()
+    //void ResetToDefault_Check()
+    //{
+    //    if (Input.GetKey(KeyCode.Escape))
+    //    {
+    //        ResetToDefault();
+    //    }
+    //}
+    void AssignData()
     {
         if (!uiDocument) uiDocument = GetComponent<UIDocument>();
         if (!cam) cam = Camera.main;
@@ -46,118 +49,120 @@ public class UIManager : MonoBehaviour
         root = uiDocument.rootVisualElement;
 
         mainMenuRoot = root.Q<VisualElement>("mainMenuRoot");
-        addRoot = root.Q<VisualElement>("addRoot");
+        createRoot = root.Q<VisualElement>("createRoot");
 
-        mainMenuTBG = root.Q<ToggleButtonGroup>("mainTBG");
-        addTBG = root.Q<ToggleButtonGroup>("addTBG");
-        
-        addBtn = root.Q<Button>("addBtn");        
-        editBtn = root.Q<Button>("editBtn");
-        listenBtn = root.Q<Button>("listenBtn");
-        settingsBtn = root.Q<Button>("settingsBtn");
-        rotorBtn = root.Q<Button>("rotorBtn");
-        fixedWingBtn = root.Q<Button>("fixedWingBtn");
+        mainMenuTBG = root.Q<VisualElement>("mainMenuTBG");
+        createTBG = root.Q<VisualElement>("createTBG");
 
-        aircraftListDDM = root.Q<DropdownField>("aircraftListDDM");
+        createTBtn = root.Q<Toggle>("createTBtn");
+        listenTBtn = root.Q<Toggle>("listenTBtn");
+        settingsTBtn = root.Q<Toggle>("settingsTBtn");
+        rotorTBtn = root.Q<Toggle>("rotorTBtn");
+        fixedWingTBtn = root.Q<Toggle>("fixedWingTBtn");
 
-        addBtn.RegisterCallback<ClickEvent>(OnAddBtnClicked);
-        rotorBtn.RegisterCallback<ClickEvent>(OnRotorBtnClicked);
-        fixedWingBtn.RegisterCallback<ClickEvent>(OnFixedWingBtnClicked);        
-        editBtn.RegisterCallback<ClickEvent>(OnEditBtnClicked);
-        ResetToDefault();
+        createDDM = root.Q<DropdownField>("createDDM");
 
 
+        var allButtons = mainMenuTBG.Query<Toggle>().ToList();
 
+        //createBtn.RegisterCallback<ClickEvent>(OnCreateBtnClicked);
+        //rotorBtn.RegisterCallback<ClickEvent>(OnRotorBtnClicked);
+        //fixedWingBtn.RegisterCallback<ClickEvent>(OnFixedWingBtnClicked);
+        //aircraftListDDM.RegisterValueChangedCallback(evt =>
+        //{
+        //    selectedAircraftModelName = evt.newValue;                 // seçilen metin                        
+        //});
+        //ResetToDefault();
 
-        
-
-        // 
-    }
-    void ResetToDefault()
-    {
-        mainMenuRoot.style.display = DisplayStyle.Flex;
-
-        addRoot.AddToClassList("submenusHidden");
-        aircraftListDDM.AddToClassList("submenusHidden");
-
-        ResetToggleButtonGroups(mainMenuTBG);
-        ResetToggleButtonGroups(addTBG);        
-    }
-    void ResetToggleButtonGroups(ToggleButtonGroup tbg) 
-    {
-        var st = tbg.value;
-        st.ResetAllOptions();
-        tbg.value = st;
+        //aircraftSpecRegistry = aircraftFactory.registry;
     }
 
-    void OnAddBtnClicked(ClickEvent clickEvent)
-    {
-        bool isSelected = mainMenuTBG.value[0];
-        if (isSelected)
-        {
-            addRoot.RemoveFromClassList("submenusHidden");                        
-        }
-        else
-        {
-            addRoot.AddToClassList("submenusHidden");
-            aircraftListDDM.AddToClassList("submenusHidden");
-            ResetToggleButtonGroups(addTBG);
-        }
-    }
-    void OnRotorBtnClicked(ClickEvent clickEvent)
-    {
-        bool isSelected = addTBG.value[0];
-        if (isSelected)
-        {
-            aircraftListDDM.RemoveFromClassList("submenusHidden");
-        }
-        else
-        {
-            aircraftListDDM.AddToClassList("submenusHidden");
-        }
 
-        List<string> _labels = new List<string>();
 
-        foreach (AircraftSpec rotorAircrafts in aircraftSpecRegistry.rotorAircrafts)
-        {
-            _labels.Add(rotorAircrafts.model.ToString());
-        }
-        aircraftListDDM.choices = _labels;
-        aircraftListDDM.index = 0;
-        //aircraftListDDM.value = _labels[aircraftListDDM.index];
 
-    }
-    void OnFixedWingBtnClicked(ClickEvent clickEvent)
-    {
-        bool isSelected = addTBG.value[1];
-        if (isSelected)
-        {
-            aircraftListDDM.RemoveFromClassList("submenusHidden");
-        }
-        else
-        {
-            aircraftListDDM.AddToClassList("submenusHidden");
-        }
-        List<string> _labels = new List<string>();
 
-        foreach (AircraftSpec fixedWingAircrafts in aircraftSpecRegistry.fixedWingAircrafts)
-        {
-            _labels.Add(fixedWingAircrafts.model.ToString());
-        }
-        aircraftListDDM.choices = _labels;
-        aircraftListDDM.index = 0;
-        //aircraftListDDM.value = _labels[aircraftListDDM.index];
-    }
 
-    void OnEditBtnClicked(ClickEvent clickEvent)
-    {
-        bool isSelected = mainMenuTBG.value[1];
-        if (isSelected)
-        {
-            addRoot.AddToClassList("submenusHidden");
-            aircraftListDDM.AddToClassList("submenusHidden");
-            ResetToggleButtonGroups(addTBG);
-        }
-    }
 
+
+
+
+
+
+    //void ResetToDefault()
+    //{
+    //    mainMenuRoot.style.display = DisplayStyle.Flex;
+
+    //    createRoot.AddToClassList("submenusHidden");        
+
+    //    ResetToggleButtonGroups(mainMenuTBG);
+    //    ResetToggleButtonGroups(createTBG);
+
+    //    isFreeModeActive = true;
+    //    isCreateModeActive = false;
+    //}
+    //void ResetToggleButtonGroups(ToggleButtonGroup tbg) 
+    //{
+    //    if (tbg.allowEmptySelection) 
+    //    { 
+    //        var st = tbg.value;
+    //        st.ResetAllOptions();
+    //        tbg.value = st;
+    //    }
+    //}
+
+    //void OnCreateBtnClicked(ClickEvent clickEvent)
+    //{
+    //    bool isSelected = mainMenuTBG.value[0];
+    //    if (isSelected)
+    //    {
+    //        createRoot.RemoveFromClassList("submenusHidden");            
+    //        List<string> _labels = new List<string>();
+    //        foreach (AircraftSpec rotorAircrafts in aircraftSpecRegistry.rotorAircrafts)
+    //        {
+    //            _labels.Add(rotorAircrafts.model.ToString());
+    //        }
+    //        aircraftListDDM.choices = _labels;
+    //        aircraftListDDM.index = 0;
+
+    //        isFreeModeActive = false;
+    //        isCreateModeActive = true;
+    //    }
+    //    else
+    //    {
+    //        ResetToDefault();
+    //    }
+    //}
+    //void OnRotorBtnClicked(ClickEvent clickEvent)
+    //{
+    //    bool isSelected = createTBG.value[0];
+
+    //    List<string> _labels = new List<string>();
+
+    //    foreach (AircraftSpec rotorAircrafts in aircraftSpecRegistry.rotorAircrafts)
+    //    {
+    //        _labels.Add(rotorAircrafts.model.ToString());
+    //    }
+    //    aircraftListDDM.choices = _labels;
+    //    aircraftListDDM.index = 0;        
+    //    //aircraftListDDM.value = _labels[aircraftListDDM.index];
+
+    //}
+    //void OnFixedWingBtnClicked(ClickEvent clickEvent)
+    //{
+    //    bool isSelected = createTBG.value[1];
+    //    List<string> _labels = new List<string>();
+
+    //    foreach (AircraftSpec fixedWingAircrafts in aircraftSpecRegistry.fixedWingAircrafts)
+    //    {
+    //        _labels.Add(fixedWingAircrafts.model.ToString());
+    //    }
+    //    aircraftListDDM.choices = _labels;
+    //    aircraftListDDM.index = 0;
+    //    //aircraftListDDM.value = _labels[aircraftListDDM.index];
+    //}
+
+    //void OnAircraftListChanged(string label)
+    //{
+    //    selectedAircraftModelName = label;
+    //}
 }
