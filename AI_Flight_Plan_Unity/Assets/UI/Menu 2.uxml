@@ -6,12 +6,13 @@
             <ui:Toggle toggle-on-label-click="false" value="false" name="listenTBtn" />
             <ui:Toggle toggle-on-label-click="false" value="false" name="settingsTBtn" class="unity-toggle_end" />
         </ui:VisualElement>
-        <ui:VisualElement name="createRoot" class="submenus" style="flex-grow: 1; align-self: center;">
+        <ui:VisualElement name="createRoot" class="submenus submenusHidden" style="flex-grow: 1; align-self: center; display: flex;">
             <ui:VisualElement name="createTBG" style="flex-grow: 1; flex-direction: row;">
                 <ui:Toggle toggle-on-label-click="false" value="false" name="rotorTBtn" class="unity-toggle__input unity-toggle_start" />
                 <ui:Toggle toggle-on-label-click="false" value="false" name="fixedWingTBtn" class="unity-toggle__input unity-toggle_end" />
             </ui:VisualElement>
-            <ui:DropdownField name="createDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus" style="transition-duration: 0s;" />
+            <ui:DropdownField name="rotorDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus" style="transition-duration: 0s;" />
+            <ui:DropdownField name="fixedWingDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus" style="transition-duration: 0s;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

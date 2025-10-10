@@ -400,7 +400,7 @@ MonoBehaviour:
   cam: {fileID: 192251732}
   aircraftFactory: {fileID: 1855684114}
   gameManager: {fileID: 1855684112}
-  gameControllerMode: 0
+  gameControllerModeFromUI: 0
   selectedAircraftModelName: 
 --- !u!4 &563892070
 Transform:
@@ -589,7 +589,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1855684110}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee1c6ec28dc926644bc45c29a65b12e4, type: 3}
   m_Name: 
@@ -663,7 +663,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1855684110}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f2a19fa63ff6d34c95cb5de7bf6cf10, type: 3}
   m_Name: 
