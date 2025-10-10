@@ -162,7 +162,7 @@
     border-right-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
-    background-size: 50% 50%;
+    background-size: 55% 55%;
     opacity: 0.5;
     border-bottom-left-radius: 0;
     border-top-right-radius: 0;

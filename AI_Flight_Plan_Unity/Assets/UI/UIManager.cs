@@ -1,5 +1,6 @@
-using UnityEngine.UIElements;
+﻿using UnityEngine.UIElements;
 using UnityEngine;
+using System.Collections.Generic;
 
 
 public class UIManager : MonoBehaviour
@@ -51,9 +52,17 @@ public class UIManager : MonoBehaviour
         mainMenuRoot = root.Q<VisualElement>("mainMenuRoot");
         createRoot = root.Q<VisualElement>("createRoot");
 
+        
+        
+        // Custom Toggle Button Group Ataması
         mainMenuTBG = root.Q<VisualElement>("mainMenuTBG");
         createTBG = root.Q<VisualElement>("createTBG");
 
+        List<Toggle> allMainMenuTBtn = mainMenuTBG.Query<Toggle>().ToList();
+        List<Toggle> allCreateTBtn = createTBG.Query<Toggle>().ToList();
+
+
+        // Toggle Button Ataması
         createTBtn = root.Q<Toggle>("createTBtn");
         listenTBtn = root.Q<Toggle>("listenTBtn");
         settingsTBtn = root.Q<Toggle>("settingsTBtn");
@@ -62,15 +71,26 @@ public class UIManager : MonoBehaviour
 
         createDDM = root.Q<DropdownField>("createDDM");
 
+        // Genel Toggle Group Controlu Fonksiyonu
+        createTBtn.RegisterCallback<ClickEvent>(evt => { toggleButtonClick(evt, allMainMenuTBtn, true); });
+        listenTBtn.RegisterCallback<ClickEvent>(evt => { toggleButtonClick(evt, allMainMenuTBtn, true); });
+        settingsTBtn.RegisterCallback<ClickEvent>(evt => { toggleButtonClick(evt, allMainMenuTBtn, true); });
 
-        var allButtons = mainMenuTBG.Query<Toggle>().ToList();
+        rotorTBtn.RegisterCallback<ClickEvent>(evt => { toggleButtonClick(evt, allCreateTBtn, false); });
+        fixedWingTBtn.RegisterCallback<ClickEvent>(evt => { toggleButtonClick(evt, allCreateTBtn, false); });
+
+        //rotorTBtn.RegisterCallback<ClickEvent, List<Toggle>>(toggleButtonClick, allCreateTBtn);
+        //fixedWingTBtn.RegisterCallback<ClickEvent, List<Toggle>>(toggleButtonClick, allCreateTBtn);
+
+
+
 
         //createBtn.RegisterCallback<ClickEvent>(OnCreateBtnClicked);
         //rotorBtn.RegisterCallback<ClickEvent>(OnRotorBtnClicked);
         //fixedWingBtn.RegisterCallback<ClickEvent>(OnFixedWingBtnClicked);
         //aircraftListDDM.RegisterValueChangedCallback(evt =>
         //{
-        //    selectedAircraftModelName = evt.newValue;                 // se�ilen metin                        
+        //    selectedAircraftModelName = evt.newValue;                 // seçilen metin                        
         //});
         //ResetToDefault();
 
@@ -78,9 +98,46 @@ public class UIManager : MonoBehaviour
     }
 
 
+    private void Update()
+    {
+        
+    }
+
+    private void ToggleControlTick()
+    {
+        
+    }
+    private void toggleButtonClick(ClickEvent evt,List<Toggle> toggleButtonGroup,bool allowEmptySelection)
+    {
+        // Uncheck Others
+        Toggle currentToggle = (Toggle)evt.currentTarget;
+        foreach (Toggle toggleButton in toggleButtonGroup)
+        {
+            if (currentToggle != toggleButton)
+            {
+                toggleButton.value = false;
+            }
+        }
 
 
+        // Check for Emptiness
+        bool isNotEmpty = false;
+        bool clickedForChecking = currentToggle.value;
+        if (clickedForChecking)
+        {
+            isNotEmpty = true;
+        }
 
+        bool isEmpty = !isNotEmpty;
+        bool clickedForUnchecking = !clickedForChecking;
+        bool notAllowEmptySelection = !allowEmptySelection;
+        if (isEmpty && clickedForUnchecking && notAllowEmptySelection)
+        {
+            currentToggle.value = true;
+        }
+
+
+    }
 
 
 
