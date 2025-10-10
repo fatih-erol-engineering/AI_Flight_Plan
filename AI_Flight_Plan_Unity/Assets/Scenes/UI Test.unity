@@ -377,6 +377,7 @@ GameObject:
   m_Component:
   - component: {fileID: 563892070}
   - component: {fileID: 563892069}
+  - component: {fileID: 563892071}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -396,10 +397,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 753acfe78ea57854dab25b69f8100e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  uiDocument: {fileID: 2113633963}
+  uiDocument: {fileID: 563892071}
   cam: {fileID: 192251732}
-  aircraftFactory: {fileID: 1855684114}
-  gameManager: {fileID: 1855684112}
+  aircraftSpecRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  gameManager: {fileID: 0}
   gameControllerModeFromUI: 0
   selectedAircraftModelName: 
 --- !u!4 &563892070
@@ -417,6 +418,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &563892071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563892068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 1b2f6b427cb9d3b48a594dcaf032f340, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: b9dd003d12a3de746b50e7b4f41fd713, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1 &1075576050
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,178 +586,10 @@ Transform:
   - {fileID: 457705281}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1855684110
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1855684113}
-  - component: {fileID: 1855684112}
-  - component: {fileID: 1855684111}
-  - component: {fileID: 1855684114}
-  - component: {fileID: 1855684115}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1855684111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1855684110}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee1c6ec28dc926644bc45c29a65b12e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FreeGameController
-  cam: {fileID: 192251732}
-  draggableMask:
-    serializedVersion: 2
-    m_Bits: 64
-  cancelKey: 27
-  selected: {fileID: 0}
-  padding: 1.2
-  moveDuration: 0.35
-  minDistance: 0.3
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  rotateToLookAt: 1
-  pickMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  maxDistance: 1000
---- !u!114 &1855684112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1855684110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c243699750da3f46b864b90d90b0243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  uIManager: {fileID: 563892069}
---- !u!4 &1855684113
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1855684110}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.83542, y: -1.57336, z: -2.09145}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1855684114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1855684110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1fbf3d14292f0d4e9f80d6a50621a5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
-  gameManager: {fileID: 1855684112}
-  uIManager: {fileID: 563892069}
-  registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
-  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
-  aircraftList: []
---- !u!114 &1855684115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1855684110}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f2a19fa63ff6d34c95cb5de7bf6cf10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CreateModeController
-  aircraftFactory: {fileID: 1855684114}
-  cam: {fileID: 192251732}
-  pickMask:
-    serializedVersion: 2
-    m_Bits: 64
---- !u!1 &2113633962
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2113633964}
-  - component: {fileID: 2113633963}
-  m_Layer: 5
-  m_Name: UIDocument
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2113633963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2113633962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 1b2f6b427cb9d3b48a594dcaf032f340, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: b9dd003d12a3de746b50e7b4f41fd713, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
---- !u!4 &2113633964
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2113633962}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 2113633964}
   - {fileID: 563892070}
   - {fileID: 192251733}
-  - {fileID: 1855684113}
   - {fileID: 1403908975}

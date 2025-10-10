@@ -2,46 +2,55 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
+[RequireComponent(typeof(UIDocument))]
 public class UIManager : MonoBehaviour
 {
 
     public UIDocument uiDocument;
     public Camera cam;
-    public AircraftFactory aircraftFactory;
-    private AircraftSpecRegistry aircraftSpecRegistry;
+    public AircraftSpecRegistry aircraftSpecRegistry;
+    
     [SerializeField]
-    private GameManager gameManager;
+    private MainGameManager gameManager;
 
     private VisualElement root, mainMenuRoot, createRoot;
     private CustomToggleButtonGroup mainMenuTBG, createTBG;
     private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;    
     private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;    
 
-    public GameControllerMode gameControllerModeFromUI;
+    public MainGameMode mainGameModeFromUI;
 
-    // Aircraft Factory Icin
+    // For Create Mode
     public string selectedAircraftModelName;
-
 
     void Start()
     {
         AssignData();
     }
-    //void Update()
-    //{
-    //    ResetToDefault_Check();
-    //    mainMenuTBG.value = 1;
-    //}
+    private void Update()
+    {
+        UpdateSelectedAircraft();
+    }
+    void UpdateSelectedAircraft()
+    {
+        switch (mainGameModeFromUI)
+        {
+            case MainGameMode.Create:
+
+                if (rotorTBtn.value)
+                {
+                    selectedAircraftModelName = rotorDDM.dropdownField.value;
+                }
+                if (fixedWingTBtn.value)
+                {
+                    selectedAircraftModelName = fixedWingDDM.dropdownField.value;
+                }
 
 
-    //void ResetToDefault_Check()
-    //{
-    //    if (Input.GetKey(KeyCode.Escape))
-    //    {
-    //        ResetToDefault();
-    //    }
-    //}
+                break;
+        }
+    }
+
     void AssignData()
     {   
         if (!uiDocument) uiDocument = GetComponent<UIDocument>();
@@ -56,10 +65,10 @@ public class UIManager : MonoBehaviour
         createTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("createTBG"), false);
 
         DropdownField d = root.Q<DropdownField>("rotorDDM");
-        rotorDDM = new CustomAircraftDropdownMenu(d, aircraftFactory.registry.rotorAircrafts);
+        rotorDDM = new CustomAircraftDropdownMenu(d, aircraftSpecRegistry.rotorAircrafts);
 
         d = root.Q<DropdownField>("fixedWingDDM");
-        fixedWingDDM = new CustomAircraftDropdownMenu(d, aircraftFactory.registry.fixedWingAircrafts);
+        fixedWingDDM = new CustomAircraftDropdownMenu(d, aircraftSpecRegistry.fixedWingAircrafts);
 
         createTBtn = root.Q<Toggle>("createTBtn");
         listenTBtn = root.Q<Toggle>("listenTBtn");
@@ -79,13 +88,13 @@ public class UIManager : MonoBehaviour
         if (createTBtn.value)
         {
             createRoot.RemoveFromClassList("submenusHidden");
-            gameControllerModeFromUI = GameControllerMode.Create;
+            mainGameModeFromUI = MainGameMode.Create;
             rotorTBtn.value = true;            
         }
         else
         {
             createRoot.AddToClassList("submenusHidden");
-            gameControllerModeFromUI = GameControllerMode.Free;
+            mainGameModeFromUI = MainGameMode.Free;
         }
     }
 
@@ -106,7 +115,7 @@ public class UIManager : MonoBehaviour
             rotorDDM.dropdownField.style.display = DisplayStyle.None;
             fixedWingDDM.dropdownField.style.display = DisplayStyle.Flex;
         }
-    }    
+    }
 }
 
 
@@ -157,14 +166,6 @@ public class CustomToggleButtonGroup
         if (isEmpty && clickedForUnchecking && notAllowEmptySelection)
         {
             currentToggle.value = true;
-        }
-    }
-
-    public void Init()
-    {
-        using (var evt = ClickEvent.GetPooled())
-        {
-            toggleButtonList[0]?.SendEvent(evt); // Toggle kendi iç mantığıyla değerini değiştirir
         }
     }
 }
