@@ -6,13 +6,9 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
 
-    public UIDocument uiDocument;
+    private UIDocument uiDocument;
     public Camera cam;
     public AircraftSpecRegistry aircraftSpecRegistry;
-    
-    [SerializeField]
-    private MainGameManager gameManager;
-
     private VisualElement root, mainMenuRoot, createRoot;
     private CustomToggleButtonGroup mainMenuTBG, createTBG;
     private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;    

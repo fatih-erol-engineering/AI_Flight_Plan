@@ -7,9 +7,11 @@ public enum MainGameMode { Free, Create}
 
 [RequireComponent(typeof(FreeGameController))]
 [RequireComponent(typeof(CreateGameController))]
+[RequireComponent(typeof(UIManager))]
 
 public class MainGameManager : MonoBehaviour
 {
+    private UIManager uIManager;
     private FreeGameController freeGameController;
     private CreateGameController createGameController;
     private Dictionary<MainGameMode, MainGameModeHooks> modes;
@@ -18,7 +20,8 @@ public class MainGameManager : MonoBehaviour
 
     void Awake()
     {
-        if(!freeGameController) freeGameController = gameObject.GetComponent<FreeGameController>();
+        if (!uIManager) uIManager = gameObject.GetComponent<UIManager>();
+        if (!freeGameController) freeGameController = gameObject.GetComponent<FreeGameController>();
         if (!createGameController) createGameController = gameObject.GetComponent<CreateGameController>();
 
         ConfigureModes();
