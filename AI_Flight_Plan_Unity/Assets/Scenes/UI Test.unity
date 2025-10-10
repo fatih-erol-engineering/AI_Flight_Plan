@@ -503,14 +503,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1403908974}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1075576054}
   - {fileID: 457705281}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1827900601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1827900595
 GameObject:
@@ -521,11 +521,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1827900601}
+  - component: {fileID: 1827900596}
   - component: {fileID: 1827900600}
   - component: {fileID: 1827900599}
   - component: {fileID: 1827900598}
   - component: {fileID: 1827900597}
-  - component: {fileID: 1827900596}
+  - component: {fileID: 1827900602}
   m_Layer: 0
   m_Name: MainGameManager
   m_TagString: Untagged
@@ -596,6 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 635423966ee34984aaf0192b997564f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreateGameController
+  aircraftFactory: {fileID: 0}
 --- !u!114 &1827900600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -617,16 +619,32 @@ Transform:
   m_GameObject: {fileID: 1827900595}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.17781, y: -0.52, z: -5.55835}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1403908975}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1827900602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827900595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1fbf3d14292f0d4e9f80d6a50621a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
+  uIManager: {fileID: 1827900597}
+  registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  aircraftList: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 192251733}
-  - {fileID: 1403908975}
   - {fileID: 1827900601}

@@ -5,15 +5,17 @@ using UnityEngine;
 
 public enum MainGameMode { Free, Create}
 
+[RequireComponent(typeof(UIManager))]
 [RequireComponent(typeof(FreeGameController))]
 [RequireComponent(typeof(CreateGameController))]
-[RequireComponent(typeof(UIManager))]
+[RequireComponent(typeof(AircraftFactory))]
 
 public class MainGameManager : MonoBehaviour
 {
     private UIManager uIManager;
     private FreeGameController freeGameController;
     private CreateGameController createGameController;
+    private AircraftFactory aircraftFactory;
     private Dictionary<MainGameMode, MainGameModeHooks> modes;
     public MainGameModeHooks currentHooks;
     public MainGameMode currentMode { get; private set; } = MainGameMode.Free;
@@ -23,6 +25,7 @@ public class MainGameManager : MonoBehaviour
         if (!uIManager) uIManager = gameObject.GetComponent<UIManager>();
         if (!freeGameController) freeGameController = gameObject.GetComponent<FreeGameController>();
         if (!createGameController) createGameController = gameObject.GetComponent<CreateGameController>();
+        if (!aircraftFactory) aircraftFactory = gameObject.GetComponent<AircraftFactory>();
 
         ConfigureModes();
         SetMode(MainGameMode.Free, true); // örnek başlangıç

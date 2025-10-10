@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 public class CreateGameController : MonoBehaviour, IGameModeHooks
 {
+    [SerializeField]
+    private AircraftFactory aircraftFactory;
     public Action Apply()
     {
         throw new NotImplementedException();
@@ -14,7 +16,8 @@ public class CreateGameController : MonoBehaviour, IGameModeHooks
 
     public Action Init()
     {
-        throw new NotImplementedException();
+        if(!aircraftFactory) aircraftFactory=GetComponent<AircraftFactory>();
+
     }
 
     public Action Tick()
