@@ -17,8 +17,8 @@ public class Aircraft : SelectableMonoBehaviour
         {
             aircraftVisualObject = transform.Find("Aircraft").gameObject;
         }
-        aircraftMeshRenderer = aircraftVisualObject.GetComponent<MeshRenderer>();        
-        UpdateColor();
+        aircraftMeshRenderer = aircraftVisualObject.GetComponent<MeshRenderer>();
+        UpdateColor(spec.color);
     }
     public void MoveAircraftWithTime(float sec)
     {
@@ -28,12 +28,12 @@ public class Aircraft : SelectableMonoBehaviour
             float startTime_s = segment.startPoint.time.second;
             float endTime_s = segment.endPoint.time.second;
 
-            if ((sec<=endTime_s)&&(sec>=startTime_s))
+            if ((sec <= endTime_s) && (sec >= startTime_s))
             {
                 int n = segment.lr.positionCount;
-                float lerpVal = (sec -startTime_s)/ (endTime_s - startTime_s);
+                float lerpVal = (sec - startTime_s) / (endTime_s - startTime_s);
                 lerpVal = Mathf.Clamp(lerpVal, 0, 1);
-                float currentIdxFloat = Mathf.Lerp(0, n-1, lerpVal);
+                float currentIdxFloat = Mathf.Lerp(0, n - 1, lerpVal);
                 int currentIdx = Mathf.RoundToInt(currentIdxFloat);
                 aircraftVisualObject.transform.position = segment.lr.GetPosition(currentIdx);
                 break;
@@ -46,23 +46,8 @@ public class Aircraft : SelectableMonoBehaviour
     {
         if (trajectory == null)
         {
-            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab,transform.position, transform.rotation, this.transform);
-            
-            trajectory = trajParentGO.GetComponent<Trajectory>();
-            if (trajectory == null)
-            {
-                trajectory = trajParentGO.AddComponent<Trajectory>();
-                trajectory.theme = theme;
-            }
-        }        
-        Waypoint wp = trajectory.CreateWaypoint(globalPosition);
-        return wp;
-    }
-    public Waypoint CreateWaypoint(Vector3 globalPosition,float time_s)
-    {
-        if (trajectory == null)
-        {
-            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);                        
+            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);
+
             trajectory = trajParentGO.GetComponent<Trajectory>();
             if (trajectory == null)
             {
@@ -70,13 +55,33 @@ public class Aircraft : SelectableMonoBehaviour
                 trajectory.theme = theme;
             }
         }
-        Waypoint wp = trajectory.CreateWaypoint(globalPosition,time_s);        
+        Waypoint wp = trajectory.CreateWaypoint(globalPosition);
         return wp;
     }
-    public virtual void UpdateColor()
-    {        
-        aircraftMeshRenderer.material.color = spec.color;
+    public Waypoint CreateWaypoint(Vector3 globalPosition, float time_s)
+    {
+        if (trajectory == null)
+        {
+            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);
+            trajectory = trajParentGO.GetComponent<Trajectory>();
+            if (trajectory == null)
+            {
+                trajectory = trajParentGO.AddComponent<Trajectory>();
+                trajectory.theme = theme;
+            }
+        }
+        Waypoint wp = trajectory.CreateWaypoint(globalPosition, time_s);
+        return wp;
     }
+    public void UpdateColor(Color color)
+    {
+        aircraftMeshRenderer.material.color = color;
+    }
+    public void UpdateMaterial(Material material)
+    {
+        aircraftMeshRenderer.material = material;
+    }
+
 
 
 }

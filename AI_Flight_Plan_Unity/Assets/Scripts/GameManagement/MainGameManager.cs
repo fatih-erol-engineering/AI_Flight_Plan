@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum MainGameMode { Free, Create}
+public enum MainGameMode { Free, Create }
 
 [RequireComponent(typeof(UIManager))]
 [RequireComponent(typeof(FreeGameController))]
@@ -33,17 +33,17 @@ public class MainGameManager : MonoBehaviour
 
     void Update()
     {
-        // 1) Her frame aktif modu çalıştır
+        SetMode(uIManager.mainGameModeFromUI, false);
+
         currentHooks?.Tick?.Invoke();
 
-        // 2) ESC ile interrupt
         if (Input.GetKeyDown(KeyCode.Escape))
             Interrupt(); // Null/None moda dön
     }
 
     public void SetMode(MainGameMode next, bool isCompleted)
     {
-        if (next == currentMode) return;
+        if ((next == currentMode) && (currentHooks != null)) return;
 
         if (isCompleted)
         {
@@ -58,14 +58,14 @@ public class MainGameManager : MonoBehaviour
         currentHooks?.Init?.Invoke();
         OnModeChanged?.Invoke(next);
     }
- 
+
     public void Interrupt()
     {
         // Mod özelinde bir “iptal” varsa önce onu çağır
         currentHooks?.Cancel?.Invoke();
 
         // Ardından Null moda geç
-        SetMode(MainGameMode.Free,false);
+        SetMode(MainGameMode.Free, false);
     }
 
     public event Action<MainGameMode> OnModeChanged;
@@ -78,16 +78,16 @@ public class MainGameManager : MonoBehaviour
             {
                 Init = () => freeGameController.Init(),
                 Tick = () => freeGameController.Tick(),
-                Apply = () => freeGameController.Apply(),                
-                Cancel = () => freeGameController.Cancel(),                
+                Apply = () => freeGameController.Apply(),
+                Cancel = () => freeGameController.Cancel(),
             },
 
             [MainGameMode.Create] = new MainGameModeHooks
             {
                 Init = () => createGameController.Init(),
                 Tick = () => createGameController.Tick(),
-                Apply = () => createGameController.Apply(),                
-                Cancel = () => createGameController.Cancel(),                
+                Apply = () => createGameController.Apply(),
+                Cancel = () => createGameController.Cancel(),
             },
         };
     }

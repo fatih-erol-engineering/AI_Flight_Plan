@@ -1,32 +1,33 @@
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
+[RequireComponent(typeof(UIManager))]
 public class AircraftFactory : MonoBehaviour
-{        
+{
     [SerializeField]
-    private UIManager uIManager;
+    public UIManager uIManager { get; private set; }
 
-    public AircraftSpecRegistry registry;
     [SerializeField]
-    private Theme theme;
+    private AircraftSpecRegistry registry;
+
+    public Theme theme;
 
     public AircraftSpec aircraftSpecToSpawn { get; private set; }
-    private Transform aircraftParent;
+    protected Transform aircraftParent;
 
     public List<Aircraft> aircraftList;
 
-
-    // PRE SHOW PROPERTIES
-    public AircraftPreShow aircraftPreShow { get; private set; }
-    public GameObject aircrafPreShowParent { get; private set; }
-
-
     private string prev_selectedAircraftModelName;
 
-    private void Awake()
-    {        
+    public void OnEnable()
+    {
+        AssignData();
     }
-
+    private void AssignData()
+    {
+        uIManager = GetComponent<UIManager>();
+    }
     public void Update()
     {
         ChangeAircraftSpecToSpawnWithUI();
@@ -44,38 +45,7 @@ public class AircraftFactory : MonoBehaviour
         prev_selectedAircraftModelName = uIManager.selectedAircraftModelName;
     }
 
-
-
-    public Aircraft Spawn(AircraftModel type, Vector3 globalPosition, Quaternion globalRotation)
-    {
-        if (aircraftParent == null)
-        {
-            GameObject aircraftParentObj = new GameObject("Aircrafts");
-            aircraftParentObj.transform.parent = this.transform;
-            aircraftParentObj.transform.localPosition = Vector3.zero;
-            aircraftParent = aircraftParentObj.transform;
-        }
-        var spec = registry.Get(type);
-        if (spec == null || spec.prefab == null)
-        {
-            Debug.LogError($"[AircraftFactory] Missing spec/prefab for {type}");
-            return null;
-        }
-
-        var go = Instantiate(spec.prefab, globalPosition, globalRotation, aircraftParent);
-        var ctrl = go.GetComponent<Aircraft>();
-        ctrl.spec = spec;
-        if (!ctrl) ctrl = go.AddComponent<Aircraft>();
-        ctrl.UpdateColor();
-        if (aircraftList == null)
-        {
-            aircraftList = new();
-        }
-        aircraftList.Add(ctrl);
-        return ctrl;
-    }
-
-    public Aircraft Spawn()
+    public virtual Aircraft Spawn()
     {
         if (aircraftParent == null)
         {
@@ -95,7 +65,63 @@ public class AircraftFactory : MonoBehaviour
         var ctrl = go.GetComponent<Aircraft>();
         ctrl.spec = spec;
         if (!ctrl) ctrl = go.AddComponent<Aircraft>();
-        ctrl.UpdateColor();
+        ctrl.UpdateColor(spec.color);
+        if (aircraftList == null)
+        {
+            aircraftList = new();
+        }
+        aircraftList.Add(ctrl);
+        return ctrl;
+    }
+    public virtual Aircraft Spawn(AircraftModel type, Vector3 globalPosition, Quaternion globalRotation)
+    {
+        if (aircraftParent == null)
+        {
+            GameObject aircraftParentObj = new GameObject("Aircrafts");
+            aircraftParentObj.transform.parent = this.transform;
+            aircraftParentObj.transform.localPosition = Vector3.zero;
+            aircraftParent = aircraftParentObj.transform;
+        }
+        var spec = registry.Get(type);
+        if (spec == null || spec.prefab == null)
+        {
+            Debug.LogError($"[AircraftFactory] Missing spec/prefab for {type}");
+            return null;
+        }
+
+        var go = Instantiate(spec.prefab, globalPosition, globalRotation, aircraftParent);
+        var ctrl = go.GetComponent<Aircraft>();
+        ctrl.spec = spec;
+        if (!ctrl) ctrl = go.AddComponent<Aircraft>();
+        ctrl.UpdateColor(spec.color);
+        if (aircraftList == null)
+        {
+            aircraftList = new();
+        }
+        aircraftList.Add(ctrl);
+        return ctrl;
+    }
+    public virtual Aircraft Spawn(string parentName)
+    {
+        if (aircraftParent == null)
+        {
+            GameObject aircraftParentObj = new GameObject(parentName);
+            aircraftParentObj.transform.parent = this.transform;
+            aircraftParentObj.transform.localPosition = Vector3.zero;
+            aircraftParent = aircraftParentObj.transform;
+        }
+        var spec = registry.Get(aircraftSpecToSpawn.model);
+        if (spec == null || spec.prefab == null)
+        {
+            Debug.LogError($"[AircraftFactory] Missing spec/prefab for {aircraftSpecToSpawn.model}");
+            return null;
+        }
+
+        var go = Instantiate(spec.prefab, aircraftParent);
+        var ctrl = go.GetComponent<Aircraft>();
+        ctrl.spec = spec;
+        if (!ctrl) ctrl = go.AddComponent<Aircraft>();
+        ctrl.UpdateColor(spec.color);
         if (aircraftList == null)
         {
             aircraftList = new();
@@ -104,57 +130,14 @@ public class AircraftFactory : MonoBehaviour
         return ctrl;
     }
 
-
-
-
-
-
-
-
-
-    public void DeleteAircraftPreShow()
-    {
-        Destroy(aircrafPreShowParent);
-        aircraftPreShow = null;
-        aircrafPreShowParent = null;
-    }
-    public AircraftPreShow SpawnForPreShow()
-    {
-        AircraftPreShow ctrl = null;
-        ChangeAircraftSpecToSpawnWithUI();
-        if ((aircraftPreShow == null))
-        {
-            if (aircraftSpecToSpawn != null)
-            {
-                if (aircrafPreShowParent == null)
-                {
-                    aircrafPreShowParent = new GameObject("Pre Show Aircraft");
-                    aircrafPreShowParent.transform.parent = this.transform;
-                    aircrafPreShowParent.transform.localPosition = Vector3.zero;
-                }
-                DeleteAllChild(aircrafPreShowParent);
-                var go = Instantiate(aircraftSpecToSpawn.prefab, aircrafPreShowParent.transform);
-                ctrl = go.AddComponent<AircraftPreShow>();
-                ctrl.spec = aircraftSpecToSpawn;
-                ctrl.preShowMaterial = theme.PreShow;
-                ctrl.UpdateColor();
-                aircraftPreShow = ctrl;
-            }
-        }
-        return ctrl;
-    }
-
     public AircraftSpec Get(string modelName)
     {
         return registry.Get(modelName);
     }
-
-    private void DeleteAllChild(GameObject go)
+    public void Delete()
     {
-        for (int i = go.transform.childCount - 1; i >= 0; i--)
-        {
-            Transform child = go.transform.GetChild(i);
-            DestroyImmediate(child);
-        }
+        Destroy(aircraftParent.gameObject);
+        aircraftList.Clear();
     }
+
 }

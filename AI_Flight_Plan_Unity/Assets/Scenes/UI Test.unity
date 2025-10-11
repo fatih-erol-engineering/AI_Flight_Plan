@@ -527,6 +527,7 @@ GameObject:
   - component: {fileID: 1827900598}
   - component: {fileID: 1827900597}
   - component: {fileID: 1827900602}
+  - component: {fileID: 1827900603}
   m_Layer: 0
   m_Name: MainGameManager
   m_TagString: Untagged
@@ -597,7 +598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 635423966ee34984aaf0192b997564f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreateGameController
-  aircraftFactory: {fileID: 0}
+  aircraftFactory: {fileID: 1827900602}
+  aircraftFactoryPreCreate: {fileID: 1827900603}
 --- !u!114 &1827900600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -638,7 +640,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1fbf3d14292f0d4e9f80d6a50621a5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
-  uIManager: {fileID: 1827900597}
+  registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  aircraftList: []
+--- !u!114 &1827900603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827900595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2606c7ba4f6ec8141a1c964a820cfcc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AircraftFactoryPreCreate
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   aircraftList: []

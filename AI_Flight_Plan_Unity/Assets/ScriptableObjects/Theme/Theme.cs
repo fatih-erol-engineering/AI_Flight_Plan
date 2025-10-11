@@ -23,6 +23,6 @@ public class Theme : ScriptableObject
     [Header("Theme Materials")]
     public Material Hover;
     public Material Select;
-    public Material PreShow;
+    public Material PreCreate;
 
 }

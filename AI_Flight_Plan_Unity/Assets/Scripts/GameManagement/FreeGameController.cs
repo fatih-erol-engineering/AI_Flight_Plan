@@ -2,24 +2,24 @@ using System;
 using UnityEngine;
 public class FreeGameController : MonoBehaviour, IGameModeHooks
 {
-    public Action Apply()
+    public void Apply()
     {
-        throw new NotImplementedException();
+        Debug.Log("Apply: Free Mode");
     }
 
-    public Action Cancel()
+    public void Cancel()
     {
-        throw new NotImplementedException();
+        Debug.Log("Cancel: Free Mode");
     }
 
-    public Action Init()
+    public void Init()
     {
-        throw new NotImplementedException();
+        Debug.Log("Init: Free Mode");
     }
 
-    public Action Tick()
+    public void Tick()
     {
-        throw new NotImplementedException();
+        Debug.Log("Tick: Free Mode");
     }
 }
 

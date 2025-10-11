@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UIElements;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(UIDocument))]
 public class UIManager : MonoBehaviour
@@ -11,8 +12,8 @@ public class UIManager : MonoBehaviour
     public AircraftSpecRegistry aircraftSpecRegistry;
     private VisualElement root, mainMenuRoot, createRoot;
     private CustomToggleButtonGroup mainMenuTBG, createTBG;
-    private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;    
-    private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;    
+    private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;
+    private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
 
     public MainGameMode mainGameModeFromUI;
 
@@ -29,36 +30,25 @@ public class UIManager : MonoBehaviour
     }
     void UpdateSelectedAircraft()
     {
-        switch (mainGameModeFromUI)
+        if (rotorTBtn.value)
         {
-            case MainGameMode.Create:
-
-                if (rotorTBtn.value)
-                {
-                    selectedAircraftModelName = rotorDDM.dropdownField.value;
-                }
-                if (fixedWingTBtn.value)
-                {
-                    selectedAircraftModelName = fixedWingDDM.dropdownField.value;
-                }
-
-
-                break;
+            selectedAircraftModelName = rotorDDM.dropdownField.value;
+        }
+        if (fixedWingTBtn.value)
+        {
+            selectedAircraftModelName = fixedWingDDM.dropdownField.value;
         }
     }
 
     void AssignData()
-    {   
+    {
         if (!uiDocument) uiDocument = GetComponent<UIDocument>();
         if (!cam) cam = Camera.main;
-        
+
         root = uiDocument.rootVisualElement;
 
         mainMenuRoot = root.Q<VisualElement>("mainMenuRoot");
         createRoot = root.Q<VisualElement>("createRoot");
-
-        mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
-        createTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("createTBG"), false);
 
         DropdownField d = root.Q<DropdownField>("rotorDDM");
         rotorDDM = new CustomAircraftDropdownMenu(d, aircraftSpecRegistry.rotorAircrafts);
@@ -77,6 +67,13 @@ public class UIManager : MonoBehaviour
         rotorTBtn.RegisterValueChangedCallback(_ => rotorTBtnChange());
         fixedWingTBtn.RegisterValueChangedCallback(_ => fixedWingTBtnChange());
 
+        rotorDDM.dropdownField.RegisterValueChangedCallback(_ => rotorDDMChange());
+        fixedWingDDM.dropdownField.RegisterValueChangedCallback(_ => fixedWingDDMChange());
+
+
+        // Custom Toggle Button Groups must be declared after Registering Value Changed Callbacks
+        mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
+        createTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("createTBG"), false);
     }
 
     void createTBtnClick()
@@ -85,7 +82,6 @@ public class UIManager : MonoBehaviour
         {
             createRoot.RemoveFromClassList("submenusHidden");
             mainGameModeFromUI = MainGameMode.Create;
-            rotorTBtn.value = true;            
         }
         else
         {
@@ -96,7 +92,7 @@ public class UIManager : MonoBehaviour
 
 
     void rotorTBtnChange()
-    {        
+    {
         if (rotorTBtn.value)
         {
             fixedWingDDM.dropdownField.style.display = DisplayStyle.None;
@@ -105,28 +101,42 @@ public class UIManager : MonoBehaviour
     }
 
     void fixedWingTBtnChange()
-    {        
+    {
         if (fixedWingTBtn.value)
         {
             rotorDDM.dropdownField.style.display = DisplayStyle.None;
             fixedWingDDM.dropdownField.style.display = DisplayStyle.Flex;
         }
     }
+
+    void rotorDDMChange()
+    {
+        // Biseyler Gelecek ama NE !
+    }
+    void fixedWingDDMChange()
+    {
+        // Biseyler Gelecek ama NE !
+    }
 }
 
 
 public class CustomToggleButtonGroup
 {
-    public VisualElement toggleButtonGroupVE {get; private set;}
+    public VisualElement toggleButtonGroupVE { get; private set; }
     public List<Toggle> toggleButtonList { get; private set; }
     public bool allowEmptySelection { get; private set; }
-    public CustomToggleButtonGroup(VisualElement _toggleButtonGroupVE,bool _allowEmptySelection)
+    public CustomToggleButtonGroup(VisualElement _toggleButtonGroupVE, bool _allowEmptySelection)
     {
         allowEmptySelection = _allowEmptySelection;
         toggleButtonGroupVE = _toggleButtonGroupVE;
         toggleButtonList = _toggleButtonGroupVE.Query<Toggle>().ToList();
         AssignCustomToggleClickToButtons();
+        if (!allowEmptySelection)
+        {
+            toggleButtonList[0].value = true;
+        }
     }
+
     public void AssignCustomToggleClickToButtons()
     {
         foreach (Toggle toggleButton in toggleButtonList)
@@ -185,6 +195,6 @@ public class CustomAircraftDropdownMenu
         }
 
         dropdownField.choices = _labels;
-        dropdownField.index = 0;        
+        dropdownField.index = 0;
     }
 }

@@ -1,28 +1,34 @@
 using System;
 using UnityEngine;
+
+[RequireComponent(typeof(AircraftFactory))]
+[RequireComponent(typeof(AircraftFactoryPreCreate))]
 public class CreateGameController : MonoBehaviour, IGameModeHooks
 {
     [SerializeField]
     private AircraftFactory aircraftFactory;
-    public Action Apply()
+    [SerializeField]
+    private AircraftFactoryPreCreate aircraftFactoryPreCreate;
+    public void Apply()
     {
-        throw new NotImplementedException();
+        Debug.Log("Apply: Create Mode");
     }
 
-    public Action Cancel()
+    public void Cancel()
     {
-        throw new NotImplementedException();
+        aircraftFactoryPreCreate?.Delete();
     }
 
-    public Action Init()
+    public void Init()
     {
-        if(!aircraftFactory) aircraftFactory=GetComponent<AircraftFactory>();
-
+        if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
+        aircraftFactoryPreCreate.Spawn();
+        Debug.Log("Init: Create Mode");
     }
 
-    public Action Tick()
+    public void Tick()
     {
-        throw new NotImplementedException();
+        Debug.Log("Tick: Create Mode");
     }
 }
 
