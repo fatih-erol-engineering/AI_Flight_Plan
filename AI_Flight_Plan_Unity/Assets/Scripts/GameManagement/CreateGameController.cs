@@ -1,14 +1,37 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 
 [RequireComponent(typeof(AircraftFactory))]
 [RequireComponent(typeof(AircraftFactoryPreCreate))]
+[RequireComponent(typeof(MainGameManager))]
 public class CreateGameController : MonoBehaviour, IGameModeHooks
 {
+    [SerializeField]
+    private MainGameManager mainGameManager;
+
+    [SerializeField]
+    private LayerMask hitMask = ~0;
+
+    [SerializeField]
+    private Camera mainCamera;
     [SerializeField]
     private AircraftFactory aircraftFactory;
     [SerializeField]
     private AircraftFactoryPreCreate aircraftFactoryPreCreate;
+    private Aircraft aircraftPreCreate;
+    void Awake()
+    {
+        AssignData();
+    }
+    void AssignData()
+    {
+        if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
+        if (!aircraftFactory) aircraftFactory = GetComponent<AircraftFactory>();
+        if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
+        if (!mainCamera) mainCamera = Camera.main;
+    }
     public void Apply()
     {
         Debug.Log("Apply: Create Mode");
@@ -22,13 +45,47 @@ public class CreateGameController : MonoBehaviour, IGameModeHooks
     public void Init()
     {
         if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
-        aircraftFactoryPreCreate.Spawn();
+        aircraftPreCreate = aircraftFactoryPreCreate.Spawn();
         Debug.Log("Init: Create Mode");
     }
 
     public void Tick()
     {
-        Debug.Log("Tick: Create Mode");
+        if (MouseHitPos(out Vector3 globalPosition))
+        {
+            Vector3 offset = new Vector3(0f, 5f, 0f);
+            aircraftPreCreate.aircraftVisualObject.transform.position = globalPosition + offset;
+        }
     }
+
+    bool MouseHitPos(out Vector3 globalPosition)
+    {
+        Vector2 screen = Input.mousePosition;
+        var ray = mainCamera.ScreenPointToRay(screen);
+        float maxDist = mainCamera ? mainCamera.farClipPlane : 1000f;
+        if (EventSystem.current && EventSystem.current.IsPointerOverGameObject())
+        {
+            globalPosition = default;
+            return false;
+        }
+
+        if (Physics.Raycast(ray, out var hit, maxDist, hitMask, QueryTriggerInteraction.Collide))
+        {
+            globalPosition = hit.point;
+            return true;
+        }
+        else
+        {
+            var plane = new Plane(Vector3.up, new Vector3(0, 0, 0));
+            if (plane.Raycast(ray, out float enter))
+            {
+                globalPosition = ray.GetPoint(enter);
+                return true;
+            }
+        }
+        globalPosition = default;
+        return false;
+    }
+
 }
 
