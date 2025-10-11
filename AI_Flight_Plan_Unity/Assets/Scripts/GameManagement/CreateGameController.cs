@@ -49,14 +49,27 @@ public class CreateGameController : MonoBehaviour, IGameModeHooks
         Debug.Log("Init: Create Mode");
     }
 
-    public void Tick()
+    public bool Tick()
     {
+        bool exitFlag = false;
         if (MouseHitPos(out Vector3 globalPosition))
         {
-            Vector3 offset = new Vector3(0f, 5f, 0f);
+            Vector3 offset = new Vector3(0f, 1f, 0f);
             aircraftPreCreate.aircraftVisualObject.transform.position = globalPosition + offset;
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            exitFlag = true;
+            exitMode = ExitMode.Cancel;
+        }
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0))
+        {
+            exitFlag = true;
+            exitMode = ExitMode.Apply;
+        }
+        return exitFlag;
     }
+    public ExitMode exitMode { get; set; }
 
     bool MouseHitPos(out Vector3 globalPosition)
     {

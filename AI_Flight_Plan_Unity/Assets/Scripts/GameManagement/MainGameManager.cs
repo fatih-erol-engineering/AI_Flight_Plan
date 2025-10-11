@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 
 public enum MainGameMode { Free, Create }
+public enum ExitMode { Cancel, Apply }
 
 [RequireComponent(typeof(UIManager))]
 [RequireComponent(typeof(FreeGameController))]
@@ -33,12 +35,22 @@ public class MainGameManager : MonoBehaviour
 
     void Update()
     {
+        bool exitFlag = false;
         SetMode(uIManager.mainGameModeFromUI, false);
 
-        currentHooks?.Tick?.Invoke();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-            Interrupt(); // Null/None moda dön
+        exitFlag = currentHooks?.Tick?.Invoke() ?? true;
+        if (exitFlag)
+        {
+            switch (currentHooks.exitMode)
+            {
+                case ExitMode.Cancel:
+                    SetMode(MainGameMode.Free, false);
+                    break;
+                case ExitMode.Apply:
+                    SetMode(MainGameMode.Free, true);
+                    break;
+            }
+        }
     }
 
     public void SetMode(MainGameMode next, bool isCompleted)
@@ -80,6 +92,7 @@ public class MainGameManager : MonoBehaviour
                 Tick = () => freeGameController.Tick(),
                 Apply = () => freeGameController.Apply(),
                 Cancel = () => freeGameController.Cancel(),
+                exitMode = freeGameController.exitMode,
             },
 
             [MainGameMode.Create] = new MainGameModeHooks
@@ -88,6 +101,7 @@ public class MainGameManager : MonoBehaviour
                 Tick = () => createGameController.Tick(),
                 Apply = () => createGameController.Apply(),
                 Cancel = () => createGameController.Cancel(),
+                exitMode = createGameController.exitMode,
             },
         };
     }
@@ -97,7 +111,8 @@ public class MainGameManager : MonoBehaviour
 public class MainGameModeHooks
 {
     public Action Init;
-    public Action Tick;
+    public Func<bool> Tick;
     public Action Apply;
     public Action Cancel;
+    public ExitMode exitMode;
 }

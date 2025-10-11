@@ -598,6 +598,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 635423966ee34984aaf0192b997564f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreateGameController
+  mainGameManager: {fileID: 1827900596}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  mainCamera: {fileID: 192251732}
   aircraftFactory: {fileID: 1827900602}
   aircraftFactoryPreCreate: {fileID: 1827900603}
 --- !u!114 &1827900600
