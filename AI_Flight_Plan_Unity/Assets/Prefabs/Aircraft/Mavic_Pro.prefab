@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 6713464166046119065}
   - component: {fileID: 2978117878603318046}
   - component: {fileID: 642516181423262312}
-  - component: {fileID: 2180298115982063024}
   m_Layer: 0
-  m_Name: Aircraft
+  m_Name: Mavic Pro Fuselage
   m_TagString: Aircraft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,10 +29,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 6829256584013129055}
+  m_Father: {fileID: 2206827229185371051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6713464166046119065
 MeshFilter:
@@ -113,19 +112,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1551919059694206447, guid: b6aefd01ecf60d84ea3cacb48d566c19, type: 3}
---- !u!114 &2180298115982063024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340078675279113828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f8c17d28db662a4789d592fc3b1de54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectableMonoBehaviour
-  isSelected: 0
 --- !u!1 &5697215273144170777
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +145,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 7720833844390499390}
+  - {fileID: 2206827229185371051}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7591488202535859855
@@ -255,4 +241,36 @@ MonoBehaviour:
   spec: {fileID: 11400000, guid: 8eb245aeb8b4a0a40a9a63ba36dfebfe, type: 2}
   trajectory: {fileID: 0}
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
-  aircraftMeshObject: {fileID: 1340078675279113828}
+  aircraftVisualObject: {fileID: 6158832458202871190}
+--- !u!1 &6158832458202871190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2206827229185371051}
+  m_Layer: 0
+  m_Name: Aircraft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2206827229185371051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158832458202871190}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7720833844390499390}
+  m_Father: {fileID: 6829256584013129055}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

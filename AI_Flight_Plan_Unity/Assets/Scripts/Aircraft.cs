@@ -9,16 +9,15 @@ public class Aircraft : SelectableMonoBehaviour
     public Trajectory trajectory;
     public Theme theme;
     public GameObject aircraftVisualObject;
-    protected MeshRenderer aircraftMeshRenderer;
+    protected MeshRenderer[] aircraftMeshRenderers;
 
     protected void OnEnable()
     {
-        if (aircraftMeshRenderer == null)
+        if (aircraftMeshRenderers == null)
         {
             aircraftVisualObject = transform.Find("Aircraft").gameObject;
         }
-        aircraftMeshRenderer = aircraftVisualObject.GetComponent<MeshRenderer>();
-        UpdateColor(spec.color);
+        aircraftMeshRenderers = aircraftVisualObject.GetComponentsInChildren<MeshRenderer>();
     }
     public void MoveAircraftWithTime(float sec)
     {
@@ -75,11 +74,17 @@ public class Aircraft : SelectableMonoBehaviour
     }
     public void UpdateColor(Color color)
     {
-        aircraftMeshRenderer.material.color = color;
+        foreach (MeshRenderer renderer in aircraftMeshRenderers)
+        {
+            renderer.material.color = color;
+        }
     }
     public void UpdateMaterial(Material material)
     {
-        aircraftMeshRenderer.material = material;
+        foreach (MeshRenderer renderer in aircraftMeshRenderers)
+        {
+            renderer.material = material;
+        }
     }
 
 
