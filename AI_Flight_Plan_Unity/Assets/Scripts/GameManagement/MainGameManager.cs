@@ -4,7 +4,7 @@ using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 
-public enum MainGameMode { Free, Create }
+public enum MainGameMode { Free, Create, }
 public enum ExitMode { Cancel, Apply }
 
 [RequireComponent(typeof(UIManager))]
@@ -30,54 +30,63 @@ public class MainGameManager : MonoBehaviour
         if (!aircraftFactory) aircraftFactory = gameObject.GetComponent<AircraftFactory>();
 
         ConfigureModes();
-        SetMode(MainGameMode.Free, true); // örnek başlangıç
+        SetMode(MainGameMode.Free); // örnek başlangıç
     }
 
+    void RestartMode()
+    {
+        currentHooks?.Cancel?.Invoke();
+        currentHooks?.Init?.Invoke();
+    }
     void Update()
     {
-        bool exitFlag = false;
-        SetMode(uIManager.mainGameModeFromUI, false);
+        if (uIManager.restartRequestUI)
+        {
+            RestartMode();
+        }
 
-        exitFlag = currentHooks?.Tick?.Invoke() ?? true;
+        bool exitFlag = currentHooks?.Tick?.Invoke() ?? true;
         if (exitFlag)
         {
-            switch (currentHooks.exitMode)
-            {
-                case ExitMode.Cancel:
-                    SetMode(MainGameMode.Free, false);
-                    break;
-                case ExitMode.Apply:
-                    SetMode(MainGameMode.Free, true);
-                    break;
-            }
+            SetMode(MainGameMode.Free, currentHooks.exitMode);
+        }
+
+        else
+        {
+            SetModeFromUI();
         }
     }
 
-    public void SetMode(MainGameMode next, bool isCompleted)
+    void SetModeFromUI()
+    {
+        SetMode(uIManager.gameModeUI);
+    }
+    public void SetMode(MainGameMode next)
     {
         if ((next == currentMode) && (currentHooks != null)) return;
-
-        if (isCompleted)
-        {
-            currentHooks?.Apply?.Invoke();
-        }
-        else
-        {
-            currentHooks?.Cancel?.Invoke();
-        }
         currentMode = next;
         currentHooks = modes.TryGetValue(next, out var h) ? h : null;
         currentHooks?.Init?.Invoke();
         OnModeChanged?.Invoke(next);
     }
-
-    public void Interrupt()
+    public void SetMode(MainGameMode next, ExitMode exitMode)
     {
-        // Mod özelinde bir “iptal” varsa önce onu çağır
-        currentHooks?.Cancel?.Invoke();
+        if ((next == currentMode) && (currentHooks != null)) return;
 
-        // Ardından Null moda geç
-        SetMode(MainGameMode.Free, false);
+        switch (currentHooks.exitMode)
+        {
+            case ExitMode.Cancel:
+                currentHooks?.Cancel?.Invoke();
+                break;
+            case ExitMode.Apply:
+                currentHooks?.Apply?.Invoke();
+                break;
+        }
+
+        currentMode = next;
+        currentHooks = modes.TryGetValue(next, out var h) ? h : null;
+        currentHooks?.Init?.Invoke();
+        OnModeChanged?.Invoke(next);
     }
 
     public event Action<MainGameMode> OnModeChanged;

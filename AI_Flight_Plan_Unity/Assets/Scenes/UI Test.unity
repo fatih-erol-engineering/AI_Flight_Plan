@@ -449,7 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   cam: {fileID: 192251732}
   aircraftSpecRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
-  mainGameModeFromUI: 0
+  gameModeUI: 0
   selectedAircraftModelName: 
 --- !u!114 &1827900598
 MonoBehaviour:

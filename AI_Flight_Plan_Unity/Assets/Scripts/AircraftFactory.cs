@@ -20,13 +20,14 @@ public class AircraftFactory : MonoBehaviour
 
     private string prev_selectedAircraftModelName;
 
-    public void OnEnable()
+    public void Awake()
     {
         AssignData();
     }
     private void AssignData()
     {
         uIManager = GetComponent<UIManager>();
+        aircraftSpecToSpawn = registry.rotorAircrafts[0];
     }
     public void Update()
     {

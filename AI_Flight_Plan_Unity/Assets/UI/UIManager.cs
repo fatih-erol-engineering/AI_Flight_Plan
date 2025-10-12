@@ -15,7 +15,8 @@ public class UIManager : MonoBehaviour
     private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;
     private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
 
-    public MainGameMode mainGameModeFromUI;
+    public MainGameMode gameModeUI { get; private set; }
+    public bool restartRequestUI { get; private set; }
 
     // For Create Mode
     public string selectedAircraftModelName;
@@ -26,6 +27,7 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
+        restartRequestUI = false;
         UpdateSelectedAircraft();
     }
     void UpdateSelectedAircraft()
@@ -81,12 +83,12 @@ public class UIManager : MonoBehaviour
         if (createTBtn.value)
         {
             createRoot.RemoveFromClassList("submenusHidden");
-            mainGameModeFromUI = MainGameMode.Create;
+            gameModeUI = MainGameMode.Create;
         }
         else
         {
             createRoot.AddToClassList("submenusHidden");
-            mainGameModeFromUI = MainGameMode.Free;
+            gameModeUI = MainGameMode.Free;
         }
     }
 
@@ -97,6 +99,7 @@ public class UIManager : MonoBehaviour
         {
             fixedWingDDM.dropdownField.style.display = DisplayStyle.None;
             rotorDDM.dropdownField.style.display = DisplayStyle.Flex;
+            restartRequestUI = true;
         }
     }
 
@@ -106,16 +109,17 @@ public class UIManager : MonoBehaviour
         {
             rotorDDM.dropdownField.style.display = DisplayStyle.None;
             fixedWingDDM.dropdownField.style.display = DisplayStyle.Flex;
+            restartRequestUI = true;
         }
     }
 
     void rotorDDMChange()
     {
-        // Biseyler Gelecek ama NE !
+        restartRequestUI = true;
     }
     void fixedWingDDMChange()
     {
-        // Biseyler Gelecek ama NE !
+        restartRequestUI = true;
     }
 }
 
