@@ -134,10 +134,12 @@ public class UIManager : MonoBehaviour
 
     void rotorDDMChange()
     {
+        UpdateSelectedAircraft();
         restartRequestUI = true;
     }
     void fixedWingDDMChange()
     {
+        UpdateSelectedAircraft();
         restartRequestUI = true;
     }
 }
