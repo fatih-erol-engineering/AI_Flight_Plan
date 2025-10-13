@@ -71,7 +71,8 @@ public class CreateModeController : MonoBehaviour, IGameModeHooks
 
     public void Cancel()
     {
-        // Preshow, Created Aircraft Created Waypoint exc. all will be deleted!        
+        currentHooks?.Cancel?.Invoke();     
+        
         Debug.Log("Cancel: Create Mode");
     }
 

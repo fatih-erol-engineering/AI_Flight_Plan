@@ -53,6 +53,7 @@ public class CreateModeAircraftController : MonoBehaviour, IGameModeHooks
 
     public void Init()
     {
+        aircraftFactoryPreCreate?.Clear();
         if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
         aircraftPreCreate = aircraftFactoryPreCreate.Spawn();
         Debug.Log("Init: Create Aircraft Mode");
@@ -71,10 +72,23 @@ public class CreateModeAircraftController : MonoBehaviour, IGameModeHooks
             exitFlag = true;
             exitMode = ExitMode.Cancel;
         }
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             exitFlag = true;
             exitMode = ExitMode.Apply;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (EventSystem.current && EventSystem.current.IsPointerOverGameObject())
+            {
+
+            }
+            else
+            {
+                exitFlag = true;
+                exitMode = ExitMode.Apply; 
+            }
         }
         return exitFlag;
     }

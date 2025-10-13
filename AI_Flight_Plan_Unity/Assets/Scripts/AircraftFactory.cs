@@ -29,10 +29,6 @@ public class AircraftFactory : MonoBehaviour
         uIManager = GetComponent<UIManager>();
         aircraftSpecToSpawn = registry.rotorAircrafts[0];        
     }
-    public void Update()
-    {
-        ChangeAircraftSpecToSpawnWithUI();
-    }
 
     private void ChangeAircraftSpecToSpawnWithUI()
     {
@@ -48,6 +44,7 @@ public class AircraftFactory : MonoBehaviour
 
     public virtual Aircraft Spawn()
     {
+        ChangeAircraftSpecToSpawnWithUI();
         if (aircraftParent == null)
         {
             GameObject aircraftParentObj = new GameObject("Aircrafts");
@@ -104,6 +101,7 @@ public class AircraftFactory : MonoBehaviour
     }
     public virtual Aircraft Spawn(string parentName)
     {
+        ChangeAircraftSpecToSpawnWithUI();
         if (aircraftParent == null)
         {
             GameObject aircraftParentObj = new GameObject(parentName);
@@ -140,5 +138,12 @@ public class AircraftFactory : MonoBehaviour
         Destroy(aircraftParent.gameObject);
         aircraftList.Clear();
     }
-
+    public void Clear()
+    {        
+        foreach (Aircraft aircraft in aircraftList)
+        {
+            Destroy(aircraft.gameObject);            
+        }
+        aircraftList.Clear();
+    }
 }

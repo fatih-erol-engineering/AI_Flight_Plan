@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Search;
 
 [RequireComponent(typeof(UIDocument))]
 public class UIManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class UIManager : MonoBehaviour
     private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
 
     public MainGameMode gameModeUI { get; private set; }
+    public bool restartRequestUI { get; private set; }
 
 
     // For Create Mode
@@ -27,10 +29,10 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-
+        restartRequestUI = false;
         UpdateSelectedAircraft();
     }
-    void UpdateSelectedAircraft()
+    public void UpdateSelectedAircraft()
     {
         if (rotorTBtn.value)
         {
@@ -91,6 +93,21 @@ public class UIManager : MonoBehaviour
             gameModeUI = MainGameMode.Free;
         }
     }
+    public void SetGameMode(MainGameMode gameMode)
+    {
+        gameModeUI = gameMode;
+        switch (gameMode)
+        {
+            case MainGameMode.Create:
+                // Show Create buttons;
+                createTBtn.value = true;
+                break;
+            case MainGameMode.Free:
+                // Hide Create buttons;
+                createTBtn.value = false;
+                break;            
+        }
+    }
 
 
     void rotorTBtnChange()
@@ -99,7 +116,8 @@ public class UIManager : MonoBehaviour
         {
             fixedWingDDM.dropdownField.style.display = DisplayStyle.None;
             rotorDDM.dropdownField.style.display = DisplayStyle.Flex;
-           
+            UpdateSelectedAircraft();
+            restartRequestUI = true;
         }
     }
 
@@ -109,17 +127,18 @@ public class UIManager : MonoBehaviour
         {
             rotorDDM.dropdownField.style.display = DisplayStyle.None;
             fixedWingDDM.dropdownField.style.display = DisplayStyle.Flex;
-           
+            UpdateSelectedAircraft();
+            restartRequestUI = true;
         }
     }
 
     void rotorDDMChange()
     {
-        
+        restartRequestUI = true;
     }
     void fixedWingDDMChange()
     {
-        
+        restartRequestUI = true;
     }
 }
 

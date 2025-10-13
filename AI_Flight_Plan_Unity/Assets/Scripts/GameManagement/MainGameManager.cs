@@ -50,11 +50,22 @@ public class MainGameManager : MonoBehaviour
         {
             SetModeFromUI();
         }
+
+        // Bazen UI ile Update olacak 
+        // Bazen Current Hook ile Update olacak ama ne zaman?, 
+        // Ornegin exit flag da bir tercih yapılıyor. 
     }
 
     void SetModeFromUI()
-    {        
-        ChangeMode(uIManager.gameModeUI,ExitMode.Cancel);
+    {
+        if (uIManager.restartRequestUI)
+        {            
+            InitMode(uIManager.gameModeUI);
+        }
+        else
+        {
+            ChangeMode(uIManager.gameModeUI, ExitMode.Cancel);
+        }
     }
 
     public void InitMode(MainGameMode mode)
@@ -81,6 +92,7 @@ public class MainGameManager : MonoBehaviour
         currentMode = next;
         currentHooks = modes.TryGetValue(next, out var h) ? h : null;
         currentHooks?.Init?.Invoke();
+        uIManager.SetGameMode(currentMode);
     }
     
     private void ConfigureModes()
