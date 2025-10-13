@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Unity.VisualScripting.Dependencies.NCalc;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.XR;
 
 
 public enum MainGameMode { Free, Create, }
@@ -21,6 +23,7 @@ public class MainGameManager : MonoBehaviour
     private Dictionary<MainGameMode, MainGameModeHooks> modes;
     public MainGameModeHooks currentHooks;
     public MainGameMode currentMode { get; private set; } = MainGameMode.Free;
+    private bool justStarted;
 
     void Awake()
     {
@@ -30,25 +33,16 @@ public class MainGameManager : MonoBehaviour
         if (!aircraftFactory) aircraftFactory = gameObject.GetComponent<AircraftFactory>();
 
         ConfigureModes();
-        SetMode(MainGameMode.Free); // örnek başlangıç
+        InitMode(MainGameMode.Free);
+        justStarted = true;
     }
 
-    void RestartMode()
-    {
-        currentHooks?.Cancel?.Invoke();
-        currentHooks?.Init?.Invoke();
-    }
     void Update()
     {
-        if (uIManager.restartRequestUI)
-        {
-            RestartMode();
-        }
-
         bool exitFlag = currentHooks?.Tick?.Invoke() ?? true;
         if (exitFlag)
         {
-            SetMode(MainGameMode.Free, currentHooks.exitMode);
+            ChangeMode(MainGameMode.Free, currentHooks.exitMode);
         }
 
         else
@@ -58,18 +52,18 @@ public class MainGameManager : MonoBehaviour
     }
 
     void SetModeFromUI()
-    {
-        SetMode(uIManager.gameModeUI);
+    {        
+        ChangeMode(uIManager.gameModeUI,ExitMode.Cancel);
     }
-    public void SetMode(MainGameMode next)
-    {
-        if ((next == currentMode) && (currentHooks != null)) return;
-        currentMode = next;
-        currentHooks = modes.TryGetValue(next, out var h) ? h : null;
-        currentHooks?.Init?.Invoke();
-        OnModeChanged?.Invoke(next);
+
+    public void InitMode(MainGameMode mode)
+    {        
+        currentMode = mode;
+        currentHooks = modes.TryGetValue(mode, out var h) ? h : null;
+        currentHooks?.Init?.Invoke();        
     }
-    public void SetMode(MainGameMode next, ExitMode exitMode)
+
+    public void ChangeMode(MainGameMode next, ExitMode exitMode)
     {
         if ((next == currentMode) && (currentHooks != null)) return;
 
@@ -86,11 +80,8 @@ public class MainGameManager : MonoBehaviour
         currentMode = next;
         currentHooks = modes.TryGetValue(next, out var h) ? h : null;
         currentHooks?.Init?.Invoke();
-        OnModeChanged?.Invoke(next);
     }
-
-    public event Action<MainGameMode> OnModeChanged;
-
+    
     private void ConfigureModes()
     {
         modes = new()

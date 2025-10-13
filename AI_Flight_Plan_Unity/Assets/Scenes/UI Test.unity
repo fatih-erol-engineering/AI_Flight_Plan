@@ -249,8 +249,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192251729}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19160998, y: 0.098744996, z: -0.019380245, w: 0.97629887}
-  m_LocalPosition: {x: 0.34941542, y: 2.1919715, z: -5.147882}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: 0.0000000037252903, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 7.4870787, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -449,7 +449,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   cam: {fileID: 192251732}
   aircraftSpecRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
-  gameModeUI: 0
   selectedAircraftModelName: 
 --- !u!114 &1827900598
 MonoBehaviour:

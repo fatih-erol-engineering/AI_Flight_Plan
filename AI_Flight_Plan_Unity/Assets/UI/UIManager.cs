@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
 
     public MainGameMode gameModeUI { get; private set; }
-    public bool restartRequestUI { get; private set; }
+
 
     // For Create Mode
     public string selectedAircraftModelName;
@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        restartRequestUI = false;
+
         UpdateSelectedAircraft();
     }
     void UpdateSelectedAircraft()
@@ -99,7 +99,7 @@ public class UIManager : MonoBehaviour
         {
             fixedWingDDM.dropdownField.style.display = DisplayStyle.None;
             rotorDDM.dropdownField.style.display = DisplayStyle.Flex;
-            restartRequestUI = true;
+           
         }
     }
 
@@ -109,17 +109,17 @@ public class UIManager : MonoBehaviour
         {
             rotorDDM.dropdownField.style.display = DisplayStyle.None;
             fixedWingDDM.dropdownField.style.display = DisplayStyle.Flex;
-            restartRequestUI = true;
+           
         }
     }
 
     void rotorDDMChange()
     {
-        restartRequestUI = true;
+        
     }
     void fixedWingDDMChange()
     {
-        restartRequestUI = true;
+        
     }
 }
 
