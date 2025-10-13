@@ -416,6 +416,7 @@ GameObject:
   - component: {fileID: 1827900597}
   - component: {fileID: 1827900602}
   - component: {fileID: 1827900603}
+  - component: {fileID: 1827900604}
   m_Layer: 0
   m_Name: MainGameManager
   m_TagString: Untagged
@@ -485,6 +486,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 635423966ee34984aaf0192b997564f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreateGameController
+  uIManager: {fileID: 0}
+  createModeAircraftController: {fileID: 0}
   mainGameManager: {fileID: 1827900596}
   hitMask:
     serializedVersion: 2
@@ -550,6 +553,25 @@ MonoBehaviour:
   registry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   aircraftList: []
+--- !u!114 &1827900604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827900595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec759bf957ac834881c4964cbfc9fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreateModeAircraftController
+  mainGameManager: {fileID: 1827900596}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  mainCamera: {fileID: 192251732}
+  aircraftFactory: {fileID: 1827900602}
+  aircraftFactoryPreCreate: {fileID: 1827900603}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

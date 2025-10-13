@@ -27,7 +27,7 @@ public class AircraftFactory : MonoBehaviour
     private void AssignData()
     {
         uIManager = GetComponent<UIManager>();
-        aircraftSpecToSpawn = registry.rotorAircrafts[0];
+        aircraftSpecToSpawn = registry.rotorAircrafts[0];        
     }
     public void Update()
     {

@@ -1,18 +1,16 @@
-using System;
+
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
-[RequireComponent(typeof(AircraftFactory))]
-[RequireComponent(typeof(AircraftFactoryPreCreate))]
-[RequireComponent(typeof(MainGameManager))]
-public class CreateGameController : MonoBehaviour, IGameModeHooks
+public class CreateModeAircraftController : MonoBehaviour, IGameModeHooks
 {
     [SerializeField]
     private MainGameManager mainGameManager;
 
     [SerializeField]
-    private LayerMask hitMask = ~0;
+    private LayerMask hitMask;
 
     [SerializeField]
     private Camera mainCamera;
@@ -20,7 +18,16 @@ public class CreateGameController : MonoBehaviour, IGameModeHooks
     private AircraftFactory aircraftFactory;
     [SerializeField]
     private AircraftFactoryPreCreate aircraftFactoryPreCreate;
+    private Aircraft aircraftCreated;
     private Aircraft aircraftPreCreate;
+    private Dictionary<CreateMode, ModeHooks> modes;
+    public ModeHooks currentHooks;
+    public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
+    private ExitMode exitMode;
+    public ExitMode GetExitMode()
+    {
+        return exitMode;
+    }
     void Awake()
     {
         AssignData();
@@ -30,10 +37,12 @@ public class CreateGameController : MonoBehaviour, IGameModeHooks
         if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
         if (!aircraftFactory) aircraftFactory = GetComponent<AircraftFactory>();
         if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
-        if (!mainCamera) mainCamera = Camera.main;
+        if (!mainCamera) mainCamera = Camera.main;        
     }
     public void Apply()
-    {
+    {        
+        aircraftCreated = aircraftFactory.Spawn(aircraftPreCreate.spec.model,aircraftPreCreate.aircraftVisualObject.transform.position,aircraftPreCreate.aircraftVisualObject.transform.rotation);        
+        aircraftFactoryPreCreate?.Delete();        
         Debug.Log("Apply: Create Mode");
     }
 
@@ -46,7 +55,7 @@ public class CreateGameController : MonoBehaviour, IGameModeHooks
     {
         if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
         aircraftPreCreate = aircraftFactoryPreCreate.Spawn();
-        Debug.Log("Init: Create Mode");
+        Debug.Log("Init: Create Aircraft Mode");
     }
 
     public bool Tick()
@@ -69,7 +78,6 @@ public class CreateGameController : MonoBehaviour, IGameModeHooks
         }
         return exitFlag;
     }
-    public ExitMode exitMode { get; set; }
 
     bool MouseHitPos(out Vector3 globalPosition)
     {

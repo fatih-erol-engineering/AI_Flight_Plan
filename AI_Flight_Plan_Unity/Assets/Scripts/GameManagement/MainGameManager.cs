@@ -1,40 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.Dependencies.NCalc;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.XR;
 
 
 public enum MainGameMode { Free, Create, }
 public enum ExitMode { Cancel, Apply }
 
 [RequireComponent(typeof(UIManager))]
-[RequireComponent(typeof(FreeGameController))]
-[RequireComponent(typeof(CreateGameController))]
+[RequireComponent(typeof(FreeModeController))]
+[RequireComponent(typeof(CreateModeController))]
 [RequireComponent(typeof(AircraftFactory))]
 
 public class MainGameManager : MonoBehaviour
 {
     private UIManager uIManager;
-    private FreeGameController freeGameController;
-    private CreateGameController createGameController;
+    private FreeModeController freeModeController;
+    private CreateModeController createModeController;
     private AircraftFactory aircraftFactory;
-    private Dictionary<MainGameMode, MainGameModeHooks> modes;
-    public MainGameModeHooks currentHooks;
+    private Dictionary<MainGameMode, ModeHooks> modes;
+    public ModeHooks currentHooks;
     public MainGameMode currentMode { get; private set; } = MainGameMode.Free;
     private bool justStarted;
 
     void Awake()
     {
+        AssignData();
+    }
+
+    void AssignData()
+    {        
         if (!uIManager) uIManager = gameObject.GetComponent<UIManager>();
-        if (!freeGameController) freeGameController = gameObject.GetComponent<FreeGameController>();
-        if (!createGameController) createGameController = gameObject.GetComponent<CreateGameController>();
+        if (!freeModeController) freeModeController = gameObject.GetComponent<FreeModeController>();
+        if (!createModeController) createModeController = gameObject.GetComponent<CreateModeController>();
         if (!aircraftFactory) aircraftFactory = gameObject.GetComponent<AircraftFactory>();
 
         ConfigureModes();
         InitMode(MainGameMode.Free);
-        justStarted = true;
     }
 
     void Update()
@@ -42,7 +43,7 @@ public class MainGameManager : MonoBehaviour
         bool exitFlag = currentHooks?.Tick?.Invoke() ?? true;
         if (exitFlag)
         {
-            ChangeMode(MainGameMode.Free, currentHooks.exitMode);
+            ChangeMode(MainGameMode.Free, currentHooks?.GetExitMode?.Invoke() ?? ExitMode.Cancel);
         }
 
         else
@@ -67,7 +68,7 @@ public class MainGameManager : MonoBehaviour
     {
         if ((next == currentMode) && (currentHooks != null)) return;
 
-        switch (currentHooks.exitMode)
+        switch (currentHooks?.GetExitMode?.Invoke() ?? ExitMode.Cancel)
         {
             case ExitMode.Cancel:
                 currentHooks?.Cancel?.Invoke();
@@ -86,33 +87,33 @@ public class MainGameManager : MonoBehaviour
     {
         modes = new()
         {
-            [MainGameMode.Free] = new MainGameModeHooks
+            [MainGameMode.Free] = new ModeHooks
             {
-                Init = () => freeGameController.Init(),
-                Tick = () => freeGameController.Tick(),
-                Apply = () => freeGameController.Apply(),
-                Cancel = () => freeGameController.Cancel(),
-                exitMode = freeGameController.exitMode,
+                Init = freeModeController.Init,
+                Tick = freeModeController.Tick,
+                Apply = freeModeController.Apply,
+                Cancel = freeModeController.Cancel,
+                GetExitMode = freeModeController.GetExitMode,
             },
 
-            [MainGameMode.Create] = new MainGameModeHooks
+            [MainGameMode.Create] = new ModeHooks
             {
-                Init = () => createGameController.Init(),
-                Tick = () => createGameController.Tick(),
-                Apply = () => createGameController.Apply(),
-                Cancel = () => createGameController.Cancel(),
-                exitMode = createGameController.exitMode,
+                Init = createModeController.Init,
+                Tick = createModeController.Tick,
+                Apply = createModeController.Apply,
+                Cancel = createModeController.Cancel,
+                GetExitMode = createModeController.GetExitMode,
             },
         };
     }
 }
 
 
-public class MainGameModeHooks
+public class ModeHooks
 {
     public Action Init;
     public Func<bool> Tick;
     public Action Apply;
     public Action Cancel;
-    public ExitMode exitMode;
+    public Func<ExitMode> GetExitMode;
 }
