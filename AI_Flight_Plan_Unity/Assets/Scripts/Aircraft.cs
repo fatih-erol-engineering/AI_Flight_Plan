@@ -84,6 +84,13 @@ public class Aircraft : SelectableMonoBehaviour
         foreach (MeshRenderer renderer in aircraftMeshRenderers)
         {
             renderer.material = material;
+            if (renderer.materials.Length>1)
+            {
+                var mats = renderer.materials;
+                for (int i = 0; i < mats.Length; i++)
+                    mats[i] = material;
+                renderer.materials = mats;                  
+            }        
         }
     }
 
