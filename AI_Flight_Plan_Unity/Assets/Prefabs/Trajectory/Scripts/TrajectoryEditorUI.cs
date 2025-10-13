@@ -6,19 +6,17 @@ public class TrajectoryEditorUI : Editor
 {
     public override void OnInspectorGUI()
     {
-        // Normal inspector çiz
         DrawDefaultInspector();
 
         Trajectory myScript = (Trajectory)target;
 
-        // Buton ekle
         if (GUILayout.Button("Create Trajectory"))
         {
-            myScript.CreateTrajectory();
+            myScript.Create();
         }
-        if (GUILayout.Button("Delete Trajectory"))
+        if (GUILayout.Button("Clear Trajectory"))
         {
-            myScript.DeleteTrajectory();
+            myScript.Clear();
         }
     }
 }

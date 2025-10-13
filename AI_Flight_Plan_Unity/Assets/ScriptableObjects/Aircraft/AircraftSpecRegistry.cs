@@ -14,12 +14,15 @@ public class AircraftSpecRegistry : ScriptableObject
     void OnEnable()
     {
         _map = new Dictionary<AircraftModel, AircraftSpec>();
-        rotorAircrafts?.Clear();
-        fixedWingAircrafts?.Clear();
+        rotorAircrafts = new List<AircraftSpec>();
+        fixedWingAircrafts = new List<AircraftSpec>();
+        
+        rotorAircrafts.Clear();
+        fixedWingAircrafts.Clear();
         foreach (var s in specs)
         {
             if (!s) continue;
-            _map[s.model] = s; // son eklenen kazanýr (bilinçli)
+            _map[s.model] = s; 
             switch (s.type)
             {
                 case AircraftType.Rotor:

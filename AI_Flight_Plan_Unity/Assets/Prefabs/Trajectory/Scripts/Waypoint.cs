@@ -1,6 +1,6 @@
 using UnityEngine;
 
-
+[ExecuteAlways]
 public class Waypoint : SelectableMonoBehaviour
 {
     public TimeGame time;

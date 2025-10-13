@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [CreateAssetMenu(fileName = "Theme", menuName = "Scriptable Objects/Theme")]
 public class Theme : ScriptableObject
@@ -24,5 +25,8 @@ public class Theme : ScriptableObject
     public Material Hover;
     public Material Select;
     public Material PreCreate;
+    [Header("Trajectory")]    
+    public Color startColor;    
+    public Color endColor;        
 
 }

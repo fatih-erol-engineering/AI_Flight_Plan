@@ -29,3 +29,5 @@ MonoBehaviour:
   Hover: {fileID: 2100000, guid: 920f933c7b786314dad2557d870b37bf, type: 2}
   Select: {fileID: 2100000, guid: 57fc93d593680074bb9e832a6f9f0118, type: 2}
   PreCreate: {fileID: 2100000, guid: 3e539d689463ba64d982bf504b51d3f1, type: 2}
+  startColor: {r: 0, g: 1, b: 0, a: 1}
+  endColor: {r: 0, g: 0, b: 1, a: 1}

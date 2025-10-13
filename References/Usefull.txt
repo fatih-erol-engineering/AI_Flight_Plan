@@ -14,3 +14,8 @@ UI pseudo classes:
 :enabled		The element is in an enabled state.
 :checked		The element is a Toggle or RadioButton element and it’s selected.
 :root			The element is the highest-level element in the visual tree that has the stylesheet applied.
+
+
+
+https://www.mathworks.com/help/robotics/ref/bsplinepolytraj.html
+Matris formatta nasıl yazıldığına. 

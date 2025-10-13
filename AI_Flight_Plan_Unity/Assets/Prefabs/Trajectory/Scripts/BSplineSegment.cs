@@ -3,10 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-/// <summary>
-/// 4 kontrol noktasý ile derece-3 clamped B-spline çizer (tek segment).
-/// LineRenderer üzerinden örnekleyip gösterir.
-/// </summary>
+[ExecuteAlways]
 [RequireComponent(typeof(LineRenderer))]
 public class BSplineSegment
     : SelectableMonoBehaviour
@@ -27,7 +24,7 @@ public class BSplineSegment
     
 
     [Header("Restricted Areas")]
-    public Transform[] restrictedAreas;
+    public RestrictedArea[] restrictedAreas;
     public bool isCollide{ get; private set; } = false;
     public LineRenderer lr;
 
@@ -66,7 +63,6 @@ public class BSplineSegment
     }
     public void SetStartAndEndWaypoints(Waypoint startWP , Waypoint endWP)
     {
-
         startPoint = startWP;
         endPoint = endWP;
 
@@ -74,7 +70,6 @@ public class BSplineSegment
     }
     void Update()
     {
-        // Editörde sürüklerken de canlý güncelle
         UpdateCurve();
         CheckCollision();
     }
@@ -102,14 +97,54 @@ public class BSplineSegment
         if (!(startPoint && controlPoint1 && controlPoint2 && endPoint)) return;
 
         Vector3[] P = new Vector3[4] { startPoint.transform.position, controlPoint1.transform.position, controlPoint2.transform.position, endPoint.transform.position };
-        
+
         lr.positionCount = samples;
         for (int i = 0; i < samples; i++)
         {
             float t = (samples == 1) ? 0f : (float)i / (samples - 1); // [0,1]
             Vector3 C = BSplinePointDegree3(P, t);
             lr.SetPosition(i, C);
-        }        
+        }
+
+    }
+    public void UpdateColorWithTotalTime(TimeGame totalStartTime,TimeGame totalEndTime)
+    {
+
+        // Alpha'yÄ± koruyarak HDR parlaklÄ±k uygula
+
+        float startVal = Mathf.Lerp(0,1, (startTime.second - totalStartTime.second) / (totalEndTime.second - totalStartTime.second));
+        Color startColor = Color.Lerp(theme.startColor, theme.endColor, startVal);            
+
+        float endVal = Mathf.Lerp(0,1, (endTime.second - totalStartTime.second) / (totalEndTime.second - totalStartTime.second));
+        Color endColor = Color.Lerp(theme.startColor, theme.endColor, endVal);      
+        Color c0 = startColor;
+        Color c1 = endColor;
+
+        if (!lr) return;
+
+        int n = lr.positionCount;
+        if (n < 2) n = 2;
+
+        var cKeys = new GradientColorKey[n];
+        var aKeys = new GradientAlphaKey[n];
+
+        // HDR yoÄŸunluk: RGBâ€™yi Ã§arpÄ±yoruz, alphaâ€™yÄ± ayrÄ± yÃ¶netiyoruz
+        for (int i = 0; i < n; i++)
+        {
+            float t = (n == 1) ? 1f : (float)i / (n - 1);
+            Color c = Color.Lerp(startColor, endColor, t);
+            c = new Color(c.r, c.g, c.b, 1f);
+
+            float a = Mathf.Lerp(startColor.a, endColor.a, t);
+
+            cKeys[i] = new GradientColorKey(c, t);
+            aKeys[i] = new GradientAlphaKey(a, t);
+        }
+
+        var g = new Gradient { mode = GradientMode.Blend };
+        g.SetKeys(cKeys, aKeys);
+        lr.colorGradient = g;
+
     }
     
     public bool[] CheckCollision()
@@ -120,15 +155,15 @@ public class BSplineSegment
         Vector3[] posList = new Vector3[restrictedAreas.Length];
         float[] radList = new float[restrictedAreas.Length];
         bool[] collisionFlag = new bool[restrictedAreas.Length];
-        for (int i = 0; i < restrictedAreas.Length; i++) 
-        {
-            if (restrictedAreas[i].gameObject.activeSelf)
-            {            
-                posList[i] = restrictedAreas[i].position;
-                radList[i] = restrictedAreas[i].localScale.x/2;
-                collisionFlag[i] = CheckCollision(posList[i], radList[i]);
-            }
-        }
+        // // // // for (int i = 0; i < restrictedAreas.Length; i++) 
+        // // // // {
+        // // // //     if (restrictedAreas[i].gameObject.activeSelf)
+        // // // //     {            
+        // // // //         posList[i] = restrictedAreas[i].position;
+        // // // //         radList[i] = restrictedAreas[i].localScale.x/2;
+        // // // //         collisionFlag[i] = CheckCollision(posList[i], radList[i]);
+        // // // //     }
+        // // // // }
         //if (collisionFlag.Contains(true))
         //{
         //    lr.sharedMaterial.color = Color.red;
@@ -168,10 +203,7 @@ public class BSplineSegment
         return collisionFlag;
     }
 
-    /// <summary>
-    /// Cubic (p=3) clamped B-spline noktasý. 4 kontrol noktasý ve U=[0,0,0,0,1,1,1,1].
-    /// Cox–de Boor baz fonksiyonlarý ile hesaplar.
-    /// </summary>
+
     Vector3 BSplinePointDegree3(Vector3[] P, float t)
     {
         // p=3, i=0..3
@@ -183,14 +215,12 @@ public class BSplineSegment
         return N0 * P[0] + N1 * P[1] + N2 * P[2] + N3 * P[3];
     }
 
-    /// <summary>
-    /// Cox–de Boor rekürsiyonu: N_{i,p}(t)
-    /// </summary>
+
     float Nip(int i, int p, float t, float[] knots)
     {
         if (p == 0)
         {
-            // N_{i,0}(t) = 1 if U_i <= t < U_{i+1} (sað uçta kapanýþ için t==1 özel durumu da düþünülür)
+            // N_{i,0}(t) = 1 if U_i <= t < U_{i+1} (saï¿½ uï¿½ta kapanï¿½ï¿½ iï¿½in t==1 ï¿½zel durumu da dï¿½ï¿½ï¿½nï¿½lï¿½r)
             if ((knots[i] <= t && t < knots[i + 1]) || (t == 1f && Mathf.Approximately(knots[i + 1], 1f)))
                 return 1f;
             return 0f;

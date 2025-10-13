@@ -41,22 +41,22 @@ public class Aircraft : SelectableMonoBehaviour
         }
     }
 
-    public Waypoint CreateWaypoint(Vector3 globalPosition)
-    {
-        if (trajectory == null)
-        {
-            GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);
+    // public Waypoint CreateWaypoint(Vector3 globalPosition)
+    // {
+    //     if (trajectory == null)
+    //     {
+    //         GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);
 
-            trajectory = trajParentGO.GetComponent<Trajectory>();
-            if (trajectory == null)
-            {
-                trajectory = trajParentGO.AddComponent<Trajectory>();
-                trajectory.theme = theme;
-            }
-        }
-        Waypoint wp = trajectory.CreateWaypoint(globalPosition);
-        return wp;
-    }
+    //         trajectory = trajParentGO.GetComponent<Trajectory>();
+    //         if (trajectory == null)
+    //         {
+    //             trajectory = trajParentGO.AddComponent<Trajectory>();
+    //             trajectory.theme = theme;
+    //         }
+    //     }
+    //     Waypoint wp = trajectory.CreateWaypoint(globalPosition);
+    //     return wp;
+    // }
     public Waypoint CreateWaypoint(Vector3 globalPosition, float time_s)
     {
         if (trajectory == null)
