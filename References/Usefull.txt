@@ -19,3 +19,4 @@ UI pseudo classes:
 
 https://www.mathworks.com/help/robotics/ref/bsplinepolytraj.html
 Matris formatta nasıl yazıldığına. 
+
