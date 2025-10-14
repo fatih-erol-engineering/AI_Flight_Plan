@@ -19,6 +19,5 @@ MonoBehaviour:
   maxVelocity_m_s: 200
   minTurnRadious_m: 100
   mass_kg: 4
-  color: {r: 0.5773585, g: 0, b: 0.06606765, a: 0}
-  prefab: {fileID: 5697215273144170777, guid: 8e64b61ae65a5524cb560cfa2b025fed, type: 3}
   noise_dBA: 40
+  aircraftPrefab: {fileID: 5697215273144170777, guid: 837a776877176c04cb6083315b2574c8, type: 3}

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5381c75aae8e0b4b8ec2e3aeb098d2a, type: 3}
-  m_Name: AircraftSpecRegistry
+  m_Name: AircraftPropertyRegistry
   m_EditorClassIdentifier: Assembly-CSharp::AircraftSpecRegistry
-  specs:
-  - {fileID: 11400000, guid: f1057860b63009e4aa8b26b830b55b88, type: 2}
-  - {fileID: 11400000, guid: 2a9d4d913a7f89845b4d76d03dc32750, type: 2}
+  aircraftPropertiesList:
   - {fileID: 11400000, guid: 8eb245aeb8b4a0a40a9a63ba36dfebfe, type: 2}
   - {fileID: 11400000, guid: 0e4a9549a4961d9488dfbbfb4872446b, type: 2}
+  - {fileID: 11400000, guid: 2a9d4d913a7f89845b4d76d03dc32750, type: 2}
+  - {fileID: 11400000, guid: f1057860b63009e4aa8b26b830b55b88, type: 2}

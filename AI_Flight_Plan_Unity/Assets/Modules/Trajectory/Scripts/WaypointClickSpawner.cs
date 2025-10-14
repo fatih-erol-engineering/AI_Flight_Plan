@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(UIDocument))]
 public class WaypointClickSpawnerUIToolkit : MonoBehaviour
 {
     [SerializeField] private Camera cam;
@@ -21,6 +20,7 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
     [SerializeField] private Theme theme; // optional, varsa theme.precreate kullanılır
     private GameObject previewInstance;
 
+    [SerializeField] 
     private UIDocument uiDocument;
     private VisualElement popupInstance;
     private bool popupOpen;
@@ -34,7 +34,7 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         previewMaterialOverride = theme.Preview; 
     }
 
-    void Update()
+    void Tick()
     {
         // hover preview: popup kapalıyken sürekli raycast yap, UI üzerindeyse preview yok
         if (!popupOpen)

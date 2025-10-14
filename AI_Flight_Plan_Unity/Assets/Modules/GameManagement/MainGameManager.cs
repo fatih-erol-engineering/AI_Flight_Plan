@@ -1,9 +1,9 @@
 ﻿// using System.Collections.Generic;
-// using UnityEngine;
+using UnityEngine;
 
 
-// public enum MainGameMode { Free, Create, }
-// public enum ExitMode { Cancel, Apply }
+public enum MainGameMode { Free, Create, }
+public enum ExitMode { Cancel, Apply }
 
 // [RequireComponent(typeof(UIManager))]
 // [RequireComponent(typeof(FreeModeManager))]

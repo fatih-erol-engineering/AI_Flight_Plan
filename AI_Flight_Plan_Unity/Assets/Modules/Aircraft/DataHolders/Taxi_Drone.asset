@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Taxi_Drone
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
   model: 0
+  type: 0
   minVelocity_m_s: 0
   nominalVelocity_m_s: 150
   maxVelocity_m_s: 200
   minTurnRadious_m: 0
   mass_kg: 250
-  color: {r: 1, g: 1, b: 1, a: 0}
-  prefab: {fileID: 5697215273144170777, guid: c968c15d3cdcf584f9e019f4bb24a86e, type: 3}
   noise_dBA: 200
+  aircraftPrefab: {fileID: 5697215273144170777, guid: c968c15d3cdcf584f9e019f4bb24a86e, type: 3}

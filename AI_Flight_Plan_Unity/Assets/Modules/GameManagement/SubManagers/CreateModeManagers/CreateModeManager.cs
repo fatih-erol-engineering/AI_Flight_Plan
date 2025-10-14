@@ -88,8 +88,8 @@
 //     {
 //         bool subExitFlag = false;
 //         bool exitFlag = false;
-//         // Öncelikle exit isteği var mı diye bakılıyor.        
-//         // Eger ESC tusuna basılırsa önce current Hookun cancel aktif olup ardından Create Aircraft moda geçilir.
+//         Öncelikle exit isteği var mı diye bakılıyor.        
+//         Eger ESC tusuna basılırsa önce current Hookun cancel aktif olup ardından Create Aircraft moda geçilir.
 //         if (Input.GetKeyDown(KeyCode.Escape))
 //         {
 //             exitFlag = true;
@@ -97,8 +97,8 @@
 //             ChangeMode(CreateMode.CreateAircraft, ExitMode.Cancel);
 //         }
 
-//         // Current Hook un kendi exit sinyali olabiliyor. O da tick fonksiyonu ile kontrol ediliyor.
-//         // Boyle bir durumda current hook exit request ediyor ve mode değişikliği yapılıyor.
+//         Current Hook un kendi exit sinyali olabiliyor. O da tick fonksiyonu ile kontrol ediliyor.
+//         Boyle bir durumda current hook exit request ediyor ve mode değişikliği yapılıyor.
 //         switch (currentMode)
 //         {
 //             case CreateMode.CreateAircraft:

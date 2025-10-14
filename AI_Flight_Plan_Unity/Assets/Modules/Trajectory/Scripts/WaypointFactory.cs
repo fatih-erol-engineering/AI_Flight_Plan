@@ -4,15 +4,15 @@ using UnityEngine;
 public class WaypointFactory : MonoBehaviour
 {
     [SerializeField]
-    private GameObject waypointPrefab;
+    private GameObject _waypointPrefab;
     public List<Waypoint> waypointList { get; private set; } = new List<Waypoint>();
 
     // public getter for other scripts to instantiate previews from the same prefab
-    public GameObject WaypointPrefab => waypointPrefab;
+    public GameObject WaypointPrefab => _waypointPrefab;
 
     public Waypoint Spawn(Vector3 globalPosition, Quaternion globalRotation, float time_s)
     {
-        var go = Instantiate(waypointPrefab, globalPosition, globalRotation,transform);
+        var go = Instantiate(_waypointPrefab, globalPosition, globalRotation,transform);
         var ctrl = go.GetComponent<Waypoint>();
         ctrl.SetTime(time_s);
         CheckAssignment(ctrl);
@@ -22,10 +22,10 @@ public class WaypointFactory : MonoBehaviour
     }
     public void Clear()
     {
-        foreach (var wp in waypointList)
+        foreach (var waypoint in waypointList)
         {
-            if (wp != null)
-                Destroy(wp.gameObject);
+            if (waypoint != null)
+                Destroy(waypoint.gameObject);
         }
         waypointList.Clear();
     }

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Flight/Aircraft Spec Registry", fileName = "AircraftSpecRegistry")]
-public class AircraftSpecRegistry : ScriptableObject
+public class AircraftPropertiesRegistry : ScriptableObject
 {
-    public List<AircraftProperties> specs = new();
+    public List<AircraftProperties> aircraftPropertiesList = new();
 
     Dictionary<AircraftModel, AircraftProperties> _map;  
     
@@ -19,7 +19,7 @@ public class AircraftSpecRegistry : ScriptableObject
         
         rotorAircrafts.Clear();
         fixedWingAircrafts.Clear();
-        foreach (var s in specs)
+        foreach (var s in aircraftPropertiesList)
         {
             if (!s) continue;
             _map[s.model] = s; 
@@ -51,7 +51,7 @@ public class AircraftSpecRegistry : ScriptableObject
     }
     public AircraftProperties Get(string modelName)
     {
-        foreach (var s in specs)
+        foreach (var s in aircraftPropertiesList)
         {
             if (!s) continue;
             if (s.model.ToString() == modelName)
@@ -62,4 +62,5 @@ public class AircraftSpecRegistry : ScriptableObject
         Debug.LogError($"[AircraftSpecRegistry] Spec not found for type {modelName}");
         return null;
     }
+
 }
