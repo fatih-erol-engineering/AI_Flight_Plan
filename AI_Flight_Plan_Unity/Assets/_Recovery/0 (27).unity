@@ -591,6 +591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointFactory
   waypointContainer: {fileID: 0}
+  waypointContainerForPreCreate: {fileID: 0}
 --- !u!114 &1827900607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -604,6 +605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointFactoryPreCreate
   waypointContainer: {fileID: 0}
+  waypointContainerForPreCreate: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -15,6 +15,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
 
     private AircraftFactory aircraftFactory;
     private AircraftFactoryPreCreate aircraftFactoryPreCreate;
+    private CreateModeWaypointManager createModeWaypointManager;
     private Aircraft aircraftCreated;
     private Aircraft aircraftPreCreate;
     private Dictionary<CreateMode, ModeHooks> modes;
@@ -25,18 +26,22 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     {
         return exitMode;
     }
-    void Awake()
-    {
-        AssignData();
-    }
+
     void AssignData()
     {
         if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
         CheckAssignment(mainGameManager);
+
         if (!aircraftFactory) aircraftFactory = GetComponent<AircraftFactory>();
         CheckAssignment(aircraftFactory);
+
+        if (!createModeWaypointManager) createModeWaypointManager = GetComponent<CreateModeWaypointManager>();
+        createModeWaypointManager.AssignData();
+
+        CheckAssignment(createModeWaypointManager);
         if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
         CheckAssignment(aircraftFactoryPreCreate);
+
         if (!mainCamera) mainCamera = Camera.main;
         CheckAssignment(mainCamera);
     }
@@ -50,6 +55,11 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         aircraftCreated = aircraftFactory.Spawn(aircraftPreCreate.spec.model, aircraftPreCreate.aircraftVisualObject.transform.position, aircraftPreCreate.aircraftVisualObject.transform.rotation);
         aircraftFactory.SelectAircraft(aircraftCreated);
         aircraftFactoryPreCreate?.Delete();
+
+        createModeWaypointManager?.Init();
+        createModeWaypointManager.waypointPreCreate.transform.position = aircraftCreated.transform.position;    
+        createModeWaypointManager?.Apply();        
+
         Debug.Log("Apply: Create Mode");
     }
 
@@ -60,6 +70,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
 
     public void Init()
     {
+        AssignData();
         aircraftFactoryPreCreate?.Clear();
         if (!aircraftFactoryPreCreate) aircraftFactoryPreCreate = GetComponent<AircraftFactoryPreCreate>();
         aircraftPreCreate = aircraftFactoryPreCreate.Spawn();

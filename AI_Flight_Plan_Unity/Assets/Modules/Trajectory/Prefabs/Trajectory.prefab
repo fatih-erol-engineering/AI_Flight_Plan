@@ -177,8 +177,8 @@ MonoBehaviour:
   <controlPointContainer>k__BackingField: {fileID: 314739279133306574}
   <segmentContainer>k__BackingField: {fileID: 8785390315187580617}
   <restrictedAreaContainer>k__BackingField: {fileID: 3153065933349397560}
-  initialControlPointDistance: 20
-  lineWidth: 10
+  initialControlPointDistance: 2
+  lineWidth: 1
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   startTime:
     second: 0

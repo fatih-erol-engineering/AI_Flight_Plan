@@ -15,6 +15,7 @@ public class WaypointFactory : MonoBehaviour
     public Theme theme { get; private set; }
     [HideInInspector]
     public Transform waypointContainer;    
+    public Transform waypointContainerForPreCreate;    
     public GameObject waypointPrefab { get; private set; }
     public Waypoint selectedWaypoint { get; private set; }        
 
@@ -51,7 +52,7 @@ public class WaypointFactory : MonoBehaviour
 
     public virtual Waypoint Spawn(Aircraft aircraft)
     {
-        waypointContainer = aircraft.trajectory.waypointContainer;
+        waypointContainer = aircraft.trajectory.transform.Find("WaypointContainer");
         if (waypointContainer == null)
         {
             GameObject waypointContainerObj = new GameObject("WaypointContainer");
@@ -68,7 +69,7 @@ public class WaypointFactory : MonoBehaviour
     }
     public virtual Waypoint Spawn(Aircraft aircraft, Vector3 globalPosition, Quaternion globalRotation)
     {
-        waypointContainer = aircraft.trajectory.waypointContainer;
+        waypointContainer = aircraft.trajectory.transform.Find("WaypointContainer");
         if (waypointContainer == null)
         {
             GameObject waypointContainerObj = new GameObject("WaypointContainer");
@@ -83,10 +84,11 @@ public class WaypointFactory : MonoBehaviour
                         
         return ctrl;
     }
+
     public virtual Waypoint Spawn(Aircraft aircraft, string parentName)
     {
-        waypointContainer = aircraft.trajectory.waypointContainer;
-        if (waypointContainer == null)
+        Transform waypointContainerForPreCreate = aircraft.trajectory.transform.Find(parentName);
+        if (waypointContainerForPreCreate == null)
         {
             GameObject waypointContainerObj = new GameObject(parentName);
             waypointContainerObj.transform.parent = aircraft.trajectory.transform;
@@ -94,7 +96,7 @@ public class WaypointFactory : MonoBehaviour
             waypointContainer = waypointContainerObj.transform;
         }                
         
-        var go = Instantiate(waypointPrefab, waypointContainer);
+        var go = Instantiate(waypointPrefab, waypointContainerForPreCreate);
         var ctrl = go.GetComponent<Waypoint>();
         CheckAssignment(ctrl);
                         
@@ -114,9 +116,12 @@ public class WaypointFactory : MonoBehaviour
     }
     public void Clear()
     {
-        for (int i = 0; i < waypointContainer.childCount; i++)
+        if (waypointContainer != null)
         {
-            Destroy(waypointContainer.GetChild(i).gameObject);
+            for (int i = 0; i < waypointContainer.childCount; i++)
+            {
+                Destroy(waypointContainer.GetChild(i).gameObject);
+            }
         }
     }
 }

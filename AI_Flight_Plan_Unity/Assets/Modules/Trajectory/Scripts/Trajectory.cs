@@ -9,7 +9,7 @@ public class Trajectory : MonoBehaviour
 
 
     [field: SerializeField]
-    public Transform waypointContainer { get; private set; }
+    public Transform waypointContainer { get; private set; }        
     [field: SerializeField]
     public Transform controlPointContainer{ get; private set; }
     [field: SerializeField]

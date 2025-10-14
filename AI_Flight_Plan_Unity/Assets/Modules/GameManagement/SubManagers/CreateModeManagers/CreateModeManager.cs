@@ -126,9 +126,7 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
                     exitMode = currentHooks?.GetExitMode?.Invoke() ?? ExitMode.Cancel;
                 }
                 break;
-        }
-        
-        
+        }                
         return exitFlag;
     }
 

@@ -16,10 +16,10 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     private Aircraft selectedAircraft;
 
     private AircraftFactory aircraftFactory;
-    private WaypointFactory waypointFactory;
-    private WaypointFactoryPreCreate waypointFactoryPreCreate;
+    public WaypointFactory waypointFactory { get; private set; }
+    public WaypointFactoryPreCreate waypointFactoryPreCreate { get; private set; }
     private Waypoint waypointCreated;
-    private Waypoint waypointPreCreate;
+    public  Waypoint waypointPreCreate { get; private set; }
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks { get; private set; }
     public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
@@ -29,7 +29,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         return exitMode;
     }
 
-    void AssignData()
+    public void AssignData()
     {
         if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
         CheckAssignment(mainGameManager);
@@ -53,8 +53,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     }
     public void Apply()
     {
-        waypointCreated = waypointFactory.Spawn(aircraftFactory.selectedAircraft,waypointPreCreate.transform.position, waypointPreCreate.transform.rotation);
-        waypointFactoryPreCreate?.Delete();
+        waypointCreated = waypointFactory.Spawn(aircraftFactory.selectedAircraft, waypointPreCreate.transform.position, waypointPreCreate.transform.rotation);
+        waypointFactoryPreCreate?.Clear();
         Debug.Log("Apply: Create Waypoint Mode");
     }
 
@@ -78,8 +78,10 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         CheckAssignment(waypointFactory.waypointContainer);
 
         if (!waypointFactoryPreCreate) waypointFactoryPreCreate = GetComponent<WaypointFactoryPreCreate>();
+        waypointFactoryPreCreate?.Clear();
         waypointFactoryPreCreate.Init();
         waypointPreCreate = waypointFactoryPreCreate.Spawn(aircraftFactory.selectedAircraft);
+        CheckAssignment(waypointFactoryPreCreate);
         
         Debug.Log("Init: Create Waypoint Mode");
     }
