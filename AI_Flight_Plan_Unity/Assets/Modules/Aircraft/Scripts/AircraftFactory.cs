@@ -1,21 +1,53 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AircraftFactory : MonoBehaviour
-{
+{        
     [SerializeField]
-    private GameObject _aircraftPrefab;
+    private UIManager uIManager;
+    [SerializeField]
+    private Theme theme;
     [SerializeField]
     private AircraftPropertiesRegistry aircraftPropertiesRegistry;
+    [SerializeField]
+    public GameObject aircraftPrefab;
+    [SerializeField]
+
     public List<Aircraft> aircraftList { get; private set; } = new List<Aircraft>();
 
     // public getter for other scripts to instantiate previews from the same prefab
-    public GameObject aircraftPrefab => _aircraftPrefab;
+    
+    private string prev_selectedAircraftModelName;
+    public void Awake()
+    {
+        AssignData();
+    }
+    private void AssignData()
+    {
+        if (!uIManager) uIManager = GetComponent<UIManager>();
+        CheckAssignment(uIManager);
+
+        aircraftPrefab = aircraftPropertiesRegistry.rotorAircrafts[0].GameObject();
+    }
+    void Update()
+    {
+        ChangeAircraftPrefabWithUI();
+    }
+    private void ChangeAircraftPrefabWithUI()
+    {
+        if ((prev_selectedAircraftModelName != uIManager.selectedAircraftModelName) && (uIManager.selectedAircraftModelName != null))
+        {
+            aircraftPrefab = Get(uIManager.selectedAircraftModelName);
+        }
+        prev_selectedAircraftModelName = uIManager.selectedAircraftModelName;
+    }
 
     public Aircraft Spawn(Vector3 globalPosition, Quaternion globalRotation)
     {
-        var go = Instantiate(_aircraftPrefab, globalPosition, globalRotation,transform);
-        var ctrl = go.GetComponent<Aircraft>();        
+        ChangeAircraftPrefabWithUI();
+        var go = Instantiate(aircraftPrefab, globalPosition, globalRotation, transform);
+        var ctrl = go.GetComponentInChildren<Aircraft>();
         CheckAssignment(ctrl);
         aircraftList.Add(ctrl);
 
@@ -36,5 +68,8 @@ public class AircraftFactory : MonoBehaviour
         if (obj == null)
             Debug.LogError($"(type: {typeof(T).Name}) is null at [{GetType().Name}]");
     } 
-
+    public GameObject Get(string modelName)
+    {
+        return aircraftPropertiesRegistry.Get(modelName).aircraftPrefab;
+    }
 }

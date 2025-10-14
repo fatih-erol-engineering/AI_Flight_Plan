@@ -1,12 +1,11 @@
 using System.Globalization;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 public class WaypointClickSpawnerUIToolkit : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private WaypointFactory waypointFactory;
     [SerializeField] private VisualTreeAsset popupUxml; // assign WaypointPopup.uxml in inspector
     [SerializeField] private LayerMask hitMask = ~0;
@@ -29,23 +28,23 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
     void Awake()
     {
         uiDocument = GetComponent<UIDocument>();
-        if (cam == null) cam = Camera.main;
+        if (mainCamera == null) mainCamera = Camera.main;
         if (waypointFactory == null) waypointFactory = GetComponent<WaypointFactory>();
         previewMaterialOverride = theme.Preview; 
     }
 
     void Tick()
     {
-        // hover preview: popup kapalıyken sürekli raycast yap, UI üzerindeyse preview yok
+        
         if (!popupOpen)
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
                 DestroyPreview();
             }
-            else if (cam != null)
+            else if (mainCamera != null)
             {
-                Ray hoverRay = cam.ScreenPointToRay(Input.mousePosition);
+                Ray hoverRay = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, maxDistance, hitMask))
                 {
                     lastHitPoint = hoverHit.point;
@@ -85,13 +84,13 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         if (!Input.GetKeyDown(spawnKey)) return;
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
 
-        if (cam == null)
+        if (mainCamera == null)
         {
             Debug.LogError($"[{GetType().Name}] Camera is not assigned.");
             return;
         }
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
         {
             lastHitPoint = hit.point;
@@ -146,7 +145,7 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         popupOpen = true;
     }
 
-    // preview oluştur / fallback sphere
+    
     private void CreatePreview(Vector3 position)
     {
         if (previewInstance != null) 
@@ -227,8 +226,8 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
 
     private void UpdatePreviewPosition()
     {
-        if (previewInstance == null || cam == null) return;
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (previewInstance == null || mainCamera == null) return;
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
         {
             previewInstance.transform.position = hit.point;

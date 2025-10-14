@@ -249,84 +249,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192251729}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.11114061, y: 0.843037, z: -0.19108629, w: 0.49032885}
-  m_LocalPosition: {x: -22.356197, y: 15.336863, z: 16.30094}
+  m_LocalRotation: {x: -0.40358832, y: 0.21540472, z: -0.09841417, w: -0.8837601}
+  m_LocalPosition: {x: 0.026837848, y: -0.112586245, z: -0.832797}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 42.58, y: 0, z: 0}
---- !u!1 &198425715
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 198425718}
-  - component: {fileID: 198425717}
-  - component: {fileID: 198425716}
-  m_Layer: 0
-  m_Name: UIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &198425716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198425715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 753acfe78ea57854dab25b69f8100e8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  cam: {fileID: 192251732}
-  aircraftPropertiesRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
-  selectedAircraftModelName: 
---- !u!114 &198425717
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198425715}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 1b2f6b427cb9d3b48a594dcaf032f340, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: b9dd003d12a3de746b50e7b4f41fd713, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
---- !u!4 &198425718
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198425715}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.86172, y: -1, z: 3.47382}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &587978676
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,6 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 587978678}
   - component: {fileID: 587978677}
+  - component: {fileID: 587978679}
   m_Layer: 0
   m_Name: AircraftFactory
   m_TagString: Untagged
@@ -356,8 +286,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1fbf3d14292f0d4e9f80d6a50621a5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
-  _aircraftPrefab: {fileID: 0}
-  aircraftPropertiesRegistry: {fileID: 0}
+  uIManager: {fileID: 1300490530}
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  aircraftPropertiesRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  aircraftPrefab: {fileID: 0}
 --- !u!4 &587978678
 Transform:
   m_ObjectHideFlags: 0
@@ -366,11 +298,205 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587978676}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0345, y: 0.26678, z: 1.13255}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.67778003, y: 1.26678, z: 1.91881}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
+  m_Father: {fileID: 1300490532}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &587978679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587978676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37e5412d058e554eb26363ff7fac48a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AircraftClickSpawnerUIToolkit
+  mainCamera: {fileID: 192251732}
+  aircraftFactory: {fileID: 587978677}
+  popupUxml: {fileID: 9197481963319205126, guid: c003b1735a5e47b428b1cf95e3475646, type: 3}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  maxDistance: 500
+  spawnKey: 323
+  previewContainer: {fileID: 1448128016}
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  uiDocument: {fileID: 1300490531}
+--- !u!1 &1300490523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1300490532}
+  - component: {fileID: 1300490531}
+  - component: {fileID: 1300490530}
+  - component: {fileID: 1300490529}
+  - component: {fileID: 1300490528}
+  - component: {fileID: 1300490527}
+  - component: {fileID: 1300490526}
+  - component: {fileID: 1300490525}
+  - component: {fileID: 1300490524}
+  m_Layer: 0
+  m_Name: MainGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1300490524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ecb3f0d4d1ebb3448806a44bbd6dce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainGameManager
+  <aircraftPropertiesRegistry>k__BackingField: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  <theme>k__BackingField: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+--- !u!114 &1300490525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635423966ee34984aaf0192b997564f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreateModeManager
+--- !u!114 &1300490526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1fbf3d14292f0d4e9f80d6a50621a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AircraftFactory
+  uIManager: {fileID: 1300490530}
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  aircraftPropertiesRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  aircraftPrefab: {fileID: 0}
+--- !u!114 &1300490527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa6b738ae46a0f244b3c7f450025c6b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreateModeWaypointManager
+  mainCamera: {fileID: 192251732}
+  waypointFactory: {fileID: 0}
+  popupUxml: {fileID: 9197481963319205126, guid: c003b1735a5e47b428b1cf95e3475646, type: 3}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  spawnKey: 323
+  previewContainer: {fileID: 1448128016}
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  uiDocument: {fileID: 1300490531}
+--- !u!114 &1300490528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec759bf957ac834881c4964cbfc9fe7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreateModeAircraftManager
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  mainCamera: {fileID: 192251732}
+--- !u!114 &1300490529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f21e91c774234c640aa1237f5108ecca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FreeModeManager
+--- !u!114 &1300490530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 753acfe78ea57854dab25b69f8100e8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  cam: {fileID: 192251732}
+  aircraftPropertiesRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  selectedAircraftModelName: 
+--- !u!114 &1300490531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 1b2f6b427cb9d3b48a594dcaf032f340, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: b9dd003d12a3de746b50e7b4f41fd713, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &1300490532
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300490523}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1448128016}
+  - {fileID: 587978678}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1448128015
@@ -397,12 +523,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1448128015}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0345, y: 0.26678, z: 1.13255}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.67778003, y: 1.26678, z: 1.91881}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1300490532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1851626768
 GameObject:
@@ -417,7 +543,7 @@ GameObject:
   - component: {fileID: 1851626770}
   - component: {fileID: 1851626769}
   m_Layer: 6
-  m_Name: Plane
+  m_Name: World
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -522,6 +648,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 192251733}
   - {fileID: 1851626772}
-  - {fileID: 587978678}
-  - {fileID: 198425718}
-  - {fileID: 1448128016}
+  - {fileID: 1300490532}

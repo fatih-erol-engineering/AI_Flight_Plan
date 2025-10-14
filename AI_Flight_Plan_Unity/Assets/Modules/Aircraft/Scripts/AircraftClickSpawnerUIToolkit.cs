@@ -1,108 +1,41 @@
-using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(MainGameManager))]
-public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
-{    
+public class AircraftClickSpawnerUIToolkit : MonoBehaviour
+{
     [SerializeField] private Camera mainCamera;
-    [SerializeField] WaypointFactory waypointFactory;
+    [SerializeField] private AircraftFactory aircraftFactory;
     [SerializeField] private VisualTreeAsset popupUxml; // assign WaypointPopup.uxml in inspector
     [SerializeField] private LayerMask hitMask = ~0;
-    private float maxDistance = 500f;
+    [SerializeField] private float maxDistance = 500f;
     [SerializeField] private KeyCode spawnKey = KeyCode.Mouse0;
 
-
     [Header("Preview")]
+    // preview için prefer edilen davranış: mevcut waypoint prefab'ından instantiate et ve previewContainer altında tut
     [SerializeField] private Transform previewContainer;
     private Material previewMaterialOverride; // inspector fallback
     [SerializeField] private Theme theme; // optional, varsa theme.precreate kullanılır
     private GameObject previewInstance;
 
-    [Header("UI")]
-    [SerializeField] private UIDocument uiDocument;
+    [SerializeField] 
+    private UIDocument uiDocument;
     private VisualElement popupInstance;
     private bool popupOpen;
     private Vector3 lastHitPoint;
 
-
-
-    private MainGameManager mainGameManager;            
-        
-    private Dictionary<CreateMode, ModeHooks> modes;
-    public ModeHooks currentHooks { get; private set; }
-    public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;        
-    private ExitMode exitMode;
-    public ExitMode GetExitMode()
+    void Awake()
     {
-        return exitMode;
-    }   
-    public void AssignData()
-    {
-        if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
-        CheckAssignment(mainGameManager);
-
-        if (!waypointFactory) waypointFactory = GetComponent<WaypointFactory>();
-        CheckAssignment(waypointFactory);
-
-        if (!mainCamera) mainCamera = Camera.main;
-        CheckAssignment(mainCamera);
-        maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
-
+        if (!uiDocument) uiDocument = GetComponent<UIDocument>();        
+        if (mainCamera == null) mainCamera = Camera.main;
+        if (aircraftFactory == null) aircraftFactory = GetComponent<AircraftFactory>();
         previewMaterialOverride = theme.Preview; 
     }
-    void CheckAssignment<T>(T obj)
+
+    void Update()
     {
-        if (obj == null)
-            Debug.LogError($"[{GetType().Name}]  Missing: (type: {typeof(T).Name})");
-    }
-    public void Apply()
-    {
-        // If popup açık ise SpawnFromPopup kullan (zaten SpawnFromPopup temizliyor)
-        if (popupOpen)
-        {
-            SpawnFromPopup();
-        }                
-    }
-
-
-    public void Cancel()
-    {
-        ClosePopup();
-        DestroyPreview();        
-    }
-
-    public void Init()
-    {
-        AssignData();
-        Debug.Log("Init: Create Waypoint Mode");
-    }
-
- public bool Tick(out ExitMode exitMode)
-    {
-        // Bu sureci basariyla durduracak olan sey space tusu olsun        
-        bool exitFlag = false;
-        exitMode = ExitMode.None;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ClosePopup();
-            exitFlag = true;
-            exitMode = ExitMode.Apply;
-        }
-
-
-        // Bu sureci iptal edecek olan sey ESC tusu olsun            
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Cancel();
-            exitFlag = true;
-            exitMode = ExitMode.Cancel;
-            return exitFlag; // exitFlag = true;
-        }
-
-        // Eger Popup Menu Acik Degilse ilk tiklama ile popup acilir.
+        
         if (!popupOpen)
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -115,7 +48,9 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, maxDistance, hitMask))
                 {
                     lastHitPoint = hoverHit.point;
-                    UpdatePreviewPositionWithMouse();
+                    CreatePreview(hoverHit.point);
+                    // preview her frame pozisyon güncellensin
+                    UpdatePreviewPosition();
                 }
                 else
                 {
@@ -124,57 +59,43 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
             }
         }
 
-        // Popup Menu Acik ise tiklama, enter veya tusa basma ile waypoint spawn edilir.
+        // if popup open -> second click in scene spawns (ignore clicks over UI)
         if (popupOpen)
-        {
-            UpdatePreviewPositionWithMouse();
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {            
+
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-                {
-
-                }
-                else
-                {                    
-                    SpawnFromPopup();
-                }
+                ClosePopup();
+                return;
             }
-        }
 
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+                SpawnFromPopup();
+            }
+
+            return;
+        }
 
         // Normal first click -> open popup
-        if (!Input.GetKeyDown(spawnKey))
-        {
-            exitFlag = false;
-        }  
-        else
-        {
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            {
-                exitFlag = false;
-            }
-            else
-            {     
-                
-                exitFlag = false;                       
-                if (mainCamera == null)
-                {
-                    Debug.LogError($"[{GetType().Name}] Camera is not assigned.");
-                    exitFlag = true;
-                    exitMode = ExitMode.Cancel;  // DEGISTIR
-                }
+        if (!Input.GetKeyDown(spawnKey)) return;
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
 
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
-                {
-                    lastHitPoint = hit.point;
-                    OpenPopupAtMouse(hit.point);
-                    // popup açılırken preview zaten varsa kalır; yoksa oluştur (zaten hover loop'u yapar)
-                    CreatePreview(hit.point);
-                }
-            }
+        if (mainCamera == null)
+        {
+            Debug.LogError($"[{GetType().Name}] Camera is not assigned.");
+            return;
         }
-        return exitFlag;
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
+        {
+            lastHitPoint = hit.point;
+            OpenPopupAtMouse(hit.point);
+            // popup açılırken preview zaten varsa kalır; yoksa oluştur (zaten hover loop'u yapar)
+            CreatePreview(hit.point);
+        }
     }
 
     private void OpenPopupAtMouse(Vector3 hitPoint)
@@ -221,6 +142,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         altField.Focus();
         popupOpen = true;
     }
+
     
     private void CreatePreview(Vector3 position)
     {
@@ -232,8 +154,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         }
 
         GameObject prefabToUse = null;
-        if (waypointFactory != null)
-            prefabToUse = waypointFactory.WaypointPrefab;
+        if (aircraftFactory != null)
+            prefabToUse = aircraftFactory.aircraftPrefab;
 
         if (prefabToUse != null && previewContainer != null)
         {
@@ -300,7 +222,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         }
     }
 
-    private void UpdatePreviewPositionWithMouse()
+    private void UpdatePreviewPosition()
     {
         if (previewInstance == null || mainCamera == null) return;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -339,7 +261,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (!popupOpen || popupInstance == null)
             return;
 
-        if (waypointFactory == null)
+        if (aircraftFactory == null)
         {
             Debug.LogError($"[{GetType().Name}] WaypointFactory is not assigned.");
             ClosePopup();
@@ -360,7 +282,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         Vector3 spawnPos = new Vector3(lon, alt, lat);
         // preview'i yok et ve gerçek waypoint oluştur
         DestroyPreview();
-        waypointFactory.Spawn(spawnPos, Quaternion.identity, t);
+        aircraftFactory.Spawn(spawnPos, Quaternion.identity);
 
         ClosePopup();
     }
@@ -377,33 +299,4 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         DestroyPreview();
         popupOpen = false;
     }
-    bool MouseHitPos(out Vector3 globalPosition)
-    {
-        Vector2 screen = Input.mousePosition;
-        var ray = mainCamera.ScreenPointToRay(screen);
-        if (EventSystem.current && EventSystem.current.IsPointerOverGameObject())
-        {
-            globalPosition = default;
-            return false;
-        }
-
-        if (Physics.Raycast(ray, out var hit, maxDistance, hitMask, QueryTriggerInteraction.Collide))
-        {
-            globalPosition = hit.point;
-            return true;
-        }
-        else
-        {
-            var plane = new Plane(Vector3.up, new Vector3(0, 0, 0));
-            if (plane.Raycast(ray, out float enter))
-            {
-                globalPosition = ray.GetPoint(enter);
-                return true;
-            }
-        }
-        globalPosition = default;
-        return false;
-    }
-
 }
-

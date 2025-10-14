@@ -20,4 +20,4 @@ MonoBehaviour:
   minTurnRadious_m: 0
   mass_kg: 0.5
   noise_dBA: 20
-  aircraftPrefab: {fileID: 5697215273144170777, guid: d8f448d9351402e4eac7d86ec77679ef, type: 3}
+  aircraftPrefab: {fileID: 5697215273144170777, guid: 8ad0062106027f8479d05759c8a781ec, type: 3}
