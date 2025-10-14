@@ -6,11 +6,7 @@ public class Theme : ScriptableObject
 {
 
     public Texture2D mouseDefault;
-    public Texture2D mouseDrag;
-    public GameObject waypointPrefab;
-    public GameObject controlPointPrefab;
-    public GameObject trajectoryPrefab;
-    public GameObject BSplineSegmentPrefab;
+    public Texture2D mouseDrag;   
     [Header("Menu Icons")]
     public Texture2D addIcon;
     public Texture2D editIcon;

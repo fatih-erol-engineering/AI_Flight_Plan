@@ -5,9 +5,8 @@ using UnityEngine;
 public class Waypoint : SelectableMonoBehaviour
 {
     public TimeGame time;
-    public WaypointType type = WaypointType.Open;
-    public ControlPoint[] controlPoints;
     private Vector3 oldPos;
+    public ControlPoint[] controlPoints;
     private MeshRenderer meshRenderer;
     void Awake()
     {
@@ -27,6 +26,7 @@ public class Waypoint : SelectableMonoBehaviour
         if (obj == null)
             Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
     }
+
     public void setPosition(Vector3 globalPosition)
     {
         transform.position = globalPosition;  
@@ -65,11 +65,4 @@ public class Waypoint : SelectableMonoBehaviour
         meshRenderer.material = material;  
     }
 
-}
-
-
-public enum WaypointType
-{
-    Open,
-    Close
 }

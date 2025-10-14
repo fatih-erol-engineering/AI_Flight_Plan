@@ -180,6 +180,14 @@
     opacity: 0.4;
 }
 
+.unity-toggle:active .unity-toggle__input > #unity-checkmark {
+    background-image: url("project://database/Assets/Icons/Add.png?fileID=2800000&guid=20a73c4cbbc9a784cafac7bc4a13f0a7&type=3#Add");
+    background-color: var(--colorTheme);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    opacity: 0.4;
+    scale: 0.95 0.95 0.95;
+}
+
 .unity-toggle:checked .unity-toggle__input > #unity-checkmark {
     background-image: url("project://database/Assets/Icons/Add.png?fileID=2800000&guid=20a73c4cbbc9a784cafac7bc4a13f0a7&type=3#Add");
     background-color: var(--colorTheme);

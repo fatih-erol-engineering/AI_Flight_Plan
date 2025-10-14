@@ -14,10 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Theme
   mouseDefault: {fileID: 2800000, guid: 702391605d531a34497536297c9cb38a, type: 3}
   mouseDrag: {fileID: 2800000, guid: d85790bdfb137734ebb87cd4abc3e119, type: 3}
-  waypointPrefab: {fileID: 517102805373364547, guid: 1194e48d07239fb459e25332f73f8806, type: 3}
-  controlPointPrefab: {fileID: 517102805373364547, guid: 0d2f4b3517351b24db17f5cfb1533c76, type: 3}
-  trajectoryPrefab: {fileID: 8064563952328812410, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  BSplineSegmentPrefab: {fileID: 517102805373364547, guid: e53a0a863f1bb5e4d8083c93fbfcd4a2, type: 3}
   addIcon: {fileID: 2800000, guid: 20a73c4cbbc9a784cafac7bc4a13f0a7, type: 3}
   editIcon: {fileID: 2800000, guid: 2039a6c2d6c87d5499abcb412d3e9ba3, type: 3}
   fixedWingIcon: {fileID: 2800000, guid: 8191d99e70fa840488e94e9dd44c897e, type: 3}
@@ -26,8 +22,8 @@ MonoBehaviour:
   playIcon: {fileID: 2800000, guid: 24d901b70b64121449758716d72b82ec, type: 3}
   stopIcon: {fileID: 2800000, guid: 6c4839554b1824642b0eda4793511155, type: 3}
   pauseIcon: {fileID: 2800000, guid: 99a25307ccbc5284bb33bb196959ea2a, type: 3}
-  Hover: {fileID: 2100000, guid: 920f933c7b786314dad2557d870b37bf, type: 2}
-  Select: {fileID: 2100000, guid: 57fc93d593680074bb9e832a6f9f0118, type: 2}
-  PreCreate: {fileID: 2100000, guid: 3e539d689463ba64d982bf504b51d3f1, type: 2}
+  Hover: {fileID: 2100000, guid: 57fc93d593680074bb9e832a6f9f0118, type: 2}
+  Select: {fileID: 2100000, guid: 920f933c7b786314dad2557d870b37bf, type: 2}
+  PreCreate: {fileID: 2100000, guid: 57fc93d593680074bb9e832a6f9f0118, type: 2}
   startColor: {r: 0, g: 1, b: 0, a: 1}
   endColor: {r: 0, g: 0, b: 1, a: 1}

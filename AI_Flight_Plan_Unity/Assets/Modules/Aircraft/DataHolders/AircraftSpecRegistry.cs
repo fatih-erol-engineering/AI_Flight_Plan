@@ -4,18 +4,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Flight/Aircraft Spec Registry", fileName = "AircraftSpecRegistry")]
 public class AircraftSpecRegistry : ScriptableObject
 {
-    public List<AircraftSpec> specs = new();
+    public List<AircraftProperties> specs = new();
 
-    Dictionary<AircraftModel, AircraftSpec> _map;  
+    Dictionary<AircraftModel, AircraftProperties> _map;  
     
-    public List<AircraftSpec> rotorAircrafts { get;  private set; }
-    public List<AircraftSpec> fixedWingAircrafts { get; private set; }
+    public List<AircraftProperties> rotorAircrafts { get;  private set; }
+    public List<AircraftProperties> fixedWingAircrafts { get; private set; }
 
     void OnEnable()
     {
-        _map = new Dictionary<AircraftModel, AircraftSpec>();
-        rotorAircrafts = new List<AircraftSpec>();
-        fixedWingAircrafts = new List<AircraftSpec>();
+        _map = new Dictionary<AircraftModel, AircraftProperties>();
+        rotorAircrafts = new List<AircraftProperties>();
+        fixedWingAircrafts = new List<AircraftProperties>();
         
         rotorAircrafts.Clear();
         fixedWingAircrafts.Clear();
@@ -37,19 +37,19 @@ public class AircraftSpecRegistry : ScriptableObject
         }
     }
 
-    public bool TryGet(AircraftModel t, out AircraftSpec spec)
+    public bool TryGet(AircraftModel t, out AircraftProperties spec)
     {
         if (_map == null) OnEnable();
         return _map.TryGetValue(t, out spec) && spec != null;
     }
 
-    public AircraftSpec Get(AircraftModel t)
+    public AircraftProperties Get(AircraftModel t)
     {
         if (TryGet(t, out var s)) return s;
         Debug.LogError($"[AircraftSpecRegistry] Spec not found for type {t}");
         return null;
     }
-    public AircraftSpec Get(string modelName)
+    public AircraftProperties Get(string modelName)
     {
         foreach (var s in specs)
         {

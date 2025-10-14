@@ -178,10 +178,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   trajectoryType: 0
-  waypointContainer: {fileID: 5513755076722954520}
-  controlPointContainer: {fileID: 314739279133306574}
-  segmentContainer: {fileID: 8785390315187580617}
-  restrictedAreaContainer: {fileID: 3153065933349397560}
+  <waypointContainer>k__BackingField: {fileID: 0}
+  <controlPointContainer>k__BackingField: {fileID: 0}
+  <segmentContainer>k__BackingField: {fileID: 0}
+  <restrictedAreaContainer>k__BackingField: {fileID: 0}
   initialControlPointDistance: 4
   lineWidth: 1
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}

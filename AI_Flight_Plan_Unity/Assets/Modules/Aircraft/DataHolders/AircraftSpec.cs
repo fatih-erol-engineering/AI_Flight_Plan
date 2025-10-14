@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "AircraftSpec", menuName = "Flight/AircraftSpec")]
-public class AircraftSpec : ScriptableObject
+public class AircraftProperties : ScriptableObject
 {
     public AircraftModel model;
     public AircraftType type;   
@@ -14,8 +14,6 @@ public class AircraftSpec : ScriptableObject
     [Range(0,200)]
     public float minTurnRadious_m;    
     public float mass_kg;
-    public Color color;
-    public GameObject prefab;
     public float noise_dBA;
 }
 public enum AircraftModel
