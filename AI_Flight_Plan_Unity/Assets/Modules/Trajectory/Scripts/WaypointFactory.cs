@@ -7,6 +7,9 @@ public class WaypointFactory : MonoBehaviour
     private GameObject waypointPrefab;
     public List<Waypoint> waypointList { get; private set; } = new List<Waypoint>();
 
+    // public getter for other scripts to instantiate previews from the same prefab
+    public GameObject WaypointPrefab => waypointPrefab;
+
     public Waypoint Spawn(Vector3 globalPosition, Quaternion globalRotation, float time_s)
     {
         var go = Instantiate(waypointPrefab, globalPosition, globalRotation,transform);

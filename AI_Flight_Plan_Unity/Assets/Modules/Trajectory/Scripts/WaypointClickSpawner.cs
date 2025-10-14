@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -13,6 +14,13 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
     [SerializeField] private float maxDistance = 500f;
     [SerializeField] private KeyCode spawnKey = KeyCode.Mouse0;
 
+    [Header("Preview")]
+    // preview için prefer edilen davranış: mevcut waypoint prefab'ından instantiate et ve previewContainer altında tut
+    [SerializeField] private Transform previewContainer;
+    private Material previewMaterialOverride; // inspector fallback
+    [SerializeField] private Theme theme; // optional, varsa theme.precreate kullanılır
+    private GameObject previewInstance;
+
     private UIDocument uiDocument;
     private VisualElement popupInstance;
     private bool popupOpen;
@@ -23,13 +31,41 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         uiDocument = GetComponent<UIDocument>();
         if (cam == null) cam = Camera.main;
         if (waypointFactory == null) waypointFactory = GetComponent<WaypointFactory>();
+        previewMaterialOverride = theme.Preview; 
     }
 
     void Update()
     {
+        // hover preview: popup kapalıyken sürekli raycast yap, UI üzerindeyse preview yok
+        if (!popupOpen)
+        {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                DestroyPreview();
+            }
+            else if (cam != null)
+            {
+                Ray hoverRay = cam.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, maxDistance, hitMask))
+                {
+                    lastHitPoint = hoverHit.point;
+                    CreatePreview(hoverHit.point);
+                    // preview her frame pozisyon güncellensin
+                    UpdatePreviewPosition();
+                }
+                else
+                {
+                    DestroyPreview();
+                }
+            }
+        }
+
         // if popup open -> second click in scene spawns (ignore clicks over UI)
         if (popupOpen)
         {
+            // preview pozisyonunu her frame güncelle
+            UpdatePreviewPosition();
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 ClosePopup();
@@ -60,6 +96,8 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         {
             lastHitPoint = hit.point;
             OpenPopupAtMouse(hit.point);
+            // popup açılırken preview zaten varsa kalır; yoksa oluştur (zaten hover loop'u yapar)
+            CreatePreview(hit.point);
         }
     }
 
@@ -108,6 +146,102 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         popupOpen = true;
     }
 
+    // preview oluştur / fallback sphere
+    private void CreatePreview(Vector3 position)
+    {
+        if (previewInstance != null) 
+        {
+            // var ise sadece pozisyonu güncelle
+            previewInstance.transform.position = position;
+            return;
+        }
+
+        GameObject prefabToUse = null;
+        if (waypointFactory != null)
+            prefabToUse = waypointFactory.WaypointPrefab;
+
+        if (prefabToUse != null && previewContainer != null)
+        {
+            previewInstance = Instantiate(prefabToUse, position, Quaternion.identity, previewContainer);
+            // disable runtime behaviours on preview
+            var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
+            for (int i = 0; i < behaviours.Length; i++)
+                behaviours[i].enabled = false;
+        }
+        else if (prefabToUse != null)
+        {
+            // parent yoksa world instantiate
+            previewInstance = Instantiate(prefabToUse, position, Quaternion.identity);
+            var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
+            for (int i = 0; i < behaviours.Length; i++)
+                behaviours[i].enabled = false;
+        }
+        else
+        {
+            previewInstance = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            previewInstance.transform.position = position;
+            previewInstance.transform.localScale = Vector3.one * 0.4f;
+            var col = previewInstance.GetComponent<Collider>();
+            if (col) Destroy(col);
+            previewInstance.name = "WaypointPreview";
+        }
+
+        // apply preview material if available (try theme fields/properties with fallbacks)
+        Material previewMat = previewMaterialOverride;
+        if (theme != null)
+        {
+            // try common property/field names
+            var t = theme.GetType();
+            var prop = t.GetProperty("Preview") ?? t.GetProperty("precreate") ?? t.GetProperty("PreCreate") ?? t.GetProperty("preCreate");
+            if (prop != null) previewMat = prop.GetValue(theme) as Material ?? previewMat;
+            else
+            {
+                var field = t.GetField("Preview") ?? t.GetField("precreate") ?? t.GetField("PreCreate") ?? t.GetField("preCreate");
+                if (field != null) previewMat = field.GetValue(theme) as Material ?? previewMat;
+            }
+        }
+
+        if (previewMat != null)
+        {
+            // handle MeshRenderer and SkinnedMeshRenderer
+            var meshRenderers = previewInstance.GetComponentsInChildren<MeshRenderer>();
+            foreach (var r in meshRenderers)
+            {
+                if (r == null) continue;
+                var mats = r.materials;
+                var newMats = new Material[mats.Length];
+                for (int i = 0; i < newMats.Length; i++) newMats[i] = previewMat;
+                r.materials = newMats;
+            }
+            var skinned = previewInstance.GetComponentsInChildren<UnityEngine.SkinnedMeshRenderer>();
+            foreach (var r in skinned)
+            {
+                if (r == null) continue;
+                var mats = r.materials;
+                var newMats = new Material[mats.Length];
+                for (int i = 0; i < newMats.Length; i++) newMats[i] = previewMat;
+                r.materials = newMats;
+            }
+        }
+    }
+
+    private void UpdatePreviewPosition()
+    {
+        if (previewInstance == null || cam == null) return;
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
+        {
+            previewInstance.transform.position = hit.point;
+        }
+    }
+
+    private void DestroyPreview()
+    {
+        if (previewInstance == null) return;
+        Destroy(previewInstance);
+        previewInstance = null;
+    }
+
     private void OnPopupKeyDown(KeyDownEvent evt)
     {
         if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
@@ -149,6 +283,8 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         float.TryParse(timeField.value, NumberStyles.Float, CultureInfo.InvariantCulture, out t);
 
         Vector3 spawnPos = new Vector3(lon, alt, lat);
+        // preview'i yok et ve gerçek waypoint oluştur
+        DestroyPreview();
         waypointFactory.Spawn(spawnPos, Quaternion.identity, t);
 
         ClosePopup();
@@ -162,6 +298,8 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
             popupInstance.RemoveFromHierarchy();
             popupInstance = null;
         }
+        // iptal ise preview'i temizle
+        DestroyPreview();
         popupOpen = false;
     }
 }

@@ -20,7 +20,7 @@ public class Theme : ScriptableObject
     [Header("Theme Materials")]
     public Material Hover;
     public Material Select;
-    public Material PreCreate;
+    public Material Preview;
     [Header("Trajectory")]    
     public Color startColor;
     public Color endColor;    
