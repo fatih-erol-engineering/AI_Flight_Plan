@@ -22,6 +22,8 @@ public class SelectableBehaviour : MonoBehaviour, ISelectable
     {
         _baseScale = transform.localScale;
         _baseMeshRenderer = GetComponent<MeshRenderer>();
+        hoverMaterial = theme?.Hover;
+        selectMaterial = theme?.Select;
         if (_baseMeshRenderer == null)
         {
             if (_baseMaterial == null)

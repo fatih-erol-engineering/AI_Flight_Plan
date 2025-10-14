@@ -1,95 +1,36 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WaypointFactory : MonoBehaviour
-{                       
-    public GameObject waypointPrefab { get; private set; }    
-    public void Init()
+{
+    [SerializeField]
+    private GameObject waypointPrefab;
+    public List<Waypoint> waypointList { get; private set; } = new List<Waypoint>();
+
+    public Waypoint Spawn(Vector3 globalPosition, Quaternion globalRotation, float time_s)
     {
-        AssignData();
+        var go = Instantiate(waypointPrefab, globalPosition, globalRotation,transform);
+        var ctrl = go.GetComponent<Waypoint>();
+        ctrl.SetTime(time_s);
+        CheckAssignment(ctrl);
+        waypointList.Add(ctrl);
+
+        return ctrl;
     }
-    private void AssignData()
+    public void Clear()
     {
-                
+        foreach (var wp in waypointList)
+        {
+            if (wp != null)
+                Destroy(wp.gameObject);
+        }
+        waypointList.Clear();
     }
+
     void CheckAssignment<T>(T obj)
     {
         if (obj == null)
-            Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
-    }    
+            Debug.LogError($"(type: {typeof(T).Name}) is null at [{GetType().Name}]");
+    } 
 
-
-    // public virtual Waypoint Spawn(Aircraft aircraft)
-    // {
-    //     waypointContainer = aircraft.trajectory.transform.Find("WaypointContainer");
-    //     if (waypointContainer == null)
-    //     {
-    //         GameObject waypointContainerObj = new GameObject("WaypointContainer");
-    //         waypointContainerObj.transform.parent = aircraft.trajectory.transform;
-    //         waypointContainerObj.transform.localPosition = Vector3.zero;
-    //         waypointContainer = waypointContainerObj.transform;
-    //     }                
-
-    //     var go = Instantiate(waypointPrefab, waypointContainer);
-    //     var ctrl = go.GetComponent<Waypoint>();
-    //     CheckAssignment(ctrl);
-                        
-    //     return ctrl;
-    // }
-    // public virtual Waypoint Spawn(Aircraft aircraft, Vector3 globalPosition, Quaternion globalRotation)
-    // {
-    //     waypointContainer = aircraft.trajectory.transform.Find("WaypointContainer");
-    //     if (waypointContainer == null)
-    //     {
-    //         GameObject waypointContainerObj = new GameObject("WaypointContainer");
-    //         waypointContainerObj.transform.parent = aircraft.trajectory.transform;
-    //         waypointContainerObj.transform.localPosition = Vector3.zero;
-    //         waypointContainer = waypointContainerObj.transform;
-    //     }                
-        
-    //     var go = Instantiate(waypointPrefab, globalPosition, globalRotation, waypointContainer);
-    //     var ctrl = go.GetComponent<Waypoint>();
-    //     CheckAssignment(ctrl);
-                        
-    //     return ctrl;
-    // }
-
-    // public virtual Waypoint Spawn(Aircraft aircraft, string parentName)
-    // {
-    //     Transform waypointContainerForPreCreate = aircraft.trajectory.transform.Find(parentName);
-    //     if (waypointContainerForPreCreate == null)
-    //     {
-    //         GameObject waypointContainerObj = new GameObject(parentName);
-    //         waypointContainerObj.transform.parent = aircraft.trajectory.transform;
-    //         waypointContainerObj.transform.localPosition = Vector3.zero;
-    //         waypointContainer = waypointContainerObj.transform;
-    //     }                
-        
-    //     var go = Instantiate(waypointPrefab, waypointContainerForPreCreate);
-    //     var ctrl = go.GetComponent<Waypoint>();
-    //     CheckAssignment(ctrl);
-                        
-    //     return ctrl;
-    // }
-
-    // public void SelectWaypoint(Waypoint waypoint)
-    // {
-
-    //     selectedWaypoint = waypoint;
-    //     CheckAssignment(selectedWaypoint);        
-    //     // uIManager.UpdateSelectedAircraftInfoPanel(aircraft);
-    // }
-    // public void Delete()
-    // {
-    //     Destroy(waypointContainer.gameObject);        
-    // }
-    // public void Clear(Transform waypointContainer)
-    // {
-    //     if (waypointContainer != null)
-    //     {
-    //         for (int i = 0; i < waypointContainer.childCount; i++)
-    //         {
-    //             Destroy(waypointContainer.GetChild(i).gameObject);
-    //         }
-    //     }
-    // }
 }

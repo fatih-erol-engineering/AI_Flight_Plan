@@ -3,7 +3,11 @@ using UnityEngine;
 [System.Serializable]
 public class TimeGame
 {
-    public float second;
+    public float second { get; private set; } = 0f;
+    public void SetTime(float _second)
+    {
+        second = _second;
+    }
     //public float day;
     //[Range(0, 24)]
     //public float hour;
