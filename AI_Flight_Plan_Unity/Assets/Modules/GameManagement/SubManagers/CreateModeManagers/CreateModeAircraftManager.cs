@@ -29,6 +29,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     private Vector3 lastHitPoint;
 
     private ExitMode exitMode;
+    [SerializeField]    
     public ExitMode GetExitMode()
     {
         return exitMode;
@@ -228,9 +229,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
             }
         }
 
-
-
-
         return exitFlag;
     }
      private void OpenPopupAtMouse(Vector3 hitPoint)
@@ -346,7 +344,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         if (previewInstance == null || mainCamera == null) return;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
-        {
+        {            
             previewInstance.transform.position = hit.point;
         }
     }

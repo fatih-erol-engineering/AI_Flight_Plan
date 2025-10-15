@@ -11,16 +11,16 @@ public class Aircraft : SelectableBehaviour
 
     [field: SerializeField]
     public Trajectory trajectory { get; private set; }
-
-    [SerializeField]
+    
     private MeshRenderer[] aircraftMeshRenderers;
+    [SerializeField]
     private MeshRenderer[] _baseAircraftMeshRenderers;
     // Saklanan orijinal materyaller (her renderer için dizi)
     private Material[][] _originalMaterials;
     
     protected void OnEnable()
     {
-        _baseAircraftMeshRenderers = GetComponentsInChildren<MeshRenderer>();
+        if(_baseAircraftMeshRenderers == null) _baseAircraftMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         // Eğer inspector'dan meshler verilmemişse fallback olarak çocukları kullan
         if (aircraftMeshRenderers == null || aircraftMeshRenderers.Length == 0)
             aircraftMeshRenderers = _baseAircraftMeshRenderers;
