@@ -2,24 +2,20 @@
 using UnityEngine;
 
 
-public enum MainGameMode { Free, Create, }
+public enum MainGameMode { Free, CreateAircraft, }
 public enum ExitMode { Cancel, Apply, None}
 
-[RequireComponent(typeof(UIManager))]
+
 [RequireComponent(typeof(FreeModeManager))]
 [RequireComponent(typeof(CreateModeManager))]
-[RequireComponent(typeof(AircraftFactory))]
-
 public class MainGameManager : MonoBehaviour
 {
-    [field: SerializeField]
-    public AircraftPropertiesRegistry aircraftPropertiesRegistry { get; private set; }    
-    [field: SerializeField]
-    public Theme theme{ get; private set; }
-    public UIManager uIManager{ get; private set; }
-    public FreeModeManager freeModeController{ get; private set; }
-    public CreateModeManager createModeController{ get; private set; }
-    public AircraftFactory aircraftFactory{ get; private set; }
+    [SerializeField]
+    private UIManager uIManager;
+    [SerializeField]
+    private FreeModeManager freeModeController;
+    [SerializeField]
+    private CreateModeManager createModeManager;
     public Dictionary<MainGameMode, ModeHooks> modes{ get; private set; }
     public ModeHooks currentHooks  { get; private set; }
     public MainGameMode currentMode { get; private set; } = MainGameMode.Free;    
@@ -30,18 +26,13 @@ public class MainGameManager : MonoBehaviour
     }
 
     void AssignData()
-    {
-        if (!uIManager) uIManager = gameObject.GetComponent<UIManager>();
+    {        
         CheckAssignment(uIManager);    
 
         if (!freeModeController) freeModeController = gameObject.GetComponent<FreeModeManager>();
         CheckAssignment(freeModeController);
-
-        if (!createModeController) createModeController = gameObject.GetComponent<CreateModeManager>();
-        CheckAssignment(createModeController);
-
-        if (!aircraftFactory) aircraftFactory = gameObject.GetComponent<AircraftFactory>();
-        CheckAssignment(aircraftFactory);
+        if (!createModeManager) createModeManager = gameObject.GetComponent<CreateModeManager>();
+        CheckAssignment(createModeManager);
 
         ConfigureModes();
         InitMode(MainGameMode.Free);
@@ -49,7 +40,7 @@ public class MainGameManager : MonoBehaviour
     void CheckAssignment<T>(T obj)
     {
         if (obj == null)
-            Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
+            Debug.LogError($"[{GetType().Name}]  (type: {typeof(T).Name}) is null.");
     }
 
     void Update()
@@ -67,7 +58,7 @@ public class MainGameManager : MonoBehaviour
         // Current Hook un kendi exit sinyali olabiliyor. O da tick fonksiyonu ile kontrol ediliyor.
         // Boyle bir durumda current hook exit request ediyor ve mode değişikliği yapılıyor.
         ExitMode currentHooksExitMode = ExitMode.None;
-        exitFlag = currentHooks.Tick(out currentHooksExitMode);
+            exitFlag = currentHooks.Tick(out currentHooksExitMode);
         if (exitFlag)
         {
             // Current Hook tarafından gelen exit isteği apply ya da cancel olabilir.
@@ -123,12 +114,12 @@ public class MainGameManager : MonoBehaviour
                 Cancel = freeModeController.Cancel,                
             },
 
-            [MainGameMode.Create] = new ModeHooks
+            [MainGameMode.CreateAircraft] = new ModeHooks
             {
-                Init = createModeController.Init,
-                Tick = createModeController.Tick,
-                Apply = createModeController.Apply,
-                Cancel = createModeController.Cancel,                
+                Init = createModeManager.Init,
+                Tick = createModeManager.Tick,
+                Apply = createModeManager.Apply,
+                Cancel = createModeManager.Cancel,                
             },
         };
     }

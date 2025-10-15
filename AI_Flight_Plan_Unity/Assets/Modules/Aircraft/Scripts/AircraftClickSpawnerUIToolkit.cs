@@ -7,7 +7,7 @@ public class AircraftClickSpawnerUIToolkit : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private AircraftFactory aircraftFactory;
-    [SerializeField] private VisualTreeAsset popupUxml; // assign WaypointPopup.uxml in inspector
+    [SerializeField] private VisualTreeAsset popupUxml; 
     [SerializeField] private LayerMask hitMask = ~0;
     [SerializeField] private float maxDistance = 500f;
     [SerializeField] private KeyCode spawnKey = KeyCode.Mouse0;
@@ -27,10 +27,18 @@ public class AircraftClickSpawnerUIToolkit : MonoBehaviour
 
     void Awake()
     {
-        if (!uiDocument) uiDocument = GetComponent<UIDocument>();        
+        if (!uiDocument) uiDocument = GetComponent<UIDocument>();
+        CheckAssignment(uiDocument);
         if (mainCamera == null) mainCamera = Camera.main;
+        CheckAssignment(mainCamera);
         if (aircraftFactory == null) aircraftFactory = GetComponent<AircraftFactory>();
-        previewMaterialOverride = theme.Preview; 
+        CheckAssignment(aircraftFactory);
+        previewMaterialOverride = theme.Preview;
+    }
+    void CheckAssignment<T>(T obj)
+    {
+        if (obj == null)
+            Debug.LogError($"[{GetType().Name}]  (type: {typeof(T).Name}) is null.");
     }
 
     void Update()
@@ -282,7 +290,9 @@ public class AircraftClickSpawnerUIToolkit : MonoBehaviour
         Vector3 spawnPos = new Vector3(lon, alt, lat);
         // preview'i yok et ve gerçek waypoint oluştur
         DestroyPreview();
-        aircraftFactory.Spawn(spawnPos, Quaternion.identity);
+        TimeGame _time = new TimeGame();
+        _time.SetTime(t);
+        aircraftFactory.Spawn(spawnPos, Quaternion.identity,_time);
 
         ClosePopup();
     }

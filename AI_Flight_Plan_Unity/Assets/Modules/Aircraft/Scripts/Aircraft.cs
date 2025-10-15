@@ -4,11 +4,13 @@ using UnityEngine;
 public class Aircraft : SelectableBehaviour
 {
     [Header("Aircraft Settings")]
+    [field: SerializeField]
+    public TimeGame time { get; private set; }
     [SerializeField]
     private AircraftProperties aircraftProperties;
 
-    [SerializeField]
-    private Trajectory trajectory;
+    [field: SerializeField]
+    public Trajectory trajectory { get; private set; }
 
     [SerializeField]
     private MeshRenderer[] aircraftMeshRenderers;
@@ -152,7 +154,10 @@ public class Aircraft : SelectableBehaviour
             }
         }
     }
-
+    public void SetTime(TimeGame time)
+    {
+        this.time = time;
+    }
 
 
 }

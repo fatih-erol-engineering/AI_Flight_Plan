@@ -1,25 +1,20 @@
 
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 
 public enum CreateMode { CreateAircraft, CreateWaypoint, CreateTrajectory}
 
-[RequireComponent(typeof(UIManager))]
-[RequireComponent(typeof(CreateModeAircraftManager))]
-[RequireComponent(typeof(CreateModeWaypointManager))]
-[RequireComponent(typeof(AircraftFactory))]
-[RequireComponent(typeof(MainGameManager))]
 public class CreateModeManager : MonoBehaviour, IGameModeHooks
 {
+
+    [SerializeField] UIManager uIManager;
     
-    private UIManager uIManager;
-    private CreateModeAircraftManager createModeAircraftManager;    
-    private CreateModeWaypointManager createModeWaypointManager;   
-    private MainGameManager mainGameManager;    
-    private AircraftFactory aircraftFactory;        
-    private Camera mainCamera;        
+    [SerializeField] private CreateModeAircraftManager createModeAircraftManager;
+    [SerializeField] private CreateModeWaypointManager createModeWaypointManager;   
+
+    [SerializeField] private AircraftFactory aircraftFactory;        
+    [SerializeField] private Camera mainCamera;        
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks;
     public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
@@ -37,16 +32,8 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     {
         if (!uIManager) uIManager = GetComponent<UIManager>();
         CheckAssignment(uIManager);
-
-        if (!createModeAircraftManager) createModeAircraftManager = GetComponent<CreateModeAircraftManager>();
-        CheckAssignment(createModeAircraftManager);
-
-        if (!createModeWaypointManager) createModeWaypointManager = GetComponent<CreateModeWaypointManager>();
-        CheckAssignment(createModeWaypointManager);
-        if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
-        CheckAssignment(mainGameManager);
-
-        if (!aircraftFactory) aircraftFactory = GetComponent<AircraftFactory>();
+        
+        CheckAssignment(createModeAircraftManager);        
         CheckAssignment(aircraftFactory);
 
         if (!mainCamera) mainCamera = Camera.main;
@@ -164,14 +151,19 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
                 Cancel = createModeAircraftManager.Cancel,
                 GetExitMode = createModeAircraftManager.GetExitMode,
             },
-            [CreateMode.CreateWaypoint] = new ModeHooks
-            {
-                Init = createModeWaypointManager.Init,
-                Tick = createModeWaypointManager.Tick,
-                Apply = createModeWaypointManager.Apply,
-                Cancel = createModeWaypointManager.Cancel,
-                GetExitMode = createModeWaypointManager.GetExitMode,
-            },
+
+
+            // CreateWaypoint mode will created after creating aircraft
+
+
+            // [CreateMode.CreateWaypoint] = new ModeHooks
+            // {
+            //     Init = createModeWaypointManager.Init,
+            //     Tick = createModeWaypointManager.Tick,
+            //     Apply = createModeWaypointManager.Apply,
+            //     Cancel = createModeWaypointManager.Cancel,
+            //     GetExitMode = createModeWaypointManager.GetExitMode,
+            // },
         };
     }
 }

@@ -102,6 +102,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5513755076722954520}
+  - component: {fileID: 2546198646138960698}
+  - component: {fileID: 937270970343944918}
   m_Layer: 0
   m_Name: WaypointContainer
   m_TagString: Untagged
@@ -124,6 +126,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8820869112042112267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2546198646138960698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417412776748581244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948d7c142516f6548b62d6f49676bff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaypointFactory
+  _waypointPrefab: {fileID: 517102805373364547, guid: 1194e48d07239fb459e25332f73f8806, type: 3}
+--- !u!114 &937270970343944918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417412776748581244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa6b738ae46a0f244b3c7f450025c6b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreateModeWaypointManager
+  mainCamera: {fileID: 0}
+  waypointFactory: {fileID: 2546198646138960698}
+  popupUxml: {fileID: 9197481963319205126, guid: c003b1735a5e47b428b1cf95e3475646, type: 3}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 64
+  spawnKey: 323
+  previewContainer: {fileID: 0}
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  uiDocument: {fileID: 0}
 --- !u!1 &8064563952328812410
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,6 +210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   trajectoryType: 0
+  <waypointFactory>k__BackingField: {fileID: 0}
   <waypointContainer>k__BackingField: {fileID: 5513755076722954520}
   <controlPointContainer>k__BackingField: {fileID: 314739279133306574}
   <segmentContainer>k__BackingField: {fileID: 8785390315187580617}
@@ -180,7 +218,3 @@ MonoBehaviour:
   initialControlPointDistance: 2
   lineWidth: 1
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
-  startTime:
-    second: 0
-  endTime:
-    second: 0

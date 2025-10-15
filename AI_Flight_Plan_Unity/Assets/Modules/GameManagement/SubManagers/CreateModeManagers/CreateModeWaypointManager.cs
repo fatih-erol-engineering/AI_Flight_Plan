@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(MainGameManager))]
+[RequireComponent(typeof(WaypointFactory))]
 public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
-{    
+{
     [SerializeField] private Camera mainCamera;
-    [SerializeField] WaypointFactory waypointFactory;
+    [field:SerializeField]
+    public WaypointFactory waypointFactory { get; private set; }
     [SerializeField] private VisualTreeAsset popupUxml; // assign WaypointPopup.uxml in inspector
     [SerializeField] private LayerMask hitMask = ~0;
     private float maxDistance = 500f;
@@ -28,22 +29,16 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     private Vector3 lastHitPoint;
 
 
-
-    private MainGameManager mainGameManager;            
-        
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks { get; private set; }
-    public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;        
+    public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
     private ExitMode exitMode;
     public ExitMode GetExitMode()
     {
         return exitMode;
-    }   
+    }
     public void AssignData()
     {
-        if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
-        CheckAssignment(mainGameManager);
-
         if (!waypointFactory) waypointFactory = GetComponent<WaypointFactory>();
         CheckAssignment(waypointFactory);
 
@@ -51,7 +46,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         CheckAssignment(mainCamera);
         maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
 
-        previewMaterialOverride = theme.Preview; 
+        previewMaterialOverride = theme.Preview;
     }
     void CheckAssignment<T>(T obj)
     {
@@ -64,14 +59,14 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (popupOpen)
         {
             SpawnFromPopup();
-        }                
+        }
     }
 
 
     public void Cancel()
     {
         ClosePopup();
-        DestroyPreview();        
+        DestroyPreview();
     }
 
     public void Init()
@@ -80,7 +75,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         Debug.Log("Init: Create Waypoint Mode");
     }
 
- public bool Tick(out ExitMode exitMode)
+    public bool Tick(out ExitMode exitMode)
     {
         // Bu sureci basariyla durduracak olan sey space tusu olsun        
         bool exitFlag = false;
@@ -135,7 +130,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
 
                 }
                 else
-                {                    
+                {
                     SpawnFromPopup();
                 }
             }
@@ -146,7 +141,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (!Input.GetKeyDown(spawnKey))
         {
             exitFlag = false;
-        }  
+        }
         else
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -154,9 +149,9 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 exitFlag = false;
             }
             else
-            {     
-                
-                exitFlag = false;                       
+            {
+
+                exitFlag = false;
                 if (mainCamera == null)
                 {
                     Debug.LogError($"[{GetType().Name}] Camera is not assigned.");
@@ -169,8 +164,11 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 {
                     lastHitPoint = hit.point;
                     OpenPopupAtMouse(hit.point);
-                    // popup açılırken preview zaten varsa kalır; yoksa oluştur (zaten hover loop'u yapar)
-                    CreatePreview(hit.point);
+                    if (previewInstance == null)
+                    {
+                        CreatePreview(hit.point);
+                    }
+                        
                 }
             }
         }
@@ -221,16 +219,9 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         altField.Focus();
         popupOpen = true;
     }
-    
+
     private void CreatePreview(Vector3 position)
     {
-        if (previewInstance != null) 
-        {
-            // var ise sadece pozisyonu güncelle
-            previewInstance.transform.position = position;
-            return;
-        }
-
         GameObject prefabToUse = null;
         if (waypointFactory != null)
             prefabToUse = waypointFactory.WaypointPrefab;
@@ -360,7 +351,9 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         Vector3 spawnPos = new Vector3(lon, alt, lat);
         // preview'i yok et ve gerçek waypoint oluştur
         DestroyPreview();
-        waypointFactory.Spawn(spawnPos, Quaternion.identity, t);
+        TimeGame _time = new TimeGame();
+        _time.SetTime(t);
+        waypointFactory.Spawn(spawnPos, Quaternion.identity, _time);
 
         ClosePopup();
     }

@@ -13,11 +13,9 @@ public class AircraftFactory : MonoBehaviour
     [SerializeField]
     public GameObject aircraftPrefab;
     [SerializeField]
-
     public List<Aircraft> aircraftList { get; private set; } = new List<Aircraft>();
+    public Aircraft selectedAircraft;
 
-    // public getter for other scripts to instantiate previews from the same prefab
-    
     private string prev_selectedAircraftModelName;
     public void Awake()
     {
@@ -43,14 +41,15 @@ public class AircraftFactory : MonoBehaviour
         prev_selectedAircraftModelName = uIManager.selectedAircraftModelName;
     }
 
-    public Aircraft Spawn(Vector3 globalPosition, Quaternion globalRotation)
+    public Aircraft Spawn(Vector3 globalPosition, Quaternion globalRotation,TimeGame time)
     {
         ChangeAircraftPrefabWithUI();
         var go = Instantiate(aircraftPrefab, globalPosition, globalRotation, transform);
         var ctrl = go.GetComponentInChildren<Aircraft>();
         CheckAssignment(ctrl);
         aircraftList.Add(ctrl);
-
+        ctrl.SetTime(time);
+        selectedAircraft = ctrl;
         return ctrl;
     }
     public void Clear()

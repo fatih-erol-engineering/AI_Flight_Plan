@@ -10,11 +10,11 @@ public class WaypointFactory : MonoBehaviour
     // public getter for other scripts to instantiate previews from the same prefab
     public GameObject WaypointPrefab => _waypointPrefab;
 
-    public Waypoint Spawn(Vector3 globalPosition, Quaternion globalRotation, float time_s)
+    public Waypoint Spawn(Vector3 globalPosition, Quaternion globalRotation, TimeGame time)
     {
         var go = Instantiate(_waypointPrefab, globalPosition, globalRotation,transform);
         var ctrl = go.GetComponent<Waypoint>();
-        ctrl.SetTime(time_s);
+        ctrl.SetTime(time);
         CheckAssignment(ctrl);
         waypointList.Add(ctrl);
 

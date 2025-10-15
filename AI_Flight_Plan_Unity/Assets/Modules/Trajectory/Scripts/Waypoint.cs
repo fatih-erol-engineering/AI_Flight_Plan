@@ -44,9 +44,9 @@ public class Waypoint : SelectableBehaviour
         }
         oldPos = globalPosition;
     }
-    public void SetTime(float time_s)
+    public void SetTime(TimeGame time)
     {
-        time.SetTime(time_s);
+        time.SetTime(time.second);
     }
     public void setPosition(Vector3 globalPosition, float time_s)
     {

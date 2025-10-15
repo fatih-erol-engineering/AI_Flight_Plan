@@ -28,11 +28,11 @@ public class UIManager : MonoBehaviour
     {
         AssignData();
     }
-//     private void Update()
-//     {
-//         restartRequestUI = false;
-//         UpdateSelectedAircraft();
-//     }
+    private void Update()
+    {
+        restartRequestUI = false;
+        UpdateSelectedAircraft();
+    }
     public void UpdateSelectedAircraft()
     {
         if (rotorTBtn.value)
@@ -121,12 +121,12 @@ public class UIManager : MonoBehaviour
         if (createTBtn.value)
         {
             createRoot.RemoveFromClassList("submenusHidden");
-            // gameModeUI = MainGameMode.Create;
+            gameModeUI = MainGameMode.CreateAircraft;
         }
         else
         {
             createRoot.AddToClassList("submenusHidden");
-            // gameModeUI = MainGameMode.Free;
+            gameModeUI = MainGameMode.Free;
         }
     }
     public void SetGameMode(MainGameMode gameMode)
@@ -134,7 +134,7 @@ public class UIManager : MonoBehaviour
         gameModeUI = gameMode;
         switch (gameMode)
         {
-            case MainGameMode.Create:
+            case MainGameMode.CreateAircraft:
                 // Show Create buttons;
                 createTBtn.value = true;
                 break;

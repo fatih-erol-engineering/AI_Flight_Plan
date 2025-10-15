@@ -7,6 +7,11 @@ public class Trajectory : MonoBehaviour
     public TrajectoryType trajectoryType;
 
 
+    [field: SerializeField]
+    public WaypointFactory waypointFactory { get; private set; }    
+      
+    [field: SerializeField]
+    public CreateModeWaypointManager createModeWaypointManager { get; private set; }      
 
     [field: SerializeField]
     public Transform waypointContainer { get; private set; }        
