@@ -71,64 +71,7 @@ public class Trajectory : MonoBehaviour
     { 
         waypoints = null;
     }
-    // public Waypoint CreateWaypoint(Vector3 globalPosition)
-    // {
-    //     if (waypointContainer == null)
-    //     {
-    //         GameObject waypointGO = new GameObject("WaypointContainer");
-    //         waypointGO.transform.parent = transform;
-    //         waypointGO.transform.localPosition = Vector3.zero;
-    //         waypointContainer = waypointGO.transform;
-    //     }
-
-    //     GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, transform.rotation, waypointContainer);
-    //     Waypoint wp = waypoint.GetComponent<Waypoint>();
-    //     AddWaypoint(waypoint.transform);
-    //     return wp;
-    // }
-    // public Waypoint CreateWaypoint(Vector3 globalPosition, float time_s)
-    // {
-    //     if (waypointContainer == null)
-    //     {
-    //         GameObject waypointGO = new GameObject("WaypointContainer");
-    //         waypointGO.transform.parent = transform;
-    //         waypointGO.transform.localPosition = Vector3.zero;
-    //         waypointContainer = waypointGO.transform;
-    //     }
-
-    //     GameObject waypoint = Instantiate(theme.waypointPrefab, globalPosition, transform.rotation, waypointContainer);
-    //     Waypoint wp = waypoint.GetComponent<Waypoint>();
-    //     if (wp != null) 
-    //     {
-    //         wp.time.second = time_s;
-    //     }
-
-    //     if (startTime == null)
-    //     {
-    //         startTime.second = time_s;
-    //     }
-    //     else
-    //     {
-    //         if (time_s<startTime.second)
-    //         {
-    //             startTime.second = time_s;
-    //         }
-    //     }
-
-    //     if (endTime == null)
-    //     {
-    //         endTime.second = time_s;
-    //     }
-    //     else
-    //     {
-    //         if (time_s > endTime.second)
-    //         {
-    //             endTime.second = time_s;
-    //         }
-    //     }
-        
-    //     return wp;
-    // }
+    
 
     public void Clear()
     {

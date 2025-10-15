@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class TimeGame
 {
+    [field: SerializeField]
     public float second { get; private set; } = 0f;
     public void SetTime(float _second)
     {

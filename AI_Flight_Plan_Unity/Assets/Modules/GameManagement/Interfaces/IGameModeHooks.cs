@@ -10,6 +10,7 @@ public interface IGameModeHooks
 public delegate bool TickDelegate(out ExitMode exitMode);
 public class ModeHooks
 {
+    public string modeName;
     public Action Init;
     public TickDelegate Tick;
     public Action Apply;

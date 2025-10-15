@@ -27,9 +27,8 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     private VisualElement popupInstance;
     private bool popupOpen;
     private Vector3 lastHitPoint;
-
+    private bool exitFlag;    
     private ExitMode exitMode;
-    [SerializeField]    
     public ExitMode GetExitMode()
     {
         return exitMode;
@@ -56,16 +55,10 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
             Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
     }
     public void Apply()
-    {
-        if (popupOpen)
-        {
-            SpawnFromPopup();
-            CheckAssignment(aircraftFactory.selectedAircraft);
-            CheckAssignment(aircraftFactory.selectedAircraft.trajectory);
-            aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Init();
-            aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.waypointFactory.Spawn(aircraftFactory.selectedAircraft.transform.position,aircraftFactory.selectedAircraft.transform.rotation, aircraftFactory.selectedAircraft.time);
-            aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Apply();
-        }
+    {       
+        aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Init();
+        aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.waypointFactory.Spawn(aircraftFactory.selectedAircraft.transform.position, aircraftFactory.selectedAircraft.transform.rotation, aircraftFactory.selectedAircraft.time);
+        aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Apply();
         Debug.Log("Apply: Create Mode");
     }
 
@@ -103,8 +96,9 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         TimeGame _time = new TimeGame();
         _time.SetTime(t);
         aircraftFactory.Spawn(spawnPos, Quaternion.identity, _time);
-
         ClosePopup();
+        exitFlag = true;
+        exitMode = ExitMode.Apply;
     }
     private void ClosePopup()
     {
@@ -116,7 +110,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         }
         // iptal ise preview'i temizle
         DestroyPreview();
-        popupOpen = false;
+        popupOpen = false;        
     }
     private void OnPopupKeyDown(KeyDownEvent evt)
     {
@@ -146,17 +140,18 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         Debug.Log("Init: Create Aircraft Mode");
     }
 
-    public bool Tick(out ExitMode exitMode)
+    public bool Tick(out ExitMode exitModeOut)
     {
-        bool exitFlag = false;
-        exitMode = ExitMode.None;
+        exitFlag = false;
+        
 
         // Bu sureci iptal edecek olan sey ESC tusu olsun            
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cancel();
             exitFlag = true;
-            exitMode = ExitMode.Cancel;
+            exitModeOut = ExitMode.Cancel;
+            exitMode = exitModeOut;
             return exitFlag; // exitFlag = true;
         }
 
@@ -196,9 +191,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                                 {
                                     lastHitPoint = hit.point;
                                     OpenPopupAtMouse(hit.point);
-                                    exitFlag = false; // Dont exit the code but end current tick.
-                                    exitMode = ExitMode.None; // Dont exit the code but end current tick.
-                                    return exitFlag;
                                 }
                             }
                         }
@@ -214,21 +206,12 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         // Popup Menu Acik ise tiklama, enter veya tusa basma ile waypoint spawn edilir.
         if (popupOpen)
         {
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
-                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-                {
-                    // UI elementlerinin uzerine tiklanmis ise spawn yapma
-                }
-                else
-                {
-                    SpawnFromPopup();
-                    exitFlag = true;
-                    exitMode = ExitMode.Apply;
-                }
+                SpawnFromPopup();
             }
         }
-
+        exitModeOut = exitMode;
         return exitFlag;
     }
      private void OpenPopupAtMouse(Vector3 hitPoint)
@@ -275,7 +258,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         altField.Focus();
         popupOpen = true;
     }
-    // ...existing code...
+
     private void CreatePreview(Vector3 position)
     {
         // Prefab'ı al

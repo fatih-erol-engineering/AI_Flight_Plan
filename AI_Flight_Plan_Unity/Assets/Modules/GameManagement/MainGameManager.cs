@@ -108,6 +108,7 @@ public class MainGameManager : MonoBehaviour
         {
             [MainGameMode.Free] = new ModeHooks
             {
+                modeName = "Free",
                 Init = freeModeController.Init,
                 Tick = freeModeController.Tick,
                 Apply = freeModeController.Apply,
@@ -116,6 +117,7 @@ public class MainGameManager : MonoBehaviour
 
             [MainGameMode.CreateAircraft] = new ModeHooks
             {
+                modeName = "CreateAircraft",
                 Init = createModeManager.Init,
                 Tick = createModeManager.Tick,
                 Apply = createModeManager.Apply,

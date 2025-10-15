@@ -12,6 +12,7 @@ TagManager:
   - RestrictedArea
   - CesiumMap
   - TrajectorySegment
+  - UIManager
   layers:
   - Default
   - TransparentFX

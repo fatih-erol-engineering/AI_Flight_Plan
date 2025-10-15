@@ -154,9 +154,9 @@ public class Aircraft : SelectableBehaviour
             }
         }
     }
-    public void SetTime(TimeGame time)
+    public void SetTime(TimeGame _time)
     {
-        this.time = time;
+        time = _time;
     }
 
 

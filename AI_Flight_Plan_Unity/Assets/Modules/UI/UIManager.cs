@@ -8,8 +8,9 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
 
-//     private MainGameManager mainGameManager;
-    private UIDocument uiDocument;
+    //     private MainGameManager mainGameManager;
+    [field: SerializeField]
+    public UIDocument uIDocument { get; private set; }
     public Camera cam;
     [SerializeField] private AircraftPropertiesRegistry aircraftPropertiesRegistry;
     private VisualElement root, mainMenuRoot, createRoot;
@@ -54,13 +55,13 @@ public class UIManager : MonoBehaviour
         // CheckAssignment(aircraftSpecRegistry);
         
 
-        if (!uiDocument) uiDocument = GetComponent<UIDocument>();
-        CheckAssignment(uiDocument);
+        if (!uIDocument) uIDocument = GetComponent<UIDocument>();
+        CheckAssignment(uIDocument);
 
         if (!cam) cam = Camera.main;
         CheckAssignment(cam);
 
-        root = uiDocument.rootVisualElement;
+        root = uIDocument.rootVisualElement;
         CheckAssignment(root);
 
         mainMenuRoot = root.Q<VisualElement>("mainMenuRoot");

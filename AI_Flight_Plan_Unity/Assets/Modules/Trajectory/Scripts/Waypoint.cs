@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class Waypoint : SelectableBehaviour
 {
-
+    [field:SerializeField]
     public TimeGame time { get; private set; }
     private Vector3 oldPos;
     public ControlPoint[] controlPoints;
@@ -44,9 +44,9 @@ public class Waypoint : SelectableBehaviour
         }
         oldPos = globalPosition;
     }
-    public void SetTime(TimeGame time)
+    public void SetTime(TimeGame _time)
     {
-        time.SetTime(time.second);
+        time.SetTime(_time.second);
     }
     public void setPosition(Vector3 globalPosition, float time_s)
     {

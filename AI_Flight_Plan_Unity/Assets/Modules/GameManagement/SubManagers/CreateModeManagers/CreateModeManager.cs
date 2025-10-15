@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 public enum CreateMode { CreateAircraft, CreateWaypoint, CreateTrajectory}
@@ -88,7 +89,8 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
             case CreateMode.CreateAircraft:                
                 subExitFlag = currentHooks.Tick(out subExitMode);
                 if (subExitFlag)
-                {                    
+                {                                                           
+                    UpdateCreateWaypointMode();
                     ChangeMode(CreateMode.CreateWaypoint, subExitMode);
                 }
                 break;
@@ -123,7 +125,7 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     {
         if ((next == currentMode) && (currentHooks != null)) return;
 
-        switch (currentHooks?.GetExitMode?.Invoke() ?? ExitMode.Cancel)
+        switch (exitMode)
         {
             case ExitMode.Cancel:
                 currentHooks?.Cancel?.Invoke();
@@ -138,33 +140,52 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
         currentHooks?.Init?.Invoke();        
     }
     
-
      private void ConfigureModes()
     {
         modes = new()
         {
             [CreateMode.CreateAircraft] = new ModeHooks
             {
+                modeName = "CreateAircraft",
                 Init = createModeAircraftManager.Init,
                 Tick = createModeAircraftManager.Tick,
                 Apply = createModeAircraftManager.Apply,
                 Cancel = createModeAircraftManager.Cancel,
                 GetExitMode = createModeAircraftManager.GetExitMode,
             },
-
-
-            // CreateWaypoint mode will created after creating aircraft
-
-
-            // [CreateMode.CreateWaypoint] = new ModeHooks
-            // {
-            //     Init = createModeWaypointManager.Init,
-            //     Tick = createModeWaypointManager.Tick,
-            //     Apply = createModeWaypointManager.Apply,
-            //     Cancel = createModeWaypointManager.Cancel,
-            //     GetExitMode = createModeWaypointManager.GetExitMode,
-            // },
+            [CreateMode.CreateWaypoint] = new ModeHooks
+            {
+                modeName = "CreateWaypoint",
+                Init = () => { /* Place Holder*/},
+                Tick = (out ExitMode _out) => { _out = ExitMode.None; return false; },
+                Apply = () => { /* Place Holder*/},
+                Cancel = () => { /* Place Holder*/},
+                GetExitMode = () => ExitMode.None,
+            },
+            [CreateMode.CreateTrajectory] = new ModeHooks
+            {
+                modeName = "CreateTrajectory",
+                Init = ()=> { /* Place Holder*/},
+                Tick = (out ExitMode _out )=> { _out = ExitMode.None; return false; },
+                Apply = ()=> { /* Place Holder*/},
+                Cancel = ()=> { /* Place Holder*/},
+                GetExitMode =  ()=> ExitMode.None,
+            },
         };
+    }
+    private void UpdateCreateWaypointMode()
+    {
+        createModeWaypointManager = aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager; 
+        modes[CreateMode.CreateWaypoint] = new ModeHooks
+        {
+            modeName = "CreateWaypoint",
+            Init = createModeWaypointManager.Init,
+            Tick = createModeWaypointManager.Tick,
+            Apply = createModeWaypointManager.Apply,
+            Cancel = createModeWaypointManager.Cancel,
+            GetExitMode = createModeWaypointManager.GetExitMode,
+        };
+        createModeWaypointManager.SetUIManager(uIManager.uIDocument);
     }
 }
 

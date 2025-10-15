@@ -37,6 +37,11 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     {
         return exitMode;
     }
+    public void SetUIManager(UIDocument _uIDocument)
+    {
+        uiDocument = _uIDocument;
+    }
+    
     public void AssignData()
     {
         if (!waypointFactory) waypointFactory = GetComponent<WaypointFactory>();
@@ -110,6 +115,10 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, maxDistance, hitMask))
                 {
                     lastHitPoint = hoverHit.point;
+                    if (previewInstance == null)
+                    {
+                        CreatePreview(lastHitPoint);
+                    }
                     UpdatePreviewPositionWithMouse();
                 }
                 else
@@ -121,8 +130,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
 
         // Popup Menu Acik ise tiklama, enter veya tusa basma ile waypoint spawn edilir.
         if (popupOpen)
-        {
-            UpdatePreviewPositionWithMouse();
+        {            
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
