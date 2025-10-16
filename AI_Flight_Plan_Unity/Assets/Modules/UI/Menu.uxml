@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
+    <Style src="project://database/Assets/Modules/UI/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
     <ui:VisualElement name="mainMenuRoot" style="justify-content: space-around; align-self: flex-end; flex-direction: column; margin-top: 20px; margin-right: 20px;">
         <ui:VisualElement name="mainMenuTBG" style="flex-grow: 1; flex-direction: row;">
             <ui:Toggle toggle-on-label-click="false" value="false" name="createTBtn" class="unity-toggle__input unity-toggle_start" />
@@ -14,5 +14,13 @@
             <ui:DropdownField name="rotorDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus" style="transition-duration: 0s;" />
             <ui:DropdownField name="fixedWingDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus" style="transition-duration: 0s;" />
         </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="timeSliderRoot" style="flex-grow: 0; bottom: 0; flex-shrink: 0; height: 100px; align-self: center; align-content: auto; align-items: center; flex-direction: column; justify-content: space-around; width: auto; position: absolute; left: 0; right: 0;">
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-self: stretch; align-content: stretch; justify-content: center;">
+            <ui:Button text="Play/Pa&#10;use" class="buttonStart button" />
+            <ui:Button text="Button" class="button" />
+            <ui:Button text="Button" class="buttonEnd button" />
+        </ui:VisualElement>
+        <ui:Slider label="Slider" value="42" high-value="100" style="flex-shrink: 1; flex-grow: 1; align-items: flex-end; align-self: flex-start;" />
     </ui:VisualElement>
 </ui:UXML>
