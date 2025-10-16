@@ -30,9 +30,9 @@ public class BSplineSegment
 
     [Header("Time")]
     public TimeGame startTime;
-    public TimeGame endTime;    
+    public TimeGame endTime;
 
-
+    public GameObject controlPointPrefab;
     public Theme theme;
 
 
@@ -76,20 +76,20 @@ public class BSplineSegment
     public void CreateControlPoints()
     {
         
-        // if ((startPoint != null) && (endPoint != null))
-        // {            
-        //     GameObject controlPoint1GO = Instantiate(theme.controlPointPrefab,transform, true);            
-        //     controlPoint1GO.name = this.name + " Control Point 1";                        
-        //     controlPoint1GO.transform.position = startPoint.transform.position + (endPoint.transform.position - startPoint.transform.position).normalized * initialControlPointDistance;            
+        if ((startPoint != null) && (endPoint != null))
+        {            
+            GameObject controlPoint1GO = Instantiate(controlPointPrefab,transform, true);            
+            controlPoint1GO.name = this.name + " Control Point 1";                        
+            controlPoint1GO.transform.position = startPoint.transform.position + (endPoint.transform.position - startPoint.transform.position).normalized * initialControlPointDistance;            
             
-        //     GameObject controlPoint2GO = Instantiate(theme.controlPointPrefab, transform, true);
-        //     controlPoint2GO.transform.parent= transform;
-        //     controlPoint2GO.name = this.name + " Control Point 2";                        
-        //     controlPoint2GO.transform.position = endPoint.transform.position + (startPoint.transform.position - endPoint.transform.position).normalized * initialControlPointDistance;
+            GameObject controlPoint2GO = Instantiate(controlPointPrefab, transform, true);
+            controlPoint2GO.transform.parent= transform;
+            controlPoint2GO.name = this.name + " Control Point 2";                        
+            controlPoint2GO.transform.position = endPoint.transform.position + (startPoint.transform.position - endPoint.transform.position).normalized * initialControlPointDistance;
 
-        //     controlPoint1 = controlPoint1GO.GetComponent<ControlPoint>();
-        //     controlPoint2 = controlPoint2GO.GetComponent<ControlPoint>();            
-        // }
+            controlPoint1 = controlPoint1GO.GetComponent<ControlPoint>();
+            controlPoint2 = controlPoint2GO.GetComponent<ControlPoint>();            
+        }
     }
     void UpdateCurve()
     {

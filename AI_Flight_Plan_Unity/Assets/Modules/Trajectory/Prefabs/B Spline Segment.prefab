@@ -174,7 +174,8 @@ MonoBehaviour:
   restrictedAreas: []
   lr: {fileID: 1287273195967994826}
   startTime:
-    second: 0
+    <second>k__BackingField: 0
   endTime:
-    second: 0
+    <second>k__BackingField: 0
+  controlPointPrefab: {fileID: 517102805373364547, guid: 0d2f4b3517351b24db17f5cfb1533c76, type: 3}
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}

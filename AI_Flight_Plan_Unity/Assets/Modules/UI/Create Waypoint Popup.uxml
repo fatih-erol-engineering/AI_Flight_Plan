@@ -1,12 +1,11 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Modules/UI/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
-    <ui:VisualElement class="popup-root popup-root_hidden" style="width: 300px; display: flex;">
-        <ui:Label text="Create Waypoint" class="title" />
+    <ui:VisualElement class="popup-root popup-root_hidden" style="width: 300px; display: flex; opacity: 1; background-color: rgba(34, 34, 34, 0.69); position: absolute; flex-shrink: 0; justify-content: flex-start; align-items: stretch; align-content: auto; align-self: flex-start;">
         <ui:TextField name="latField" label="Latitude (m)" />
         <ui:TextField name="lonField" label="Longitude (m)" />
         <ui:TextField name="altField" label="Altitude (m)" />
         <ui:TextField name="timeField" label="Time (s)" />
-        <ui:VisualElement class="button-row" style="justify-content: space-around; align-items: auto; align-self: auto; align-content: auto;">
+        <ui:VisualElement enabled="true" class="button-row" style="justify-content: space-around; align-items: auto; align-self: auto; align-content: auto; display: none;">
             <ui:Button name="createBtn" text="Create" class="button_popup" />
             <ui:Button name="cancelBtn" text="Cancel" class="button_popup" />
         </ui:VisualElement>

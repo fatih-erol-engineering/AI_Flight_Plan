@@ -12,12 +12,12 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     public WaypointFactory waypointFactory { get; private set; }
     [SerializeField] private VisualTreeAsset popupUxml; // assign WaypointPopup.uxml in inspector
     [SerializeField] private LayerMask hitMask = ~0;
-    private float maxDistance = 500f;
+    private float maxDistance;
     [SerializeField] private KeyCode spawnKey = KeyCode.Mouse0;
 
 
     [Header("Preview")]
-    [SerializeField] private Transform previewContainer;
+    private Transform previewContainer;
     private Material previewMaterialOverride; // inspector fallback
     [SerializeField] private Theme theme; // optional, varsa theme.precreate kullanılır
     private GameObject previewInstance;
@@ -50,6 +50,9 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (!mainCamera) mainCamera = Camera.main;
         CheckAssignment(mainCamera);
         maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
+
+        if (!previewContainer) previewContainer = new GameObject("Preview").transform;
+        CheckAssignment(previewContainer);
 
         previewMaterialOverride = theme.Preview;
     }

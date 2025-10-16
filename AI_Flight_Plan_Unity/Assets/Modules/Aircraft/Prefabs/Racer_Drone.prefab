@@ -150,6 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  <time>k__BackingField:
+    <second>k__BackingField: 0
   aircraftProperties: {fileID: 11400000, guid: 0e4a9549a4961d9488dfbbfb4872446b, type: 2}
   <trajectory>k__BackingField: {fileID: 3580389350947403072}
   _baseAircraftMeshRenderers:
@@ -311,7 +313,7 @@ PrefabInstance:
     - target: {fileID: 937270970343944918, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: previewContainer
       value: 
-      objectReference: {fileID: 574551272877936495}
+      objectReference: {fileID: 0}
     - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: <waypointFactory>k__BackingField
       value: 
@@ -334,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.6616
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_LocalRotation.w
@@ -365,15 +367,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5418463059334812664, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
---- !u!4 &574551272877936495 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8131320693932895125, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  m_PrefabInstance: {fileID: 8584272383094056186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &957986857704497649 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}

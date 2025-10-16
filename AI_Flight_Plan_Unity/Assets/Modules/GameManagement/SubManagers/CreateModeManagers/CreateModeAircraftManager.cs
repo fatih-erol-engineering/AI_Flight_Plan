@@ -13,11 +13,11 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     [SerializeField] private AircraftFactory aircraftFactory;    
     [SerializeField] private VisualTreeAsset popupUxml; 
     [SerializeField] private LayerMask hitMask= ~0;
-    [SerializeField] private float maxDistance = 500f;
+    private float maxDistance;
     [SerializeField] private KeyCode spawnKey = KeyCode.Mouse0;
 
     [Header("Preview")]    
-    [SerializeField] private Transform previewContainer;
+    private Transform previewContainer;
     private Material previewMaterialOverride; 
     [SerializeField] private Theme theme; 
     private GameObject previewInstance;    
@@ -46,7 +46,12 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
 
         if (!mainCamera) mainCamera = Camera.main;
         CheckAssignment(mainCamera);
-        
+
+        if (!previewContainer) previewContainer = new GameObject("Preview").transform;
+        CheckAssignment(previewContainer);
+
+        maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
+                
         previewMaterialOverride = theme.Preview;
     }
     void CheckAssignment<T>(T obj)
@@ -56,6 +61,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     }
     public void Apply()
     {       
+        // Create waypoint instance at aircraft position
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Init();
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.waypointFactory.Spawn(aircraftFactory.selectedAircraft.transform.position, aircraftFactory.selectedAircraft.transform.rotation, aircraftFactory.selectedAircraft.time);
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Apply();
@@ -226,12 +232,26 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         popupInstance = popupUxml.CloneTree();
         // style positioning (absolute)
         popupInstance.style.position = Position.Absolute;
+        // ...existing code...
         Vector2 mouse = Input.mousePosition;
-        // Convert to UI coordinates (UI root origin top-left)
-        float left = Mathf.Clamp(mouse.x, 8, Screen.width - 308);
-        float top = Mathf.Clamp(Screen.height - mouse.y, 8, Screen.height - 8 - 220);
+        // initial placement: cursor'ın sağ-altına küçük offset
+        const float offset = 12f;
+        float left = mouse.x + offset;
+        float top = Screen.height - mouse.y + offset;
         popupInstance.style.left = left;
         popupInstance.style.top = top;
+
+        // after layout, clamp using actual popup size so it doesn't overflow screen
+        popupInstance.schedule.Execute(() =>
+        {
+            float w = popupInstance.layout.width > 0 ? popupInstance.layout.width : 300f;
+            float h = popupInstance.layout.height > 0 ? popupInstance.layout.height : 220f;
+            float clampedLeft = Mathf.Clamp(mouse.x + offset, 8, Screen.width - w - 8);
+            float clampedTop = Mathf.Clamp(Screen.height - mouse.y + offset, 8, Screen.height - h - 8);
+            popupInstance.style.left = clampedLeft;
+            popupInstance.style.top = clampedTop;
+        }).StartingIn(1);
+        // ...existing code...  
 
         // prefill fields
         var latField = popupInstance.Q<TextField>("latField");

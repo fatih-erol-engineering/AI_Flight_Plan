@@ -93,37 +93,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8820869112042112267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5418463059334812664
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8131320693932895125}
-  m_Layer: 0
-  m_Name: Preview
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8131320693932895125
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5418463059334812664}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5513755076722954520}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6417412776748581244
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,8 +123,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8131320693932895125}
+  m_Children: []
   m_Father: {fileID: 8820869112042112267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2546198646138960698
@@ -190,7 +158,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   spawnKey: 323
-  previewContainer: {fileID: 8131320693932895125}
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   uiDocument: {fileID: 0}
 --- !u!1 &8064563952328812410
@@ -241,13 +208,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fade72144e7c210419866bdd17e64273, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  trajectoryType: 0
   <waypointFactory>k__BackingField: {fileID: 2546198646138960698}
   <createModeWaypointManager>k__BackingField: {fileID: 937270970343944918}
   <waypointContainer>k__BackingField: {fileID: 5513755076722954520}
   <controlPointContainer>k__BackingField: {fileID: 314739279133306574}
   <segmentContainer>k__BackingField: {fileID: 8785390315187580617}
   <restrictedAreaContainer>k__BackingField: {fileID: 3153065933349397560}
+  bSplineSegmentPrefab: {fileID: 517102805373364547, guid: e53a0a863f1bb5e4d8083c93fbfcd4a2, type: 3}
   initialControlPointDistance: 2
   lineWidth: 1
-  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  startTime:
+    <second>k__BackingField: 0
+  endTime:
+    <second>k__BackingField: 0

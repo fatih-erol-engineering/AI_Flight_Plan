@@ -12,7 +12,7 @@ public class TrajectoryEditorUI : Editor
 
         if (GUILayout.Button("Create Trajectory"))
         {
-            // myScript.Create();
+            myScript.Create();
         }
         if (GUILayout.Button("Clear Trajectory"))
         {
