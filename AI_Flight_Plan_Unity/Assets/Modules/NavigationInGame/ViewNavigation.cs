@@ -84,11 +84,14 @@ public class EditorLikeCameraController : MonoBehaviour
         ApplyTransform(manualInput);
 
         // Optional: auto-focus when your selection changes
-        if (focusOnSelection && hoverSelectionSystem.selectedObject != _prevSelected)
-        {
-            _prevSelected = hoverSelectionSystem.selectedObject;
-            if (hoverSelectionSystem.selectedObject != null)
-                Focus(hoverSelectionSystem.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
+        if (hoverSelectionSystem.selectedObject != null)
+        {            
+            if (focusOnSelection && hoverSelectionSystem.selectedObject != _prevSelected)
+            {
+                _prevSelected = hoverSelectionSystem.selectedObject;
+                if (hoverSelectionSystem.selectedObject != null)
+                    Focus(hoverSelectionSystem.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
+            }
         }
     }
 
@@ -222,18 +225,12 @@ public class EditorLikeCameraController : MonoBehaviour
             {
                 Focus(hoverSelectionSystem.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: false);
             }
-#if UNITY_EDITOR
-            else if (UnityEditor.Selection.activeTransform != null)
-            {
-                Focus(UnityEditor.Selection.activeTransform, includeChildren: true, keepOrientation: true, instant: false);
-            }
-#endif
-            else if (!FocusByRaycast())
-            {
-                // fallback: focus some point ahead
-                Vector3 ahead = transform.position + transform.forward * Mathf.Min(20f, maxFocusDistance);
-                FocusPoint(ahead, 5f, instant:false);
-            }
+            // else if (!FocusByRaycast())
+            // {
+            //     // fallback: focus some point ahead
+            //     Vector3 ahead = transform.position + transform.forward * Mathf.Min(20f, maxFocusDistance);
+            //     FocusPoint(ahead, 5f, instant:false);
+            // }
         }
 
         // Any manual navigation cancels focus smoothing immediately
