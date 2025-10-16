@@ -67,7 +67,7 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
         Debug.Log("Init: Create Mode");
     }
 
-    public bool Tick(out ExitMode exitMode)
+    public bool Tick(out ExitMode _exitMode)
     {
         bool subExitFlag = false;
         ExitMode subExitMode = ExitMode.None;
@@ -83,34 +83,36 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
             ChangeMode(CreateMode.CreateAircraft, exitMode);
         }
 
-        
+
         switch (currentMode)
-        {            
-            case CreateMode.CreateAircraft:                
+        {
+            case CreateMode.CreateAircraft:
                 subExitFlag = currentHooks.Tick(out subExitMode);
                 if (subExitFlag)
-                {                                                           
+                {
                     UpdateCreateWaypointMode();
                     ChangeMode(CreateMode.CreateWaypoint, subExitMode);
                 }
                 break;
 
             case CreateMode.CreateWaypoint:
-                subExitFlag = currentHooks.Tick(out subExitMode);
-                if (subExitFlag)
-                {                    
-                    ChangeMode(CreateMode.CreateTrajectory, subExitMode);
-                }
-                break;
-
-            case CreateMode.CreateTrajectory:
                 exitFlag = currentHooks.Tick(out subExitMode);
                 if (exitFlag)
                 {
                     exitMode = subExitMode;
+                    // ChangeMode(CreateMode.CreateTrajectory, subExitMode);
                 }
                 break;
-        }                
+
+                // case CreateMode.CreateTrajectory:
+                //     exitFlag = currentHooks.Tick(out subExitMode);
+                //     if (exitFlag)
+                //     {
+                //         exitMode = subExitMode;
+                //     }
+                //     break;
+        }
+        _exitMode = exitMode;
         return exitFlag;
     }
 

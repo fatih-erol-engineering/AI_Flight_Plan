@@ -95,7 +95,15 @@ public class MainGameManager : MonoBehaviour
     public void ChangeMode(MainGameMode next, ExitMode exitMode)
     {
         if ((next == currentMode) && (currentHooks != null)) return;
-
+        switch (exitMode)
+        {
+            case ExitMode.Apply:
+                currentHooks?.Apply?.Invoke();
+                break;
+            case ExitMode.Cancel:
+                currentHooks?.Cancel?.Invoke();
+                break;                            
+        }
         currentMode = next;
         currentHooks = modes.TryGetValue(next, out var h) ? h : null;
         currentHooks?.Init?.Invoke();

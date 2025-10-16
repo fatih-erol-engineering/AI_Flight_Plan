@@ -31,7 +31,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
 
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks { get; private set; }
-    public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
+    public CreateMode currentMode { get; private set; } = CreateMode.CreateWaypoint;
     private ExitMode exitMode;
     public ExitMode GetExitMode()
     {
@@ -68,6 +68,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         {
             SpawnFromPopup();
         }
+        waypointFactory.transform.parent.GetComponent<Trajectory>().Create();
+
     }
 
 
@@ -83,7 +85,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         Debug.Log("Init: Create Waypoint Mode");
     }
 
-    public bool Tick(out ExitMode exitMode)
+    public bool Tick(out ExitMode _exitMode)
     {
         // Bu sureci basariyla durduracak olan sey space tusu olsun        
         bool exitFlag = false;
@@ -93,6 +95,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
             ClosePopup();
             exitFlag = true;
             exitMode = ExitMode.Apply;
+            _exitMode = exitMode;
+            return exitFlag;
         }
 
 
@@ -102,6 +106,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
             Cancel();
             exitFlag = true;
             exitMode = ExitMode.Cancel;
+            _exitMode = exitMode;
             return exitFlag; // exitFlag = true;
         }
 
@@ -179,10 +184,11 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                     {
                         CreatePreview(hit.point);
                     }
-                        
+
                 }
             }
         }
+        _exitMode = exitMode;
         return exitFlag;
     }
 
