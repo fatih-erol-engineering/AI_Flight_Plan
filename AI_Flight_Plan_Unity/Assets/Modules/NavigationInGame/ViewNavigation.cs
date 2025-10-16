@@ -11,8 +11,13 @@ using UnityEngine;
 /// Smoothing runs ONLY during focus transitions. Any manual input cancels focus-smoothing.
 /// </summary>
 [RequireComponent(typeof(Camera))]
-public class EditorLikeCameraController : MonoBehaviour
+public class ViewNavigation : MonoBehaviour
 {
+    // --- XZ-only pan with fixed plane & anchor ---
+    private bool _isPanningXZ = false;
+    private Vector3 _panAnchorWorld; // where you first clicked in world
+    private float _panPlaneY;        // fixed horizontal plane height for this drag
+    // --- XZ-only pan state ---
     [SerializeField] private HoverSelectionSystem hoverSelectionSystem;
     [Header("Look / Orbit")]
     public float lookSensitivity = 2.2f;
@@ -150,42 +155,59 @@ public class EditorLikeCameraController : MonoBehaviour
             _targetPos = _pivot - (_targetRot * Vector3.forward * _pivotDistance);
         }
 
-        // ------- PAN (MMB) -------
-        if (mmb && !alt)
+// ------- PAN XZ with fixed anchor (MMB) -------
+if (Input.GetMouseButtonDown(2) && !alt)
+{
+    // 1) Try to anchor on actual geometry under cursor
+    var ray = _cam.ScreenPointToRay(Input.mousePosition);
+    if (Physics.Raycast(ray, out var hit, maxFocusDistance, focusMask, QueryTriggerInteraction.Ignore))
+    {
+        _panAnchorWorld = hit.point;
+        _panPlaneY      = _panAnchorWorld.y; // lock plane to the clicked surface height
+    }
+    else
+    {
+        // 2) Fallback: intersect with a horizontal plane (use pivot height)
+        var plane = new Plane(Vector3.up, new Vector3(0f, _pivot.y, 0f));
+        if (plane.Raycast(ray, out float enter))
         {
-            manualInput = true;
-
-            float panScale = Mathf.Max(0.01f, _pivotDistance) * panSensitivity;
-            Vector3 right = _targetRot * Vector3.right;
-            Vector3 up    = _targetRot * Vector3.up;
-
-            Vector3 delta = (-right * mx - up * (invertY ? -my : my)) * panScale;
-            _targetPos += delta;
-            _pivot     += delta; // keep orbit distance consistent
-        }
-
-        // ------- DOLLY (Scroll or Alt+MMB vertical drag) -------
-        if (!rmb)
-        {
-            if (Mathf.Abs(scroll) > 0.0001f)
-            {
-                manualInput = true;
-
-                float dolly = scroll * dollySensitivity * Mathf.Max(0.5f, _pivotDistance);
-                _pivotDistance = Mathf.Max(minPivotDistance, _pivotDistance - dolly);
-                _targetPos = _pivot - (_targetRot * Vector3.forward * _pivotDistance);
-            }
-
-            if (alt && mmb && Mathf.Abs(my) > 0.0001f)
-            {
-                manualInput = true;
-
-                float dolly = (invertY ? my : -my) * dollySensitivity * Mathf.Max(0.5f, _pivotDistance) * 0.1f;
-                _pivotDistance = Mathf.Max(minPivotDistance, _pivotDistance - dolly);
-                _targetPos = _pivot - (_targetRot * Vector3.forward * _pivotDistance);
-            }
+            _panAnchorWorld = ray.GetPoint(enter);
+            _panPlaneY      = _pivot.y; // lock plane for the whole drag
         }
         else
+        {
+            // no valid anchor; abort this pan
+            _isPanningXZ = false;
+            goto PanEndCheck;
+        }
+    }
+
+    _isPanningXZ = true;
+    // Any manual pan cancels focus smoothing
+    _isFocusing = false;
+}
+
+if (_isPanningXZ && Input.GetMouseButton(2) && !alt)
+{
+    // Always raycast onto the SAME horizontal plane (no height drift)
+    var plane = new Plane(Vector3.up, new Vector3(0f, _panPlaneY, 0f));
+    var ray   = _cam.ScreenPointToRay(Input.mousePosition);
+
+    if (plane.Raycast(ray, out float enter))
+    {
+        Vector3 currentOnPlane = ray.GetPoint(enter);   // y == _panPlaneY
+        Vector3 delta = _panAnchorWorld - currentOnPlane;
+        delta.y = 0f; // enforce pure XZ translation
+
+        _targetPos += delta;
+        _pivot     += delta; // keep orbit sphere & pan plane coherent
+    }
+}
+
+// release or mode change ends pan
+PanEndCheck:
+if (Input.GetMouseButtonUp(2) || alt) _isPanningXZ = false;
+        if(rmb)
         {
             // RMB held: scroll adjusts fly speed (like Scene view)
             if (Mathf.Abs(scroll) > 0.0001f)
