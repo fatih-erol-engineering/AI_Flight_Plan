@@ -249,8 +249,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192251729}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.43792772, y: -0.5489932, z: 0.4164229, w: 0.5774235}
-  m_LocalPosition: {x: 3.6226592, y: 8.705288, z: 0.5570481}
+  m_LocalRotation: {x: 0.70710677, y: 0.000000059604645, z: 0.000000055879354, w: 0.7071068}
+  m_LocalPosition: {x: 1.5668813, y: 5.243471, z: -0.51372856}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 510241425}
   - component: {fileID: 510241424}
   - component: {fileID: 510241423}
+  - component: {fileID: 510241426}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -335,6 +336,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21e91c774234c640aa1237f5108ecca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FreeModeManager
+--- !u!114 &510241426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510241416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2328c2f3b70fe4d9159547f2baface, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverSelectionSystem
+  mainGameManager: {fileID: 510241423}
+  mainCamera: {fileID: 192251732}
+  pickMask:
+    serializedVersion: 2
+    m_Bits: 55
+  selectKey: 323
+  selectedObject: {fileID: 0}
 --- !u!1 &587978676
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +426,7 @@ MonoBehaviour:
     m_Bits: 64
   spawnKey: 323
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  altitudeClearanceForMouseSpawn: 0.1
 --- !u!1 &1851626768
 GameObject:
   m_ObjectHideFlags: 0

@@ -1050,6 +1050,10 @@ PrefabInstance:
       propertyPath: previewContainer
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 937270970343944918, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      propertyPath: altitudeClearanceForMouseSpawn
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: <waypointFactory>k__BackingField
       value: 

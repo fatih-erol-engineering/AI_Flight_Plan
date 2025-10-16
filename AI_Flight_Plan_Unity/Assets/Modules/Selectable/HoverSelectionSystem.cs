@@ -1,10 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class HoverSelectionSystem : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
+    [SerializeField] private MainGameManager mainGameManager;
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask pickMask = ~0; // gerekirse katman daralt
-    [SerializeField] private float maxDistance = 200f;
+    private float maxDistance = 200f;
     [SerializeField] private KeyCode selectKey = KeyCode.Mouse0;
 
     private ISelectable _hovered;
@@ -14,20 +16,26 @@ public class HoverSelectionSystem : MonoBehaviour
 
     void Awake()
     {
-        if (!cam) cam = Camera.main;
+        if (!mainCamera) mainCamera = Camera.main;
+        maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
     }
 
     void Update()
     {
-        UpdateHover();
-        HandleSelection();
+        switch (mainGameManager.currentMode)
+        {
+            case MainGameMode.Free:
+                UpdateHover();
+                HandleSelection();
+                break;
+        }            
     }
 
     private void UpdateHover()
     {
         ISelectable hitSelectable = null;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
         {
             hitSelectable = hit.collider.GetComponentInParent<ISelectable>();

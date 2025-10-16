@@ -215,8 +215,8 @@ MonoBehaviour:
   <segmentContainer>k__BackingField: {fileID: 8785390315187580617}
   <restrictedAreaContainer>k__BackingField: {fileID: 3153065933349397560}
   bSplineSegmentPrefab: {fileID: 517102805373364547, guid: e53a0a863f1bb5e4d8083c93fbfcd4a2, type: 3}
-  initialControlPointDistance: 2
-  lineWidth: 1
+  initialControlPointDistance: 0.2
+  lineWidth: 0.1
   startTime:
     <second>k__BackingField: 0
   endTime:

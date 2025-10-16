@@ -37,6 +37,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     {
         return exitMode;
     }
+    [SerializeField]
+    private float altitudeClearanceForMouseSpawn = 0.1f;
     public void SetUIManager(UIDocument _uIDocument)
     {
         uiDocument = _uIDocument;
@@ -122,7 +124,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 Ray hoverRay = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, maxDistance, hitMask))
                 {
-                    lastHitPoint = hoverHit.point;
+                    lastHitPoint = hoverHit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f);;
                     if (previewInstance == null)
                     {
                         CreatePreview(lastHitPoint);
@@ -178,8 +180,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
                 {
-                    lastHitPoint = hit.point;
-                    OpenPopupAtMouse(hit.point);
+                    lastHitPoint = hit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f);
+                    OpenPopupAtMouse(hit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f));
                     if (previewInstance == null)
                     {
                         CreatePreview(hit.point);
@@ -221,7 +223,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
 
         lonField.value = hitPoint.x.ToString("F3", CultureInfo.InvariantCulture);
         latField.value = hitPoint.z.ToString("F3", CultureInfo.InvariantCulture);
-        altField.value = hitPoint.y.ToString("F3", CultureInfo.InvariantCulture);
+        altField.value = (hitPoint.y).ToString("F3", CultureInfo.InvariantCulture);
         timeField.value = Time.time.ToString("F2", CultureInfo.InvariantCulture);
 
         // callbacks
@@ -246,18 +248,20 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (prefabToUse != null && previewContainer != null)
         {
             previewInstance = Instantiate(prefabToUse, position, Quaternion.identity, previewContainer);
-            // disable runtime behaviours on preview
-            var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
-            for (int i = 0; i < behaviours.Length; i++)
-                behaviours[i].enabled = false;
+            previewInstance.GetComponent<WaypointShow>()?.ShowWaypoint();
+            // // disable runtime behaviours on preview
+            // var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
+            // for (int i = 0; i < behaviours.Length; i++)
+            //     behaviours[i].enabled = false;
         }
         else if (prefabToUse != null)
         {
             // parent yoksa world instantiate
             previewInstance = Instantiate(prefabToUse, position, Quaternion.identity);
-            var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
-            for (int i = 0; i < behaviours.Length; i++)
-                behaviours[i].enabled = false;
+            previewInstance.GetComponent<WaypointShow>()?.ShowWaypoint();
+            // var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
+            // for (int i = 0; i < behaviours.Length; i++)
+            //     behaviours[i].enabled = false;
         }
         else
         {
@@ -313,8 +317,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (previewInstance == null || mainCamera == null) return;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
-        {
-            previewInstance.transform.position = hit.point;
+        {             
+            previewInstance.transform.position = hit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f);;
         }
     }
 
@@ -386,34 +390,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         // iptal ise preview'i temizle
         DestroyPreview();
         popupOpen = false;
-    }
-    bool MouseHitPos(out Vector3 globalPosition)
-    {
-        Vector2 screen = Input.mousePosition;
-        var ray = mainCamera.ScreenPointToRay(screen);
-        if (EventSystem.current && EventSystem.current.IsPointerOverGameObject())
-        {
-            globalPosition = default;
-            return false;
-        }
-
-        if (Physics.Raycast(ray, out var hit, maxDistance, hitMask, QueryTriggerInteraction.Collide))
-        {
-            globalPosition = hit.point;
-            return true;
-        }
-        else
-        {
-            var plane = new Plane(Vector3.up, new Vector3(0, 0, 0));
-            if (plane.Raycast(ray, out float enter))
-            {
-                globalPosition = ray.GetPoint(enter);
-                return true;
-            }
-        }
-        globalPosition = default;
-        return false;
-    }
+    }   
 
 }
 

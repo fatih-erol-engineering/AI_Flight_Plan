@@ -37,28 +37,29 @@ public class SelectableBehaviour : MonoBehaviour, ISelectable
     {
         if (_selected) return;
         // TweenTo(_baseScale * hoverScaleMultiplier);
-        _baseMeshRenderer.material = hoverMaterial ? hoverMaterial : _baseMaterial;
+        if(!_baseMeshRenderer)  _baseMeshRenderer.material = hoverMaterial ? hoverMaterial : _baseMaterial;
     }
 
     public virtual void OnHoverExit()
     {
         if (_selected) return;
         TweenTo(_baseScale);
-        _baseMeshRenderer.material = _baseMaterial;
+        if(_baseMeshRenderer != null) _baseMeshRenderer.material = _baseMaterial;
     }
 
     public virtual void OnSelect()
     {
         _selected = true;
         // TweenTo(_baseScale * selectScaleMultiplier);
-        _baseMeshRenderer.material = selectMaterial ? selectMaterial : _baseMaterial;
+        if(_baseMeshRenderer != null) _baseMeshRenderer.material = selectMaterial ? selectMaterial : _baseMaterial;
+        
     }
 
     public virtual void OnDeselect()
     {
         _selected = false;
-        TweenTo(_baseScale);
-        _baseMeshRenderer.material = _baseMaterial;
+        TweenTo(_baseScale);        
+        if(_baseMeshRenderer != null)_baseMeshRenderer.material = _baseMaterial;
     }
 
     private void TweenTo(Vector3 target)

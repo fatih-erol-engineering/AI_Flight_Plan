@@ -1,14 +1,16 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer))]
 public class Waypoint : SelectableBehaviour
 {
     [field:SerializeField]
     public TimeGame time { get; private set; }
     private Vector3 oldPos;
     public ControlPoint[] controlPoints;
-    private MeshRenderer meshRenderer;
+    [SerializeField]
+    private MeshRenderer[] meshRenderers;
+    private Material baseMaterial;
+    
     protected void OnEnable()
     {
         oldPos = transform.position;
@@ -16,11 +18,8 @@ public class Waypoint : SelectableBehaviour
     }
     void AssignData()
     {
-        time = new TimeGame();
-
-        if (!meshRenderer) meshRenderer = GetComponent<MeshRenderer>();
-        CheckAssignment(meshRenderer);
-
+        time = new TimeGame();        
+        baseMaterial = meshRenderers[0].material;
     }
     void CheckAssignment<T>(T obj)
     {
@@ -67,7 +66,20 @@ public class Waypoint : SelectableBehaviour
     }
     public void UpdateMaterial(Material material)
     {
-        meshRenderer.material = material;  
+        foreach (MeshRenderer mr in meshRenderers)
+        {            
+            mr.material = material;  
+        }
     }
-
+    public override void OnHoverExit()
+    {
+        base.OnHoverExit();
+        UpdateMaterial(baseMaterial);
+        
+    }
+    public override void OnHoverEnter()
+    {
+        base.OnHoverEnter();
+        UpdateMaterial(theme.Hover);
+    }
 }
