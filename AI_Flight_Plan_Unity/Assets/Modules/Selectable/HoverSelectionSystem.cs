@@ -1,5 +1,5 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class HoverSelectionSystem : MonoBehaviour
 {
@@ -43,7 +43,7 @@ public class HoverSelectionSystem : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
         {
-            hitSelectable = hit.collider.GetComponentInParent<ISelectable>();
+                hitSelectable = hit.collider.GetComponentInParent<ISelectable>();
         }
 
         if (!ReferenceEquals(hitSelectable, _hovered))
@@ -58,15 +58,21 @@ public class HoverSelectionSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(selectKey))
         {
-            if (_selected != null && !ReferenceEquals(_selected, _hovered))
-                _selected.OnDeselect();
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                
+            }
+            else
+            {
+                if (_selected != null && !ReferenceEquals(_selected, _hovered))
+                    _selected.OnDeselect();
 
-            _selected = _hovered;            
-            selectedObject = (_selected as SelectableBehaviour)?.gameObject;
-    
+                _selected = _hovered;
+                selectedObject = (_selected as SelectableBehaviour)?.gameObject;
 
-            if (_selected != null)
-                _selected.OnSelect();
+                if (_selected != null)
+                    _selected.OnSelect();
+            }
         }
     }
 }

@@ -6,6 +6,9 @@ public class Trajectory : MonoBehaviour
 {
     [field: SerializeField]
     public WaypointFactory waypointFactory { get; private set; }    
+    [field: SerializeField]
+    public float[] distanceList { get; private set; }   
+    public Vector3[] trajPosList;
       
     [field: SerializeField]
     public CreateModeWaypointManager createModeWaypointManager { get; private set; }      
@@ -61,6 +64,7 @@ public class Trajectory : MonoBehaviour
     void Update()
     {
         var go = HoverSelectionSystem.Instance.selectedObject;
+
         if (go != null)
         {
             if (go.GetComponent<ControlPoint>() != null)
@@ -72,6 +76,7 @@ public class Trajectory : MonoBehaviour
                 go.GetComponent<Waypoint>().setPosition(go.transform.position);
             }
         }
+
         if (TimeManager.Instance.isUpdated)
         {            
             TimeGame startTimeFromTimeManager = new TimeGame();
@@ -217,7 +222,6 @@ public class Trajectory : MonoBehaviour
                 segmentContainer.GetChild(i).gameObject.GetComponent<BSplineSegment>().controlPoint1.GetComponent<ControlPoint>().pairCP = segmentContainer.GetChild(i - 1).gameObject.GetComponent<BSplineSegment>().controlPoint2.GetComponent<ControlPoint>();
             }
         }
-        
     }
 
     public void UpdateColorWithTotalTime(TimeGame totalStartTime,TimeGame totalEndTime)

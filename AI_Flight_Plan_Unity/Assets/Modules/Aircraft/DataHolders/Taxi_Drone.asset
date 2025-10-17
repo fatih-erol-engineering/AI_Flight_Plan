@@ -15,8 +15,8 @@ MonoBehaviour:
   model: 0
   type: 0
   minVelocity_m_s: 0
-  nominalVelocity_m_s: 150
-  maxVelocity_m_s: 200
+  nominalVelocity_m_s: 10
+  maxVelocity_m_s: 20
   minTurnRadious_m: 0
   mass_kg: 250
   noise_dBA: 200

@@ -193,6 +193,7 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
             Cancel = createModeWaypointManager.Cancel,
             GetExitMode = createModeWaypointManager.GetExitMode,
         };
+        createModeWaypointManager.aircraftFactory = createModeAircraftManager.aircraftFactory;
         createModeWaypointManager.SetUIManager(uIManager.uIDocument);
     }
     private void UpdateCreateTrajectoryMode()

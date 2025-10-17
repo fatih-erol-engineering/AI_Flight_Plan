@@ -1,3 +1,4 @@
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class Aircraft : SelectableBehaviour
     [field: SerializeField]
     public TimeGame time { get; private set; }
     [SerializeField]
-    private AircraftProperties aircraftProperties;
+    public AircraftProperties aircraftProperties;
 
     [field: SerializeField]
     public Trajectory trajectory { get; private set; }
@@ -87,27 +88,25 @@ public class Aircraft : SelectableBehaviour
         int ct = 0;
         foreach (BSplineSegment segment in trajectory.bSplineSegments)
         {
+            
             float startTime_s = segment.startPoint.time.second;
             float endTime_s = segment.endPoint.time.second;
 
             if ((sec < endTime_s) && (sec >= startTime_s))
             {
-                // int n = segment.lr.positionCount;
-                // float lerpVal = (sec - startTime_s) / (endTime_s - startTime_s);
-                // lerpVal = Mathf.Clamp(lerpVal, 0, 1);
-                // float currentIdxFloat = Mathf.Lerp(0, n - 1, lerpVal);
-                // int currentIdx = Mathf.RoundToInt(currentIdxFloat);
-
-                // Vector3 pos1 = segment.lr.GetPosition(currentIdx);
-                // Vector3 pos2 = segment.lr.GetPosition(currentIdx + 1);
+                segment.UpdateCurve();
+                float dt = segment.endTime.second - segment.startTime.second;
+                float oran = (sec - segment.startTime.second) / dt;
 
 
-                // Vector3.Lerp(pos1,pos2,)
+                float distLength = (segment.distanceList[segment.distanceList.Length - 1] - segment.distanceList[0]);
+                float currentDist = distLength * oran;
 
-                int n = segment.lr.positionCount;
-                float deltaTime = (endTime_s - startTime_s);
-                float gain = (sec - startTime_s) / deltaTime * n;
-                int lowerIdx = Mathf.FloorToInt(gain);
+                int lowerIdx = 0;
+                int n = segment.distanceList.Length;
+
+                lowerIdx = SelectClosestIdx(segment.distanceList, currentDist);
+
                 int upperIdx = lowerIdx + 1;
 
                 if (upperIdx > n - 1)
@@ -116,13 +115,13 @@ public class Aircraft : SelectableBehaviour
                 }
                 else
                 {
-                    float lowerIdxTime = ((float)lowerIdx / n) * deltaTime + startTime_s;
-                    float upperIdxTime = ((float)upperIdx / n) * deltaTime + startTime_s;
 
-                    float lerpVal = Mathf.Clamp((sec - lowerIdxTime) / (upperIdxTime - lowerIdxTime), 0, 1);
+                    float lerpVal = (currentDist - segment.distanceList[lowerIdx])/(segment.distanceList[upperIdx]-segment.distanceList[lowerIdx]);
 
-                    Vector3 lowerPosition = segment.lr.GetPosition(lowerIdx);
-                    Vector3 upperPosition = segment.lr.GetPosition(upperIdx);
+                    lerpVal = Mathf.Clamp(lerpVal, 0, 1);
+
+                    Vector3 lowerPosition = segment.trajPosList[lowerIdx];
+                    Vector3 upperPosition = segment.trajPosList[upperIdx];
                     Vector3 unitDir = (upperPosition - lowerPosition) / (upperPosition - lowerPosition).magnitude;
                     AlignLocalX_Absolute(transform, unitDir, Vector3.up*(-1f));
                     Vector3 aircraftPosition = Vector3.Lerp(lowerPosition, upperPosition, lerpVal);
@@ -132,6 +131,22 @@ public class Aircraft : SelectableBehaviour
             }
             ct++;
         }
+    }
+    
+    public int SelectClosestIdx(float[] list,float val)
+    {
+        float lim = Mathf.Infinity;
+        int selectedIdx = 0;
+        for (int i = 0; i < list.Length; i++)
+        {
+            float len = Mathf.Abs(list[i] - val);
+            if (len < lim)
+            {
+                selectedIdx = i;
+                lim = len;
+            }
+        }
+        return selectedIdx;
     }
     // Align object's local +X to unitDir, and control roll with upHint.
     // If upHint is null -> uses Vector3.up

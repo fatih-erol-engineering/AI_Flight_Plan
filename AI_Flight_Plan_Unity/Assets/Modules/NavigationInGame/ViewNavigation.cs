@@ -37,6 +37,8 @@ public class ViewNavigation : MonoBehaviour
     public float focusPadding = 1.15f;
     public LayerMask focusMask = ~0;
     public KeyCode focusKey = KeyCode.F;
+    public KeyCode constantFocusKey = KeyCode.K;
+    public bool constantFocusFlag = false;
 
     [Header("Runtime Selection")]        
     public bool focusOnSelection = false;
@@ -82,7 +84,7 @@ public class ViewNavigation : MonoBehaviour
         _pitch = e.x;
     }
 
-    void Update()
+    void LateUpdate()
     {
         bool manualInput = HandleInput(); // returns true if any manual nav input detected
         ApplyTransform(manualInput);
@@ -234,10 +236,25 @@ if (Input.GetMouseButtonUp(2) || alt) _isPanningXZ = false;
 
             Vector3 moveWorld = _targetRot * moveLocal * speed * dt;
             _targetPos += moveWorld;
-            _pivot     += moveWorld; // keep orbit distance consistent
+            _pivot += moveWorld; // keep orbit distance consistent
         }
 
         // ------- FOCUS (F) -------
+
+        if (Input.GetKeyDown(constantFocusKey))
+        {
+            constantFocusFlag = !constantFocusFlag;
+        }
+        
+        if (constantFocusFlag)
+        {
+            manualInput = false; // pressing F is not "manual nav" that should cancel smoothing
+
+            if (HoverSelectionSystem.Instance.selectedObject != null)
+            {
+                Focus(HoverSelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: true);
+            }
+        }
         if (Input.GetKeyDown(focusKey))
         {
             manualInput = false; // pressing F is not "manual nav" that should cancel smoothing

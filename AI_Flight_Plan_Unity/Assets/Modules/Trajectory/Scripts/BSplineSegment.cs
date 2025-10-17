@@ -14,6 +14,8 @@ public class BSplineSegment
     public ControlPoint controlPoint2;
     public Waypoint endPoint { get; private set; }
     public float initialControlPointDistance = 3f;
+    public Vector3[] trajPosList { get; private set; }  
+    public float[] distanceList { get; private set; }   
 
     [Header("Sampling")]
     [Range(4, 256)] public int samples = 32;
@@ -91,7 +93,7 @@ public class BSplineSegment
             controlPoint2 = controlPoint2GO.GetComponent<ControlPoint>();            
         }
     }
-    void UpdateCurve()
+    public void UpdateCurve()
     {
         if (!lr) return;
         if (!(startPoint && controlPoint1 && controlPoint2 && endPoint)) return;
@@ -99,10 +101,20 @@ public class BSplineSegment
         Vector3[] P = new Vector3[4] { startPoint.transform.position, controlPoint1.transform.position, controlPoint2.transform.position, endPoint.transform.position };
 
         lr.positionCount = samples;
+        trajPosList = new Vector3[samples];
+        distanceList = new float[samples - 1];
+        float cumulativeDistance = 0f;
         for (int i = 0; i < samples; i++)
         {
             float t = (samples == 1) ? 0f : (float)i / (samples - 1); // [0,1]
             Vector3 C = BSplinePointDegree3(P, t);
+            trajPosList[i] = C;
+            if (i>1)
+            {
+                distanceList[i-1] = cumulativeDistance + (trajPosList[i] - trajPosList[i - 1]).magnitude;
+                cumulativeDistance = distanceList[i-1];
+            }
+            
             lr.SetPosition(i, C);
         }
 

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -8,8 +10,9 @@ using UnityEngine.UIElements;
 public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
 {
     [SerializeField] private Camera mainCamera;
-    [field:SerializeField]
+    [field: SerializeField]
     public WaypointFactory waypointFactory { get; private set; }
+    public AircraftFactory aircraftFactory;
     [SerializeField] private VisualTreeAsset popupUxml; // assign WaypointPopup.uxml in inspector
     [SerializeField] private LayerMask hitMask = ~0;
     private float maxDistance;
@@ -225,7 +228,14 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         lonField.value = hitPoint.x.ToString("F3", CultureInfo.InvariantCulture);
         latField.value = hitPoint.z.ToString("F3", CultureInfo.InvariantCulture);
         altField.value = (hitPoint.y).ToString("F3", CultureInfo.InvariantCulture);
-        timeField.value = Time.time.ToString("F2", CultureInfo.InvariantCulture);
+
+        Waypoint prev_waypoint = aircraftFactory.selectedAircraft.trajectory.waypointFactory.waypointList.Last();
+        float dist_m = (hitPoint - prev_waypoint.transform.position).magnitude;
+        float aircraft_nom_Vel = aircraftFactory.selectedAircraft.aircraftProperties.nominalVelocity_m_s;
+        float dt=(dist_m / aircraft_nom_Vel);
+        float prevWpTime = prev_waypoint.time.second;
+        float finalTime = prevWpTime + dt;
+        timeField.value = finalTime.ToString("F2", CultureInfo.InvariantCulture);
 
         // callbacks
         createBtn.clicked += SpawnFromPopup;

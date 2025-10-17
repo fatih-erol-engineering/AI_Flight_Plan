@@ -74,12 +74,29 @@ public class Waypoint : SelectableBehaviour
     public override void OnHoverExit()
     {
         base.OnHoverExit();
-        UpdateMaterial(baseMaterial);
-        
+        if (!base._selected)
+        {            
+            UpdateMaterial(baseMaterial);            
+        }        
     }
     public override void OnHoverEnter()
     {
         base.OnHoverEnter();
-        UpdateMaterial(theme.Hover);
+        if (!base._selected)
+        {            
+            UpdateMaterial(theme.Hover);
+        }
     }
+
+    public override void OnSelect()
+    {
+        base.OnSelect();
+        UpdateMaterial(theme.Select);
+    }
+    public override void OnDeselect()
+    {
+        base.OnSelect();
+        UpdateMaterial(baseMaterial);
+    }
+
 }

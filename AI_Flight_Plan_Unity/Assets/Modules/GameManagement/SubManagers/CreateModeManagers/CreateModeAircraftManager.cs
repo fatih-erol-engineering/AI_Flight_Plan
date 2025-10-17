@@ -10,7 +10,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     [SerializeField] 
     private UIDocument uiDocument;
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private AircraftFactory aircraftFactory;    
+    [field: SerializeField] public AircraftFactory aircraftFactory{ get; private set; }  
     [SerializeField] private VisualTreeAsset popupUxml; 
     [SerializeField] private LayerMask hitMask= ~0;
     private float maxDistance;
