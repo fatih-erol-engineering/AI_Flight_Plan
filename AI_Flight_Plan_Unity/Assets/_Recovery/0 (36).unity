@@ -496,6 +496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   uiDocument: {fileID: 1900046852}
+  timeManager: {fileID: 0}
   <playFlag>k__BackingField: 0
 --- !u!114 &762850602
 MonoBehaviour:

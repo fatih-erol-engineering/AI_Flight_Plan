@@ -1,6 +1,6 @@
 :root {
     --colorTheme: rgb(113, 12, 4);
-    --colorPassive: rgb(0, 0, 0);
+    --colorPassive: rgb(56, 6, 2);
     --colorActive: rgb(156, 17, 6);
     --colorText: rgb(255, 255, 255);
     --colorIcon: rgb(255, 255, 255);
@@ -31,6 +31,7 @@
     margin-left: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+    transition-duration: 0.25s;
 }
 
 .timeSliderButton:hover {
@@ -57,8 +58,9 @@
     margin-left: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-    -unity-background-image-tint-color: var(--colorTheme);
-    scale: 1.05 1.05 1.05;
+    -unity-background-image-tint-color: var(--colorActive);
+    scale: 1.3 1.3 1.2;
+    transition-duration: 0.25s;
 }
 
 .timeSliderButton:active {
@@ -87,6 +89,61 @@
     margin-bottom: 10px;
     -unity-background-image-tint-color: var(--colorActive);
     scale: 1 1;
+    transition-duration: 0s;
+}
+
+.timeSliderPlayState {
+    opacity: 1;
+    overflow: visible;
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-size: contain;
+    -unity-background-scale-mode: scale-to-fit;
+    align-self: center;
+    background-position-y: center;
+    background-position-x: center;
+    align-content: auto;
+    flex-grow: 1;
+    align-items: auto;
+    justify-content: flex-start;
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-image: url("project://database/Assets/Icons/PauseFull.png?fileID=2800000&guid=61b360a9253a4df45b67577e8c2659d5&type=3#PauseFull");
+}
+
+.timeSliderPauseState {
+    opacity: 1;
+    overflow: visible;
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-size: contain;
+    -unity-background-scale-mode: scale-to-fit;
+    align-self: center;
+    background-position-y: center;
+    background-position-x: center;
+    align-content: auto;
+    flex-grow: 1;
+    align-items: auto;
+    justify-content: flex-start;
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-image: url("project://database/Assets/Icons/PlayFull.png?fileID=2800000&guid=209fe31deeb373e4baef0e8f38e6d4c7&type=3#PlayFull");
 }
 
 #timeSlider > .unity-slider__label {
@@ -126,7 +183,26 @@
     font-size: 16px;
 }
 
-#totalTimeField > #unity-text-input {
+#maxTimeField > #unity-text-input {
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    color: var(--colorText);
+    -unity-text-align: upper-center;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    font-size: 16px;
+}
+
+#currentTimeField > #unity-text-input {
     background-color: rgba(0, 0, 0, 0);
     border-top-width: 0;
     border-right-width: 0;
@@ -163,7 +239,7 @@
     width: 26px;
     height: 26px;
     scale: 0.7 0.7 0.7;
-    background-color: var(--colorIcon);
+    background-color: var(--colorActive);
 }
 
 #timeSliderRoot > #VisualElement > #timeSlider > .unity-slider__input > #unity-drag-container > #unity-dragger:hover {
@@ -183,29 +259,10 @@
     align-content: auto;
     width: 26px;
     height: 26px;
-    background-color: var(--colorTheme);
-    scale: 0.7 0.7 0.7;
-}
-
-#timeSliderRoot > #VisualElement > #timeSlider > .unity-slider__input > #unity-drag-container > #unity-dragger:checked {
-    align-self: auto;
-    border-top-width: 0;
-    border-right-width: 0;
-    border-bottom-width: 0;
-    border-left-width: 0;
-    border-top-left-radius: 57px;
-    border-top-right-radius: 57px;
-    border-bottom-right-radius: 57px;
-    border-bottom-left-radius: 57px;
-    -unity-background-scale-mode: scale-to-fit;
-    background-size: cover;
-    flex-grow: 1;
-    align-items: auto;
-    align-content: auto;
-    width: 26px;
-    height: 26px;
     background-color: var(--colorActive);
     scale: 1 1;
+    transition-property: scale;
+    transition-duration: 0.25s;
 }
 
 #timeSliderRoot > #VisualElement > #timeSlider > .unity-slider__input > #unity-drag-container > #unity-tracker {
@@ -213,7 +270,7 @@
 }
 
 #timeSliderRoot > #VisualElement > #timeSlider > .unity-slider__input > #unity-drag-container > #unity-tracker > #unity-fill {
-    background-color: var(--colorTheme);
+    background-color: var(--colorActive);
     border-top-width: 0;
     border-right-width: 0;
     border-bottom-width: 0;
@@ -229,7 +286,7 @@
     border-right-width: 0;
     border-bottom-width: 0;
     border-left-width: 0;
-    background-color: var(--colorIcon);
+    background-color: var(--colorPassive);
 }
 
 #timeSliderRoot > #VisualElement > #timeSlider > .unity-slider__input > #unity-drag-container > #unity-dragger:active {

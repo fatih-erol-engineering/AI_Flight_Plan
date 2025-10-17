@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Modules/UI/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3" />
-    <Style src="project://database/Assets/Modules/UI/TimeSliderStyle.uss?fileID=7433441132597879392&amp;guid=a1c2ff1e8eb31a6469297f36edb62c1a&amp;type=3" />
+    <Style src="project://database/Assets/Modules/UI/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
+    <Style src="project://database/Assets/Modules/UI/TimeSliderStyle.uss?fileID=7433441132597879392&amp;guid=a1c2ff1e8eb31a6469297f36edb62c1a&amp;type=3#TimeSliderStyle" />
     <ui:VisualElement name="mainMenuRoot" style="justify-content: space-around; align-self: flex-end; flex-direction: column; margin-top: 20px; margin-right: 20px;">
         <ui:VisualElement name="mainMenuTBG" style="flex-grow: 1; flex-direction: row;">
             <ui:Toggle toggle-on-label-click="false" value="false" name="createTBtn" class="unity-toggle__input unity-toggle_start" />
@@ -20,13 +20,14 @@
         <ui:VisualElement name="timeSliderBtnRoot" style="flex-grow: 0; flex-direction: row; align-self: auto; align-content: auto; justify-content: flex-start; background-color: rgba(0, 0, 0, 0); align-items: auto; width: auto; height: auto; margin-left: 0; opacity: 1;">
             <ui:Button name="backwardStepBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/BackwardStep.png?fileID=2800000&amp;guid=589c2e7719a52934ab629bb8840ec3ee&amp;type=3#BackwardStep&quot;); display: none;" />
             <ui:Button name="backwardBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/BackwardFull.png?fileID=2800000&amp;guid=07afd40500b6d7b4d95171699af55fbe&amp;type=3#BackwardFull&quot;); background-size: contain; display: flex;" />
-            <ui:Button name="playPauseBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/PlayFull.png?fileID=2800000&amp;guid=209fe31deeb373e4baef0e8f38e6d4c7&amp;type=3#PlayFull&quot;);" />
+            <ui:Button name="playPauseBtn" class="timeSliderButton timeSliderPlayState timeSliderPauseState" />
             <ui:Button name="forwardBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/ForwardFull.png?fileID=2800000&amp;guid=49ab9e3ec3d1e4641b3dbb09c7545602&amp;type=3#ForwardFull&quot;); display: flex;" />
             <ui:Button name="forwardStepBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/ForwardStep.png?fileID=2800000&amp;guid=b96f7d0b02c1849478ff218370bb5f08&amp;type=3#ForwardStep&quot;); display: none;" />
         </ui:VisualElement>
         <ui:VisualElement name="VisualElement" style="flex-grow: 1; align-content: auto; align-items: auto; align-self: stretch; flex-direction: row; opacity: 1;">
-            <ui:Slider value="40" high-value="100" name="timeSlider" fill="true" show-input-field="true" direction="Horizontal" inverted="false" style="align-items: auto; flex-shrink: 1; flex-grow: 1; min-height: auto; height: auto; align-self: center; align-content: auto;" />
-            <ui:FloatField value="42.2" name="totalTimeField" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" hide-placeholder-on-focus="false" focusable="false" style="align-self: center; justify-content: flex-start; align-items: auto; overflow: visible; flex-shrink: 1; align-content: auto; -unity-text-align: upper-center;" />
+            <ui:FloatField value="0" name="currentTimeField" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" hide-placeholder-on-focus="false" focusable="false" style="align-self: center; justify-content: flex-start; align-items: auto; overflow: visible; flex-shrink: 1; align-content: auto; -unity-text-align: upper-center;" />
+            <ui:Slider value="40" high-value="100" name="timeSlider" fill="true" show-input-field="false" direction="Horizontal" inverted="false" style="align-items: auto; flex-shrink: 1; flex-grow: 1; min-height: auto; height: auto; align-self: center; align-content: auto;" />
+            <ui:FloatField value="10" name="maxTimeField" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" hide-placeholder-on-focus="false" focusable="false" style="align-self: center; justify-content: flex-start; align-items: auto; overflow: visible; flex-shrink: 1; align-content: auto; -unity-text-align: upper-center;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
