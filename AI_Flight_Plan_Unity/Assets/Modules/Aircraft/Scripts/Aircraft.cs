@@ -81,7 +81,7 @@ public class Aircraft : SelectableBehaviour
             r.materials = mats;
         }
     }
-    
+
     public void MoveAircraftWithTime(float sec)
     {
         int ct = 0;
@@ -106,24 +106,25 @@ public class Aircraft : SelectableBehaviour
 
                 int n = segment.lr.positionCount;
                 float deltaTime = (endTime_s - startTime_s);
-                float gain = (sec - startTime_s)/ deltaTime * n;
+                float gain = (sec - startTime_s) / deltaTime * n;
                 int lowerIdx = Mathf.FloorToInt(gain);
-                int upperIdx = lowerIdx+1;
+                int upperIdx = lowerIdx + 1;
 
-                if (upperIdx > n-1)
+                if (upperIdx > n - 1)
                 {
                     break;
                 }
                 else
-                {                    
+                {
                     float lowerIdxTime = ((float)lowerIdx / n) * deltaTime + startTime_s;
                     float upperIdxTime = ((float)upperIdx / n) * deltaTime + startTime_s;
 
-                    float lerpVal = Mathf.Clamp((sec - lowerIdxTime) / (upperIdxTime - lowerIdxTime),0,1);
+                    float lerpVal = Mathf.Clamp((sec - lowerIdxTime) / (upperIdxTime - lowerIdxTime), 0, 1);
 
                     Vector3 lowerPosition = segment.lr.GetPosition(lowerIdx);
                     Vector3 upperPosition = segment.lr.GetPosition(upperIdx);
-
+                    Vector3 unitDir = (upperPosition - lowerPosition) / (upperPosition - lowerPosition).magnitude;
+                    AlignLocalX_Absolute(transform, unitDir, Vector3.up*(-1f));
                     Vector3 aircraftPosition = Vector3.Lerp(lowerPosition, upperPosition, lerpVal);
                     transform.position = aircraftPosition;
                 }
@@ -131,6 +132,56 @@ public class Aircraft : SelectableBehaviour
             }
             ct++;
         }
+    }
+    // Align object's local +X to unitDir, and control roll with upHint.
+    // If upHint is null -> uses Vector3.up
+    // Align object's local +X to unitDir, and control roll with upHint.
+// If upHint is null -> uses Vector3.up
+
+
+    public void AlignLocalX_Absolute(Transform t, Vector3 unitDir, Vector3? upHint = null)
+    {
+        // Guards
+        if (unitDir.sqrMagnitude < 1e-10f || float.IsNaN(unitDir.x) || float.IsInfinity(unitDir.x))
+            return;
+
+        // Build an orthonormal basis where:
+        // X = unitDir, Y = computed using upHint, Z = completes the right-handed frame
+        Vector3 x = unitDir.normalized;
+        Vector3 up = (upHint ?? Vector3.up).normalized;
+
+        // If up is nearly parallel to x, choose a safe alternative up
+        if (Mathf.Abs(Vector3.Dot(x, up)) > 0.999f)
+            up = Mathf.Abs(x.y) < 0.9f ? Vector3.up : Vector3.right;
+
+        // Create orthonormal axes
+        Vector3 z = Vector3.Cross(up, x).normalized*(1);   // perpendicular to up & x
+        Vector3 y = Vector3.Cross(z, x).normalized;    // completes right-handed basis
+
+        // Compose rotation so that:
+        //   forward (Z) = z,   up (Y) = y,   right (X) = x
+        t.rotation = Quaternion.LookRotation(z, y);
+    }
+
+// Align the object's +Z axis to the given unit direction (world-space)
+    public static void AlignZAxisTo(Transform t, Vector3 unitDir, Vector3? upHint = null)
+    {
+        // Guard: zero-length or NaN/Inf inputs are unsafe for rotations
+        if (unitDir.sqrMagnitude < 1e-8f || float.IsNaN(unitDir.x) || float.IsInfinity(unitDir.x))
+            return;
+
+        // Ensure normalized
+        unitDir = unitDir.normalized;
+
+        // Choose an up vector (optional). World up by default.
+        Vector3 up = upHint ?? Vector3.up;
+
+        // If up is (nearly) parallel to direction, pick a safe alternative up
+        if (Mathf.Abs(Vector3.Dot(unitDir, up)) > 0.999f)
+            up = Mathf.Abs(unitDir.y) < 0.9f ? Vector3.up : Vector3.right;
+
+        // Make forward (Z+) point to unitDir
+        t.rotation = Quaternion.LookRotation(unitDir, up);
     }
 
     public void UpdateMaterial(Material material)
