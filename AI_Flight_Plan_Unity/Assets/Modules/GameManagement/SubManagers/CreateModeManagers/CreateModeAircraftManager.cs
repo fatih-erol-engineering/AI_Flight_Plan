@@ -269,11 +269,11 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         timeField.value = Time.time.ToString("F2", CultureInfo.InvariantCulture);
 
         // callbacks
-        createBtn.clicked += SpawnFromPopup;
-        cancelBtn.clicked += ClosePopup;
+        // createBtn.clicked += SpawnFromPopup;
+        // cancelBtn.clicked += ClosePopup;
 
         // Enter key handling on popup — use TrickleDown so TextField'ler de tuşu geçirirse yakalar
-        popupInstance.RegisterCallback<KeyDownEvent>(OnPopupKeyDown, TrickleDown.TrickleDown);
+        // popupInstance.RegisterCallback<KeyDownEvent>(OnPopupKeyDown, TrickleDown.TrickleDown);
 
         root.Add(popupInstance);
         // focus altitude

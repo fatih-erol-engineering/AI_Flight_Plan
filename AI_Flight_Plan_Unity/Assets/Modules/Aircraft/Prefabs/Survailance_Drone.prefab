@@ -323,6 +323,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      propertyPath: initialControlPointDistance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: <waypointFactory>k__BackingField
       value: 
       objectReference: {fileID: 6085660992328769472}

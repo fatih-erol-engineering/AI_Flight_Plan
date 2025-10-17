@@ -12,8 +12,7 @@ public class AircraftFactory : MonoBehaviour
     private AircraftPropertiesRegistry aircraftPropertiesRegistry;
     [SerializeField]
     public GameObject aircraftPrefab;
-    [SerializeField]
-    public List<Aircraft> aircraftList { get; private set; } = new List<Aircraft>();
+    public List<Aircraft> AircraftList { get; private set; } = new List<Aircraft>();
     public Aircraft selectedAircraft;
     [SerializeField]
     public bool aircraftSpawnFlag { get; private set; } = false;
@@ -50,7 +49,7 @@ public class AircraftFactory : MonoBehaviour
         var go = Instantiate(aircraftPrefab, globalPosition, globalRotation, transform);
         var ctrl = go.GetComponentInChildren<Aircraft>();
         CheckAssignment(ctrl);
-        aircraftList.Add(ctrl);
+        AircraftList.Add(ctrl);
         ctrl.SetTime(time);
         selectedAircraft = ctrl;
         aircraftSpawnFlag = true;
@@ -58,12 +57,12 @@ public class AircraftFactory : MonoBehaviour
     }
     public void Clear()
     {
-        foreach (var aircraft in aircraftList)
+        foreach (var aircraft in AircraftList)
         {
             if (aircraft != null)
                 Destroy(aircraft.gameObject);
         }
-        aircraftList.Clear();
+        AircraftList.Clear();
     }
 
     void CheckAssignment<T>(T obj)

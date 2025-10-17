@@ -23,6 +23,7 @@ public class TimeManager : MonoBehaviour
     public float timeScale { get; private set; } = 1f;
     private bool prev_trajectoryCreatedFlag = false;
     public bool isUpdated = false;
+    public bool timeIsChanging = false;
 
 
     void Awake()
@@ -34,12 +35,14 @@ public class TimeManager : MonoBehaviour
     void Update()
     {
         isUpdated = false;
+        timeIsChanging = false;
         playFlag = timeSliderUI.playFlag;
         if (playFlag)
         {
             currentTime_s += Time.deltaTime * timeScale;
             currentTime_s = Mathf.Clamp(currentTime_s, startTime_s, endTime_s);
             timeSliderUI.SetTimeSliderValue(currentTime_s);
+            timeIsChanging = true;
         }
 
         if (createModeManager.trajectoryCreatedFlag != prev_trajectoryCreatedFlag)
@@ -58,7 +61,7 @@ public class TimeManager : MonoBehaviour
     {
         float minTime = Mathf.Infinity;
         float maxTime = Mathf.NegativeInfinity;
-        foreach (Aircraft aircraft in aircraftFactory.aircraftList)
+        foreach (Aircraft aircraft in aircraftFactory.AircraftList)
         {
             if (minTime > aircraft.trajectory.startTime.second)
             {

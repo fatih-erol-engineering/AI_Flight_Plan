@@ -73,7 +73,8 @@ public class TimeSliderUI : MonoBehaviour
     
     private void SliderValueChanged()
     {
-        timeManager.SetCurrentTime(timeSlider.value); 
+        timeManager.SetCurrentTime(timeSlider.value);
+        timeManager.timeIsChanging = true;
     }
     
 

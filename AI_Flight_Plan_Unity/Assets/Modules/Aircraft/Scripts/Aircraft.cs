@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
@@ -80,66 +81,58 @@ public class Aircraft : SelectableBehaviour
             r.materials = mats;
         }
     }
-
-
-
-
-
-
     
-    // public void MoveAircraftWithTime(float sec)
-    // {
-    //     int ct = 0;
-    //     foreach (BSplineSegment segment in trajectory.bSplineSegments)
-    //     {
-    //         float startTime_s = segment.startPoint.time.second;
-    //         float endTime_s = segment.endPoint.time.second;
+    public void MoveAircraftWithTime(float sec)
+    {
+        int ct = 0;
+        foreach (BSplineSegment segment in trajectory.bSplineSegments)
+        {
+            float startTime_s = segment.startPoint.time.second;
+            float endTime_s = segment.endPoint.time.second;
 
-    //         if ((sec <= endTime_s) && (sec >= startTime_s))
-    //         {
-    //             int n = segment.lr.positionCount;
-    //             float lerpVal = (sec - startTime_s) / (endTime_s - startTime_s);
-    //             lerpVal = Mathf.Clamp(lerpVal, 0, 1);
-    //             float currentIdxFloat = Mathf.Lerp(0, n - 1, lerpVal);
-    //             int currentIdx = Mathf.RoundToInt(currentIdxFloat);
-    //             aircraftVisualObject.transform.position = segment.lr.GetPosition(currentIdx);
-    //             break;
-    //         }
-    //         ct++;
-    //     }
-    // }
+            if ((sec < endTime_s) && (sec >= startTime_s))
+            {
+                // int n = segment.lr.positionCount;
+                // float lerpVal = (sec - startTime_s) / (endTime_s - startTime_s);
+                // lerpVal = Mathf.Clamp(lerpVal, 0, 1);
+                // float currentIdxFloat = Mathf.Lerp(0, n - 1, lerpVal);
+                // int currentIdx = Mathf.RoundToInt(currentIdxFloat);
 
-    // public Waypoint CreateWaypoint(Vector3 globalPosition)
-    // {
-    //     if (trajectory == null)
-    //     {
-    //         GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);
+                // Vector3 pos1 = segment.lr.GetPosition(currentIdx);
+                // Vector3 pos2 = segment.lr.GetPosition(currentIdx + 1);
 
-    //         trajectory = trajParentGO.GetComponent<Trajectory>();
-    //         if (trajectory == null)
-    //         {
-    //             trajectory = trajParentGO.AddComponent<Trajectory>();
-    //             trajectory.theme = theme;
-    //         }
-    //     }
-    //     Waypoint wp = trajectory.CreateWaypoint(globalPosition);
-    //     return wp;
-    // }
-    // public Waypoint CreateWaypoint(Vector3 globalPosition, float time_s)
-    // {
-    //     if (trajectory == null)
-    //     {
-    //         GameObject trajParentGO = Instantiate(theme.trajectoryPrefab, transform.position, transform.rotation, this.transform);
-    //         trajectory = trajParentGO.GetComponent<Trajectory>();
-    //         if (trajectory == null)
-    //         {
-    //             trajectory = trajParentGO.AddComponent<Trajectory>();
-    //             trajectory.theme = theme;
-    //         }
-    //     }
-    //     Waypoint wp = trajectory.CreateWaypoint(globalPosition, time_s);
-    //     return wp;
-    // }
+
+                // Vector3.Lerp(pos1,pos2,)
+
+                int n = segment.lr.positionCount;
+                float deltaTime = (endTime_s - startTime_s);
+                float gain = (sec - startTime_s)/ deltaTime * n;
+                int lowerIdx = Mathf.FloorToInt(gain);
+                int upperIdx = lowerIdx+1;
+
+                if (upperIdx > n-1)
+                {
+                    break;
+                }
+                else
+                {                    
+                    float lowerIdxTime = ((float)lowerIdx / n) * deltaTime + startTime_s;
+                    float upperIdxTime = ((float)upperIdx / n) * deltaTime + startTime_s;
+
+                    float lerpVal = Mathf.Clamp((sec - lowerIdxTime) / (upperIdxTime - lowerIdxTime),0,1);
+
+                    Vector3 lowerPosition = segment.lr.GetPosition(lowerIdx);
+                    Vector3 upperPosition = segment.lr.GetPosition(upperIdx);
+
+                    Vector3 aircraftPosition = Vector3.Lerp(lowerPosition, upperPosition, lerpVal);
+                    transform.position = aircraftPosition;
+                }
+                break;
+            }
+            ct++;
+        }
+    }
+
     public void UpdateMaterial(Material material)
     {
         foreach (MeshRenderer renderer in aircraftMeshRenderers)
