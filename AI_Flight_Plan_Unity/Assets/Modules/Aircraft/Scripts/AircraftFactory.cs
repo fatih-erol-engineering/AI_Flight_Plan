@@ -15,6 +15,8 @@ public class AircraftFactory : MonoBehaviour
     [SerializeField]
     public List<Aircraft> aircraftList { get; private set; } = new List<Aircraft>();
     public Aircraft selectedAircraft;
+    [SerializeField]
+    public bool aircraftSpawnFlag { get; private set; } = false;
 
     private string prev_selectedAircraftModelName;
     public void Awake()
@@ -30,6 +32,7 @@ public class AircraftFactory : MonoBehaviour
     }
     void Update()
     {
+        aircraftSpawnFlag = false;
         ChangeAircraftPrefabWithUI();
     }
     private void ChangeAircraftPrefabWithUI()
@@ -50,6 +53,7 @@ public class AircraftFactory : MonoBehaviour
         aircraftList.Add(ctrl);
         ctrl.SetTime(time);
         selectedAircraft = ctrl;
+        aircraftSpawnFlag = true;
         return ctrl;
     }
     public void Clear()

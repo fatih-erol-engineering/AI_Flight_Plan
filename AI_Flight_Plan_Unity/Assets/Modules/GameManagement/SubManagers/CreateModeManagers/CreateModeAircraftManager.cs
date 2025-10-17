@@ -34,7 +34,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         return exitMode;
     }
 
-    [SerializeField] private float altitudeClearanceForMouseSpawn = 0.1f;
+    [SerializeField] private float altitudeClearanceForMouseSpawn = 0.1f;    
 
     void AssignData()
     {

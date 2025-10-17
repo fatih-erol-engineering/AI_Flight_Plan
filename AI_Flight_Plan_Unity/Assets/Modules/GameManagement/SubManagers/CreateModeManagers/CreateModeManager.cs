@@ -13,6 +13,7 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     
     [SerializeField] private CreateModeAircraftManager createModeAircraftManager;
     [SerializeField] private CreateModeWaypointManager createModeWaypointManager;   
+    [SerializeField] private CreateModeTrajectoryManager createModeTrajectoryManager;   
 
     [SerializeField] private AircraftFactory aircraftFactory;        
     [SerializeField] private Camera mainCamera;        
@@ -24,6 +25,8 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     {
         return exitMode;
     }
+
+    [field: SerializeField] public bool trajectoryCreatedFlag { get; private set; } = false;    
 
     void Awake()
     {
@@ -51,24 +54,27 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     public void Apply()
     {
         currentHooks?.Apply?.Invoke();
+        trajectoryCreatedFlag = true;
         Debug.Log("Apply: Create Mode");
     }
 
     public void Cancel()
     {
-        currentHooks?.Cancel?.Invoke();     
-        
+        currentHooks?.Cancel?.Invoke();
+        trajectoryCreatedFlag = false;
         Debug.Log("Cancel: Create Mode");
     }
 
     public void Init()
     {
+        trajectoryCreatedFlag = false;
         InitMode(CreateMode.CreateAircraft);
         Debug.Log("Init: Create Mode");
     }
 
     public bool Tick(out ExitMode _exitMode)
     {
+        trajectoryCreatedFlag = false;
         bool subExitFlag = false;
         ExitMode subExitMode = ExitMode.None;
 
@@ -96,21 +102,21 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
                 break;
 
             case CreateMode.CreateWaypoint:
-                exitFlag = currentHooks.Tick(out subExitMode);
-                if (exitFlag)
+                subExitFlag = currentHooks.Tick(out subExitMode);
+                if (subExitFlag)
                 {
-                    exitMode = subExitMode;
-                    // ChangeMode(CreateMode.CreateTrajectory, subExitMode);
+                    UpdateCreateTrajectoryMode();                    
+                    ChangeMode(CreateMode.CreateTrajectory, subExitMode);
                 }
                 break;
 
-                // case CreateMode.CreateTrajectory:
-                //     exitFlag = currentHooks.Tick(out subExitMode);
-                //     if (exitFlag)
-                //     {
-                //         exitMode = subExitMode;
-                //     }
-                //     break;
+                case CreateMode.CreateTrajectory:
+                    exitFlag = currentHooks.Tick(out subExitMode);
+                    if (exitFlag)
+                    {
+                        exitMode = subExitMode;
+                    }
+                    break;
         }
         _exitMode = exitMode;
         return exitFlag;
@@ -177,7 +183,7 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     }
     private void UpdateCreateWaypointMode()
     {
-        createModeWaypointManager = aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager; 
+        createModeWaypointManager = aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager;
         modes[CreateMode.CreateWaypoint] = new ModeHooks
         {
             modeName = "CreateWaypoint",
@@ -188,6 +194,19 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
             GetExitMode = createModeWaypointManager.GetExitMode,
         };
         createModeWaypointManager.SetUIManager(uIManager.uIDocument);
+    }
+    private void UpdateCreateTrajectoryMode()
+    {
+        createModeTrajectoryManager = aircraftFactory.selectedAircraft.trajectory.transform.GetComponent<CreateModeTrajectoryManager>(); 
+        modes[CreateMode.CreateTrajectory] = new ModeHooks
+        {
+            modeName = "CreateTrajectory",
+            Init = createModeTrajectoryManager.Init,
+            Tick = createModeTrajectoryManager.Tick,
+            Apply = createModeTrajectoryManager.Apply,
+            Cancel = createModeTrajectoryManager.Cancel,
+            GetExitMode = createModeTrajectoryManager.GetExitMode,
+        };        
     }
 }
 

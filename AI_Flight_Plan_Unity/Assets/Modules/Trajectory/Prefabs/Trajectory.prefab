@@ -160,6 +160,7 @@ MonoBehaviour:
   spawnKey: 323
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   uiDocument: {fileID: 0}
+  altitudeClearanceForMouseSpawn: 1
 --- !u!1 &8064563952328812410
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,6 +171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8820869112042112267}
   - component: {fileID: 5084967935425630650}
+  - component: {fileID: 8009024786390400837}
   m_Layer: 0
   m_Name: Trajectory
   m_TagString: Aircraft
@@ -221,3 +223,17 @@ MonoBehaviour:
     <second>k__BackingField: 0
   endTime:
     <second>k__BackingField: 0
+--- !u!114 &8009024786390400837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8064563952328812410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0642d8f1e1fade43926a03fccc86a78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreateTrajectoryManager
+  mainCamera: {fileID: 0}
+  <trajectory>k__BackingField: {fileID: 5084967935425630650}

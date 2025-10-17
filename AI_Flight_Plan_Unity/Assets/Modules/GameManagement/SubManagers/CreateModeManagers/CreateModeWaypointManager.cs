@@ -39,6 +39,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     }
     [SerializeField]
     private float altitudeClearanceForMouseSpawn = 0.1f;
+    
     public void SetUIManager(UIDocument _uIDocument)
     {
         uiDocument = _uIDocument;

@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c89d8bb571204f49b96d336daa7787a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NavigationInGame
-  hoverSelectionSystem: {fileID: 0}
+  hoverSelectionSystem: {fileID: 1742630310}
   lookSensitivity: 2
   orbitSensitivity: 0.6
   invertY: 0
@@ -359,8 +359,10 @@ MonoBehaviour:
   uIManager: {fileID: 1900046851}
   createModeAircraftManager: {fileID: 587978679}
   createModeWaypointManager: {fileID: 0}
+  createModeTrajectoryManager: {fileID: 0}
   aircraftFactory: {fileID: 587978677}
   mainCamera: {fileID: 192251732}
+  <trajectoryCreatedFlag>k__BackingField: 0
 --- !u!114 &510241425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,6 +498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   uiDocument: {fileID: 1900046852}
+  timeManager: {fileID: 762850602}
   <playFlag>k__BackingField: 0
 --- !u!114 &762850602
 MonoBehaviour:
@@ -509,6 +512,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e143a8a99477fd4e9f016d57e6626dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeManager
+  aircraftFactory: {fileID: 587978677}
+  createModeManager: {fileID: 510241424}
   timeSliderUI: {fileID: 762850601}
   <currentTime_s>k__BackingField: 0
   <startTime_s>k__BackingField: 0
@@ -1024,7 +1029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 753acfe78ea57854dab25b69f8100e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  <uIDocument>k__BackingField: {fileID: 0}
+  <uIDocument>k__BackingField: {fileID: 1900046852}
   cam: {fileID: 192251732}
   aircraftPropertiesRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
   selectedAircraftModelName: 
