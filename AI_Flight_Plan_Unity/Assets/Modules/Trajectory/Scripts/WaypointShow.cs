@@ -19,6 +19,7 @@ public class WaypointShow : MonoBehaviour
     private MeshFilter targetMeshFilter;
     private Vector3 originalLocalScale;
     private float originalMeshHeight = 1f; // mesh bounds height in local units
+    [SerializeField]
     private LineRenderer lr;
 
     void Awake()
@@ -50,7 +51,6 @@ public class WaypointShow : MonoBehaviour
         {
             Debug.LogWarning($"[WaypointShow] No Renderer found on '{gameObject.name}' or children. Scaling will use defaults.");
         }
-        lr = GetComponent<LineRenderer>();
     }
 
     void Update()
@@ -64,14 +64,14 @@ public class WaypointShow : MonoBehaviour
         if (mainCamera == null) mainCamera = Camera.main;
         if (mainCamera == null) return;
 
-        // Face camera
-        if (faceCamera)
-        {
-            // Make the object's forward face the camera (billboard).
-            // Use camera up to avoid rolling.
-            referenceMesh.rotation = Quaternion.LookRotation(referenceMesh.position - mainCamera.transform.position, mainCamera.transform.up);
-            // If the object's front is opposite, use: Quaternion.LookRotation(mainCamera.transform.position - transform.position)
-        }
+        // // Face camera
+        // if (faceCamera)
+        // {
+        //     // Make the object's forward face the camera (billboard).
+        //     // Use camera up to avoid rolling.
+        //     referenceMesh.rotation = Quaternion.LookRotation(referenceMesh.position - mainCamera.transform.position, mainCamera.transform.up);
+        //     // If the object's front is opposite, use: Quaternion.LookRotation(mainCamera.transform.position - transform.position)
+        // }
 
         // Maintain constant pixel height
         if (targetRenderer == null && targetMeshFilter == null) return;
