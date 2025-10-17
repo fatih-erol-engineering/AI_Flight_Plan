@@ -4,6 +4,7 @@
     --colorActive: rgb(82, 9, 3);
     --colorText: rgb(255, 255, 255);
     --colorIcon: rgb(255, 255, 255);
+    --sizeTextButton: 16;
 }
 
 .button {
