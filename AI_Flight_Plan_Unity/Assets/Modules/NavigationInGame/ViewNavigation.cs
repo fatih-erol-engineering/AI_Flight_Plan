@@ -18,7 +18,6 @@ public class ViewNavigation : MonoBehaviour
     private Vector3 _panAnchorWorld; // where you first clicked in world
     private float _panPlaneY;        // fixed horizontal plane height for this drag
     // --- XZ-only pan state ---
-    [SerializeField] private HoverSelectionSystem hoverSelectionSystem;
     [Header("Look / Orbit")]
     public float lookSensitivity = 2.2f;
     public float orbitSensitivity = 4.0f;
@@ -89,13 +88,13 @@ public class ViewNavigation : MonoBehaviour
         ApplyTransform(manualInput);
 
         // Optional: auto-focus when your selection changes
-        if (hoverSelectionSystem.selectedObject != null)
+        if (HoverSelectionSystem.Instance.selectedObject != null)
         {            
-            if (focusOnSelection && hoverSelectionSystem.selectedObject != _prevSelected)
+            if (focusOnSelection && HoverSelectionSystem.Instance.selectedObject != _prevSelected)
             {
-                _prevSelected = hoverSelectionSystem.selectedObject;
-                if (hoverSelectionSystem.selectedObject != null)
-                    Focus(hoverSelectionSystem.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
+                _prevSelected = HoverSelectionSystem.Instance.selectedObject;
+                if (HoverSelectionSystem.Instance.selectedObject != null)
+                    Focus(HoverSelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
             }
         }
     }
@@ -243,9 +242,9 @@ if (Input.GetMouseButtonUp(2) || alt) _isPanningXZ = false;
         {
             manualInput = false; // pressing F is not "manual nav" that should cancel smoothing
 
-            if (hoverSelectionSystem.selectedObject != null)
+            if (HoverSelectionSystem.Instance.selectedObject != null)
             {
-                Focus(hoverSelectionSystem.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: false);
+                Focus(HoverSelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: false);
             }
             // else if (!FocusByRaycast())
             // {

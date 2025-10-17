@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    public static TimeManager Instance { get; private set; }
     [SerializeField]
     private AircraftFactory aircraftFactory;
     [SerializeField]
@@ -21,9 +22,18 @@ public class TimeManager : MonoBehaviour
     [field: SerializeField]
     public float timeScale { get; private set; } = 1f;
     private bool prev_trajectoryCreatedFlag = false;
+    public bool isUpdated = false;
 
+
+    void Awake()
+    {
+        // Ensure a single instance
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+    }
     void Update()
     {
+        isUpdated = false;
         playFlag = timeSliderUI.playFlag;
         if (playFlag)
         {
@@ -35,10 +45,11 @@ public class TimeManager : MonoBehaviour
         if (createModeManager.trajectoryCreatedFlag != prev_trajectoryCreatedFlag)
         {
             if (createModeManager.trajectoryCreatedFlag)
-            {                
-                UpdateTimeWithTrajectoryTimes();
-            }
+            {
+                UpdateTimeWithTrajectoryTimes();                
+            }            
         }
+        
 
         prev_trajectoryCreatedFlag = createModeManager.trajectoryCreatedFlag;
     }
@@ -62,7 +73,7 @@ public class TimeManager : MonoBehaviour
         endTime_s = maxTime;        
         timeSliderUI.SetTimeSliderMinValue(startTime_s);
         timeSliderUI.SetTimeSliderMaxValue(endTime_s);
-
+        isUpdated = true;
     }
     public void SetCurrentTime(float second)
     {

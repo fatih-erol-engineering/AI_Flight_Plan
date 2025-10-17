@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -36,13 +37,13 @@ public class Trajectory : MonoBehaviour
     public TimeGame startTime;
     public TimeGame endTime;
     void AssignData()
-    {        
+    {
         if (!waypointContainer) waypointContainer = transform.Find("WaypointContainer");
         if (!controlPointContainer) controlPointContainer = transform.Find("ControlPointContainer");
         if (!segmentContainer) segmentContainer = transform.Find("SegmentContainer");
-        waypoints = new Waypoint[waypointContainer.childCount]; 
-        controlPoints = new ControlPoint[(waypointContainer.childCount-2)*2 + 2]; 
-        bSplineSegments = new BSplineSegment[waypointContainer.childCount-1];
+        waypoints = new Waypoint[waypointContainer.childCount];
+        controlPoints = new ControlPoint[(waypointContainer.childCount - 2) * 2 + 2];
+        bSplineSegments = new BSplineSegment[waypointContainer.childCount - 1];
         restrictedAreas = new RestrictedArea[restrictedAreaContainer.childCount];
 
 
@@ -50,13 +51,40 @@ public class Trajectory : MonoBehaviour
         {
             waypoints[i] = waypointContainer.GetChild(i).GetComponent<Waypoint>();
         }
-        
+
         for (int i = 0; i < restrictedAreaContainer.childCount; i++)
-        {         
+        {
             restrictedAreas[i] = restrictedAreaContainer.GetChild(i).GetComponent<RestrictedArea>();
         }
     }
     
+    void Update()
+    {
+        var go = HoverSelectionSystem.Instance.selectedObject;
+        if (go != null)
+        {
+            if (go.GetComponent<ControlPoint>() != null)
+            {
+                go.GetComponent<ControlPoint>().setPosition(go.transform.position);
+            }
+            if (go.GetComponent<Waypoint>() != null)
+            {
+                go.GetComponent<Waypoint>().setPosition(go.transform.position);
+            }
+        }
+        if (TimeManager.Instance.isUpdated)
+        {            
+            TimeGame startTimeFromTimeManager = new TimeGame();
+            startTimeFromTimeManager.SetTime(TimeManager.Instance.startTime_s);
+
+            TimeGame  endTimeFromTimeManager = new TimeGame();
+            endTimeFromTimeManager.SetTime(TimeManager.Instance.endTime_s);
+
+            UpdateColorWithTotalTime(startTimeFromTimeManager, endTimeFromTimeManager);
+        }
+
+    }
+
     public void Init()
     {
         AssignData();
@@ -191,27 +219,20 @@ public class Trajectory : MonoBehaviour
         }
         
     }
-#if UNITY_EDITOR
-    void Update()
+
+    public void UpdateColorWithTotalTime(TimeGame totalStartTime,TimeGame totalEndTime)
     {
-        if (!UnityEditor.EditorApplication.isPlaying)
+        
+        for (int i = 0; i < bSplineSegments.Length; i++)
         {
-            var go = UnityEditor.Selection.activeGameObject;
-            if (go != null)
-            {
-                if (go.GetComponent<ControlPoint>() != null)
-                {
-                    go.GetComponent<ControlPoint>().setPosition(go.transform.position);
-                }
-                if (go.GetComponent<Waypoint>() != null)
-                {
-                    go.GetComponent<Waypoint>().setPosition(go.transform.position);
-                }
-            }
+            bSplineSegments[i].UpdateColorWithTotalTime(totalStartTime, totalEndTime);
         }
     }
 
-#endif
+
+
+
+
 
 
 }

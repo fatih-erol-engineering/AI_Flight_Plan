@@ -44,7 +44,7 @@ public class TimeSliderUI : MonoBehaviour
         currentTimeField.formatString = "F1";
         maxTimeField.formatString = "F1";
 
-        timeSlider.value = (minVal + maxVal) / 2;
+        timeSlider.value = 0f;
 
         SetTimeSliderMinValue(minVal);
         SetTimeSliderMaxValue(maxVal);

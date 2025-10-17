@@ -26,7 +26,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="VisualElement" style="flex-grow: 1; align-content: auto; align-items: auto; align-self: stretch; flex-direction: row; opacity: 1;">
             <ui:FloatField value="0" name="currentTimeField" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" hide-placeholder-on-focus="false" focusable="false" style="align-self: center; justify-content: flex-start; align-items: auto; overflow: visible; flex-shrink: 1; align-content: auto; -unity-text-align: upper-center;" />
-            <ui:Slider value="40" high-value="100" name="timeSlider" fill="true" show-input-field="false" direction="Horizontal" inverted="false" style="align-items: auto; flex-shrink: 1; flex-grow: 1; min-height: auto; height: auto; align-self: center; align-content: auto;" />
+            <ui:Slider value="0" high-value="100" name="timeSlider" fill="true" show-input-field="false" direction="Horizontal" inverted="false" style="align-items: auto; flex-shrink: 1; flex-grow: 1; min-height: auto; height: auto; align-self: center; align-content: auto;" />
             <ui:FloatField value="10" name="maxTimeField" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" hide-placeholder-on-focus="false" focusable="false" style="align-self: center; justify-content: flex-start; align-items: auto; overflow: visible; flex-shrink: 1; align-content: auto; -unity-text-align: upper-center;" />
         </ui:VisualElement>
     </ui:VisualElement>

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class HoverSelectionSystem : MonoBehaviour
 {
+    public static HoverSelectionSystem Instance { get; private set; }
     [SerializeField] private MainGameManager mainGameManager;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask pickMask = ~0; // gerekirse katman daralt
@@ -18,6 +19,10 @@ public class HoverSelectionSystem : MonoBehaviour
     {
         if (!mainCamera) mainCamera = Camera.main;
         maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
+
+        // Ensure a single instance
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
     }
 
     void Update()

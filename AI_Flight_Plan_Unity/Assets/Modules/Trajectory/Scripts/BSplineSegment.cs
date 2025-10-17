@@ -122,7 +122,7 @@ public class BSplineSegment
 
         if (!lr) return;
 
-        int n = lr.positionCount;
+        int n = 2;
         if (n < 2) n = 2;
 
         var cKeys = new GradientColorKey[n];
@@ -136,13 +136,20 @@ public class BSplineSegment
             c = new Color(c.r, c.g, c.b, 1f);
 
             float a = Mathf.Lerp(startColor.a, endColor.a, t);
-
+            
             cKeys[i] = new GradientColorKey(c, t);
             aKeys[i] = new GradientAlphaKey(a, t);
         }
 
         var g = new Gradient { mode = GradientMode.Blend };
-        g.SetKeys(cKeys, aKeys);
+        try
+        {
+            g.SetKeys(cKeys, aKeys);            
+        }
+        catch (System.Exception)
+        {            
+            throw;
+        }
         lr.colorGradient = g;
 
     }
