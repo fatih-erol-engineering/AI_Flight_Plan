@@ -467,6 +467,9 @@ MonoBehaviour:
     m_Bits: 64
   spawnKey: 323
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  previewLineWidth: 0.02
+  previewLineMaxLength: 100
+  altitudeDragSensitivity: 0.02
   altitudeClearanceForMouseSpawn: 0.1
 --- !u!114 &587978680
 MonoBehaviour:

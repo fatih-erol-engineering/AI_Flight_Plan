@@ -19,8 +19,7 @@ public class WaypointShow : MonoBehaviour
     private MeshFilter targetMeshFilter;
     private Vector3 originalLocalScale;
     private float originalMeshHeight = 1f; // mesh bounds height in local units
-    [SerializeField]
-    private LineRenderer lr;
+    [SerializeField]    
 
     void Awake()
     {
@@ -99,10 +98,7 @@ public class WaypointShow : MonoBehaviour
         // compute scale factor relative to original mesh height
         float scaleFactor = originalMeshHeight > 0f ? (desiredWorldHeight / originalMeshHeight) : 1f;
         Vector3 newLocalScale = originalLocalScale * scaleFactor;
-        referenceMesh.localScale = newLocalScale;
-        lr.useWorldSpace = true;
-        lr.SetPosition(0, transform.position);
-        lr.SetPosition(1, new Vector3(transform.position.x, 0, transform.position.z));
+        referenceMesh.localScale = newLocalScale;        
     }
     
     

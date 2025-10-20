@@ -157,7 +157,7 @@ public class ViewNavigation : MonoBehaviour
         }
 
 // ------- PAN XZ with fixed anchor (MMB) -------
-if (Input.GetMouseButtonDown(2) && !alt)
+if (Input.GetMouseButtonDown(0) && !alt)
 {
     // 1) Try to anchor on actual geometry under cursor
     var ray = _cam.ScreenPointToRay(Input.mousePosition);
@@ -188,7 +188,7 @@ if (Input.GetMouseButtonDown(2) && !alt)
     _isFocusing = false;
 }
 
-if (_isPanningXZ && Input.GetMouseButton(2) && !alt)
+if (_isPanningXZ && Input.GetMouseButton(0) && !alt)
 {
     // Always raycast onto the SAME horizontal plane (no height drift)
     var plane = new Plane(Vector3.up, new Vector3(0f, _panPlaneY, 0f));

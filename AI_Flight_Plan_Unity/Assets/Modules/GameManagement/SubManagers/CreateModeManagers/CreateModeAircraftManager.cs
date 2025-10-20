@@ -21,6 +21,10 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     private Material previewMaterialOverride; 
     [SerializeField] private Theme theme; 
     private GameObject previewInstance;    
+    // vertical line under preview (same material as preview)
+    private GameObject previewLine;
+    [SerializeField] private float previewLineWidth = 0.3f;
+    [SerializeField] private float previewLineMaxLength = 100f;
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks { get; private set; }
     public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
@@ -29,6 +33,12 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     private Vector3 lastHitPoint;
     private bool exitFlag;    
     private ExitMode exitMode;
+    // altitude-drag controls for popup
+    private TextField popupAltField;
+    private bool isDraggingAltitude = false;
+    private float altDragStartMouseY;
+    private float altDragStartValue;
+    [SerializeField] private float altitudeDragSensitivity = 0.02f; // world units per pixel
     public ExitMode GetExitMode()
     {
         return exitMode;
@@ -139,6 +149,12 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     private void DestroyPreview()
     {
         if (previewInstance == null) return;
+        // destroy associated line first
+        if (previewLine != null)
+        {
+            Destroy(previewLine);
+            previewLine = null;
+        }
         Destroy(previewInstance);
         previewInstance = null;
     }
@@ -214,6 +230,53 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         // Popup Menu Acik ise tiklama, enter veya tusa basma ile waypoint spawn edilir.
         if (popupOpen)
         {
+            // Altitude editing with middle mouse drag while popup is open
+            // Start dragging
+            if (Input.GetMouseButtonDown(2))
+            {
+                // ensure we have reference to the alt field
+                if (popupAltField == null && popupInstance != null)
+                    popupAltField = popupInstance.Q<TextField>("altField");
+
+                if (popupAltField != null)
+                {
+                    // parse current altitude shown in popup
+                    float currentAlt = 0f;
+                    float.TryParse(popupAltField.value, NumberStyles.Float, CultureInfo.InvariantCulture, out currentAlt);
+                    isDraggingAltitude = true;
+                    altDragStartMouseY = Input.mousePosition.y;
+                    altDragStartValue = currentAlt;
+                }
+            }
+
+            // While dragging, update altitude
+            if (isDraggingAltitude && Input.GetMouseButton(2))
+            {
+                float deltaPixels = altDragStartMouseY - Input.mousePosition.y; // drag up -> increase
+                float newAlt = altDragStartValue - deltaPixels * altitudeDragSensitivity;
+                // clamp or snap as needed (optional)
+                // update popup UI and preview position live
+                if (popupAltField != null)
+                    popupAltField.SetValueWithoutNotify(newAlt.ToString("F3", CultureInfo.InvariantCulture));
+
+                // update preview's y if exists
+                if (previewInstance != null)
+                {
+                    var p = previewInstance.transform.position;
+                    p.y = newAlt;
+                    previewLine.GetComponent<LineRenderer>().SetPosition(0, p);
+                    
+                    previewInstance.transform.position = p;
+                }
+                lastHitPoint.y = newAlt;
+            }
+
+            // End dragging
+            if (isDraggingAltitude && Input.GetMouseButtonUp(2))
+            {
+                isDraggingAltitude = false;
+            }
+            
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 SpawnFromPopup();
@@ -266,6 +329,8 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         lonField.value = hitPoint.x.ToString("F3", CultureInfo.InvariantCulture);
         latField.value = hitPoint.z.ToString("F3", CultureInfo.InvariantCulture);
         altField.value = hitPoint.y.ToString("F3", CultureInfo.InvariantCulture);
+        // keep a persistent reference so other methods can update the alt field live
+        popupAltField = altField;
         timeField.value = Time.time.ToString("F2", CultureInfo.InvariantCulture);
 
         // callbacks
@@ -342,6 +407,39 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                 r.materials = newMats;
             }
         }
+
+        // create vertical line under preview using LineRenderer, reuse material if available
+        if (previewLine != null)
+        {
+            Destroy(previewLine);
+            previewLine = null;
+        }
+        previewLine = new GameObject("PreviewLine");
+        previewLine.transform.SetParent(previewInstance.transform, false);
+        var lr = previewLine.AddComponent<LineRenderer>();
+        lr.useWorldSpace = true;
+        lr.positionCount = 2;
+        lr.startWidth = previewLineWidth;
+        lr.endWidth = previewLineWidth;
+        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lr.receiveShadows = false;
+        lr.allowOcclusionWhenDynamic = false;
+        if (previewMat != null)
+        {
+            lr.material = previewMat;
+        }
+        else
+        {
+            // fallback simple material
+            var mat = new Material(Shader.Find("Unlit/Color"));
+            mat.color = Color.white;
+            lr.material = mat;
+        }
+        // initial positions (will be updated by UpdatePreviewPositionWithMouse)
+        lr.SetPosition(0, previewInstance.transform.position);
+        lr.SetPosition(1, previewInstance.transform.position + Vector3.down * Mathf.Min(previewLineMaxLength, 1f));
+        lr.startWidth = previewLineWidth;
+        lr.endWidth = previewLineWidth;
     }
 
     private void UpdatePreviewPositionWithMouse()
@@ -351,6 +449,23 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
         {            
             previewInstance.transform.position = hit.point+ new Vector3(0f,altitudeClearanceForMouseSpawn,0f);
+            // update vertical line: cast down from preview to find ground, else use max length
+            if (previewLine != null)
+            {
+                Vector3 top = previewInstance.transform.position;
+                Vector3 downOrigin = top + Vector3.up * 0.01f;
+                Ray down = new Ray(downOrigin, Vector3.down);
+                if (Physics.Raycast(down, out RaycastHit downHit, previewLineMaxLength, hitMask))
+                {
+                    previewLine.GetComponent<LineRenderer>().SetPosition(0, top);
+                    previewLine.GetComponent<LineRenderer>().SetPosition(1, downHit.point);
+                }
+                else
+                {
+                    previewLine.GetComponent<LineRenderer>().SetPosition(0, top);
+                    previewLine.GetComponent<LineRenderer>().SetPosition(1, top + Vector3.down * previewLineMaxLength);
+                }
+            }
         }
     }
 
