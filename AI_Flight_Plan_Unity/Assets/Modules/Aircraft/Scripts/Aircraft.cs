@@ -7,7 +7,7 @@ public class Aircraft : SelectableBehaviour
 {
     [Header("Aircraft Settings")]
     [field: SerializeField]
-    public TimeGame time { get; private set; }
+    public TimeGame time { get; private set; }    
     [SerializeField]
     public AircraftProperties aircraftProperties;
 

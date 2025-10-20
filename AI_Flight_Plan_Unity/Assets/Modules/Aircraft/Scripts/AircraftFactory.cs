@@ -46,8 +46,10 @@ public class AircraftFactory : MonoBehaviour
     public Aircraft Spawn(Vector3 globalPosition, Quaternion globalRotation,TimeGame time)
     {
         ChangeAircraftPrefabWithUI();
-        var go = Instantiate(aircraftPrefab, globalPosition, globalRotation, transform);
+        var go = Instantiate(aircraftPrefab, Vector3.zero, Quaternion.identity, transform);
         var ctrl = go.GetComponentInChildren<Aircraft>();
+        ctrl.transform.position = globalPosition;
+        ctrl.transform.rotation = globalRotation;
         CheckAssignment(ctrl);
         AircraftList.Add(ctrl);
         ctrl.SetTime(time);
@@ -73,5 +75,14 @@ public class AircraftFactory : MonoBehaviour
     public GameObject Get(string modelName)
     {
         return aircraftPropertiesRegistry.Get(modelName).aircraftPrefab;
+    }
+    public List<Trajectory> GetAllTrajectories()
+    {
+        List<Trajectory> trajList = new List<Trajectory>();
+        foreach (var aircraft in AircraftList)
+        {
+            trajList.Add(aircraft.trajectory);
+        }
+        return trajList;
     }
 }

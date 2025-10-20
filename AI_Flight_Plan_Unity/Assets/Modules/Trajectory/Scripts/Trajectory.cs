@@ -1,7 +1,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections.Generic;
 
-[ExecuteAlways]
+//  [ExecuteAlways]
 public class Trajectory : MonoBehaviour
 {
     [field: SerializeField]
@@ -63,19 +64,19 @@ public class Trajectory : MonoBehaviour
     
     void Update()
     {
-        var go = HoverSelectionSystem.Instance.selectedObject;
+        // var go = HoverSelectionSystem.Instance.selectedObject;
 
-        if (go != null)
-        {
-            if (go.GetComponent<ControlPoint>() != null)
-            {
-                go.GetComponent<ControlPoint>().setPosition(go.transform.position);
-            }
-            if (go.GetComponent<Waypoint>() != null)
-            {
-                go.GetComponent<Waypoint>().setPosition(go.transform.position);
-            }
-        }
+        // if (go != null)
+        // {
+        //     if (go.GetComponent<ControlPoint>() != null)
+        //     {
+        //         go.GetComponent<ControlPoint>().setPosition(go.transform.position);
+        //     }
+        //     if (go.GetComponent<Waypoint>() != null)
+        //     {
+        //         go.GetComponent<Waypoint>().setPosition(go.transform.position);
+        //     }
+        // }
 
         if (TimeManager.Instance.isUpdated)
         {            
@@ -233,10 +234,90 @@ public class Trajectory : MonoBehaviour
         }
     }
 
+    public List<CollisionInfo> CheckCollisionWithAnotherTrajectory(Trajectory otherTrajectory, float geometricCollisionThreshold_m, float timeCollision_s)
+    {
+        List<CollisionInfo> innerCollisionInfoList = new List<CollisionInfo>();
+        List<CollisionInfo> collisionInfoList = new List<CollisionInfo>();
+        foreach (var segment1 in bSplineSegments)
+        {
+            foreach (var segment2 in otherTrajectory.bSplineSegments)
+            {
+                var collisions = segment1.CheckCollisionWithAnotherSegment(segment2, geometricCollisionThreshold_m, timeCollision_s);
+                innerCollisionInfoList.AddRange(collisions);
+            }
+        }
 
+        Vector3 sumOfPositions = new Vector3(0, 0, 0);
+        float sumOfTimes = 0f;
+        int collisionCount = 0;
+        Vector3 meanPosition = new Vector3(0, 0, 0);
+        float meanTime_s = 0f;        
+        bool same_prev_collisionFlagTick = false;
+        bool same_collisionFlagTick = false;
+        bool same_collisionFlagStart = false;
+        bool same_collisionFlagEnd = false;    
 
+        for (int i = 0; i < innerCollisionInfoList.Count; i++)
+        {
+            var collision1 = innerCollisionInfoList[i];
+            var collision2 = new CollisionInfo();
+            collision2.point = new Vector3(0, 0, 0);
+            collision2.time = 0f;
+            if (i != innerCollisionInfoList.Count - 1)
+            {
+                collision2 = innerCollisionInfoList[i + 1];
 
+                float dist = Vector3.Distance(collision1.point, collision2.point);
+                float timeDiff = Mathf.Abs(collision1.time - collision2.time);
 
+                if (dist >= geometricCollisionThreshold_m || timeDiff >= timeCollision_s)
+                {
+                    same_collisionFlagTick = false;
+                }
+                else
+                {
+                    same_collisionFlagTick = true;
+                }
+            }
+            else
+            {
+                same_collisionFlagTick = false;
+            }
+
+            same_collisionFlagStart = ((same_prev_collisionFlagTick == false) && same_collisionFlagTick == true);
+            same_collisionFlagEnd = ((same_prev_collisionFlagTick == true) && same_collisionFlagTick == false);
+
+            if (same_collisionFlagStart)
+            {
+                sumOfPositions = collision1.point;
+                sumOfTimes = collision1.time;
+                collisionCount = 1;
+            }
+
+            if (same_collisionFlagEnd)
+            {
+                meanPosition = sumOfPositions / (float)collisionCount;
+                meanTime_s = sumOfTimes / (float)collisionCount;
+                collisionInfoList.Add(new CollisionInfo
+                {
+                    point = (meanPosition),
+                    time = meanTime_s,
+                });
+            }
+
+            if (same_collisionFlagTick)
+            {
+                sumOfPositions += (collision1.point + collision2.point) / 2;
+                sumOfTimes += (collision1.time + collision2.time) / 2;
+                collisionCount++;
+            }
+
+            same_prev_collisionFlagTick = same_collisionFlagTick;
+
+        }
+
+        return collisionInfoList;
+    }
 
 
 }

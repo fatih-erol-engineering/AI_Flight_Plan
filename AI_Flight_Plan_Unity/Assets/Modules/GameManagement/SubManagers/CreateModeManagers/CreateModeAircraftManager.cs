@@ -232,49 +232,57 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         {
             // Altitude editing with middle mouse drag while popup is open
             // Start dragging
-            if (Input.GetMouseButtonDown(2))
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
-                // ensure we have reference to the alt field
-                if (popupAltField == null && popupInstance != null)
-                    popupAltField = popupInstance.Q<TextField>("altField");
-
-                if (popupAltField != null)
+                if (Input.GetMouseButtonDown(2))
                 {
-                    // parse current altitude shown in popup
-                    float currentAlt = 0f;
-                    float.TryParse(popupAltField.value, NumberStyles.Float, CultureInfo.InvariantCulture, out currentAlt);
-                    isDraggingAltitude = true;
-                    altDragStartMouseY = Input.mousePosition.y;
-                    altDragStartValue = currentAlt;
+                    // ensure we have reference to the alt field
+                    if (popupAltField == null && popupInstance != null)
+                        popupAltField = popupInstance.Q<TextField>("altField");
+
+                    if (popupAltField != null)
+                    {
+                        // parse current altitude shown in popup
+                        float currentAlt = 0f;
+                        float.TryParse(popupAltField.value, NumberStyles.Float, CultureInfo.InvariantCulture, out currentAlt);
+                        isDraggingAltitude = true;
+                        altDragStartMouseY = Input.mousePosition.y;
+                        altDragStartValue = currentAlt;
+                    }
                 }
             }
 
             // While dragging, update altitude
-            if (isDraggingAltitude && Input.GetMouseButton(2))
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
-                float deltaPixels = altDragStartMouseY - Input.mousePosition.y; // drag up -> increase
-                float newAlt = altDragStartValue - deltaPixels * altitudeDragSensitivity;
-                // clamp or snap as needed (optional)
-                // update popup UI and preview position live
-                if (popupAltField != null)
-                    popupAltField.SetValueWithoutNotify(newAlt.ToString("F3", CultureInfo.InvariantCulture));
-
-                // update preview's y if exists
-                if (previewInstance != null)
+                if (isDraggingAltitude && Input.GetMouseButton(2))
                 {
-                    var p = previewInstance.transform.position;
-                    p.y = newAlt;
-                    previewLine.GetComponent<LineRenderer>().SetPosition(0, p);
-                    
-                    previewInstance.transform.position = p;
+                    float deltaPixels = altDragStartMouseY - Input.mousePosition.y; // drag up -> increase
+                    float newAlt = altDragStartValue - deltaPixels * altitudeDragSensitivity;
+                    // clamp or snap as needed (optional)
+                    // update popup UI and preview position live
+                    if (popupAltField != null)
+                        popupAltField.SetValueWithoutNotify(newAlt.ToString("F3", CultureInfo.InvariantCulture));
+
+                    // update preview's y if exists
+                    if (previewInstance != null)
+                    {
+                        var p = previewInstance.transform.position;
+                        p.y = newAlt;
+                        previewLine.GetComponent<LineRenderer>().SetPosition(0, p);
+                        
+                        previewInstance.transform.position = p;
+                    }
+                    lastHitPoint.y = newAlt;
                 }
-                lastHitPoint.y = newAlt;
             }
 
-            // End dragging
-            if (isDraggingAltitude && Input.GetMouseButtonUp(2))
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
-                isDraggingAltitude = false;
+                if (isDraggingAltitude && Input.GetMouseButtonUp(2))
+                {
+                    isDraggingAltitude = false;
+                }
             }
             
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))

@@ -12,7 +12,7 @@ using UnityEngine;
 /// </summary>
 [RequireComponent(typeof(Camera))]
 public class ViewNavigation : MonoBehaviour
-{
+{    
     // --- XZ-only pan with fixed plane & anchor ---
     private bool _isPanningXZ = false;
     private Vector3 _panAnchorWorld; // where you first clicked in world
@@ -117,6 +117,10 @@ public class ViewNavigation : MonoBehaviour
         bool lmb = Input.GetMouseButton(0);
         bool rmb = Input.GetMouseButton(1);
         bool mmb = Input.GetMouseButton(2);
+        bool lmbd = Input.GetMouseButtonDown(0);
+        bool rmbd = Input.GetMouseButtonDown(1);
+        bool mmbd = Input.GetMouseButtonDown(2);
+
         bool alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
         bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
@@ -157,7 +161,7 @@ public class ViewNavigation : MonoBehaviour
         }
 
 // ------- PAN XZ with fixed anchor (MMB) -------
-if (Input.GetMouseButtonDown(0) && !alt)
+if (mmbd && !alt)
 {
     // 1) Try to anchor on actual geometry under cursor
     var ray = _cam.ScreenPointToRay(Input.mousePosition);
@@ -188,7 +192,7 @@ if (Input.GetMouseButtonDown(0) && !alt)
     _isFocusing = false;
 }
 
-if (_isPanningXZ && Input.GetMouseButton(0) && !alt)
+if (_isPanningXZ && mmb && !alt)
 {
     // Always raycast onto the SAME horizontal plane (no height drift)
     var plane = new Plane(Vector3.up, new Vector3(0f, _panPlaneY, 0f));
