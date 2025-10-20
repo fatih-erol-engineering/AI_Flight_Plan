@@ -5,14 +5,9 @@ public class CollisionCheckerTrajectory : MonoBehaviour
     [SerializeField] private AircraftFactory aircraftFactory;
     [SerializeField] private float geometricCollisionTreshold_m = 5f;
     [SerializeField] private float timeCollision_s = 5f;
-    public bool collisionFlag { get; private set; } = false;
-    public List<(GameObject, GameObject)> collidedGameObjects { get; private set; }
-    public List<CollidedObjects> collidedGameObjectsList { get; private set; }
     public List<GameObject> markers { get; private set; }
     void Awake()
     {
-        collidedGameObjects = new List<(GameObject, GameObject)>();
-        collidedGameObjectsList = new List<CollidedObjects>();
         markers = new List<GameObject>();   
     }
 
@@ -20,32 +15,34 @@ public class CollisionCheckerTrajectory : MonoBehaviour
     public void CheckCollisions()
     {
         List<Trajectory> allTraj = aircraftFactory.GetAllTrajectories();
+        List<CollisionInfo> all_collisionInfoList = new List<CollisionInfo>();
         for (int i = 0; i < allTraj.Count; i++)
         {
-            for (int j = i + 1; j < allTraj.Count; j++)
+            // for (int j = i + 1; j < allTraj.Count; j++)
+            // {
+            //     current_collisionInfoList = allTraj[i].CheckCollisionWithAnotherTrajectory(allTraj[j], geometricCollisionTreshold_m, timeCollision_s);
+            //     all_collisionInfoList.AddRange(current_collisionInfoList);
+            // }
+            for (int j = 0; j < allTraj.Count; j++)
             {
-                var collisions = allTraj[i].CheckCollisionWithAnotherTrajectory(allTraj[j], geometricCollisionTreshold_m, timeCollision_s);
-                if (collisions.Count > 0)
-                {
-                    collisionFlag = true;
-                    foreach (var collision in collisions)
-                    {
-                        collidedGameObjects.Add((allTraj[i].gameObject, allTraj[j].gameObject));
-                        collidedGameObjectsList.Add(new CollidedObjects(allTraj[i].gameObject, allTraj[j].gameObject));
-                        var marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        marker.transform.position = collision.point;
-                        marker.transform.rotation = Quaternion.identity;
-                        markers.Add(marker);
-                    }
-                }
+                if(allTraj[j] == allTraj[i]) continue;
+                List<CollisionInfo> current_collisionInfoList = allTraj[i].CheckCollisionWithAnotherTrajectory(allTraj[j], geometricCollisionTreshold_m, timeCollision_s);
+                all_collisionInfoList.AddRange(current_collisionInfoList);
             }
+        }
+
+        foreach (var collision in all_collisionInfoList)
+        {
+            var marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            marker.GetComponent<MeshRenderer>().material.color = Color.red;
+            marker.transform.position = collision.point;
+            marker.transform.rotation = Quaternion.identity;
+            marker.transform.localScale = Vector3.one * geometricCollisionTreshold_m;
+            markers.Add(marker);
         }
     }
     public void ClearCollisions()
     {
-        collisionFlag = false;
-        collidedGameObjects.Clear();
-        collidedGameObjectsList.Clear();
         foreach (GameObject marker in markers)
         {
             Destroy(marker);
@@ -54,20 +51,11 @@ public class CollisionCheckerTrajectory : MonoBehaviour
     }
     
 }
-public class CollidedObjects
-{
-    public GameObject obj1;
-    public GameObject obj2;
-
-    public CollidedObjects(GameObject obj1_, GameObject obj2_)
-    {
-        obj1 = obj1_;
-        obj2 = obj2_;
-    }
-}
 
 public class CollisionInfo
 {
+    public GameObject objCurrent;
+    public GameObject objCollidedWith;
     public Vector3 point;
     public float time;
 }

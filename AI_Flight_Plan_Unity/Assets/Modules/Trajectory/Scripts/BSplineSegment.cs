@@ -301,10 +301,7 @@ public class BSplineSegment
         List<CollisionInfo> collisionInfoList = new List<CollisionInfo>();
 
         Vector3 sumOfPositions = new Vector3(0, 0, 0);
-        float sumOfTimes = 0f;
-        int collisionCount = 0;
         Vector3 meanPosition = new Vector3(0, 0, 0);
-        float meanTime_s = 0f;
         prev_collisionFlagTick = false;
         collisionFlagTick = false;
 
@@ -316,120 +313,19 @@ public class BSplineSegment
                 {
                     if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m))
                     {
-                        collisionFlagTick = true;
+
+                        collisionInfoList.Add(new CollisionInfo
+                        {
+                            objCurrent = gameObject,
+                            objCollidedWith = otherSegment.gameObject,
+                            point = traj1Point.position,
+                            time = traj1Point.time,
+                        });
+
                     }
-                    else
-                    {
-                        collisionFlagTick = false;
-                    }
                 }
-                collisionFlagStart = ((prev_collisionFlagTick == false) && collisionFlagTick == true);
-                collisionFlagEnd = ((prev_collisionFlagTick == true) && collisionFlagTick == false);
-
-                if (collisionFlagStart)
-                {
-                    sumOfPositions = new Vector3(0, 0, 0);
-                    sumOfTimes = 0f;
-                    collisionCount = 0;
-                    meanPosition = new Vector3(0, 0, 0);
-                    meanTime_s = 0f;
-                }
-
-                if (collisionFlagEnd)
-                {
-                    meanPosition = sumOfPositions / (float)collisionCount;
-                    meanTime_s = sumOfTimes / (float)collisionCount;
-                    innerCollisionInfoList.Add(new CollisionInfo
-                    {
-                        point = (meanPosition),
-                        time = meanTime_s,
-                    });
-                }
-
-                if (collisionFlagTick)
-                {
-                    sumOfPositions += (traj2Point.position + traj1Point.position) / 2;
-                    sumOfTimes += (traj2Point.time + traj1Point.time) / 2;
-                    collisionCount++;
-                }
-
-                prev_collisionFlagTick = collisionFlagTick;
             }
         }
-
-
-        sumOfPositions = new Vector3(0, 0, 0);
-        sumOfTimes = 0f;
-        collisionCount = 0;
-        meanPosition = new Vector3(0, 0, 0);
-        meanTime_s = 0f;        
-        same_prev_collisionFlagTick = false;
-        same_collisionFlagTick = false;
-        for (int i = 0; i < innerCollisionInfoList.Count; i++)
-        {
-            var collision1 = innerCollisionInfoList[i];
-            var collision2 = new CollisionInfo();
-            collision2.point = new Vector3(0, 0, 0);
-            collision2.time = 0f;
-            if (i != innerCollisionInfoList.Count - 1)
-            {
-                collision2 = innerCollisionInfoList[i + 1];
-
-                float dist = Vector3.Distance(collision1.point, collision2.point);
-                float timeDiff = Mathf.Abs(collision1.time - collision2.time);
-
-                if (dist >= geometricCollisionThreshold_m || timeDiff >= timeCollision_s)
-                {
-                    same_collisionFlagTick = false;
-                }
-                else
-                {
-                    same_collisionFlagTick = true;
-                }
-            }
-            else
-            {
-                same_collisionFlagTick = false;
-            }
-
-            same_collisionFlagStart = ((same_prev_collisionFlagTick == false) && same_collisionFlagTick == true);
-            same_collisionFlagEnd = ((same_prev_collisionFlagTick == true) && same_collisionFlagTick == false);
-
-            if (same_collisionFlagStart)
-            {
-                sumOfPositions = collision1.point;
-                sumOfTimes = collision1.time;
-                collisionCount = 1;
-            }
-
-            if (same_collisionFlagEnd)
-            {
-                meanPosition = sumOfPositions / (float)collisionCount;
-                meanTime_s = sumOfTimes / (float)collisionCount;
-                collisionInfoList.Add(new CollisionInfo
-                {
-                    point = (meanPosition),
-                    time = meanTime_s,
-                });
-            }
-
-            if (same_collisionFlagTick)
-            {
-                sumOfPositions +=  collision2.point;
-                sumOfTimes +=  collision2.time;
-                collisionCount++;
-            }
-
-            same_prev_collisionFlagTick = same_collisionFlagTick;
-
-
-
-        }
-        
-
-
-
-
         return collisionInfoList;
     }
     

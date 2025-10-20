@@ -926,8 +926,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollisionCheckerTrajectory
   aircraftFactory: {fileID: 587978677}
-  geometricCollisionTreshold_m: 5
-  timeCollision_s: 5
+  geometricCollisionTreshold_m: 3
+  timeCollision_s: 1
 --- !u!1 &1477263165
 GameObject:
   m_ObjectHideFlags: 0

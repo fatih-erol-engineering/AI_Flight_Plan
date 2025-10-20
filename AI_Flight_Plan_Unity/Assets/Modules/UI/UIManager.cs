@@ -1,6 +1,8 @@
 ﻿using UnityEngine.UIElements;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
+
 
 // [RequireComponent(typeof(MainGameManager))]
 [RequireComponent(typeof(UIDocument))]
@@ -54,7 +56,12 @@ public class UIManager : MonoBehaviour
         // if (!aircraftSpecRegistry) aircraftSpecRegistry = mainGameManager?.aircraftSpecRegistry;
         // CheckAssignment(aircraftSpecRegistry);
         
-
+        // Ensure an EventSystem exists if there is any UI in the scene.
+        // If none exists and we detect a Canvas or UIDocument, create a simple EventSystem with StandaloneInputModule.
+        if (EventSystem.current == null)
+        {
+            var go = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+        }
         if (!uIDocument) uIDocument = GetComponent<UIDocument>();
         CheckAssignment(uIDocument);
 
