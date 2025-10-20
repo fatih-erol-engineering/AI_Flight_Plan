@@ -272,7 +272,7 @@ MonoBehaviour:
   lookSensitivity: 2
   orbitSensitivity: 0.6
   invertY: 0
-  moveSpeed: 6
+  moveSpeed: 20
   boostMultiplier: 4
   slowMultiplier: 0.2
   panSensitivity: 0.5

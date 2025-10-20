@@ -24,7 +24,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     // vertical line under preview (same material as preview)
     private GameObject previewLine;
     [SerializeField] private float previewLineWidth = 0.3f;
-    [SerializeField] private float previewLineMaxLength = 100f;
+    [SerializeField] private float previewLineMaxLength = 10000f;
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks { get; private set; }
     public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
