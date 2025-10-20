@@ -27,7 +27,7 @@ public class Trajectory : MonoBehaviour
     public Waypoint[] waypoints { get; private set; }
     public ControlPoint[] controlPoints { get; private set; }
     public BSplineSegment[] bSplineSegments { get; private set; }
-    public RestrictedArea[] restrictedAreas { get; private set; }
+    // public RestrictedArea[] restrictedAreas { get; private set; }
 
 
     [SerializeField]
@@ -48,7 +48,7 @@ public class Trajectory : MonoBehaviour
         waypoints = new Waypoint[waypointContainer.childCount];
         controlPoints = new ControlPoint[(waypointContainer.childCount - 2) * 2 + 2];
         bSplineSegments = new BSplineSegment[waypointContainer.childCount - 1];
-        restrictedAreas = new RestrictedArea[restrictedAreaContainer.childCount];
+        // restrictedAreas = new RestrictedArea[restrictedAreaContainer.childCount];
 
 
         for (int i = 0; i < waypointContainer.childCount; i++)
@@ -56,10 +56,10 @@ public class Trajectory : MonoBehaviour
             waypoints[i] = waypointContainer.GetChild(i).GetComponent<Waypoint>();
         }
 
-        for (int i = 0; i < restrictedAreaContainer.childCount; i++)
-        {
-            restrictedAreas[i] = restrictedAreaContainer.GetChild(i).GetComponent<RestrictedArea>();
-        }
+        // for (int i = 0; i < restrictedAreaContainer.childCount; i++)
+        // {
+        //     restrictedAreas[i] = restrictedAreaContainer.GetChild(i).GetComponent<RestrictedArea>();
+        // }
     }
     
     void Update()
@@ -164,7 +164,7 @@ public class Trajectory : MonoBehaviour
             seg.initialControlPointDistance = initialControlPointDistance;
             seg.SetStartAndEndWaypoints(waypoints[i].GetComponent<Waypoint>(), waypoints[i + 1].GetComponent<Waypoint>());
             
-            seg.restrictedAreas = restrictedAreas;
+            // seg.restrictedAreas = restrictedAreas;
             seg.CreateControlPoints();            
             seg.GetComponent<LineRenderer>().startWidth = lineWidth;
             seg.GetComponent<LineRenderer>().endWidth = lineWidth;

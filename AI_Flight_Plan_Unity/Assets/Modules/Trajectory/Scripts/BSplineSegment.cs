@@ -26,8 +26,8 @@ public class BSplineSegment
     
 
     [Header("Restricted Areas")]
-    public RestrictedArea[] restrictedAreas;
-    public bool isCollide{ get; private set; } = false;
+    // public RestrictedArea[] restrictedAreas;
+    // public bool isCollide{ get; private set; } = false;
 
 
 
@@ -89,7 +89,7 @@ public class BSplineSegment
     void Update()
     {
         UpdateCurve();
-        CheckCollision();
+        // CheckCollision();
     }
     public void CreateControlPoints()
     {
@@ -184,14 +184,14 @@ public class BSplineSegment
 
     }
     
-    public bool[] CheckCollision()
-    {
+    // public bool[] CheckCollision()
+    // {
         /// <summary>
         /// Checks collision for restricted area objects.
         /// </summary>
-        Vector3[] posList = new Vector3[restrictedAreas.Length];
-        float[] radList = new float[restrictedAreas.Length];
-        bool[] collisionFlag = new bool[restrictedAreas.Length];
+        // Vector3[] posList = new Vector3[restrictedAreas.Length];
+        // float[] radList = new float[restrictedAreas.Length];
+        // bool[] collisionFlag = new bool[restrictedAreas.Length];
         // // // // for (int i = 0; i < restrictedAreas.Length; i++) 
         // // // // {
         // // // //     if (restrictedAreas[i].gameObject.activeSelf)
@@ -213,8 +213,8 @@ public class BSplineSegment
         //};
 
 
-        return collisionFlag;
-    }
+        // return collisionFlag;
+    // }
     public bool[] CheckCollision(Vector3[] P, float[] radious)
     {
         bool[] collisionFlag = new bool[P.Length];

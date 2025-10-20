@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2303945624442028908}
   - component: {fileID: 6690761361301215202}
   - component: {fileID: 2052101487879225902}
-  - component: {fileID: 4524635423006400827}
+  - component: {fileID: 3808613535235872908}
   m_Layer: 0
-  m_Name: Restricted Area
+  m_Name: School Area
   m_TagString: RestrictedArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,7 +112,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4524635423006400827
+--- !u!114 &3808613535235872908
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,8 +121,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2974273728743173281}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9de1b4e6b460d974caca2925dd06376d, type: 3}
+  m_Script: {fileID: 11500000, guid: f6c5afac61e2b784689c1ca7c3c3d7ac, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RestrictedArea
-  isSelected: 0
+  m_EditorClassIdentifier: Assembly-CSharp::SoundLimitedRestrictedArea
+  <currentSound_dBa>k__BackingField: 0
+  aircraftFactory: {fileID: 0}
   radius: 10
+  soundLimit_dBa: 10
+  minSoundColor: {r: 0, g: 1, b: 0.16973758, a: 1}
+  maxSoundColor: {r: 1, g: 0.058096346, b: 0, a: 1}
+  prefab: {fileID: 2974273728743173281, guid: b1193eea8f097d4498bde36bd9e6d14c, type: 3}
