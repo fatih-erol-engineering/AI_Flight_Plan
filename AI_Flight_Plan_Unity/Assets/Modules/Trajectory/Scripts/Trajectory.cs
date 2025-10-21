@@ -80,11 +80,8 @@ public class Trajectory : MonoBehaviour
 
         if (TimeManager.Instance.isUpdated)
         {            
-            TimeGame startTimeFromTimeManager = new TimeGame();
-            startTimeFromTimeManager.SetTime(TimeManager.Instance.startTime_s);
-
-            TimeGame  endTimeFromTimeManager = new TimeGame();
-            endTimeFromTimeManager.SetTime(TimeManager.Instance.endTime_s);
+            TimeGame startTimeFromTimeManager = new TimeGame(TimeManager.Instance.startTime_s);
+            TimeGame endTimeFromTimeManager = new TimeGame(TimeManager.Instance.endTime_s);                        
 
             UpdateColorWithTotalTime(startTimeFromTimeManager, endTimeFromTimeManager);
         }

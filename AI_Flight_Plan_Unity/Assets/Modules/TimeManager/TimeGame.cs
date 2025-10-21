@@ -9,6 +9,10 @@ public class TimeGame
     {
         second = _second;
     }
+    public TimeGame(float _second)
+    {
+        second = _second;
+    }
     //public float day;
     //[Range(0, 24)]
     //public float hour;

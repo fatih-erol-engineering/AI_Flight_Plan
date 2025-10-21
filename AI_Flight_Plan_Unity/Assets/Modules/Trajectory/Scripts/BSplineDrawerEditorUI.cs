@@ -11,6 +11,10 @@ public class BSplineDrawerEditorUI : Editor
 
         BSplineDrawer myScript = (BSplineDrawer)target;
 
+        if (GUILayout.Button("Assign Data"))
+        {
+            myScript.AssignData();
+        }
         if (GUILayout.Button("Create"))
         {
             myScript.Create();

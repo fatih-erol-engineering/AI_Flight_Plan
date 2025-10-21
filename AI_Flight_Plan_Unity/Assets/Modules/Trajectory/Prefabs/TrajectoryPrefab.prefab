@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 5084967935425630650}
   - component: {fileID: 8009024786390400837}
   m_Layer: 0
-  m_Name: Trajectory
+  m_Name: TrajectoryPrefab
   m_TagString: Aircraft
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -11,9 +11,17 @@ public class TrajectoryDrawerEditorUI : Editor
 
         TrajectoryDrawer myScript = (TrajectoryDrawer)target;
 
+        if (GUILayout.Button("Assign Data"))
+        {
+            myScript.AssignData();
+        }
         if (GUILayout.Button("Create"))
         {
             myScript.Create();
+        }
+        if (GUILayout.Button("Update"))
+        {
+            myScript.UpdateTrajectory();
         }
         if (GUILayout.Button("Clear"))
         {

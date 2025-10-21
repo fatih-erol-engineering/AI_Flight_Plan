@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 4762456286002285265}
   - component: {fileID: 8654042068168216709}
   - component: {fileID: 2055751154702369548}
-  - component: {fileID: 2654637728615648021}
-  - component: {fileID: 2476649527627540839}
+  - component: {fileID: -5034571709002089529}
   m_Layer: 0
-  m_Name: Waypoint
+  m_Name: ControlPointPrefab
   m_TagString: Waypoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,7 +82,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fdaf9bc9d1df28f4d9101ad8302e09d2, type: 2}
+  - {fileID: 2100000, guid: 4a76010ae388867429d8eaee2ef63c92, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,7 +105,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2654637728615648021
+--- !u!114 &-5034571709002089529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,33 +114,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 517102805373364547}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e9e80fbeddb70a4cae974e4ae8b67bc, type: 3}
+  m_Script: {fileID: 11500000, guid: ee9266cf2236fdb49983c106fa49ee4b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Waypoint
-  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
-  <time>k__BackingField:
-    <second>k__BackingField: 0
-  controlPoints: []
-  meshRenderers:
-  - {fileID: 5169179678102574174}
-  - {fileID: 6567050306873335625}
---- !u!114 &2476649527627540839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 517102805373364547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699cc4d2e0486a14ea0a271827697c45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WaypointShow
-  waypoint: {fileID: 2654637728615648021}
-  mainCamera: {fileID: 0}
-  referenceMesh: {fileID: 2174126387821869349}
-  desiredPixelHeight: 48
-  faceCamera: 1
+  m_EditorClassIdentifier: Assembly-CSharp::ControlPoint
+  isSelected: 0
+  pairCP: {fileID: 0}
+  waypoint: {fileID: 0}
 --- !u!1 &2521410053571870100
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +220,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fdaf9bc9d1df28f4d9101ad8302e09d2, type: 2}
+  - {fileID: 2100000, guid: 4a76010ae388867429d8eaee2ef63c92, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -353,7 +331,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: fdaf9bc9d1df28f4d9101ad8302e09d2, type: 2}
+      objectReference: {fileID: 2100000, guid: 4a76010ae388867429d8eaee2ef63c92, type: 2}
     - target: {fileID: 919132149155446097, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
       propertyPath: m_Name
       value: Arrow
@@ -396,10 +374,5 @@ MeshCollider:
 --- !u!4 &5434144533599347750 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
-  m_PrefabInstance: {fileID: 5540356440179114957}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &6567050306873335625 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
   m_PrefabInstance: {fileID: 5540356440179114957}
   m_PrefabAsset: {fileID: 0}

@@ -18,7 +18,7 @@ public class Waypoint : SelectableBehaviour
     }
     void AssignData()
     {
-        time = new TimeGame();        
+        time = new TimeGame(0f);
         baseMaterial = meshRenderers[0].material;
     }
     void CheckAssignment<T>(T obj)

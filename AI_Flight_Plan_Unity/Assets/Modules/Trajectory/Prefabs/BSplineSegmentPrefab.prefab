@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1287273195967994826}
   - component: {fileID: 2320338839356727352}
   m_Layer: 0
-  m_Name: B Spline Segment
+  m_Name: BSplineSegmentPrefab
   m_TagString: TrajectorySegment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

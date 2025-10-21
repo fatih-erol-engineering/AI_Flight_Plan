@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 781948544774136140}
   m_Layer: 0
-  m_Name: WaypointContainer
+  m_Name: ContainerControlPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 7438865554711935436}
   - component: {fileID: 5454687630953241645}
   m_Layer: 0
-  m_Name: B Spline Drawer
+  m_Name: BSplineDrawerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,11 +77,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bede003c36ff2f641a82dc6ee3cad193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  <waypointContainer>k__BackingField: {fileID: 781948544774136140}
+  <controlPointContainer>k__BackingField: {fileID: 781948544774136140}
+  <controlPointPrefab>k__BackingField: {fileID: 517102805373364547, guid: 619f54b1d9dc3ae40b0965f8807610f9, type: 3}
+  <waypointStart>k__BackingField: {fileID: 0}
+  <waypointEnd>k__BackingField: {fileID: 0}
+  startColor: {r: 0, g: 1, b: 0, a: 1}
+  endColor: {r: 1, g: 0, b: 0, a: 1}
+  controlPoints: []
   segmentCount: 100
-  waypointList: []
-  waypointPositionList: []
   lineRenderer: {fileID: 5454687630953241645}
+  points: []
 --- !u!120 &5454687630953241645
 LineRenderer:
   serializedVersion: 2
@@ -108,7 +113,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ca3044f05fa13dd48af6003780d509bb, type: 2}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

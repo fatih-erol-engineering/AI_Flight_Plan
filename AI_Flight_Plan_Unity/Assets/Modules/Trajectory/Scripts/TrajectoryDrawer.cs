@@ -4,12 +4,57 @@ using System.Collections.Generic;
 [ExecuteAlways]
 public class TrajectoryDrawer : MonoBehaviour
 {
-    [SerializeField, HideInInspector] private float segmentLength_m = 10f;
+    [SerializeField] private float segmentLength_m = 10f;
+    [field: SerializeField] public TimeGame startTime { get; private set; }
+    [field: SerializeField] public TimeGame endTime { get; private set; }
+    [SerializeField] private Color startColor = Color.green;
+    [SerializeField] private Color endColor = Color.red;
     [SerializeField] private Transform waypointContainer;
     [SerializeField] private Transform SegmentContainer;
     [SerializeField] private GameObject bSplineDrawerPrefab;
-    [SerializeField] private GameObject waypointPrefab;
+    [SerializeField] private GameObject controlPointPrefab;
+    [SerializeField, HideInInspector] private BSplineDrawer[] bSplineDrawerArray;
+    [SerializeField, HideInInspector] private bool isReadyToUpdate = false;
 
+    public void AssignData()
+    {
+        startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
+        endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;        
+    }
+    void OnEnable()
+    {
+        Create();
+    }
+    void Update()
+    {   if (isReadyToUpdate)
+        {        
+            UpdateTrajectory();
+        }
+    }
+    public void UpdateTrajectory()
+    {
+        foreach (BSplineDrawer bSplineDrawer in bSplineDrawerArray)
+        {
+            bSplineDrawer.UpdateCurve();            
+        }
+        UpdateColor();
+    }
+    public void UpdateColor()
+    {
+        if (bSplineDrawerArray.Length == 0) Debug.LogWarning("No B-Spline drawers available to update color.");
+        foreach (BSplineDrawer bSplineDrawer in bSplineDrawerArray)
+        {
+
+            float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - startTime.second) / (endTime.second - startTime.second));
+            Color _startColor = Color.Lerp(startColor, endColor, startVal);
+
+            float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - startTime.second) / (endTime.second - startTime.second));
+            Color _endColor = Color.Lerp(startColor, endColor, endVal);
+            bSplineDrawer.SetStartColor(_startColor);
+            bSplineDrawer.SetEndColor(_endColor);
+        }
+
+    }
     public void Create()
     {
         if (waypointContainer == null || bSplineDrawerPrefab == null)
@@ -24,40 +69,44 @@ public class TrajectoryDrawer : MonoBehaviour
             Debug.LogError(" At least 2 waypoints are required to create trajectory.");
             return;
         }
-
-        // her waypoint arasını eğer segmentLength_m ten büyükse böl
+        startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
+        endTime = waypointContainer.GetChild(waypointCount - 1).GetComponent<Waypoint>().time;
+        
+        bSplineDrawerArray = new BSplineDrawer[waypointCount - 1];
         for (int i = 0; i < waypointCount - 1; i++)
         {
-            Transform startWaypoint = waypointContainer.GetChild(i);
-            Transform endWaypoint = waypointContainer.GetChild(i + 1);
+            Waypoint startWaypoint = waypointContainer.GetChild(i).GetComponent<Waypoint>();
+            Waypoint endWaypoint = waypointContainer.GetChild(i + 1).GetComponent<Waypoint>();
 
-            float distance = Vector3.Distance(startWaypoint.position, endWaypoint.position);
+            float distance = Vector3.Distance(startWaypoint.transform.position, endWaypoint.transform.position);
             int segmentCount = Mathf.CeilToInt(distance / segmentLength_m);
 
-            List<Waypoint> segmentWaypoints = new List<Waypoint>();
             GameObject segmentObj = Instantiate(bSplineDrawerPrefab, SegmentContainer);
             BSplineDrawer bSplineDrawer = segmentObj.GetComponent<BSplineDrawer>();
-            Waypoint _startWaypoint = Instantiate(startWaypoint.GetComponent<Waypoint>(), startWaypoint.position, startWaypoint.rotation, bSplineDrawer.waypointContainer);
-            segmentWaypoints.Add(_startWaypoint);
-            for (int j = 1; j < segmentCount; j++)
+
+            ControlPoint[] controlPoints = new ControlPoint[segmentCount - 1];
+            for (int j = 0; j < segmentCount - 1; j++)
             {
                 // Set waypoints for the segment
-                float t = (float)j / segmentCount;
-                Vector3 position = Vector3.Lerp(startWaypoint.position, endWaypoint.position, t);
-                Waypoint newWaypoint = Instantiate(waypointPrefab, position, Quaternion.identity, bSplineDrawer.waypointContainer).GetComponent<Waypoint>();
-                segmentWaypoints.Add(newWaypoint);
-                
+                float t = ((float)j + 1f) / segmentCount;
+                Vector3 position = Vector3.Lerp(startWaypoint.transform.position, endWaypoint.transform.position, t);
+                ControlPoint newControlPoint = Instantiate(controlPointPrefab, position, Quaternion.identity).GetComponent<ControlPoint>();
+                controlPoints[j] = newControlPoint;
             }
-            Waypoint _endWaypoint = Instantiate(endWaypoint.GetComponent<Waypoint>(), endWaypoint.position, endWaypoint.rotation, bSplineDrawer.waypointContainer);
-            segmentWaypoints.Add(_endWaypoint);
-            bSplineDrawer.SetWaypoints(segmentWaypoints);
+
+            bSplineDrawer.SetStartWaypoint(startWaypoint);
+            bSplineDrawer.SetEndWaypoint(endWaypoint);
+            bSplineDrawer.SetControlPoints(controlPoints);
             bSplineDrawer.Create();
-        }             
+            bSplineDrawerArray[i] = bSplineDrawer;
+        }
+        isReadyToUpdate = true;
     }
 
     // Update is called once per frame
     public void Clear()
     {
+        bSplineDrawerArray = new BSplineDrawer[0];
         for (int i = SegmentContainer.childCount - 1; i >= 0; i--)
         {
             Transform child = SegmentContainer.GetChild(i);
@@ -70,6 +119,7 @@ public class TrajectoryDrawer : MonoBehaviour
             Destroy(child.gameObject);
 #endif
         }
+        isReadyToUpdate = false;
     }
 
 }

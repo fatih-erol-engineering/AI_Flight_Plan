@@ -1,38 +1,163 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 [ExecuteAlways]
 public class BSplineDrawer : MonoBehaviour
 {
-    [field: SerializeField] public Transform waypointContainer { get; private set; }
-    [SerializeField] private int segmentCount=100;
-    [SerializeField, HideInInspector] private List<Waypoint> waypointList = new List<Waypoint>();
-    [SerializeField, HideInInspector] private Vector3[] waypointPositionList;
+    [field: SerializeField] public Transform controlPointContainer { get; private set; }
+    [field: SerializeField] public GameObject controlPointPrefab { get; private set; }
+    [field: SerializeField] public Waypoint waypointStart { get; private set; }
+    [field: SerializeField] public Waypoint waypointEnd { get; private set; }        
+    [SerializeField] public TimeGame startTime { get => waypointStart.time;}
+    [SerializeField] public TimeGame endTime { get => waypointEnd.time;}
+    [SerializeField] private Color startColor = Color.green;
+    [SerializeField] private Color endColor = Color.red;
+    [SerializeField, HideInInspector] private ControlPoint[] controlPoints;
+    [SerializeField] private int segmentCount = 32;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
-    void OnEnable()
+    [SerializeField, HideInInspector] private Transform[] points;
+    public void AssignData()
     {
         lineRenderer = GetComponent<LineRenderer>();
         if (lineRenderer == null)
             lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = 0;
-    }
-    public void SetWaypoints(List<Waypoint> _waypoints)
-    {
-        waypointList = _waypoints;
-        foreach (Waypoint waypoint in _waypoints)
+
+        lineRenderer.colorGradient = new Gradient();
+
+        int ct = 0;
+        controlPoints = new ControlPoint[controlPointContainer.childCount];
+        if (controlPointContainer != null)
         {
-            waypoint.transform.SetParent(waypointContainer);
+            for (int i = 0; i < controlPointContainer.childCount; i++)
+            {
+                Transform child = controlPointContainer.GetChild(i);
+                var controlPoint = child.GetComponent<ControlPoint>();
+                if (controlPoint != null)
+                {
+                    controlPoints[ct] = controlPoint;
+                    ct++;
+                }
+            }
+        }
+        points = new Transform[controlPoints.Length + 2]; // 2 comes from start and end waypoints
+        points[0] = waypointStart.transform;
+        for (int i = 0; i < controlPoints.Length; i++)
+        {
+            points[i + 1] = controlPoints[i].transform;
+        }
+        points[points.Length - 1] = waypointEnd.transform;
+    }
+    public void UpdateColor()
+    {
+        if (!lineRenderer) return;
+
+        int n = 2;
+        if (n < 2) n = 2;
+
+        var cKeys = new GradientColorKey[n];
+        var aKeys = new GradientAlphaKey[n];
+
+        // HDR yoğunluk: RGB’yi çarpıyoruz, alpha’yı ayrı yönetiyoruz
+        for (int i = 0; i < n; i++)
+        {
+            float t = (n == 1) ? 1f : (float)i / (n - 1);
+            Color c = Color.Lerp(startColor, endColor, t);
+            c = new Color(c.r, c.g, c.b, 1f);
+
+            float a = Mathf.Lerp(startColor.a, endColor.a, t);
+            
+            cKeys[i] = new GradientColorKey(c, t);
+            aKeys[i] = new GradientAlphaKey(a, t);
+        }
+
+        var g = new Gradient { mode = GradientMode.Blend };
+        try
+        {
+            g.SetKeys(cKeys, aKeys);            
+        }
+        catch (System.Exception)
+        {            
+            throw;
+        }
+        lineRenderer.colorGradient = g;
+
+    }
+
+    public void SetStartColor(Color _color)
+    {
+        startColor = _color;
+        UpdateColor();
+    }
+    public void SetEndColor(Color _color)
+    {
+        endColor = _color;
+        UpdateColor();
+    }
+    public void UpdateCurve()
+    {
+        DrawCurve(points, lineRenderer, segmentCount);
+    }
+    public void SetStartWaypoint(Waypoint _waypoint)
+    {
+        waypointStart = _waypoint;
+    }
+    public void SetEndWaypoint(Waypoint _waypoint)
+    {
+        waypointEnd = _waypoint;
+    }
+    public void SetControlPoints(Vector3[] _controlPointPositions)
+    {
+        DeleteControlPoints();
+        controlPoints = new ControlPoint[_controlPointPositions.Length];
+        int ct = 0;
+        foreach (Vector3 _controlPointPosition in _controlPointPositions)
+        {
+            ControlPoint controlPoint = Instantiate(controlPointPrefab, _controlPointPosition, Quaternion.identity, controlPointContainer).GetComponent<ControlPoint>();
+            controlPoints[ct] = controlPoint;
+            ct++;
         }
     }
-    public void SetWaypointContainer(Transform _container)
+    
+     public void SetControlPoints(ControlPoint[] _controlPoints)
     {
-        waypointContainer =_container;
+        DeleteControlPoints();
+        int ct = 0;
+        controlPoints = new ControlPoint[_controlPoints.Length];
+        foreach (ControlPoint _controlPoint in _controlPoints)
+        {            
+            _controlPoint.transform.parent = controlPointContainer;
+            controlPoints[ct] = _controlPoint;
+            ct++;
+        }
     }
+    
+    
+    
+    public void DeleteControlPoints()
+    {
+        foreach (Transform child in controlPointContainer)
+        {
+            var controlPoint = child.GetComponent<ControlPoint>();
+            if (controlPoint != null)
+            {
+#if UNITY_EDITOR
+                UnityEditor.Undo.DestroyObjectImmediate(controlPoint);
+#else
+                Destroy(controlPoint);
+#endif
+            }
+        }
+        controlPoints = new ControlPoint[0];
+    }
+
     public void Create()
     {
-        DrawCurve(waypointPositionList, lineRenderer, segmentCount);
+        AssignData();
+        DrawCurve(points, lineRenderer, segmentCount);
     }
     public void Clear()
     {
@@ -43,44 +168,16 @@ public class BSplineDrawer : MonoBehaviour
     }
 
 
-    public void DrawCurve(Vector3[] points, LineRenderer lineRenderer, int segmentCount)
+    public void DrawCurve(Transform[] _points, LineRenderer lineRenderer, int segmentCount)
     {
-        // rebuild control points from waypointContainer (clear previous list)
-        waypointList.Clear();
-        int ct = 0;
-        var pts = new List<Vector3>();
-        if (waypointContainer != null)
-        {
-            for (int i = 0; i < waypointContainer.childCount; i++)
-            {
-                Transform child = waypointContainer.GetChild(i);
-                var waypoint = child.GetComponent<Waypoint>();
-                if (waypoint != null)
-                {
-                    waypointList.Add(waypoint);
-                    pts.Add(child.position);
-                    ct++;
-                }
-            }
-        }
-
-        if (pts.Count == 0)
-        {
-            lineRenderer.positionCount = 0;
-            waypointPositionList = Array.Empty<Vector3>();
-            return;
-        }
-
-        waypointPositionList = pts.ToArray();
-
         // need at least degree+1 control points for cubic B-spline
-        int degree = 3;
-        if (waypointPositionList.Length <= degree)
+        int degree = 2;
+        if (_points.Length <= degree)
         {
             // fallback: draw straight polyline through control points
-            lineRenderer.positionCount = waypointPositionList.Length;
-            for (int i = 0; i < waypointPositionList.Length; i++)
-                lineRenderer.SetPosition(i, waypointPositionList[i]);
+            lineRenderer.positionCount = _points.Length;
+            for (int i = 0; i < _points.Length; i++)
+                lineRenderer.SetPosition(i, _points[i].transform.position);
             return;
         }
 
@@ -89,7 +186,7 @@ public class BSplineDrawer : MonoBehaviour
         for (int i = 0; i <= segmentCount; i++)
         {
             float t = (float)i / segmentCount;
-            Vector3 position = DeBoorCox(waypointPositionList, t, degree);
+            Vector3 position = DeBoorCox(_points, t, degree);
             lineRenderer.SetPosition(i, position);
         }
     }
@@ -100,9 +197,9 @@ public class BSplineDrawer : MonoBehaviour
     /// t in [0,1]
     /// degree = spline degree (e.g. 3 for cubic)
     /// </summary>
-    private Vector3 DeBoorCox(Vector3[] points, float t, int degree)
+    private Vector3 DeBoorCox(Transform[] _points, float t, int degree)
     {
-        int n = points.Length - 1;
+        int n = _points.Length - 1;
         int p = degree;
         int m = n + p + 1; // highest knot index
         // build clamped uniform knot vector in [0,1]
@@ -141,7 +238,7 @@ public class BSplineDrawer : MonoBehaviour
         {
             int idx = k - p + j;
             idx = Mathf.Clamp(idx, 0, n);
-            d[j] = points[idx];
+            d[j] = _points[idx].transform.position;
         }
 
         // de Boor recursion

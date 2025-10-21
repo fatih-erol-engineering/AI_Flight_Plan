@@ -284,8 +284,7 @@ public class WaypointClickSpawnerUIToolkit : MonoBehaviour
         Vector3 spawnPos = new Vector3(lon, alt, lat);
         // preview'i yok et ve gerçek waypoint oluştur
         DestroyPreview();
-        TimeGame _time = new TimeGame();
-        _time.SetTime(t);
+        TimeGame _time = new TimeGame(t);
         waypointFactory.Spawn(spawnPos, Quaternion.identity, _time);
 
         ClosePopup();
