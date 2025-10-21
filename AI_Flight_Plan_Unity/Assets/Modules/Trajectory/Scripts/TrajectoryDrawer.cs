@@ -16,6 +16,8 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField, HideInInspector] private BSplineDrawer[] bSplineDrawerArray;
     [SerializeField, HideInInspector] private bool isReadyToUpdate = false;
 
+    [SerializeField] private Vector3[] waypointPositions_AfterCreation;    
+
     public void AssignData()
     {
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
@@ -26,10 +28,29 @@ public class TrajectoryDrawer : MonoBehaviour
         Create();
     }
     void Update()
-    {   if (isReadyToUpdate)
-        {        
+    {        
+        if ( CheckForRecreationNeed())
+        {
+            Clear();
+            Create();
+        }
+        if (isReadyToUpdate)
+        {
             UpdateTrajectory();
         }
+    }
+    public bool CheckForRecreationNeed()
+    {
+        int waypointCount = waypointContainer.childCount;        
+        for (int i = 0; i < waypointCount; i++)
+        {
+            float dist = Vector3.Distance(waypointPositions_AfterCreation[i], waypointContainer.GetChild(i).position);
+            if (dist > segmentLength_m)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     public void UpdateTrajectory()
     {
@@ -100,6 +121,13 @@ public class TrajectoryDrawer : MonoBehaviour
             bSplineDrawer.Create();
             bSplineDrawerArray[i] = bSplineDrawer;
         }
+
+        waypointPositions_AfterCreation = new Vector3[waypointCount];
+        for (int i = 0; i < waypointCount; i++)
+        {
+            waypointPositions_AfterCreation[i] = waypointContainer.GetChild(i).position;
+        }
+
         isReadyToUpdate = true;
     }
 
