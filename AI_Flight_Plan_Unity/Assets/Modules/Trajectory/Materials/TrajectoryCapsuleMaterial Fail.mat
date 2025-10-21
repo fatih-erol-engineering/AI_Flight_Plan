@@ -56,7 +56,7 @@ Material:
     - _asdasd: 0
     - _edgeIntensity: 58.6
     - _edgePower: 9.4
-    - _edgeThreshold: 0.01
+    - _edgeThreshold: 0.02
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _baseColor: {r: 1, g: 0.1464625, b: 0, a: 0.05882353}
