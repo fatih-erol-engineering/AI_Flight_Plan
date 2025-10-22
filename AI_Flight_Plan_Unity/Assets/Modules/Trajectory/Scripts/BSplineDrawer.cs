@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -19,7 +16,23 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField] private int segmentCount = 32;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
     [SerializeField, HideInInspector] private Transform[] points;
-    [SerializeField] private Transform tube;
+
+
+    [Header("Tube")]
+    [SerializeField] private bool showTube = true;
+    [SerializeField] private GameObject tubePrefab;
+    [SerializeField] private float tubeRadius = 5f;
+    [SerializeField, ColorUsage(true, true)] public Color tubeEdgeColor = Color.white;
+    [SerializeField, ColorUsage(true, true)] public Color tubeSurfaceColor = Color.blue;
+
+    [SerializeField, HideInInspector] private Transform tube;
+    [SerializeField, HideInInspector] private TubeManager tubeManager;
+    [SerializeField, HideInInspector] private Vector3 tubeStartPosition;
+    [SerializeField, HideInInspector] private Vector3 tubeEndPosition;
+    [SerializeField, HideInInspector] private Vector3 prev_tubeStartPosition;
+    [SerializeField, HideInInspector] private Vector3 prev_tubeEndPosition;
+    
+
     public void AssignData()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -51,6 +64,21 @@ public class BSplineDrawer : MonoBehaviour
             points[i + 1] = controlPoints[i].transform;
         }
         points[points.Length - 1] = waypointEnd.transform;
+
+
+        DrawCurve(points, lineRenderer, segmentCount);
+        if (showTube)
+        {
+            tubeManager = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponent<TubeManager>();
+            
+
+            Vector3 start = lineRenderer.GetPosition(0);
+            Vector3 end = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+
+            tubeManager.start = start;
+            tubeManager.end = end;
+            tubeManager.Create();
+        }
     }
     public void UpdateColor()
     {
@@ -101,6 +129,28 @@ public class BSplineDrawer : MonoBehaviour
     public void UpdateCurve()
     {
         DrawCurve(points, lineRenderer, segmentCount);
+
+            
+        tubeStartPosition = lineRenderer.GetPosition(0);
+        tubeEndPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+        if (showTube)
+        {
+            if (prev_tubeEndPosition != tubeEndPosition || prev_tubeStartPosition != tubeStartPosition)
+            {
+                tubeManager.start = tubeStartPosition;
+                tubeManager.end = tubeEndPosition;  
+                tubeManager.UpdateTube();
+            }
+            tubeManager.SetRadius(tubeRadius);
+            tubeManager.SetEdgeColor(tubeEdgeColor);
+            tubeManager.SetSurfaceColor(tubeSurfaceColor);
+            
+        }
+        
+        
+
+        prev_tubeStartPosition = lineRenderer.GetPosition(0);
+        prev_tubeEndPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
     }
     public void SetStartWaypoint(Waypoint _waypoint)
     {

@@ -2,40 +2,40 @@ using UnityEngine;
 
 public class TubeManager : MonoBehaviour
 {
-    [SerializeField] public Transform start;
-    [SerializeField] public Transform end;
-    [SerializeField] public float radius = 5f;
+    [SerializeField] public Vector3 start;
+    [SerializeField] public Vector3 end;
+    [SerializeField] private float radius = 5f;
 
     [Header("Appearance")]
-    [SerializeField] public Color edgeColor = Color.white;
-    [SerializeField] public Color surfaceColor = Color.blue;
+
+    [SerializeField, ColorUsage(true, true)] public Color edgeColor = Color.white;
+    [SerializeField, ColorUsage(true, true)] public Color surfaceColor = Color.blue;
     [SerializeField] public float edgeSize = 0.1f;
 
 
-    [SerializeField] private Color prev_edgeColor = Color.white;
-    [SerializeField] private Color prev_surfaceColor = Color.blue;
-    [SerializeField] private float prev_edgeSize = 0.1f;
+    [SerializeField, HideInInspector, ColorUsage(true, true)] private Color prev_edgeColor = Color.white;
+    [SerializeField, HideInInspector, ColorUsage(true, true)] private Color prev_surfaceColor = Color.blue;
+    [SerializeField, HideInInspector] private float prev_edgeSize = 0.1f;
 
     [SerializeField, HideInInspector] private float length = 10f;
     [SerializeField, HideInInspector] private float prev_radius = 5f;    
     [SerializeField, HideInInspector] private float prev_length = 10f;
     [SerializeField, HideInInspector] private Material material;
-    void Start()
+    public void Create()
     {
-        material = transform.GetComponent<Renderer>().material;
-        Debug.Log("Material assigned: " + material.name);
+        material = transform.GetComponent<Renderer>().sharedMaterial;        
 
-        if (start == null || end == null)
-        {
-            start = new GameObject("Start").transform;
-            end = new GameObject("End").transform;
+        // if (start == null || end == null)
+        // {
+        //     start = new GameObject("Start").transform;
+        //     end = new GameObject("End").transform;
 
-            start.SetParent(transform);
-            end.SetParent(transform);
-        };
+        //     start.SetParent(transform);
+        //     end.SetParent(transform);
+        // };
         prev_radius = radius;
 
-        length = Vector3.Distance(start.position, end.position);
+        length = Vector3.Distance(start, end);
         prev_length = length;
         UpdateTube();
     }
@@ -47,8 +47,8 @@ public class TubeManager : MonoBehaviour
     // Update is called once per frame
     public void UpdateTube()
     {
-        Vector3 a = start.position;
-        Vector3 b = end.position;
+        Vector3 a = start;
+        Vector3 b = end;
         Vector3 dir = b - a;
         float newLength = dir.magnitude;
         if (newLength <= Mathf.Epsilon) return;
@@ -99,4 +99,30 @@ public class TubeManager : MonoBehaviour
         material.SetFloat("edgeSize", edgeSize);
         material.SetFloat("_edgeSize", edgeSize);
     }
+
+    public void SetRadius(float _radius)
+    {
+        if (radius != _radius)
+        {
+            radius = _radius;
+            UpdateRadius();
+        }
+    }
+    public void SetEdgeColor(Color _color)
+    {
+        if (edgeColor != _color)
+        {
+            edgeColor = _color;
+            UpdateAppearance();
+        }
+    }
+    public void SetSurfaceColor(Color _color)
+    {
+        if (surfaceColor != _color)
+        {
+            surfaceColor = _color;
+            UpdateAppearance();
+        }
+    }
+
 }

@@ -41,12 +41,12 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _edgeSize: 0.1
-    - _length: 14.558405
+    - _length: 30.80146
     - _radious: 1
-    - _radius: 1
+    - _radius: 5
     m_Colors:
-    - _edgeColor: {r: 0, g: 2.0804434, b: 2.9960787, a: 1}
-    - _surfaceColor: {r: 0, g: 0.38850415, b: 1, a: 0.101960786}
+    - _edgeColor: {r: 0, g: 1.2568283, b: 16, a: 1}
+    - _surfaceColor: {r: 0, g: 0, b: 1, a: 0.101960786}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7367499006488847702
