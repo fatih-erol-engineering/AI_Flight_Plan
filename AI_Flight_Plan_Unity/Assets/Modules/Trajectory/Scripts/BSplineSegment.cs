@@ -6,7 +6,7 @@ using System.Collections.Generic;
 // [ExecuteAlways]
 [RequireComponent(typeof(LineRenderer))]
 public class BSplineSegment
-    : SelectableMonoBehaviour
+    : MonoBehaviour
 {
     [Header("4 Control Points (Transforms)")]
     public Waypoint startPoint { get; private set; }

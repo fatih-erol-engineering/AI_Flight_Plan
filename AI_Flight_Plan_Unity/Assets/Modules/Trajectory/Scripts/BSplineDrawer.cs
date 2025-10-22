@@ -19,6 +19,7 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField] private int segmentCount = 32;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
     [SerializeField, HideInInspector] private Transform[] points;
+    [SerializeField] private Transform tube;
     public void AssignData()
     {
         lineRenderer = GetComponent<LineRenderer>();

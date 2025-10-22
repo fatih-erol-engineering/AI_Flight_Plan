@@ -1,37 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &841038989457606762
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6104482400612339655}
-  m_Layer: 0
-  m_Name: RefTube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6104482400612339655
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 841038989457606762}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1064361324261268265}
-  m_Father: {fileID: 215093482184042786}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &960242843588808632
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +63,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 781948544774136140}
-  - {fileID: 6104482400612339655}
+  - {fileID: 7125569807210946121}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7438865554711935436
@@ -228,13 +196,13 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1001 &671009412013145282
+--- !u!1001 &7307550549140044194
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6104482400612339655}
+    m_TransformParent: {fileID: 215093482184042786}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -246,19 +214,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071067
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.z
@@ -279,7 +247,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 2017b119900c7854cb98948a63eeab4e, type: 2}
+      objectReference: {fileID: 2100000, guid: eba4de160e7d0c544920b650d163b105, type: 2}
     - target: {fileID: 919132149155446097, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_Name
       value: Tube
@@ -289,8 +257,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
---- !u!4 &1064361324261268265 stripped
+--- !u!4 &7125569807210946121 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
-  m_PrefabInstance: {fileID: 671009412013145282}
+  m_PrefabInstance: {fileID: 7307550549140044194}
   m_PrefabAsset: {fileID: 0}

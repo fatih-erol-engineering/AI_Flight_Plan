@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // [ExecuteAlways]
-public class ControlPoint : SelectableMonoBehaviour
+public class ControlPoint : MonoBehaviour
 {
     public ControlPoint pairCP;
     public Waypoint waypoint;
