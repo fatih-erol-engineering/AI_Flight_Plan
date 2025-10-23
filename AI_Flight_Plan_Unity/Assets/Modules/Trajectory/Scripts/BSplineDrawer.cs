@@ -77,7 +77,7 @@ public class BSplineDrawer : MonoBehaviour
             tubeManagers[0] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();            
             
             Vector3 start = waypointStart.transform.position;
-            Vector3 end = controlPoints[0].transform.position;
+            Vector3 end = controlPoints[0].GetClosestPointToSpline();
 
             tubeManagers[0].SetStartAndEndPositions(start, end);
 
@@ -87,15 +87,15 @@ public class BSplineDrawer : MonoBehaviour
                 {
                     tubeManagers[i+1] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();
 
-                    start = controlPoints[i].transform.position;
-                    end = controlPoints[i + 1].transform.position;
+                    start = controlPoints[i].GetClosestPointToSpline();
+                    end = controlPoints[i + 1].GetClosestPointToSpline();
 
                     tubeManagers[i+1].SetStartAndEndPositions(start, end);
                 }
             }
             tubeManagers[tubeManagers.Length - 1] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();                        
 
-            start = controlPoints[controlPoints.Length - 1].transform.position;
+            start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
             end = waypointEnd.transform.position;
 
             tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
@@ -159,7 +159,7 @@ public class BSplineDrawer : MonoBehaviour
             if (controlPoints != null)
             {                        
                 Vector3 start = waypointStart.transform.position;
-                Vector3 end = controlPoints[0].transform.position;
+                Vector3 end = controlPoints[0].GetClosestPointToSpline();
 
                 tubeManagers[0].SetStartAndEndPositions(start, end);
 
@@ -167,15 +167,15 @@ public class BSplineDrawer : MonoBehaviour
                 {
                     if (showTube)
                     {
-                        start = controlPoints[i].transform.position;
-                        end = controlPoints[i + 1].transform.position;
+                        start = controlPoints[i].GetClosestPointToSpline();
+                        end = controlPoints[i + 1].GetClosestPointToSpline();
 
 
                         tubeManagers[i+1].SetStartAndEndPositions(start, end);
                         tubeManagers[i+1].UpdateTube();
                     }
                 }
-                start = controlPoints[controlPoints.Length - 1].transform.position;
+                start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
                 end = waypointEnd.transform.position;
 
                 tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
@@ -266,11 +266,30 @@ public class BSplineDrawer : MonoBehaviour
 
         segmentCount = Mathf.Max(1, segmentCount);
         lineRenderer.positionCount = segmentCount + 1;
+        int cpCt = 0;
+        bool changeCpFlag = false;
         for (int i = 0; i <= segmentCount; i++)
         {
             float t = (float)i / segmentCount;
             Vector3 position = DeBoorCox(_points, t, degree);
             lineRenderer.SetPosition(i, position);
+
+            // Set closest points to spline for control points
+            if (i>0)
+            {                
+                if (cpCt<=controlPoints.Length-1)
+                {                    
+                    float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, lineRenderer.GetPosition(i-1));
+                    float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, position);
+                    
+                    changeCpFlag = dist2 > dist1;
+                    if (changeCpFlag)
+                    {
+                        controlPoints[cpCt].SetClosestPointToSpline(position);
+                        cpCt++;
+                    }   
+                }
+            }
         }
     }
 
@@ -322,6 +341,10 @@ public class BSplineDrawer : MonoBehaviour
             int idx = k - p + j;
             idx = Mathf.Clamp(idx, 0, n);
             d[j] = _points[idx].transform.position;
+            // // // // // if (idx != 0 || idx == _points.Length - 1) // start end and points are waypoints, so only control points are set
+            // // // // // {
+            // // // // //     controlPoints[idx - 1].SetClosestPointToSpline(d[j]); 
+            // // // // // }
         }
 
         // de Boor recursion
@@ -339,5 +362,5 @@ public class BSplineDrawer : MonoBehaviour
 
         return d[p];
     }
-
+   
 }
