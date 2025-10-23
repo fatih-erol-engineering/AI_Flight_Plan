@@ -7,7 +7,7 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField] private float segmentLength_m = 10f;
     [field: SerializeField] public TimeGame startTime { get; private set; }
     [field: SerializeField] public TimeGame endTime { get; private set; }
-    [SerializeField] private Color startColor = Color.green;
+    [SerializeField] private Color startColor = Color.green;    
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private Transform waypointContainer;
     [SerializeField] private Transform SegmentContainer;
@@ -16,7 +16,14 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField, HideInInspector] private BSplineDrawer[] bSplineDrawerArray;
     [SerializeField, HideInInspector] private bool isReadyToUpdate = false;
 
-    [SerializeField] private Vector3[] waypointPositions_AfterCreation;    
+    [SerializeField] private Vector3[] waypointPositions_AfterCreation;
+
+    [Header("Trajectory Tube Settings")]
+    [SerializeField] private bool showTube = true;
+    [SerializeField] private float tubeRadius = 5f;
+    [SerializeField] private float tubeEdgeSize = 0.1f;
+    [SerializeField, ColorUsage(true, true)] public Color tubeEdgeColor = Color.white;
+    [SerializeField, ColorUsage(true, true)] public Color tubeSurfaceColor = Color.blue;
 
     public void AssignData()
     {
@@ -25,24 +32,25 @@ public class TrajectoryDrawer : MonoBehaviour
     }
     void Awake()
     {
+        Clear();
         AssignData();
         Create();
     }
     void Update()
     {        
-        if ( CheckForRecreationNeed())
+        if (CheckForRecreationNeed())
         {
             Clear();
             Create();
         }
         if (isReadyToUpdate)
         {
-            UpdateTrajectory();
+            UpdateImmediately();
         }
     }
     public bool CheckForRecreationNeed()
     {
-        int waypointCount = waypointContainer.childCount;        
+        int waypointCount = waypointContainer.childCount;
         for (int i = 0; i < waypointCount; i++)
         {
             float dist = Vector3.Distance(waypointPositions_AfterCreation[i], waypointContainer.GetChild(i).position);
@@ -53,11 +61,15 @@ public class TrajectoryDrawer : MonoBehaviour
         }
         return false;
     }
-    public void UpdateTrajectory()
+    public void UpdateImmediately()
     {
         foreach (BSplineDrawer bSplineDrawer in bSplineDrawerArray)
         {
-            bSplineDrawer.UpdateCurve();            
+            bSplineDrawer.Tick();
+            bSplineDrawer.SetTubeEdgeColor(tubeEdgeColor);
+            bSplineDrawer.SetTubeSurfaceColor(tubeSurfaceColor);
+            bSplineDrawer.SetTubeRadius(tubeRadius);
+            bSplineDrawer.SetTubeEdgeSize(tubeEdgeSize);
         }
         UpdateColor();
     }
@@ -131,6 +143,60 @@ public class TrajectoryDrawer : MonoBehaviour
 
         isReadyToUpdate = true;
     }
+
+
+
+
+
+
+
+
+    public void SetTubeRadius(float _radius)
+    {
+        if (tubeRadius != _radius)
+        {
+            tubeRadius = _radius;
+            foreach(BSplineDrawer bSplineDrawer in bSplineDrawerArray)
+            {
+                bSplineDrawer.SetTubeRadius(_radius);
+            }
+        }
+    }
+    public void SetEdgeColor(Color _color)
+    {
+        if (tubeEdgeColor != _color)
+        {
+            tubeEdgeColor = _color;
+            foreach(BSplineDrawer bSplineDrawer in bSplineDrawerArray)
+            {
+                bSplineDrawer.SetTubeEdgeColor(_color);
+            }
+        }
+    }
+    public void SetSurfaceColor(Color _color)
+    {
+        if (tubeSurfaceColor != _color)
+        {
+            tubeSurfaceColor = _color;
+            foreach(BSplineDrawer bSplineDrawer in bSplineDrawerArray)
+            {
+                bSplineDrawer.SetTubeSurfaceColor(_color);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Update is called once per frame
     public void Clear()

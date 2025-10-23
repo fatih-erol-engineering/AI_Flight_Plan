@@ -17,7 +17,7 @@ public class TubeManagerEditorUI : Editor
         }
         if (GUILayout.Button("Update"))
         {
-            myScript.UpdateTubeForce();
+            myScript.UpdateTubeImmidiately();
         }
         if (GUILayout.Button("Clear"))
         {

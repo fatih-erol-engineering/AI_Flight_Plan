@@ -40,12 +40,12 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _edgeSize: 0.1
-    - _length: 20
+    - _edgeSize: 0.5
+    - _length: 10.09
     - _radious: 1
-    - _radius: 5
+    - _radius: 10.19
     m_Colors:
-    - _edgeColor: {r: 0, g: 1.2568283, b: 16, a: 1}
+    - _edgeColor: {r: 0, g: 1.0945477, b: 5.9921565, a: 1}
     - _surfaceColor: {r: 0, g: 0, b: 1, a: 0.101960786}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -21,7 +21,7 @@ public class TrajectoryDrawerEditorUI : Editor
         }
         if (GUILayout.Button("Update"))
         {
-            myScript.UpdateTrajectory();
+            myScript.UpdateImmediately();
         }
         if (GUILayout.Button("Clear"))
         {

@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -5,32 +7,34 @@ using UnityEngine;
 public class BSplineDrawer : MonoBehaviour
 {
     [field: SerializeField] public Transform controlPointContainer { get; private set; }
+    [field: SerializeField] public Transform tubeContainer { get; private set; }
     [field: SerializeField] public GameObject controlPointPrefab { get; private set; }
     [field: SerializeField] public Waypoint waypointStart { get; private set; }
     [field: SerializeField] public Waypoint waypointEnd { get; private set; }        
     [SerializeField] public TimeGame startTime { get => waypointStart.time;}
-    [SerializeField] public TimeGame endTime { get => waypointEnd.time;}
+    [SerializeField] public TimeGame endTime { get => waypointEnd.time; }
+    [SerializeField,HideInInspector] private TimeGame prev_startTime;
+    [SerializeField,HideInInspector] private TimeGame prev_endTime;
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
     [SerializeField, HideInInspector] private ControlPoint[] controlPoints;
     [SerializeField] private int segmentCount = 32;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
     [SerializeField, HideInInspector] private Transform[] points;
+    [SerializeField, HideInInspector] private Vector3[] prev_pointPositions;
 
 
     [Header("Tube")]
     [SerializeField] private bool showTube = true;
     [SerializeField] private GameObject tubePrefab;
     [SerializeField] private float tubeRadius = 5f;
-    [SerializeField, ColorUsage(true, true)] public Color tubeEdgeColor = Color.white;
-    [SerializeField, ColorUsage(true, true)] public Color tubeSurfaceColor = Color.blue;
+    [SerializeField] private float tubeEdgeSize = 0.1f;
+    [SerializeField, ColorUsage(true, true)] private Color tubeEdgeColor = Color.white;
+    [SerializeField] private Color tubeSurfaceColor = Color.blue;
 
     [SerializeField, HideInInspector] private Transform tube;
     [SerializeField, HideInInspector] private TubeManager[] tubeManagers;
-    [SerializeField, HideInInspector] private Vector3 tubeStartPosition;
-    [SerializeField, HideInInspector] private Vector3 tubeEndPosition;
-    [SerializeField, HideInInspector] private Vector3 prev_tubeStartPosition;
-    [SerializeField, HideInInspector] private Vector3 prev_tubeEndPosition;
+
     
 
     public void AssignData()
@@ -74,33 +78,126 @@ public class BSplineDrawer : MonoBehaviour
         tubeManagers = new TubeManager[controlPoints.Length + 1];
         if (controlPoints != null)
         {
-            tubeManagers[0] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();            
+            GameObject go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
+            go.transform.SetParent(tubeContainer,true);
+            tubeManagers[0] = go.GetComponentInChildren<TubeManager>();
             
             Vector3 start = waypointStart.transform.position;
             Vector3 end = controlPoints[0].GetClosestPointToSpline();
 
             tubeManagers[0].SetStartAndEndPositions(start, end);
 
-            for (int i = 0; i < controlPoints.Length-1; i++)
+            for (int i = 0; i < controlPoints.Length - 1; i++)
             {
                 if (showTube)
                 {
-                    tubeManagers[i+1] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();
+                    go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
+                    go.transform.SetParent(tubeContainer, true);
+                    tubeManagers[i + 1] = go.GetComponentInChildren<TubeManager>();
 
                     start = controlPoints[i].GetClosestPointToSpline();
                     end = controlPoints[i + 1].GetClosestPointToSpline();
 
-                    tubeManagers[i+1].SetStartAndEndPositions(start, end);
+                    tubeManagers[i + 1].SetStartAndEndPositions(start, end);
                 }
             }
-            tubeManagers[tubeManagers.Length - 1] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();                        
+            go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
+            go.transform.SetParent(tubeContainer, true);
+            tubeManagers[tubeManagers.Length - 1] = go.GetComponentInChildren<TubeManager>();            
 
             start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
             end = waypointEnd.transform.position;
 
             tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
+
+
+
+            prev_pointPositions = new Vector3[points.Length];
+            for (int i = 0; i < points.Length; i++)
+            {
+                prev_pointPositions[i] = points[i].position;
+            }
         }
     }
+    public void Tick()
+    {
+        UpdateWithPerformance();          
+    }
+
+    public void UpdateWithPerformance()
+    {
+        bool updateCondition = false;
+
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            updateCondition |= prev_pointPositions[i] != points[i].position;
+            prev_pointPositions[i] = points[i].position;
+        }
+
+        if (!updateCondition)
+        {
+            updateCondition |= (prev_startTime.second != startTime.second) || (prev_endTime.second != endTime.second);
+            prev_startTime = startTime;
+            prev_endTime = endTime;
+        }
+        
+        if (updateCondition)
+        {
+            UpdateImmediately();
+        }
+
+    }
+
+
+
+    public void UpdateImmediately()
+    {
+        DrawCurve(points, lineRenderer, segmentCount);
+        
+        if (showTube)
+        {
+            if (controlPoints != null)
+            {
+                Vector3 start = waypointStart.transform.position;
+                Vector3 end = controlPoints[0].GetClosestPointToSpline();
+
+                tubeManagers[0].SetStartAndEndPositions(start, end);
+
+                for (int i = 0; i < controlPoints.Length - 1; i++)
+                {
+                    if (showTube)
+                    {
+                        start = controlPoints[i].GetClosestPointToSpline();
+                        end = controlPoints[i + 1].GetClosestPointToSpline();
+
+
+                        tubeManagers[i + 1].SetStartAndEndPositions(start, end);
+                        tubeManagers[i + 1].Tick();
+                    }
+                }
+                start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
+                end = waypointEnd.transform.position;
+
+                tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
+                tubeManagers[tubeManagers.Length - 1].Tick();
+            }
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void UpdateColor()
     {
         if (!lineRenderer) return;
@@ -119,7 +216,7 @@ public class BSplineDrawer : MonoBehaviour
             c = new Color(c.r, c.g, c.b, 1f);
 
             float a = Mathf.Lerp(startColor.a, endColor.a, t);
-            
+
             cKeys[i] = new GradientColorKey(c, t);
             aKeys[i] = new GradientAlphaKey(a, t);
         }
@@ -127,10 +224,10 @@ public class BSplineDrawer : MonoBehaviour
         var g = new Gradient { mode = GradientMode.Blend };
         try
         {
-            g.SetKeys(cKeys, aKeys);            
+            g.SetKeys(cKeys, aKeys);
         }
         catch (System.Exception)
-        {            
+        {
             throw;
         }
         lineRenderer.colorGradient = g;
@@ -146,43 +243,6 @@ public class BSplineDrawer : MonoBehaviour
     {
         endColor = _color;
         UpdateColor();
-    }
-    public void UpdateCurve()
-    {
-        DrawCurve(points, lineRenderer, segmentCount);
-
-            
-        tubeStartPosition = lineRenderer.GetPosition(0);
-        tubeEndPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
-        if (showTube)
-        {
-            if (controlPoints != null)
-            {                        
-                Vector3 start = waypointStart.transform.position;
-                Vector3 end = controlPoints[0].GetClosestPointToSpline();
-
-                tubeManagers[0].SetStartAndEndPositions(start, end);
-
-                for (int i = 0; i < controlPoints.Length-1; i++)
-                {
-                    if (showTube)
-                    {
-                        start = controlPoints[i].GetClosestPointToSpline();
-                        end = controlPoints[i + 1].GetClosestPointToSpline();
-
-
-                        tubeManagers[i+1].SetStartAndEndPositions(start, end);
-                        tubeManagers[i+1].UpdateTube();
-                    }
-                }
-                start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
-                end = waypointEnd.transform.position;
-
-                tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
-                tubeManagers[tubeManagers.Length - 1].UpdateTube();
-            }            
-        
-        }                
     }
     public void SetStartWaypoint(Waypoint _waypoint)
     {
@@ -248,7 +308,57 @@ public class BSplineDrawer : MonoBehaviour
         {
             lineRenderer.positionCount = 0;
         }
+        
     }
+
+
+
+    public void SetTubeRadius(float _radius)
+    {
+        if (tubeRadius != _radius)
+        {
+            tubeRadius = _radius;
+            foreach (TubeManager tubeManager in tubeManagers)
+                tubeManager.SetRadius(_radius);            
+        }
+    }
+    public void SetTubeEdgeColor(Color _color)
+    {
+        if (tubeEdgeColor != _color)
+        {
+            tubeEdgeColor = _color;
+            foreach (TubeManager tubeManager in tubeManagers)
+                tubeManager.SetEdgeColor(_color);
+        }
+    }
+        public void SetTubeEdgeSize(float _size)
+    {
+        if (tubeEdgeSize != _size)
+        {
+            tubeEdgeSize = _size;
+            foreach (TubeManager tubeManager in tubeManagers)
+                tubeManager.SetEdgeSize(_size);
+        }        
+    }
+    public void SetTubeSurfaceColor(Color _color)
+    {
+        if (tubeSurfaceColor != _color)
+        {
+            tubeSurfaceColor = _color;
+            foreach (TubeManager tubeManager in tubeManagers)
+                tubeManager.SetSurfaceColor(_color);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     public void DrawCurve(Transform[] _points, LineRenderer lineRenderer, int segmentCount)
@@ -275,19 +385,19 @@ public class BSplineDrawer : MonoBehaviour
             lineRenderer.SetPosition(i, position);
 
             // Set closest points to spline for control points
-            if (i>0)
-            {                
-                if (cpCt<=controlPoints.Length-1)
-                {                    
-                    float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, lineRenderer.GetPosition(i-1));
+            if (i > 0)
+            {
+                if (cpCt <= controlPoints.Length - 1)
+                {
+                    float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, lineRenderer.GetPosition(i - 1));
                     float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, position);
-                    
+
                     changeCpFlag = dist2 > dist1;
                     if (changeCpFlag)
                     {
                         controlPoints[cpCt].SetClosestPointToSpline(position);
                         cpCt++;
-                    }   
+                    }
                 }
             }
         }

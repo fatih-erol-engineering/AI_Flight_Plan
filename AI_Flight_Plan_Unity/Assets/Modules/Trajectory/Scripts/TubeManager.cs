@@ -10,12 +10,12 @@ public class TubeManager : MonoBehaviour
     [Header("Appearance")]
 
     [SerializeField, ColorUsage(true, true)] public Color edgeColor = Color.white;
-    [SerializeField, ColorUsage(true, true)] public Color surfaceColor = Color.blue;
+    [SerializeField] public Color surfaceColor = Color.blue;
     [SerializeField] public float edgeSize = 0.1f;
 
 
     [SerializeField, HideInInspector, ColorUsage(true, true)] private Color prev_edgeColor = Color.white;
-    [SerializeField, HideInInspector, ColorUsage(true, true)] private Color prev_surfaceColor = Color.blue;
+    [SerializeField, HideInInspector] private Color prev_surfaceColor = Color.blue;
     [SerializeField, HideInInspector] private float prev_edgeSize = 0.1f;
 
     [SerializeField, HideInInspector] private float length = 10f;
@@ -57,7 +57,7 @@ public class TubeManager : MonoBehaviour
     // }
 
     // Update is called once per frame
-    public void UpdateTubeForce()
+    public void UpdateTubeImmidiately()
     {
         Vector3 a = start.position;
         Vector3 b = end.position;
@@ -80,7 +80,7 @@ public class TubeManager : MonoBehaviour
         prev_radius = radius;
         prev_length = length;
     }
-    public void UpdateTube()
+    public void Tick()
     {
         Vector3 a = start.position;
         Vector3 b = end.position;
@@ -132,6 +132,7 @@ public class TubeManager : MonoBehaviour
         rend.GetPropertyBlock(mpb);
         mpb.SetColor(EdgeColorID, edgeColor);
         mpb.SetColor(BaseColorID, surfaceColor);
+        mpb.SetFloat(EdgeSizeID, edgeSize);
         rend.SetPropertyBlock(mpb);
     }
 
@@ -159,12 +160,19 @@ public class TubeManager : MonoBehaviour
             UpdateAppearance();
         }
     }
-
+    public void SetEdgeSize(float _size)
+    {
+        if (edgeSize != _size)
+        {
+            edgeSize = _size;
+            UpdateAppearance();
+        }
+    }
     public void SetStartAndEndPositions(Vector3 startPos, Vector3 endPos)
     {
         start.position = startPos;
         end.position = endPos;
-        UpdateTube();
+        Tick();
     }
 
 }

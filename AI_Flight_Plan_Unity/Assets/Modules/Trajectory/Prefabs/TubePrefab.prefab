@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1608574790270603372}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -23.3, y: 0, z: -1.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -106,7 +106,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5
+      value: -6.6499996
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -114,15 +114,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.64
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.027160024
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.y
@@ -130,7 +130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.7071068
+      value: -0.706585
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6738e3c67d3fd0547b4c545861e96ef7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -179,16 +179,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TubeManager
   start: {fileID: 4773991811754634666}
   end: {fileID: 2130896048154354871}
-  radius: 5
-  edgeColor: {r: 0, g: 3.90192, b: 21.361254, a: 1}
-  surfaceColor: {r: 0, g: 0.09169197, b: 1, a: 0.039215688}
-  edgeSize: 0.1
-  prev_edgeColor: {r: 0, g: 3.90192, b: 21.361254, a: 1}
-  prev_surfaceColor: {r: 0, g: 0.09169197, b: 1, a: 0.039215688}
-  prev_edgeSize: 0.1
-  length: 10
-  prev_radius: 5
-  prev_length: 10
+  radius: 10
+  edgeColor: {r: 0, g: 1.0290256, b: 2.9960785, a: 1}
+  surfaceColor: {r: 0, g: 0.09169197, b: 1, a: 0.14901961}
+  edgeSize: 0.5
+  prev_edgeColor: {r: 0, g: 0.2572564, b: 0.7490196, a: 1}
+  prev_surfaceColor: {r: 0, g: 0.09169197, b: 1, a: 0.14901961}
+  prev_edgeSize: 0.5
+  length: 33.324593
+  prev_radius: 10
+  prev_length: 33.324593
   material: {fileID: 0}
   rend: {fileID: 8851598860779615589}
 --- !u!4 &7682048705575947786 stripped
