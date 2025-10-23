@@ -6,7 +6,7 @@ public class CreateModeTrajectoryManager : MonoBehaviour, IGameModeHooks
 {
     [SerializeField] private Camera mainCamera;
     [field:SerializeField]
-    public Trajectory trajectory { get; private set; }    
+    public TrajectoryDrawer trajectory { get; private set; }    
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks { get; private set; }
     public CreateMode currentMode { get; private set; } = CreateMode.CreateTrajectory;
@@ -20,6 +20,7 @@ public class CreateModeTrajectoryManager : MonoBehaviour, IGameModeHooks
         CheckAssignment(trajectory);
         if (!mainCamera) mainCamera = Camera.main;
         CheckAssignment(mainCamera);
+        trajectory.AssignData();
     }
     void CheckAssignment<T>(T obj)
     {
@@ -39,7 +40,7 @@ public class CreateModeTrajectoryManager : MonoBehaviour, IGameModeHooks
     public void Init()
     {
         AssignData();
-        Debug.Log("Init: Create Waypoint Mode");
+        // Debug.Log("Init: Create Waypoint Mode");
     }
 
     public bool Tick(out ExitMode _exitMode)

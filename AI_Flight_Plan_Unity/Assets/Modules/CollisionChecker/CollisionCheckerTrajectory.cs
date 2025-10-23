@@ -14,7 +14,7 @@ public class CollisionCheckerTrajectory : MonoBehaviour
     // Update is called once per frame
     public void CheckCollisions()
     {
-        List<Trajectory> allTraj = aircraftFactory.GetAllTrajectories();
+        List<TrajectoryDrawer> allTraj = aircraftFactory.GetAllTrajectories();
         List<CollisionInfo> all_collisionInfoList = new List<CollisionInfo>();
         for (int i = 0; i < allTraj.Count; i++)
         {

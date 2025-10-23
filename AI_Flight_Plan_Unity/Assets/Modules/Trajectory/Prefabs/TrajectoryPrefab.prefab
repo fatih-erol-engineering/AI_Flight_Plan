@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1128834332122658154
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 314739279133306574}
-  m_Layer: 0
-  m_Name: ControlPointContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &314739279133306574
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1128834332122658154}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8820869112042112267}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2956600280934288491
 GameObject:
   m_ObjectHideFlags: 0
@@ -54,37 +23,6 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2956600280934288491}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8820869112042112267}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4553589481604693071
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3153065933349397560}
-  m_Layer: 0
-  m_Name: RestrictedAreaContrainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3153065933349397560
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4553589481604693071}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -153,6 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CreateModeWaypointManager
   mainCamera: {fileID: 0}
   <waypointFactory>k__BackingField: {fileID: 2546198646138960698}
+  aircraftFactory: {fileID: 0}
   popupUxml: {fileID: 9197481963319205126, guid: c003b1735a5e47b428b1cf95e3475646, type: 3}
   hitMask:
     serializedVersion: 2
@@ -161,6 +100,9 @@ MonoBehaviour:
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   uiDocument: {fileID: 0}
   altitudeClearanceForMouseSpawn: 1
+  altitudeDragSensitivity: 0.02
+  previewLineWidth: 0.1
+  previewLineMaxLength: 100
 --- !u!1 &8064563952328812410
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,8 +112,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8820869112042112267}
-  - component: {fileID: 5084967935425630650}
   - component: {fileID: 8009024786390400837}
+  - component: {fileID: 873070052421959320}
   m_Layer: 0
   m_Name: TrajectoryPrefab
   m_TagString: Aircraft
@@ -193,36 +135,9 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5513755076722954520}
-  - {fileID: 314739279133306574}
   - {fileID: 8785390315187580617}
-  - {fileID: 3153065933349397560}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5084967935425630650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8064563952328812410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fade72144e7c210419866bdd17e64273, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  <waypointFactory>k__BackingField: {fileID: 2546198646138960698}
-  <createModeWaypointManager>k__BackingField: {fileID: 937270970343944918}
-  <waypointContainer>k__BackingField: {fileID: 5513755076722954520}
-  <controlPointContainer>k__BackingField: {fileID: 314739279133306574}
-  <segmentContainer>k__BackingField: {fileID: 8785390315187580617}
-  <restrictedAreaContainer>k__BackingField: {fileID: 3153065933349397560}
-  bSplineSegmentPrefab: {fileID: 517102805373364547, guid: e53a0a863f1bb5e4d8083c93fbfcd4a2, type: 3}
-  initialControlPointDistance: 0.2
-  lineWidth: 0.1
-  startTime:
-    <second>k__BackingField: 0
-  endTime:
-    <second>k__BackingField: 0
 --- !u!114 &8009024786390400837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,4 +151,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreateTrajectoryManager
   mainCamera: {fileID: 0}
-  <trajectory>k__BackingField: {fileID: 5084967935425630650}
+  <trajectory>k__BackingField: {fileID: 873070052421959320}
+--- !u!114 &873070052421959320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8064563952328812410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73412e3e37930e14885babcfaf3dccd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrajectoryDrawer
+  segmentLength_m: 30
+  <startTime>k__BackingField:
+    <second>k__BackingField: 0
+  <endTime>k__BackingField:
+    <second>k__BackingField: 10
+  <waypointFactory>k__BackingField: {fileID: 0}
+  <createModeWaypointManager>k__BackingField: {fileID: 0}
+  startColor: {r: 0, g: 1, b: 0, a: 1}
+  endColor: {r: 1, g: 0, b: 0, a: 1}
+  waypointContainer: {fileID: 5513755076722954520}
+  SegmentContainer: {fileID: 8785390315187580617}
+  bSplineDrawerPrefab: {fileID: 2126725392596791476, guid: ae48c7f9232d5e44396886c1f5a2da14, type: 3}
+  controlPointPrefab: {fileID: 517102805373364547, guid: 619f54b1d9dc3ae40b0965f8807610f9, type: 3}
+  bSplineDrawerArray: []
+  isReadyToUpdate: 0
+  waypointPositions_AfterCreation: []
+  showTube: 1
+  tubeRadius: 10
+  tubeEdgeSize: 0.05
+  tubeEdgeColor: {r: 0, g: 0.93055916, b: 4, a: 1}
+  tubeSurfaceColor: {r: 0, g: 0.16230345, b: 1, a: 0.15686275}

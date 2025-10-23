@@ -121,7 +121,7 @@ MonoBehaviour:
   <time>k__BackingField:
     <second>k__BackingField: 0
   aircraftProperties: {fileID: 11400000, guid: f1057860b63009e4aa8b26b830b55b88, type: 2}
-  <trajectory>k__BackingField: {fileID: 3580389350947403072}
+  <trajectory>k__BackingField: {fileID: 7608579817030596569}
   _baseAircraftMeshRenderers:
   - {fileID: 6617761422860566013}
   - {fileID: 6981931906432179762}
@@ -202,7 +202,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 113578939797663538}
-  - {fileID: 957986857704497649}
+  - {fileID: 2297075669462977610}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5831094808280839001
@@ -1038,7 +1038,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1001 &8584272383094056186
+--- !u!1001 &7316906415756724545
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1046,45 +1046,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6829256584013129055}
     m_Modifications:
-    - target: {fileID: 937270970343944918, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: previewContainer
-      value: 
+    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 937270970343944918, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: altitudeClearanceForMouseSpawn
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: lineWidth
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: initialControlPointDistance
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: <waypointFactory>k__BackingField
       value: 
-      objectReference: {fileID: 6085660992328769472}
-    - target: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      objectReference: {fileID: 5106859549458281083}
+    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: <createModeWaypointManager>k__BackingField
       value: 
-      objectReference: {fileID: 8800223591244666412}
+      objectReference: {fileID: 7533120733465426839}
     - target: {fileID: 8064563952328812410, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_Name
-      value: Trajectory
+      value: TrajectoryPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.03022
       objectReference: {fileID: 0}
     - target: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.05891
       objectReference: {fileID: 0}
     - target: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.08515
       objectReference: {fileID: 0}
     - target: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1115,31 +1103,19 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 5418463059334812664, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
---- !u!4 &957986857704497649 stripped
+--- !u!4 &2297075669462977610 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  m_PrefabInstance: {fileID: 8584272383094056186}
+  m_PrefabInstance: {fileID: 7316906415756724545}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3580389350947403072 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5084967935425630650, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  m_PrefabInstance: {fileID: 8584272383094056186}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fade72144e7c210419866bdd17e64273, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
---- !u!114 &6085660992328769472 stripped
+--- !u!114 &5106859549458281083 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2546198646138960698, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  m_PrefabInstance: {fileID: 8584272383094056186}
+  m_PrefabInstance: {fileID: 7316906415756724545}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -1147,10 +1123,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948d7c142516f6548b62d6f49676bff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaypointFactory
---- !u!114 &8800223591244666412 stripped
+--- !u!114 &7533120733465426839 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 937270970343944918, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  m_PrefabInstance: {fileID: 8584272383094056186}
+  m_PrefabInstance: {fileID: 7316906415756724545}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -1158,3 +1134,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6b738ae46a0f244b3c7f450025c6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreateModeWaypointManager
+--- !u!114 &7608579817030596569 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+  m_PrefabInstance: {fileID: 7316906415756724545}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73412e3e37930e14885babcfaf3dccd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrajectoryDrawer

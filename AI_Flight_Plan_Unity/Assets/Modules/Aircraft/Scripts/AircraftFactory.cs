@@ -76,9 +76,9 @@ public class AircraftFactory : MonoBehaviour
     {
         return aircraftPropertiesRegistry.Get(modelName).aircraftPrefab;
     }
-    public List<Trajectory> GetAllTrajectories()
+    public List<TrajectoryDrawer> GetAllTrajectories()
     {
-        List<Trajectory> trajList = new List<Trajectory>();
+        List<TrajectoryDrawer> trajList = new List<TrajectoryDrawer>();
         foreach (var aircraft in AircraftList)
         {
             trajList.Add(aircraft.trajectory);

@@ -92,7 +92,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         {
             SpawnFromPopup();
         }
-        waypointFactory.transform.parent.GetComponent<Trajectory>().Create();
+        // waypointFactory.transform.parent.GetComponent<TrajectoryDrawer>().AssignData();
+        // waypointFactory.transform.parent.GetComponent<TrajectoryDrawer>().Create();
 
     }
 
@@ -106,7 +107,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     public void Init()
     {
         AssignData();
-        Debug.Log("Init: Create Waypoint Mode");
+        // Debug.Log("Init: Create Waypoint Mode");
     }
 
     public bool Tick(out ExitMode _exitMode)

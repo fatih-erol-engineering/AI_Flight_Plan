@@ -331,14 +331,3 @@ public class BSplineSegment
     
 }
 
-public class TrajectoryPoint
-{
-    public Vector3 position;
-    public float time;
-    public TrajectoryPoint(Vector3 pos, float t)
-    {
-        position = pos;
-        time = t;
-    }    
-}
-

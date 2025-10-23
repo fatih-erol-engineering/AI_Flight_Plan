@@ -77,7 +77,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Init();
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.waypointFactory.Spawn(aircraftFactory.selectedAircraft.transform.position, aircraftFactory.selectedAircraft.transform.rotation, aircraftFactory.selectedAircraft.time);
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Apply();
-        Debug.Log("Apply: Create Mode");
+        // Debug.Log("Apply: Create Mode");
     }
 
     public void Cancel()
@@ -160,7 +160,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     public void Init()
     {
         AssignData();        
-        Debug.Log("Init: Create Aircraft Mode");
+        // Debug.Log("Init: Create Aircraft Mode");
     }
 
     public bool Tick(out ExitMode exitModeOut)

@@ -55,21 +55,21 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     {
         currentHooks?.Apply?.Invoke();
         trajectoryCreatedFlag = true;
-        Debug.Log("Apply: Create Mode");
+        // Debug.Log("Apply: Create Mode");
     }
 
     public void Cancel()
     {
         currentHooks?.Cancel?.Invoke();
         trajectoryCreatedFlag = false;
-        Debug.Log("Cancel: Create Mode");
+        // Debug.Log("Cancel: Create Mode");
     }
 
     public void Init()
     {
         trajectoryCreatedFlag = false;
         InitMode(CreateMode.CreateAircraft);
-        Debug.Log("Init: Create Mode");
+        // Debug.Log("Init: Create Mode");
     }
 
     public bool Tick(out ExitMode _exitMode)

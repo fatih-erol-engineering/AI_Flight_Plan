@@ -7,6 +7,8 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField] private float segmentLength_m = 10f;
     [field: SerializeField] public TimeGame startTime { get; private set; }
     [field: SerializeField] public TimeGame endTime { get; private set; }
+    [field: SerializeField] public WaypointFactory waypointFactory { get; private set; }
+    [field: SerializeField] public CreateModeWaypointManager createModeWaypointManager { get; private set; }
     [SerializeField] private Color startColor = Color.green;    
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private Transform waypointContainer;
@@ -16,36 +18,42 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField, HideInInspector] private BSplineDrawer[] bSplineDrawerArray;
     [SerializeField, HideInInspector] private bool isReadyToUpdate = false;
 
-    [SerializeField] private Vector3[] waypointPositions_AfterCreation;
+    [SerializeField, HideInInspector] private Vector3[] waypointPositions_AfterCreation;
 
     [Header("Trajectory Tube Settings")]
     [SerializeField] private bool showTube = true;
     [SerializeField] private float tubeRadius = 5f;
     [SerializeField] private float tubeEdgeSize = 0.1f;
     [SerializeField, ColorUsage(true, true)] public Color tubeEdgeColor = Color.white;
-    [SerializeField, ColorUsage(true, true)] public Color tubeSurfaceColor = Color.blue;
+    [SerializeField] public Color tubeSurfaceColor = Color.blue;
 
     public void AssignData()
     {
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
         endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;        
+        int waypointCount = waypointContainer.childCount;
+        waypointPositions_AfterCreation = new Vector3[waypointCount];
+        for (int i = 0; i < waypointCount; i++)
+        {
+            waypointPositions_AfterCreation[i] = waypointContainer.GetChild(i).position;
+        }
     }
-    void Awake()
-    {
-        Clear();
-        AssignData();
-        Create();
-    }
+    // void Awake()
+    // {
+    //     Clear();
+    //     AssignData();
+    //     Create();
+    // }
     void Update()
     {        
-        if (CheckForRecreationNeed())
-        {
-            Clear();
-            Create();
-        }
         if (isReadyToUpdate)
         {
-            UpdateImmediately();
+            if (CheckForRecreationNeed())
+            {
+                Clear();
+                Create();
+            }
+            Tick();
         }
     }
     public bool CheckForRecreationNeed()
@@ -61,7 +69,7 @@ public class TrajectoryDrawer : MonoBehaviour
         }
         return false;
     }
-    public void UpdateImmediately()
+    public void Tick()
     {
         foreach (BSplineDrawer bSplineDrawer in bSplineDrawerArray)
         {
@@ -90,7 +98,7 @@ public class TrajectoryDrawer : MonoBehaviour
 
     }
     public void Create()
-    {
+    {        
         if (waypointContainer == null || bSplineDrawerPrefab == null)
         {
             Debug.LogError("WaypointContainer or BSplineDrawerPrefab is not assigned.");
@@ -196,8 +204,6 @@ public class TrajectoryDrawer : MonoBehaviour
 
 
 
-
-
     // Update is called once per frame
     public void Clear()
     {
@@ -216,5 +222,36 @@ public class TrajectoryDrawer : MonoBehaviour
         }
         isReadyToUpdate = false;
     }
+
+
+    public BSplineDrawer[] GetSegmentDrawers()
+    {
+        return bSplineDrawerArray;
+    }
+
+
+
+
+
+
+
+
+
+
+    public List<CollisionInfo> CheckCollisionWithAnotherTrajectory(TrajectoryDrawer otherTrajectory, float geometricCollisionThreshold_m, float timeCollision_s)
+    {
+        List<CollisionInfo> totalCollisionInfoList = new List<CollisionInfo>();
+        foreach (var segment1 in bSplineDrawerArray)
+        {
+            foreach (BSplineDrawer segment2 in otherTrajectory.bSplineDrawerArray)
+            {
+                List<CollisionInfo> currentCollisionInfoList = segment1.CheckCollisionWithAnotherSegment(segment2, geometricCollisionThreshold_m, timeCollision_s);
+                totalCollisionInfoList.AddRange(currentCollisionInfoList);
+            }
+        }              
+        return totalCollisionInfoList;
+    }
+
+
 
 }
