@@ -41,7 +41,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _edgeSize: 0.1
-    - _length: 30.80146
+    - _length: 20
     - _radious: 1
     - _radius: 5
     m_Colors:

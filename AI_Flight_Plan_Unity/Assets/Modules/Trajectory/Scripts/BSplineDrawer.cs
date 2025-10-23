@@ -26,7 +26,7 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField, ColorUsage(true, true)] public Color tubeSurfaceColor = Color.blue;
 
     [SerializeField, HideInInspector] private Transform tube;
-    [SerializeField, HideInInspector] private TubeManager tubeManager;
+    [SerializeField, HideInInspector] private TubeManager[] tubeManagers;
     [SerializeField, HideInInspector] private Vector3 tubeStartPosition;
     [SerializeField, HideInInspector] private Vector3 tubeEndPosition;
     [SerializeField, HideInInspector] private Vector3 prev_tubeStartPosition;
@@ -67,17 +67,38 @@ public class BSplineDrawer : MonoBehaviour
 
 
         DrawCurve(points, lineRenderer, segmentCount);
-        if (showTube)
+
+
+
+
+        tubeManagers = new TubeManager[controlPoints.Length + 1];
+        if (controlPoints != null)
         {
-            tubeManager = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponent<TubeManager>();
+            tubeManagers[0] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();            
             
+            Vector3 start = waypointStart.transform.position;
+            Vector3 end = controlPoints[0].transform.position;
 
-            Vector3 start = lineRenderer.GetPosition(0);
-            Vector3 end = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+            tubeManagers[0].SetStartAndEndPositions(start, end);
 
-            tubeManager.start = start;
-            tubeManager.end = end;
-            tubeManager.Create();
+            for (int i = 0; i < controlPoints.Length-1; i++)
+            {
+                if (showTube)
+                {
+                    tubeManagers[i+1] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();
+
+                    start = controlPoints[i].transform.position;
+                    end = controlPoints[i + 1].transform.position;
+
+                    tubeManagers[i+1].SetStartAndEndPositions(start, end);
+                }
+            }
+            tubeManagers[tubeManagers.Length - 1] = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<TubeManager>();                        
+
+            start = controlPoints[controlPoints.Length - 1].transform.position;
+            end = waypointEnd.transform.position;
+
+            tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
         }
     }
     public void UpdateColor()
@@ -135,22 +156,33 @@ public class BSplineDrawer : MonoBehaviour
         tubeEndPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
         if (showTube)
         {
-            if (prev_tubeEndPosition != tubeEndPosition || prev_tubeStartPosition != tubeStartPosition)
-            {
-                tubeManager.start = tubeStartPosition;
-                tubeManager.end = tubeEndPosition;  
-                tubeManager.UpdateTube();
-            }
-            tubeManager.SetRadius(tubeRadius);
-            tubeManager.SetEdgeColor(tubeEdgeColor);
-            tubeManager.SetSurfaceColor(tubeSurfaceColor);
-            
-        }
-        
-        
+            if (controlPoints != null)
+            {                        
+                Vector3 start = waypointStart.transform.position;
+                Vector3 end = controlPoints[0].transform.position;
 
-        prev_tubeStartPosition = lineRenderer.GetPosition(0);
-        prev_tubeEndPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+                tubeManagers[0].SetStartAndEndPositions(start, end);
+
+                for (int i = 0; i < controlPoints.Length-1; i++)
+                {
+                    if (showTube)
+                    {
+                        start = controlPoints[i].transform.position;
+                        end = controlPoints[i + 1].transform.position;
+
+
+                        tubeManagers[i+1].SetStartAndEndPositions(start, end);
+                        tubeManagers[i+1].UpdateTube();
+                    }
+                }
+                start = controlPoints[controlPoints.Length - 1].transform.position;
+                end = waypointEnd.transform.position;
+
+                tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
+                tubeManagers[tubeManagers.Length - 1].UpdateTube();
+            }            
+        
+        }                
     }
     public void SetStartWaypoint(Waypoint _waypoint)
     {

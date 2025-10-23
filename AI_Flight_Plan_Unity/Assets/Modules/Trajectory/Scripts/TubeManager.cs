@@ -1,9 +1,10 @@
 using UnityEngine;
 
+[ExecuteAlways]
 public class TubeManager : MonoBehaviour
 {
-    [SerializeField] public Vector3 start;
-    [SerializeField] public Vector3 end;
+    [SerializeField] public Transform start;
+    [SerializeField] public Transform end;
     [SerializeField] private float radius = 5f;
 
     [Header("Appearance")]
@@ -18,37 +19,48 @@ public class TubeManager : MonoBehaviour
     [SerializeField, HideInInspector] private float prev_edgeSize = 0.1f;
 
     [SerializeField, HideInInspector] private float length = 10f;
-    [SerializeField, HideInInspector] private float prev_radius = 5f;    
+    [SerializeField, HideInInspector] private float prev_radius = 5f;
     [SerializeField, HideInInspector] private float prev_length = 10f;
     [SerializeField, HideInInspector] private Material material;
-    public void Create()
+    static readonly int BaseColorID = Shader.PropertyToID("_surfaceColor"); // URP Lit
+    static readonly int EdgeColorID = Shader.PropertyToID("_edgeColor"); // URP Lit
+    static readonly int RadiusID = Shader.PropertyToID("_radius"); // URP Lit
+    static readonly int LengthID = Shader.PropertyToID("_length"); // URP Lit
+    static readonly int EdgeSizeID = Shader.PropertyToID("_edgeSize"); // URP Lit
+    [SerializeField, HideInInspector] MaterialPropertyBlock mpb;
+    [SerializeField, HideInInspector] Renderer rend;
+
+    void Awake()
     {
-        material = transform.GetComponent<Renderer>().sharedMaterial;        
-
-        // if (start == null || end == null)
-        // {
-        //     start = new GameObject("Start").transform;
-        //     end = new GameObject("End").transform;
-
-        //     start.SetParent(transform);
-        //     end.SetParent(transform);
-        // };
-        prev_radius = radius;
-
-        length = Vector3.Distance(start, end);
-        prev_length = length;
-        UpdateTube();
+        AssignData();
     }
-    void Update()
+
+
+    
+    public void Clear()
     {
-        UpdateTube();
+        Debug.Log("Clearing TubeManager not implemented yet.");
     }
+    public void AssignData()
+    {
+        if (!material)
+        {
+            // material = transform.GetComponent<Renderer>().material;
+            rend = GetComponent<Renderer>();
+            mpb = new MaterialPropertyBlock();
+
+        }        
+    }
+    // void Update()
+    // {
+    //     UpdateTube();
+    // }
 
     // Update is called once per frame
-    public void UpdateTube()
+    public void UpdateTubeForce()
     {
-        Vector3 a = start;
-        Vector3 b = end;
+        Vector3 a = start.position;
+        Vector3 b = end.position;
         Vector3 dir = b - a;
         float newLength = dir.magnitude;
         if (newLength <= Mathf.Epsilon) return;
@@ -59,7 +71,30 @@ public class TubeManager : MonoBehaviour
         // rotation: align local Y (up) to direction
         transform.rotation = Quaternion.FromToRotation(Vector3.up, dir.normalized);
         length = newLength;
-        
+        UpdateLength();
+        UpdateRadius();
+        UpdateAppearance();
+        prev_edgeColor = edgeColor;
+        prev_surfaceColor = surfaceColor;
+        prev_edgeSize = edgeSize;
+        prev_radius = radius;
+        prev_length = length;
+    }
+    public void UpdateTube()
+    {
+        Vector3 a = start.position;
+        Vector3 b = end.position;
+        Vector3 dir = b - a;
+        float newLength = dir.magnitude;
+        if (newLength <= Mathf.Epsilon) return;
+
+        // position: midpoint between start and end
+        transform.position = (a + b) * 0.5f;
+
+        // rotation: align local Y (up) to direction
+        transform.rotation = Quaternion.FromToRotation(Vector3.up, dir.normalized);
+        length = newLength;
+
         if (prev_length != length)
         {
             UpdateLength();
@@ -82,22 +117,22 @@ public class TubeManager : MonoBehaviour
     }
     void UpdateRadius()
     {
-        material.SetFloat("radius", radius);
-        material.SetFloat("_radius", radius);
+        rend.GetPropertyBlock(mpb);
+        mpb.SetFloat(RadiusID, radius);
+        rend.SetPropertyBlock(mpb);
     }
     void UpdateLength()
     {
-        material.SetFloat("length", length);
-        material.SetFloat("_length", length);
+        rend.GetPropertyBlock(mpb);
+        mpb.SetFloat(LengthID, length);
+        rend.SetPropertyBlock(mpb);
     }
     void UpdateAppearance()
     {
-        material.SetColor("edgeColor", edgeColor);
-        material.SetColor("_edgeColor", edgeColor);
-        material.SetColor("surfaceColor", surfaceColor);
-        material.SetColor("_surfaceColor", surfaceColor);
-        material.SetFloat("edgeSize", edgeSize);
-        material.SetFloat("_edgeSize", edgeSize);
+        rend.GetPropertyBlock(mpb);
+        mpb.SetColor(EdgeColorID, edgeColor);
+        mpb.SetColor(BaseColorID, surfaceColor);
+        rend.SetPropertyBlock(mpb);
     }
 
     public void SetRadius(float _radius)
@@ -123,6 +158,13 @@ public class TubeManager : MonoBehaviour
             surfaceColor = _color;
             UpdateAppearance();
         }
+    }
+
+    public void SetStartAndEndPositions(Vector3 startPos, Vector3 endPos)
+    {
+        start.position = startPos;
+        end.position = endPos;
+        UpdateTube();
     }
 
 }

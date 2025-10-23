@@ -23,8 +23,9 @@ public class TrajectoryDrawer : MonoBehaviour
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
         endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;        
     }
-    void OnEnable()
+    void Awake()
     {
+        AssignData();
         Create();
     }
     void Update()

@@ -1548,7 +1548,7 @@
     "m_ObjectId": "0f269a92542144b785aae1bbac5bdb75",
     "m_Title": "Setting Length",
     "m_Position": {
-        "x": -1387.0,
+        "x": -1386.9998779296875,
         "y": -529.0
     }
 }
@@ -3118,8 +3118,8 @@
     "m_ObjectId": "5be5345cff9f49b6964143d4c6df89eb",
     "m_Title": "Edge Mask",
     "m_Position": {
-        "x": -2482.999755859375,
-        "y": -122.0
+        "x": -2483.0,
+        "y": -121.9999771118164
     }
 }
 
@@ -6059,7 +6059,7 @@
     "m_ObjectId": "c9a0b9cd5f6a4182b3b758c664bf578f",
     "m_Title": "Setting Radious",
     "m_Position": {
-        "x": -2487.999755859375,
+        "x": -2488.0,
         "y": -637.0
     }
 }
