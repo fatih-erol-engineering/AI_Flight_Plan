@@ -23,6 +23,15 @@ public class Theme : ScriptableObject
     public Material Preview;
     [Header("Trajectory")]    
     public Color startColor;
-    public Color endColor;    
+    public Color endColor;
 
+    [Header("Tube Properties")]
+    [ColorUsage(true, true)]
+    public Color tubeEdgeColor_nonCollided;
+    public Color tubeEdgeColor_collided;
+    public Color tubeSurfaceColor_nonCollided;    
+    public Color tubeSurfaceColor_collided;
+    public float tubeEdgeSize = 0.2f;  
+    
+    
 }

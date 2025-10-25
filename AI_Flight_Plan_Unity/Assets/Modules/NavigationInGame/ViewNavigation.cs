@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
-
+ 
 /// <summary>
 /// Editor-like scene navigation at runtime:
 /// - RMB = free look (yaw/pitch)
@@ -9,8 +9,6 @@ using UnityEngine.UIElements;
 /// - MMB = pan
 /// - Alt + LMB = orbit around pivot
 /// - Scroll = dolly; while RMB held, scroll tunes fly speed
-/// - F = focus: selectedObject -> editor selection (in editor) -> mouse raycast -> ahead
-/// Smoothing runs ONLY during focus transitions. Any manual input cancels focus-smoothing.
 /// </summary>
 [RequireComponent(typeof(Camera))]
 public class ViewNavigation : MonoBehaviour

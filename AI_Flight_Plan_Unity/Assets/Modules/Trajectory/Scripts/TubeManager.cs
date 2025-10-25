@@ -8,6 +8,7 @@ public class TubeManager : MonoBehaviour
     [SerializeField] private float radius = 5f;
 
     [Header("Appearance")]
+    [SerializeField] public bool isCollided { get; set { if (isCollided == value) return; isCollided = value; } }
 
     [SerializeField, ColorUsage(true, true)] public Color edgeColor = Color.white;
     [SerializeField] public Color surfaceColor = Color.blue;
@@ -174,5 +175,11 @@ public class TubeManager : MonoBehaviour
         end.position = endPos;
         Tick();
     }
-
+    public bool CheckPositionInsideOrNot(Vector3 vector3)
+    {
+        // Check if the position is inside the tube's volume
+        Vector3 closestPoint = Vector3.ClampMagnitude(vector3 - start.position, length) + start.position;
+        float distance = Vector3.Distance(closestPoint, end.position);
+        return distance <= radius;
+    }
 }

@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73412e3e37930e14885babcfaf3dccd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryDrawer
-  segmentLength_m: 30
+  segmentLength_m: 50
   <startTime>k__BackingField:
     <second>k__BackingField: 0
   <endTime>k__BackingField:
@@ -182,6 +182,6 @@ MonoBehaviour:
   waypointPositions_AfterCreation: []
   showTube: 1
   tubeRadius: 10
-  tubeEdgeSize: 0.05
-  tubeEdgeColor: {r: 0, g: 0.93055916, b: 4, a: 1}
+  tubeEdgeSize: 0.2
+  tubeEdgeColor: {r: 0, g: 0.4928585, b: 2.1185477, a: 1}
   tubeSurfaceColor: {r: 0, g: 0.16230345, b: 1, a: 0.15686275}

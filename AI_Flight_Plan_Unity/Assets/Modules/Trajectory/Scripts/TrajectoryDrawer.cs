@@ -8,7 +8,7 @@ public class TrajectoryDrawer : MonoBehaviour
     [field: SerializeField] public TimeGame startTime { get; private set; }
     [field: SerializeField] public TimeGame endTime { get; private set; }
     [field: SerializeField] public WaypointFactory waypointFactory { get; private set; }
-    [field: SerializeField] public CreateModeWaypointManager createModeWaypointManager { get; private set; }
+    [field: SerializeField] public CreateModeWaypointManager createModeWaypointManager { get; private set; }    
     [SerializeField] private Color startColor = Color.green;    
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private Transform waypointContainer;
@@ -45,7 +45,7 @@ public class TrajectoryDrawer : MonoBehaviour
     //     Create();
     // }
     void Update()
-    {        
+    {
         if (isReadyToUpdate)
         {
             if (CheckForRecreationNeed())
@@ -54,8 +54,32 @@ public class TrajectoryDrawer : MonoBehaviour
                 Create();
             }
             Tick();
+
+            if (TimeManager.Instance.isUpdated)
+            {
+                TimeGame startTimeFromTimeManager = new TimeGame(TimeManager.Instance.startTime_s);
+                TimeGame endTimeFromTimeManager = new TimeGame(TimeManager.Instance.endTime_s);
+
+                UpdateColorWithTotalTime(startTimeFromTimeManager, endTimeFromTimeManager);
+            }
         }
     }
+    public void UpdateColorWithTotalTime(TimeGame totalStartTime,TimeGame totalEndTime)
+    {
+        
+        for (int i = 0; i < bSplineDrawerArray.Length; i++)
+        {
+            BSplineDrawer bSplineDrawer = bSplineDrawerArray[i];    
+            float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - startTime.second) / (endTime.second - startTime.second));
+            Color _startColor = Color.Lerp(startColor, endColor, startVal);
+
+            float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - startTime.second) / (endTime.second - startTime.second));
+            Color _endColor = Color.Lerp(startColor, endColor, endVal);
+            bSplineDrawer.SetStartColor(_startColor);
+            bSplineDrawer.SetEndColor(_endColor);            
+        }
+    }
+
     public bool CheckForRecreationNeed()
     {
         int waypointCount = waypointContainer.childCount;

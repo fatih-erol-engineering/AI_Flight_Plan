@@ -183,7 +183,7 @@ public class CreateModeManager : MonoBehaviour, IGameModeHooks
     }
     private void UpdateCreateWaypointMode()
     {
-        createModeWaypointManager = aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager;
+        createModeWaypointManager = aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager;        
         modes[CreateMode.CreateWaypoint] = new ModeHooks
         {
             modeName = "CreateWaypoint",

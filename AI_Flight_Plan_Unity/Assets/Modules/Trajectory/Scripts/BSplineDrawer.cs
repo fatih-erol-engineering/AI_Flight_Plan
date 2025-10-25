@@ -37,8 +37,8 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField, HideInInspector] private Transform tube;
     [SerializeField, HideInInspector] private TubeManager[] tubeManagers;
 
-    [SerializeField, HideInInspector] bool collisionFlagTick = false;
-    [SerializeField, HideInInspector] bool prev_collisionFlagTick = false;
+    [SerializeField, HideInInspector] Vector3 prev_CollisionPoint = Vector3.positiveInfinity;
+    
 
     public void AssignData()
     {
@@ -68,7 +68,7 @@ public class BSplineDrawer : MonoBehaviour
             points[i + 1] = controlPoints[i].transform;
         }
         points[points.Length - 1] = waypointEnd.transform;
-        trajectoryPositions = new Vector3[segmentCount + 1];
+        trajectoryPositions = new Vector3[segmentCount];
         distanceArray = new float[trajectoryPositions.Length - 1];
         DrawCurve(points, lineRenderer, segmentCount);
 
@@ -555,18 +555,13 @@ public class BSplineDrawer : MonoBehaviour
         List<CollisionInfo> innerCollisionInfoList = new List<CollisionInfo>();
         List<CollisionInfo> collisionInfoList = new List<CollisionInfo>();
 
-        Vector3 sumOfPositions = new Vector3(0, 0, 0);
-        Vector3 meanPosition = new Vector3(0, 0, 0);
-        prev_collisionFlagTick = false;
-        collisionFlagTick = false;
-
         foreach (var traj1Point in traj1Points)
         {
             foreach (var traj2Point in traj2Points)
             {
                 if (Mathf.Abs(traj1Point.time - traj2Point.time) < timeCollision_s)
                 {
-                    if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m))
+                    if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m) && prev_CollisionPoint != traj1Point.position)
                     {
 
                         collisionInfoList.Add(new CollisionInfo
@@ -576,6 +571,7 @@ public class BSplineDrawer : MonoBehaviour
                             point = traj1Point.position,
                             time = traj1Point.time,
                         });
+                        prev_CollisionPoint = traj1Point.position;
 
                     }
                 }
