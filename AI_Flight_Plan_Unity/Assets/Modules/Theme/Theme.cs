@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[CreateAssetMenu(fileName = "Theme", menuName = "Scriptable Objects/Theme")]
+[CreateAssetMenu(fileName = "Theme", menuName = "Theme")]
 public class Theme : ScriptableObject
 {
 
     public Texture2D mouseDefault;
-    public Texture2D mouseDrag;   
+    public Texture2D mouseDrag;
     [Header("Menu Icons")]
     public Texture2D addIcon;
     public Texture2D editIcon;
@@ -21,17 +21,17 @@ public class Theme : ScriptableObject
     public Material Hover;
     public Material Select;
     public Material Preview;
-    [Header("Trajectory")]    
+    [Header("Trajectory")]
     public Color startColor;
     public Color endColor;
 
     [Header("Tube Properties")]
-    [ColorUsage(true, true)]
-    public Color tubeEdgeColor_nonCollided;
-    public Color tubeEdgeColor_collided;
-    public Color tubeSurfaceColor_nonCollided;    
+
+    [ColorUsage(true, true)] public Color tubeEdgeColor_nonCollided;
+    public Color tubeSurfaceColor_nonCollided;
+    [ColorUsage(true, true)] public Color tubeEdgeColor_collided;
     public Color tubeSurfaceColor_collided;
-    public float tubeEdgeSize = 0.2f;  
-    
-    
+    public float tubeEdgeSize = 0.2f;
+
+
 }

@@ -1548,8 +1548,8 @@
     "m_ObjectId": "0f269a92542144b785aae1bbac5bdb75",
     "m_Title": "Setting Length",
     "m_Position": {
-        "x": -1387.0001220703125,
-        "y": -529.0000610351563
+        "x": -1387.199951171875,
+        "y": -530.39990234375
     }
 }
 
@@ -1709,7 +1709,7 @@
     "m_ZTestMode": 2,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
-    "m_RenderFace": 2,
+    "m_RenderFace": 0,
     "m_AlphaClip": false,
     "m_CastShadows": false,
     "m_ReceiveShadows": true,
@@ -3118,8 +3118,8 @@
     "m_ObjectId": "5be5345cff9f49b6964143d4c6df89eb",
     "m_Title": "Edge Mask",
     "m_Position": {
-        "x": -2483.000244140625,
-        "y": -122.0001220703125
+        "x": -2483.199951171875,
+        "y": -123.9998779296875
     }
 }
 
@@ -6059,8 +6059,8 @@
     "m_ObjectId": "c9a0b9cd5f6a4182b3b758c664bf578f",
     "m_Title": "Setting Radious",
     "m_Position": {
-        "x": -2488.000244140625,
-        "y": -637.0001220703125
+        "x": -2488.0,
+        "y": -638.39990234375
     }
 }
 

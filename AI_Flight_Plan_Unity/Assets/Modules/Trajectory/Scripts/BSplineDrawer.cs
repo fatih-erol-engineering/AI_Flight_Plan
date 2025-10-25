@@ -9,11 +9,11 @@ public class BSplineDrawer : MonoBehaviour
     [field: SerializeField] public Transform tubeContainer { get; private set; }
     [field: SerializeField] public GameObject controlPointPrefab { get; private set; }
     [field: SerializeField] public Waypoint waypointStart { get; private set; }
-    [field: SerializeField] public Waypoint waypointEnd { get; private set; }        
-    [SerializeField] public TimeGame startTime { get => waypointStart.time;}
+    [field: SerializeField] public Waypoint waypointEnd { get; private set; }
+    [SerializeField] public TimeGame startTime { get => waypointStart.time; }
     [SerializeField] public TimeGame endTime { get => waypointEnd.time; }
-    [SerializeField,HideInInspector] private TimeGame prev_startTime;
-    [SerializeField,HideInInspector] private TimeGame prev_endTime;
+    [SerializeField, HideInInspector] private TimeGame prev_startTime;
+    [SerializeField, HideInInspector] private TimeGame prev_endTime;
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
     [SerializeField, HideInInspector] private ControlPoint[] controlPoints;
@@ -38,7 +38,7 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField, HideInInspector] private TubeManager[] tubeManagers;
 
     [SerializeField, HideInInspector] Vector3 prev_CollisionPoint = Vector3.positiveInfinity;
-    
+
 
     public void AssignData()
     {
@@ -58,9 +58,9 @@ public class BSplineDrawer : MonoBehaviour
             var controlPoint = child.GetComponent<ControlPoint>();
             controlPoints[ct] = controlPoint;
             ct++;
-            
+
         }
-        
+
         points = new Transform[controlPoints.Length + 2]; // 2 comes from start and end waypoints
         points[0] = waypointStart.transform;
         for (int i = 0; i < controlPoints.Length; i++)
@@ -84,7 +84,8 @@ public class BSplineDrawer : MonoBehaviour
             Vector3 start = waypointStart.transform.position;
             Vector3 end = controlPoints[0].GetClosestPointToSpline();
 
-            tubeManagers[0].SetStartAndEndPositions(start, end);
+            tubeManagers[0].SetStartPosition(start);
+            tubeManagers[0].SetEndPosition(end);
 
             for (int i = 0; i < controlPoints.Length - 1; i++)
             {
@@ -97,7 +98,8 @@ public class BSplineDrawer : MonoBehaviour
                     start = controlPoints[i].GetClosestPointToSpline();
                     end = controlPoints[i + 1].GetClosestPointToSpline();
 
-                    tubeManagers[i + 1].SetStartAndEndPositions(start, end);
+                    tubeManagers[i + 1].SetStartPosition(start);
+                    tubeManagers[i + 1].SetEndPosition(end);
                 }
             }
             go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
@@ -107,9 +109,8 @@ public class BSplineDrawer : MonoBehaviour
             start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
             end = waypointEnd.transform.position;
 
-            tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
-
-
+            tubeManagers[tubeManagers.Length - 1].SetStartPosition(start);
+            tubeManagers[tubeManagers.Length - 1].SetEndPosition(end);
 
             prev_pointPositions = new Vector3[points.Length];
             for (int i = 0; i < points.Length; i++)
@@ -124,7 +125,7 @@ public class BSplineDrawer : MonoBehaviour
     }
     public void Tick()
     {
-        UpdateWithPerformance();          
+        UpdateWithPerformance();
     }
 
     public void UpdateWithPerformance()
@@ -143,8 +144,8 @@ public class BSplineDrawer : MonoBehaviour
             updateCondition |= (prev_startTime.second != startTime.second) || (prev_endTime.second != endTime.second);
             prev_startTime = startTime;
             prev_endTime = endTime;
-        }   
-        
+        }
+
         if (updateCondition)
         {
             UpdateImmediately();
@@ -165,7 +166,8 @@ public class BSplineDrawer : MonoBehaviour
                 Vector3 start = waypointStart.transform.position;
                 Vector3 end = controlPoints[0].GetClosestPointToSpline();
 
-                tubeManagers[0].SetStartAndEndPositions(start, end);
+                tubeManagers[0].SetStartPosition(start);
+                tubeManagers[0].SetEndPosition(end);
 
                 for (int i = 0; i < controlPoints.Length - 1; i++)
                 {
@@ -175,19 +177,19 @@ public class BSplineDrawer : MonoBehaviour
                         end = controlPoints[i + 1].GetClosestPointToSpline();
 
 
-                        tubeManagers[i + 1].SetStartAndEndPositions(start, end);
-                        tubeManagers[i + 1].Tick();
+                        tubeManagers[i + 1].SetStartPosition(start);
+                        tubeManagers[i + 1].SetEndPosition(end);
                     }
                 }
                 start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
                 end = waypointEnd.transform.position;
 
-                tubeManagers[tubeManagers.Length - 1].SetStartAndEndPositions(start, end);
-                tubeManagers[tubeManagers.Length - 1].Tick();
+                tubeManagers[tubeManagers.Length - 1].SetStartPosition(start);
+                tubeManagers[tubeManagers.Length - 1].SetEndPosition(end);
             }
         }
-        UpdateDistanceList();       
-        UpdateTrajectoryPointsWithTimeInfo();        
+        UpdateDistanceList();
+        UpdateTrajectoryPointsWithTimeInfo();
     }
 
 
@@ -268,22 +270,22 @@ public class BSplineDrawer : MonoBehaviour
             ct++;
         }
     }
-    
-     public void SetControlPoints(ControlPoint[] _controlPoints)
+
+    public void SetControlPoints(ControlPoint[] _controlPoints)
     {
         DeleteControlPoints();
         int ct = 0;
         controlPoints = new ControlPoint[_controlPoints.Length];
         foreach (ControlPoint _controlPoint in _controlPoints)
-        {            
+        {
             _controlPoint.transform.parent = controlPointContainer;
             controlPoints[ct] = _controlPoint;
             ct++;
         }
     }
-    
-    
-    
+
+
+
     public void DeleteControlPoints()
     {
         foreach (Transform child in controlPointContainer)
@@ -314,7 +316,7 @@ public class BSplineDrawer : MonoBehaviour
         {
             lineRenderer.positionCount = 0;
         }
-        
+
     }
 
 
@@ -325,7 +327,7 @@ public class BSplineDrawer : MonoBehaviour
         {
             tubeRadius = _radius;
             foreach (TubeManager tubeManager in tubeManagers)
-                tubeManager.SetRadius(_radius);            
+                tubeManager.SetRadius(_radius);
         }
     }
     public void SetTubeEdgeColor(Color _color)
@@ -337,14 +339,14 @@ public class BSplineDrawer : MonoBehaviour
                 tubeManager.SetEdgeColor(_color);
         }
     }
-        public void SetTubeEdgeSize(float _size)
+    public void SetTubeEdgeSize(float _size)
     {
         if (tubeEdgeSize != _size)
         {
             tubeEdgeSize = _size;
             foreach (TubeManager tubeManager in tubeManagers)
                 tubeManager.SetEdgeSize(_size);
-        }        
+        }
     }
     public void SetTubeSurfaceColor(Color _color)
     {
@@ -382,7 +384,7 @@ public class BSplineDrawer : MonoBehaviour
             {
                 lineRenderer.SetPosition(i, _points[i].transform.position);
                 trajectoryPositions[i] = _points[i].transform.position;
-                if (i > 0) 
+                if (i > 0)
                 {
                     cumulativeDistance += Vector3.Distance(trajectoryPositions[i], trajectoryPositions[i - 1]);
                     distanceArray[i - 1] = cumulativeDistance;
@@ -402,7 +404,7 @@ public class BSplineDrawer : MonoBehaviour
             lineRenderer.SetPosition(i, position);
             trajectoryPositions[i] = position;
             float cumulativeDistance = 0f;
-            if (i > 0) 
+            if (i > 0)
             {
                 cumulativeDistance += Vector3.Distance(trajectoryPositions[i], trajectoryPositions[i - 1]);
                 distanceArray[i - 1] = cumulativeDistance;
@@ -521,7 +523,7 @@ public class BSplineDrawer : MonoBehaviour
         {
             if (i > 1)
             {
-                float delta = (lineRenderer.GetPosition(i) - lineRenderer.GetPosition(i-1)).magnitude;
+                float delta = (lineRenderer.GetPosition(i) - lineRenderer.GetPosition(i - 1)).magnitude;
                 cumulativeDistance += delta;
                 distanceArray[i - 1] = cumulativeDistance;
             }
@@ -548,7 +550,7 @@ public class BSplineDrawer : MonoBehaviour
         }
     }
 
-      public List<CollisionInfo> CheckCollisionWithAnotherSegment(BSplineDrawer otherSegment, float geometricCollisionThreshold_m, float timeCollision_s)
+    public List<CollisionInfo> CheckCollisionWithAnotherSegment(BSplineDrawer otherSegment, float geometricCollisionThreshold_m, float timeCollision_s)
     {
         TrajectoryPoint[] traj1Points = trajectoryPoints;
         TrajectoryPoint[] traj2Points = otherSegment.trajectoryPoints;
@@ -589,6 +591,6 @@ public class TrajectoryPoint
     {
         position = pos;
         time = t;
-    }    
+    }
 }
 

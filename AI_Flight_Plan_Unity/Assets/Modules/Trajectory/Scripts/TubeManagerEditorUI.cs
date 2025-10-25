@@ -11,8 +11,9 @@ public class TubeManagerEditorUI : Editor
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
 
+
+        DrawDefaultInspector();
         TubeManager myScript = (TubeManager)target;
 
         // Horizontal row: Vector3 field on left, action button on right
@@ -20,22 +21,10 @@ public class TubeManagerEditorUI : Editor
         leftVector = EditorGUILayout.Vector3Field(GUIContent.none, leftVector, GUILayout.Width(220));
         if (GUILayout.Button("Check Pos Inside ", GUILayout.Height(20)))
         {
-          myScript.CheckPositionInsideOrNot(leftVector);
+            myScript.CheckPositionInsideOrNot(leftVector);
         }
         EditorGUILayout.EndHorizontal();
 
-        if (GUILayout.Button("Assign Data"))
-        {
-            myScript.AssignData();
-        }
-        if (GUILayout.Button("Update"))
-        {
-            myScript.UpdateTubeImmidiately();
-        }
-        if (GUILayout.Button("Clear"))
-        {
-            myScript.Clear();
-        }
-        
+
     }
 }

@@ -1,27 +1,23 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteAlways]
 public class TubeManager : MonoBehaviour
 {
-    [SerializeField] public Transform start;
-    [SerializeField] public Transform end;
-    [SerializeField] private float radius = 5f;
-
-    [Header("Appearance")]
-    [SerializeField] public bool isCollided { get; set { if (isCollided == value) return; isCollided = value; } }
-
-    [SerializeField, ColorUsage(true, true)] public Color edgeColor = Color.white;
-    [SerializeField] public Color surfaceColor = Color.blue;
-    [SerializeField] public float edgeSize = 0.1f;
 
 
-    [SerializeField, HideInInspector, ColorUsage(true, true)] private Color prev_edgeColor = Color.white;
-    [SerializeField, HideInInspector] private Color prev_surfaceColor = Color.blue;
-    [SerializeField, HideInInspector] private float prev_edgeSize = 0.1f;
+    [SerializeField] private bool isCollided;
+    [SerializeField] private Vector3 startPosition;
+    [SerializeField] private Vector3 endPosition;
 
-    [SerializeField, HideInInspector] private float length = 10f;
-    [SerializeField, HideInInspector] private float prev_radius = 5f;
-    [SerializeField, HideInInspector] private float prev_length = 10f;
+    [Header("Appearance Properties")]
+    [SerializeField] private bool isDrivenByThemeManager = false;
+    [SerializeField, ColorUsage(true, true)] private Color edgeColor;
+    [SerializeField] private Color surfaceColor;
+    [SerializeField] private float edgeSize;
+    [SerializeField] private float radius;
+    [SerializeField] private float length;
+
     [SerializeField, HideInInspector] private Material material;
     static readonly int BaseColorID = Shader.PropertyToID("_surfaceColor"); // URP Lit
     static readonly int EdgeColorID = Shader.PropertyToID("_edgeColor"); // URP Lit
@@ -31,155 +27,159 @@ public class TubeManager : MonoBehaviour
     [SerializeField, HideInInspector] MaterialPropertyBlock mpb;
     [SerializeField, HideInInspector] Renderer rend;
 
-    void Awake()
-    {
-        AssignData();
-    }
 
 
-    
-    public void Clear()
+    private void Awake()
     {
-        Debug.Log("Clearing TubeManager not implemented yet.");
-    }
-    public void AssignData()
-    {
-        if (!material)
+        rend = GetComponent<Renderer>();
+        if (material == null)
         {
-            // material = transform.GetComponent<Renderer>().material;
-            rend = GetComponent<Renderer>();
-            mpb = new MaterialPropertyBlock();
-
-        }        
-    }
-    // void Update()
-    // {
-    //     UpdateTube();
-    // }
-
-    // Update is called once per frame
-    public void UpdateTubeImmidiately()
-    {
-        Vector3 a = start.position;
-        Vector3 b = end.position;
-        Vector3 dir = b - a;
-        float newLength = dir.magnitude;
-        if (newLength <= Mathf.Epsilon) return;
-
-        // position: midpoint between start and end
-        transform.position = (a + b) * 0.5f;
-
-        // rotation: align local Y (up) to direction
-        transform.rotation = Quaternion.FromToRotation(Vector3.up, dir.normalized);
-        length = newLength;
-        UpdateLength();
-        UpdateRadius();
-        UpdateAppearance();
-        prev_edgeColor = edgeColor;
-        prev_surfaceColor = surfaceColor;
-        prev_edgeSize = edgeSize;
-        prev_radius = radius;
-        prev_length = length;
-    }
-    public void Tick()
-    {
-        Vector3 a = start.position;
-        Vector3 b = end.position;
-        Vector3 dir = b - a;
-        float newLength = dir.magnitude;
-        if (newLength <= Mathf.Epsilon) return;
-
-        // position: midpoint between start and end
-        transform.position = (a + b) * 0.5f;
-
-        // rotation: align local Y (up) to direction
-        transform.rotation = Quaternion.FromToRotation(Vector3.up, dir.normalized);
-        length = newLength;
-
-        if (prev_length != length)
-        {
-            UpdateLength();
+            material = rend.sharedMaterial;
         }
-        if (prev_radius != radius)
-        {
-            UpdateRadius();
-        }
-        if (prev_edgeColor != edgeColor || prev_surfaceColor != surfaceColor || prev_edgeSize != edgeSize)
-        {
-            UpdateAppearance();
-        }
-
-        prev_edgeColor = edgeColor;
-        prev_surfaceColor = surfaceColor;
-        prev_edgeSize = edgeSize;
-        prev_radius = radius;
-        prev_length = length;
-
-    }
-    void UpdateRadius()
-    {
+        mpb = new MaterialPropertyBlock();
         rend.GetPropertyBlock(mpb);
-        mpb.SetFloat(RadiusID, radius);
-        rend.SetPropertyBlock(mpb);
     }
-    void UpdateLength()
+    void OnValidate()
     {
+        rend = GetComponent<Renderer>();
+        if (material == null)
+        {
+            material = rend.sharedMaterial;
+        }
+        mpb = new MaterialPropertyBlock();
         rend.GetPropertyBlock(mpb);
-        mpb.SetFloat(LengthID, length);
-        rend.SetPropertyBlock(mpb);
-    }
-    void UpdateAppearance()
-    {
-        rend.GetPropertyBlock(mpb);
-        mpb.SetColor(EdgeColorID, edgeColor);
-        mpb.SetColor(BaseColorID, surfaceColor);
-        mpb.SetFloat(EdgeSizeID, edgeSize);
-        rend.SetPropertyBlock(mpb);
+        SetEdgeColor(edgeColor, true);
+        SetSurfaceColor(surfaceColor, true);
+        SetEdgeSize(edgeSize, true);
+        SetRadius(radius, true);
+        SetLength(length, true);
+        SetIsCollided(isCollided, true);
+        SetStartPosition(startPosition, true);
+        SetEndPosition(endPosition, true);
     }
 
-    public void SetRadius(float _radius)
+    void UpdateColorWithTheme()
     {
-        if (radius != _radius)
+        if (ThemeManager.Instance != null)
         {
-            radius = _radius;
-            UpdateRadius();
+            isDrivenByThemeManager = true;
+            if (isCollided)
+            {
+                SetEdgeColor(ThemeManager.Instance.theme.tubeEdgeColor_collided);
+                SetSurfaceColor(ThemeManager.Instance.theme.tubeSurfaceColor_collided);
+            }
+            else
+            {
+                SetEdgeColor(ThemeManager.Instance.theme.tubeEdgeColor_nonCollided);
+                SetSurfaceColor(ThemeManager.Instance.theme.tubeSurfaceColor_nonCollided);
+            }
+        }
+        else
+        {
+            isDrivenByThemeManager = false;
         }
     }
-    public void SetEdgeColor(Color _color)
+
+
+    public void SetEdgeColor(Color _color, bool isImmediate = false)
     {
-        if (edgeColor != _color)
+        if (edgeColor != _color || isImmediate)
         {
             edgeColor = _color;
-            UpdateAppearance();
+            rend.GetPropertyBlock(mpb);
+            mpb.SetColor(EdgeColorID, edgeColor);
+            rend.SetPropertyBlock(mpb);
         }
     }
-    public void SetSurfaceColor(Color _color)
+
+    public void SetSurfaceColor(Color _color, bool isImmediate = false)
     {
-        if (surfaceColor != _color)
+        if (_color != surfaceColor || isImmediate)
         {
             surfaceColor = _color;
-            UpdateAppearance();
+            rend.GetPropertyBlock(mpb);
+            mpb.SetColor(BaseColorID, surfaceColor);
+            rend.SetPropertyBlock(mpb);
         }
     }
-    public void SetEdgeSize(float _size)
+
+    public void SetEdgeSize(float _size, bool isImmediate = false)
     {
-        if (edgeSize != _size)
+        if (edgeSize != _size || isImmediate)
         {
             edgeSize = _size;
-            UpdateAppearance();
+            rend.GetPropertyBlock(mpb);
+            mpb.SetFloat(EdgeSizeID, edgeSize);
+            rend.SetPropertyBlock(mpb);
         }
     }
-    public void SetStartAndEndPositions(Vector3 startPos, Vector3 endPos)
+    public void SetLength(float _val, bool isImmediate = false)
     {
-        start.position = startPos;
-        end.position = endPos;
-        Tick();
+        if (length != _val || isImmediate)
+        {
+            length = _val;
+            rend.GetPropertyBlock(mpb);
+            mpb.SetFloat(LengthID, length);
+            rend.SetPropertyBlock(mpb);
+        }
     }
+    public void SetRadius(float _val, bool isImmediate = false)
+    {
+        if (radius != _val || isImmediate)
+        {
+            radius = _val;
+            rend.GetPropertyBlock(mpb);
+            mpb.SetFloat(RadiusID, radius);
+            rend.SetPropertyBlock(mpb);
+        }
+    }
+    public void SetIsCollided(bool _val, bool isImmediate = false)
+    {
+        if (isCollided != _val || isImmediate)
+        {
+            isCollided = _val;
+            UpdateColorWithTheme();
+        }
+    }
+
+    public void SetStartPosition(Vector3 _val, bool isImmediate = false)
+    {
+        if (startPosition != _val || isImmediate)
+        {
+            startPosition = _val;
+            SetLengthWithStartAndEndPositions();
+        }
+    }
+    public void SetEndPosition(Vector3 _val, bool isImmediate = false)
+    {
+        if (endPosition != _val || isImmediate)
+        {
+            endPosition = _val;
+            SetLengthWithStartAndEndPositions();
+        }
+    }
+    public void SetLengthWithStartAndEndPositions()
+    {
+        Vector3 a = startPosition;
+        Vector3 b = endPosition;
+        Vector3 dir = b - a;
+        float newLength = dir.magnitude;
+        if (newLength <= Mathf.Epsilon) return;
+
+        // position: midpoint between start and end
+        transform.position = (a + b) * 0.5f;
+
+        // rotation: align local Y (up) to direction
+        transform.rotation = Quaternion.FromToRotation(Vector3.up, dir.normalized);
+        SetLength(newLength);
+    }
+
     public bool CheckPositionInsideOrNot(Vector3 vector3)
     {
-        // Check if the position is inside the tube's volume
-        Vector3 closestPoint = Vector3.ClampMagnitude(vector3 - start.position, length) + start.position;
-        float distance = Vector3.Distance(closestPoint, end.position);
-        return distance <= radius;
+        // // Check if the position is inside the tube's volume
+        // Vector3 closestPoint = Vector3.ClampMagnitude(vector3 - start.position, length) + start.position;
+        // float distance = Vector3.Distance(closestPoint, end.position);
+        // return distance <= radius;
+        return false;
     }
 }
