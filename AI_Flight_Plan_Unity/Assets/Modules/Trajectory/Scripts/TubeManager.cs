@@ -12,6 +12,7 @@ public class TubeManager : MonoBehaviour
 
     [Header("Appearance Properties")]
     [SerializeField] private bool isDrivenByThemeManager = false;
+    [SerializeField] private Theme currentTheme;
     [SerializeField, ColorUsage(true, true)] private Color edgeColor;
     [SerializeField] private Color surfaceColor;
     [SerializeField] private float edgeSize;
@@ -63,20 +64,23 @@ public class TubeManager : MonoBehaviour
         if (ThemeManager.Instance != null)
         {
             isDrivenByThemeManager = true;
+            currentTheme = ThemeManager.Instance.theme;
             if (isCollided)
             {
-                SetEdgeColor(ThemeManager.Instance.theme.tubeEdgeColor_collided);
-                SetSurfaceColor(ThemeManager.Instance.theme.tubeSurfaceColor_collided);
+                SetEdgeColor(currentTheme.tubeEdgeColor_collided);
+                SetSurfaceColor(currentTheme.tubeSurfaceColor_collided);
             }
             else
             {
-                SetEdgeColor(ThemeManager.Instance.theme.tubeEdgeColor_nonCollided);
-                SetSurfaceColor(ThemeManager.Instance.theme.tubeSurfaceColor_nonCollided);
+                SetEdgeColor(currentTheme.tubeEdgeColor_nonCollided);
+                SetSurfaceColor(currentTheme.tubeSurfaceColor_nonCollided);
             }
+            SetEdgeSize(currentTheme.tubeEdgeSize);
         }
         else
         {
             isDrivenByThemeManager = false;
+            currentTheme = null;
         }
     }
 
