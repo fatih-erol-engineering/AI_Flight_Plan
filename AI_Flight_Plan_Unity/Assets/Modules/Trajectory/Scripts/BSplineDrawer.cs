@@ -46,6 +46,11 @@ public class BSplineDrawer : MonoBehaviour
         GameEvents.instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
         GameEvents.instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
     }
+    public void OnDestroy()
+    {
+        GameEvents.instance.OnWaypointPositionChanged -= OnWaypointPositionChanged;
+        GameEvents.instance.OnControlPointPositionChanged -= OnControlPointPositionChanged;
+    }
     public void OnWaypointPositionChanged(Waypoint wp, Vector3 oldPosition)
     {
         if (wp == waypointStart || wp == waypointEnd)

@@ -20,13 +20,6 @@ public class TrajectoryDrawer : MonoBehaviour
 
     [SerializeField, HideInInspector] private Vector3[] waypointPositions_AfterCreation;
 
-    [Header("Trajectory Tube Settings")]
-    [SerializeField] private bool showTube = true;
-    [SerializeField] private float tubeRadius = 5f;
-    [SerializeField] private float tubeEdgeSize = 0.1f;
-    [SerializeField, ColorUsage(true, true)] public Color tubeEdgeColor = Color.white;
-    [SerializeField] public Color tubeSurfaceColor = Color.blue;
-
     public void AssignData()
     {
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
