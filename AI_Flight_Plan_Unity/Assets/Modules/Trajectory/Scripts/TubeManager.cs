@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -180,10 +179,21 @@ public class TubeManager : MonoBehaviour
 
     public bool CheckPositionInsideOrNot(Vector3 vector3)
     {
-        // // Check if the position is inside the tube's volume
-        // Vector3 closestPoint = Vector3.ClampMagnitude(vector3 - start.position, length) + start.position;
-        // float distance = Vector3.Distance(closestPoint, end.position);
-        // return distance <= radius;
-        return false;
+        bool isInside = false;
+        Vector3 def1 = endPosition - startPosition;
+        Vector3 def2 = vector3 - startPosition;
+        float projectionLength = Vector3.Dot(def2, def1.normalized);
+        float angle_rad = Mathf.Acos(projectionLength / (def2.magnitude));
+        float distance = def2.magnitude * Mathf.Sin(angle_rad);
+        if (distance <= radius)
+        {
+            // Check if the projection of vector3 onto the tube axis is within the tube length            
+            if (projectionLength >= 0 && projectionLength <= def1.magnitude)
+            {
+                isInside = true;
+            }
+        }
+        SetIsCollided(isInside);
+        return isInside;
     }
 }
