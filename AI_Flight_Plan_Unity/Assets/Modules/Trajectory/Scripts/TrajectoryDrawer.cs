@@ -98,10 +98,6 @@ public class TrajectoryDrawer : MonoBehaviour
         foreach (BSplineDrawer bSplineDrawer in bSplineDrawerArray)
         {
             bSplineDrawer.Tick();
-            bSplineDrawer.SetTubeEdgeColor(tubeEdgeColor);
-            bSplineDrawer.SetTubeSurfaceColor(tubeSurfaceColor);
-            bSplineDrawer.SetTubeRadius(tubeRadius);
-            bSplineDrawer.SetTubeEdgeSize(tubeEdgeSize);
         }
         UpdateColor();
     }
@@ -150,14 +146,14 @@ public class TrajectoryDrawer : MonoBehaviour
             GameObject segmentObj = Instantiate(bSplineDrawerPrefab, SegmentContainer);
             BSplineDrawer bSplineDrawer = segmentObj.GetComponent<BSplineDrawer>();
 
-            ControlPoint[] controlPoints = new ControlPoint[segmentCount - 1];
+            List<ControlPoint> controlPoints = new List<ControlPoint>();
             for (int j = 0; j < segmentCount - 1; j++)
             {
                 // Set waypoints for the segment
                 float t = ((float)j + 1f) / segmentCount;
                 Vector3 position = Vector3.Lerp(startWaypoint.transform.position, endWaypoint.transform.position, t);
                 ControlPoint newControlPoint = Instantiate(controlPointPrefab, position, Quaternion.identity).GetComponent<ControlPoint>();
-                controlPoints[j] = newControlPoint;
+                controlPoints.Add(newControlPoint);
             }
 
             bSplineDrawer.SetStartWaypoint(startWaypoint);
@@ -178,44 +174,6 @@ public class TrajectoryDrawer : MonoBehaviour
 
 
 
-
-
-
-
-
-    public void SetTubeRadius(float _radius)
-    {
-        if (tubeRadius != _radius)
-        {
-            tubeRadius = _radius;
-            foreach(BSplineDrawer bSplineDrawer in bSplineDrawerArray)
-            {
-                bSplineDrawer.SetTubeRadius(_radius);
-            }
-        }
-    }
-    public void SetEdgeColor(Color _color)
-    {
-        if (tubeEdgeColor != _color)
-        {
-            tubeEdgeColor = _color;
-            foreach(BSplineDrawer bSplineDrawer in bSplineDrawerArray)
-            {
-                bSplineDrawer.SetTubeEdgeColor(_color);
-            }
-        }
-    }
-    public void SetSurfaceColor(Color _color)
-    {
-        if (tubeSurfaceColor != _color)
-        {
-            tubeSurfaceColor = _color;
-            foreach(BSplineDrawer bSplineDrawer in bSplineDrawerArray)
-            {
-                bSplineDrawer.SetTubeSurfaceColor(_color);
-            }
-        }
-    }
 
 
 

@@ -133,7 +133,7 @@ public class BSplineSegment
             }
 
             lr.SetPosition(i, C);
-            trajectoryPoints[i] = new TrajectoryPoint(C, Mathf.Lerp(startTime.second, endTime.second, t));
+            trajectoryPoints[i] = new TrajectoryPoint(C, new TimeGame(Mathf.Lerp(startTime.second, endTime.second, t)));
         }
 
     }
@@ -309,7 +309,7 @@ public class BSplineSegment
         {
             foreach (var traj2Point in traj2Points)
             {
-                if (Mathf.Abs(traj1Point.time - traj2Point.time) < timeCollision_s)
+                if (Mathf.Abs(traj1Point.time.second - traj2Point.time.second) < timeCollision_s)
                 {
                     if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m))
                     {

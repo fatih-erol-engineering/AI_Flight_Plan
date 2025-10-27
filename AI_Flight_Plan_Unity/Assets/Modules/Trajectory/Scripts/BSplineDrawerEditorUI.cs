@@ -11,17 +11,17 @@ public class BSplineDrawerEditorUI : Editor
 
         BSplineDrawer myScript = (BSplineDrawer)target;
 
-        if (GUILayout.Button("Assign Data"))
-        {
-            myScript.AssignData();
-        }
         if (GUILayout.Button("Create"))
         {
             myScript.Create();
         }
-        if (GUILayout.Button("Clear"))
-        {
-            myScript.Clear();
-        }
+        // if (GUILayout.Button("Create"))
+        // {
+        //     myScript.Create();
+        // }
+        // if (GUILayout.Button("Clear"))
+        // {
+        //     myScript.Clear();
+        // }
     }
 }

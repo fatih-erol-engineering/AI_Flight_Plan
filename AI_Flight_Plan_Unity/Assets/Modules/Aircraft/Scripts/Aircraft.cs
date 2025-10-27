@@ -84,8 +84,7 @@ public class Aircraft : SelectableBehaviour
     }
 
     public void MoveAircraftWithTime(float sec)
-    {
-        int ct = 0;
+    {        
         foreach (BSplineDrawer segment in trajectory.GetSegmentDrawers())
         {
             
@@ -94,41 +93,26 @@ public class Aircraft : SelectableBehaviour
 
             if ((sec < endTime_s) && (sec >= startTime_s))
             {                
-                float dt = segment.endTime.second - segment.startTime.second;
-                float oran = (sec - segment.startTime.second) / dt;
-
-
-                float distLength = (segment.GetDistanceArray()[segment.GetDistanceArray().Length - 1] - segment.GetDistanceArray()[0]);
-                float currentDist = distLength * oran;
-
-                int lowerIdx = 0;
-                int n = segment.GetDistanceArray().Length;
-
-                lowerIdx = SelectClosestIdx(segment.GetDistanceArray(), currentDist);
-
-                int upperIdx = lowerIdx + 1;
-
-                if (upperIdx > n - 1)
+                for (int i = 0; i < segment.trajectoryPoints.Length; i++)
                 {
-                    break;
-                }
-                else
-                {
+                    if (segment.trajectoryPoints[i].time.second > sec)
+                    {
+                        int upperIdx = i;
+                        int lowerIdx = Mathf.Max(0, i - 1);
 
-                    float lerpVal = (currentDist - segment.GetDistanceArray()[lowerIdx])/(segment.GetDistanceArray()[upperIdx]-segment.GetDistanceArray()[lowerIdx]);
-    
-                    lerpVal = Mathf.Clamp(lerpVal, 0, 1);
+                        float lerpVal = (sec - segment.trajectoryPoints[lowerIdx].time.second) / (segment.trajectoryPoints[upperIdx].time.second - segment.trajectoryPoints[lowerIdx].time.second);
+                        lerpVal = Mathf.Clamp(lerpVal, 0, 1);
 
-                    Vector3 lowerPosition = segment.GetTrajectoryPositionArray()[lowerIdx];
-                    Vector3 upperPosition = segment.GetTrajectoryPositionArray()[upperIdx];
-                    Vector3 unitDir = (upperPosition - lowerPosition) / (upperPosition - lowerPosition).magnitude;
-                    AlignLocalX_Absolute(transform, unitDir, Vector3.up*(-1f));
-                    Vector3 aircraftPosition = Vector3.Lerp(lowerPosition, upperPosition, lerpVal);
-                    transform.position = aircraftPosition;
+                        Vector3 lowerPosition = segment.trajectoryPoints[lowerIdx].position;
+                        Vector3 upperPosition = segment.trajectoryPoints[upperIdx].position;
+                        Vector3 unitDir = (upperPosition - lowerPosition).normalized;
+                        AlignLocalX_Absolute(transform, unitDir, Vector3.up * (-1f));
+                        Vector3 aircraftPosition = Vector3.Lerp(lowerPosition, upperPosition, lerpVal);
+                        transform.position = aircraftPosition;
+                        break;
+                    }
                 }
-                break;
             }
-            ct++;
         }
     }
     

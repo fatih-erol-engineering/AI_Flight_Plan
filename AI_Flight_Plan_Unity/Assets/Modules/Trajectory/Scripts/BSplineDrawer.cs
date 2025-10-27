@@ -1,216 +1,159 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 [RequireComponent(typeof(LineRenderer))]
 [ExecuteAlways]
 public class BSplineDrawer : MonoBehaviour
 {
+    [Header("Waypoints & Control Points")]
+    [SerializeField, HideInInspector] private List<ControlPoint> controlPoints;
+    [field: SerializeField] public Waypoint waypointStart { get; private set; }
+    [field: SerializeField] public Waypoint waypointEnd { get; private set; }
+    [field:SerializeField, HideInInspector] public TrajectoryPoint[] trajectoryPoints { get; private set; }
+    [SerializeField] public TimeGame startTime { get => waypointStart.time; }
+    [SerializeField] public TimeGame endTime { get => waypointEnd.time; }
+    // [SerializeField] private Vector3[] points;
+    // [SerializeField] private Vector3[] positions;
+    // [SerializeField] private float[] distances;        
+
+    [Header("Containers & Prefabs")]
     [field: SerializeField] public Transform controlPointContainer { get; private set; }
     [field: SerializeField] public Transform tubeContainer { get; private set; }
     [field: SerializeField] public GameObject controlPointPrefab { get; private set; }
-    [field: SerializeField] public Waypoint waypointStart { get; private set; }
-    [field: SerializeField] public Waypoint waypointEnd { get; private set; }
-    [SerializeField] public TimeGame startTime { get => waypointStart.time; }
-    [SerializeField] public TimeGame endTime { get => waypointEnd.time; }
-    [SerializeField, HideInInspector] private TimeGame prev_startTime;
-    [SerializeField, HideInInspector] private TimeGame prev_endTime;
+
+    [Header("Appearance")]
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
-    [SerializeField, HideInInspector] private ControlPoint[] controlPoints;
     [SerializeField] private int segmentCount = 32;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
-    [SerializeField, HideInInspector] private Transform[] points;
-    [SerializeField, HideInInspector] private Vector3[] prev_pointPositions;
-    [SerializeField, HideInInspector] private float[] distanceArray;
-    [SerializeField, HideInInspector] private Vector3[] trajectoryPositions;
-    [SerializeField, HideInInspector] private TrajectoryPoint[] trajectoryPoints;
-
 
     [Header("Tube")]
     [SerializeField] private bool showTube = true;
     [SerializeField] private GameObject tubePrefab;
-    [SerializeField] private float tubeRadius = 5f;
-    [SerializeField] private float tubeEdgeSize = 0.1f;
-    [SerializeField, ColorUsage(true, true)] private Color tubeEdgeColor = Color.white;
-    [SerializeField] private Color tubeSurfaceColor = Color.blue;
+    [SerializeField] private TubeManager[] tubeManagers;
 
-    [SerializeField, HideInInspector] private Transform tube;
-    [SerializeField, HideInInspector] private TubeManager[] tubeManagers;
-
-    [SerializeField, HideInInspector] Vector3 prev_CollisionPoint = Vector3.positiveInfinity;
-
-
-    public void AssignData()
+    
+    public void Create()
     {
-        lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer == null)
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.positionCount = 0;
+        bool initCondition = controlPointContainer != null && tubeContainer != null && controlPointPrefab != null;
+        initCondition = initCondition && waypointStart != null && waypointEnd != null;
+        initCondition = initCondition && waypointStart.time.second < waypointEnd.time.second;
+        initCondition = initCondition && tubePrefab != null;
+        initCondition = initCondition && segmentCount > 1;
 
-        lineRenderer.colorGradient = new Gradient();
-
-        int ct = 0;
-        controlPoints = new ControlPoint[controlPointContainer.childCount];
-
-        for (int i = 0; i < controlPointContainer.childCount; i++)
+        if (initCondition)
         {
-            Transform child = controlPointContainer.GetChild(i);
-            var controlPoint = child.GetComponent<ControlPoint>();
-            controlPoints[ct] = controlPoint;
-            ct++;
-
-        }
-
-        points = new Transform[controlPoints.Length + 2]; // 2 comes from start and end waypoints
-        points[0] = waypointStart.transform;
-        for (int i = 0; i < controlPoints.Length; i++)
-        {
-            points[i + 1] = controlPoints[i].transform;
-        }
-        points[points.Length - 1] = waypointEnd.transform;
-        trajectoryPositions = new Vector3[segmentCount];
-        distanceArray = new float[trajectoryPositions.Length - 1];
-        DrawCurve(points, lineRenderer, segmentCount);
-
-        trajectoryPoints = new TrajectoryPoint[trajectoryPositions.Length];
-
-        tubeManagers = new TubeManager[controlPoints.Length + 1];
-        if (controlPoints != null)
-        {
-            GameObject go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
-            go.transform.SetParent(tubeContainer, true);
-            tubeManagers[0] = go.GetComponentInChildren<TubeManager>();
-
-            Vector3 start = waypointStart.transform.position;
-            Vector3 end = controlPoints[0].GetClosestPointToSpline();
-
-            tubeManagers[0].SetStartPosition(start);
-            tubeManagers[0].SetEndPosition(end);
-
-            for (int i = 0; i < controlPoints.Length - 1; i++)
+            // Trajectory Points Initialization
+            int trajectoryPointCount = segmentCount + 1;
+            trajectoryPoints = new TrajectoryPoint[trajectoryPointCount];
+            for (int i = 0; i < trajectoryPointCount; i++)
             {
-                if (showTube)
-                {
-                    go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
-                    go.transform.SetParent(tubeContainer, true);
-                    tubeManagers[i + 1] = go.GetComponentInChildren<TubeManager>();
-
-                    start = controlPoints[i].GetClosestPointToSpline();
-                    end = controlPoints[i + 1].GetClosestPointToSpline();
-
-                    tubeManagers[i + 1].SetStartPosition(start);
-                    tubeManagers[i + 1].SetEndPosition(end);
-                }
-            }
-            go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
-            go.transform.SetParent(tubeContainer, true);
-            tubeManagers[tubeManagers.Length - 1] = go.GetComponentInChildren<TubeManager>();
-
-            start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
-            end = waypointEnd.transform.position;
-
-            tubeManagers[tubeManagers.Length - 1].SetStartPosition(start);
-            tubeManagers[tubeManagers.Length - 1].SetEndPosition(end);
-
-            prev_pointPositions = new Vector3[points.Length];
-            for (int i = 0; i < points.Length; i++)
-            {
-                prev_pointPositions[i] = points[i].position;
+                trajectoryPoints[i] = new TrajectoryPoint(Vector3.zero, new TimeGame(0f));
             }
 
-
-
-
-        }
-    }
-    public void Tick()
-    {
-        UpdateWithPerformance();
-    }
-
-    public void UpdateWithPerformance()
-    {
-        bool updateCondition = false;
-
-
-        for (int i = 0; i < points.Length; i++)
-        {
-            updateCondition |= prev_pointPositions[i] != points[i].position;
-            prev_pointPositions[i] = points[i].position;
-        }
-
-        if (!updateCondition)
-        {
-            updateCondition |= (prev_startTime.second != startTime.second) || (prev_endTime.second != endTime.second);
-            prev_startTime = startTime;
-            prev_endTime = endTime;
-        }
-
-        if (updateCondition)
-        {
-            UpdateImmediately();
-        }
-
-    }
-
-
-
-    public void UpdateImmediately()
-    {
-        DrawCurve(points, lineRenderer, segmentCount);
-
-        if (showTube)
-        {
-            if (controlPoints != null)
+            // Control Points Initialization
+            controlPoints = new List<ControlPoint>();            
+            for (int i = 0; i < controlPointContainer.childCount; i++)
             {
-                Vector3 start = waypointStart.transform.position;
-                Vector3 end = controlPoints[0].GetClosestPointToSpline();
+                Transform child = controlPointContainer.GetChild(i);
+                var controlPoint = child.GetComponent<ControlPoint>();
+                controlPoints.Add(controlPoint);                
+            }
+            DrawCurve();
+            // Line Renderer Initialization
+            lineRenderer = GetComponent<LineRenderer>();
+            if (lineRenderer == null)
+                lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer.positionCount = segmentCount;
+            lineRenderer.colorGradient = new Gradient();
+            UpdateLineRenderer();
 
-                tubeManagers[0].SetStartPosition(start);
-                tubeManagers[0].SetEndPosition(end);
 
-                for (int i = 0; i < controlPoints.Length - 1; i++)
+            // Tube Managers Initialization
+            if (showTube)
+            {
+                tubeManagers = new TubeManager[controlPoints.Count + 1];
+                tubeManagers[0] = SpawnTube();
+                tubeManagers[0].SetStartPosition(waypointStart.transform.position);
+                tubeManagers[0].SetEndPosition(controlPoints[0].GetClosestPointToSpline());
+
+                for (int i = 0; i < controlPoints.Count - 1; i++)
                 {
                     if (showTube)
                     {
-                        start = controlPoints[i].GetClosestPointToSpline();
-                        end = controlPoints[i + 1].GetClosestPointToSpline();
-
-
-                        tubeManagers[i + 1].SetStartPosition(start);
-                        tubeManagers[i + 1].SetEndPosition(end);
+                        tubeManagers[i + 1] = SpawnTube();
+                        tubeManagers[i + 1].SetStartPosition(controlPoints[i].GetClosestPointToSpline());
+                        tubeManagers[i + 1].SetEndPosition(controlPoints[i + 1].GetClosestPointToSpline());
                     }
                 }
-                start = controlPoints[controlPoints.Length - 1].GetClosestPointToSpline();
-                end = waypointEnd.transform.position;
-
-                tubeManagers[tubeManagers.Length - 1].SetStartPosition(start);
-                tubeManagers[tubeManagers.Length - 1].SetEndPosition(end);
+                
+                tubeManagers[tubeManagers.Length - 1] = SpawnTube();
+                tubeManagers[tubeManagers.Length - 1].SetStartPosition(controlPoints[controlPoints.Count - 1].GetClosestPointToSpline());
+                tubeManagers[tubeManagers.Length - 1].SetEndPosition(waypointEnd.transform.position);                        
             }
         }
-        UpdateDistanceList();
-        UpdateTrajectoryPointsWithTimeInfo();
+        else
+        {
+            Debug.LogWarning("BSplineDrawer: Initialization failed! Missing references or invalid segment count.");
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void UpdateColor()
+  
+    public void Tick()
     {
+        if (CheckReadyToUpdate())
+        {
+            DrawCurve();
+            UpdateLineRenderer();
+            UpdateTubes();
+        }
+        else
+        {
+            Debug.LogWarning("BSplineDrawer: Not ready to update.");
+        }
+    }
+    
+    public bool CheckReadyToUpdate()
+    {
+        bool waypointCondition = waypointStart != null && waypointEnd != null && waypointStart.time.second < waypointEnd.time.second;
+        return waypointCondition; // 2 adet waypoint var ve başlangıç bitiş zamanları sıralı. 
+    }
+  
+    public void UpdateTubes()
+    {
+        if (tubeManagers == null || tubeManagers.Length == 0) return;
+        if (showTube)
+        {
+            tubeManagers[0].SetStartPosition(waypointStart.transform.position);
+            tubeManagers[0].SetEndPosition(controlPoints[0].GetClosestPointToSpline());
+
+            for (int i = 0; i < controlPoints.Count - 1; i++)
+            {
+                if (showTube)
+                {
+                    tubeManagers[i + 1].SetStartPosition(controlPoints[i].GetClosestPointToSpline());
+                    tubeManagers[i + 1].SetEndPosition(controlPoints[i + 1].GetClosestPointToSpline());
+                }
+            }
+            tubeManagers[tubeManagers.Length - 1].SetStartPosition(controlPoints[controlPoints.Count - 1].GetClosestPointToSpline());
+            tubeManagers[tubeManagers.Length - 1].SetEndPosition(waypointEnd.transform.position);
+        }        
+    }
+    
+    public void UpdateLineRenderer()
+    {
+
+        // Position Update
         if (!lineRenderer) return;
-
-        int n = 2;
-        if (n < 2) n = 2;
-
+        if (lineRenderer.positionCount != segmentCount) lineRenderer.positionCount = segmentCount;
+        for (int i = 0; i < segmentCount; i++)
+        {
+            lineRenderer.SetPosition(i, trajectoryPoints[i].position);
+        }
+        
+        // Color Update 
+        
+        int n = 2;        
         var cKeys = new GradientColorKey[n];
         var aKeys = new GradientAlphaKey[n];
 
@@ -228,62 +171,69 @@ public class BSplineDrawer : MonoBehaviour
         }
 
         var g = new Gradient { mode = GradientMode.Blend };
-        try
-        {
-            g.SetKeys(cKeys, aKeys);
-        }
-        catch (System.Exception)
-        {
-            throw;
-        }
-        lineRenderer.colorGradient = g;
+        g.SetKeys(cKeys, aKeys);
 
+        lineRenderer.colorGradient = g;
     }
 
     public void SetStartColor(Color _color)
     {
-        startColor = _color;
-        UpdateColor();
+        if (startColor != _color)
+        {
+            startColor = _color;
+            UpdateLineRenderer();
+        }
     }
     public void SetEndColor(Color _color)
     {
-        endColor = _color;
-        UpdateColor();
+        if(endColor != _color)
+        {
+            endColor = _color;
+            UpdateLineRenderer();
+        }
     }
     public void SetStartWaypoint(Waypoint _waypoint)
     {
-        waypointStart = _waypoint;
+        if (waypointStart != _waypoint)
+        {
+            waypointStart = _waypoint;
+            UpdateLineRenderer();
+        }                
     }
     public void SetEndWaypoint(Waypoint _waypoint)
     {
-        waypointEnd = _waypoint;
-    }
-    public void SetControlPoints(Vector3[] _controlPointPositions)
-    {
-        DeleteControlPoints();
-        controlPoints = new ControlPoint[_controlPointPositions.Length];
-        int ct = 0;
-        foreach (Vector3 _controlPointPosition in _controlPointPositions)
+        if (waypointEnd != _waypoint)
         {
-            ControlPoint controlPoint = Instantiate(controlPointPrefab, _controlPointPosition, Quaternion.identity, controlPointContainer).GetComponent<ControlPoint>();
-            controlPoints[ct] = controlPoint;
-            ct++;
+            waypointEnd = _waypoint;
+            UpdateLineRenderer();
+        }        
+    }
+    // public void SetControlPoints(Vector3[] _controlPointPositions)
+    // {
+    //     DeleteControlPoints();
+    //     controlPoints = new ControlPoint[_controlPointPositions.Length];
+    //     int ct = 0;
+    //     foreach (Vector3 _controlPointPosition in _controlPointPositions)
+    //     {
+    //         ControlPoint controlPoint = Instantiate(controlPointPrefab, _controlPointPosition, Quaternion.identity, controlPointContainer).GetComponent<ControlPoint>();
+    //         controlPoints[ct] = controlPoint;
+    //         ct++;
+    //     }
+    // }
+
+    public void SetControlPoints(List<ControlPoint> _controlPoints)
+    {
+        if (controlPoints != _controlPoints)
+        {
+            DeleteControlPoints();
+            controlPoints = _controlPoints;
         }
     }
-
-    public void SetControlPoints(ControlPoint[] _controlPoints)
+    public void AddControlPoint(ControlPoint _controlPoint)
     {
-        DeleteControlPoints();
-        int ct = 0;
-        controlPoints = new ControlPoint[_controlPoints.Length];
-        foreach (ControlPoint _controlPoint in _controlPoints)
-        {
-            _controlPoint.transform.parent = controlPointContainer;
-            controlPoints[ct] = _controlPoint;
-            ct++;
-        }
+        _controlPoint.transform.parent = controlPointContainer;
+        controlPoints.Add(_controlPoint);
     }
-
 
 
     public void DeleteControlPoints()
@@ -300,132 +250,51 @@ public class BSplineDrawer : MonoBehaviour
 #endif
             }
         }
-        controlPoints = new ControlPoint[0];
-    }
-
-    public void Create()
-    {
-        AssignData();
-        DrawCurve(points, lineRenderer, segmentCount);
-        UpdateDistanceList();
-        UpdateTrajectoryPointsWithTimeInfo();
-    }
-    public void Clear()
-    {
-        if (lineRenderer != null)
-        {
-            lineRenderer.positionCount = 0;
-        }
-
+        controlPoints = new List<ControlPoint>();
     }
 
 
-
-    public void SetTubeRadius(float _radius)
-    {
-        if (tubeRadius != _radius)
-        {
-            tubeRadius = _radius;
-            foreach (TubeManager tubeManager in tubeManagers)
-                tubeManager.SetRadius(_radius);
-        }
-    }
-    public void SetTubeEdgeColor(Color _color)
-    {
-        if (tubeEdgeColor != _color)
-        {
-            tubeEdgeColor = _color;
-            foreach (TubeManager tubeManager in tubeManagers)
-                tubeManager.SetEdgeColor(_color);
-        }
-    }
-    public void SetTubeEdgeSize(float _size)
-    {
-        if (tubeEdgeSize != _size)
-        {
-            tubeEdgeSize = _size;
-            foreach (TubeManager tubeManager in tubeManagers)
-                tubeManager.SetEdgeSize(_size);
-        }
-    }
-    public void SetTubeSurfaceColor(Color _color)
-    {
-        if (tubeSurfaceColor != _color)
-        {
-            tubeSurfaceColor = _color;
-            foreach (TubeManager tubeManager in tubeManagers)
-                tubeManager.SetSurfaceColor(_color);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    public void DrawCurve(Transform[] _points, LineRenderer lineRenderer, int segmentCount)
+        public void DrawCurve()
     {
         // need at least degree+1 control points for cubic B-spline
-        int degree = 2;
-        if (_points.Length <= degree)
+        Vector3[] points = new Vector3[2 + controlPoints.Count];
+        points[0] = waypointStart.transform.position;
+        for (int i = 0; i < controlPoints.Count; i++)
         {
-            // fallback: draw straight polyline through control points
-            lineRenderer.positionCount = _points.Length;
-            trajectoryPositions = new Vector3[_points.Length];
-            distanceArray = new float[_points.Length - 1];
-            float cumulativeDistance = 0f;
-            for (int i = 0; i < _points.Length; i++)
-            {
-                lineRenderer.SetPosition(i, _points[i].transform.position);
-                trajectoryPositions[i] = _points[i].transform.position;
-                if (i > 0)
-                {
-                    cumulativeDistance += Vector3.Distance(trajectoryPositions[i], trajectoryPositions[i - 1]);
-                    distanceArray[i - 1] = cumulativeDistance;
-                }
-            }
-            return;
+            points[i + 1] = controlPoints[i].transform.position;
         }
+        points[points.Length - 1] = waypointEnd.transform.position;
+        float cumulativeDistance = 0f;
 
-        segmentCount = Mathf.Max(1, segmentCount);
-        lineRenderer.positionCount = segmentCount;
         int cpCt = 0;
         bool changeCpFlag = false;
         for (int i = 0; i < segmentCount; i++)
         {
             float t = (float)i / segmentCount;
-            Vector3 position = DeBoorCox(_points, t, degree);
-            lineRenderer.SetPosition(i, position);
-            trajectoryPositions[i] = position;
-            float cumulativeDistance = 0f;
+            trajectoryPoints[i].position = DeBoorCox(points, t, 2);
+            trajectoryPoints[i].time = new TimeGame(Mathf.Lerp(startTime.second, endTime.second, (float)i / (segmentCount - 1)));
             if (i > 0)
             {
-                cumulativeDistance += Vector3.Distance(trajectoryPositions[i], trajectoryPositions[i - 1]);
-                distanceArray[i - 1] = cumulativeDistance;
+                cumulativeDistance += Vector3.Distance(trajectoryPoints[i].position, trajectoryPoints[i - 1].position);
+                trajectoryPoints[i - 1].distanceToStart = cumulativeDistance;
             }
 
             // Set closest points to spline for control points
             if (i > 0)
             {
-                if (cpCt <= controlPoints.Length - 1)
+                if (cpCt <= controlPoints.Count - 1)
                 {
-                    float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, lineRenderer.GetPosition(i - 1));
-                    float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, position);
+                    float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i - 1].position);
+                    float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i].position);
 
                     changeCpFlag = dist2 > dist1;
                     if (changeCpFlag)
                     {
-                        controlPoints[cpCt].SetClosestPointToSpline(position);
+                        controlPoints[cpCt].SetClosestPointToSpline(trajectoryPoints[i].position);
                         cpCt++;
                     }
                 }
-            }
+            }            
         }
     }
 
@@ -435,7 +304,7 @@ public class BSplineDrawer : MonoBehaviour
     /// t in [0,1]
     /// degree = spline degree (e.g. 3 for cubic)
     /// </summary>
-    private Vector3 DeBoorCox(Transform[] _points, float t, int degree)
+    private Vector3 DeBoorCox(Vector3[] _points, float t, int degree)
     {
         int n = _points.Length - 1;
         int p = degree;
@@ -476,7 +345,7 @@ public class BSplineDrawer : MonoBehaviour
         {
             int idx = k - p + j;
             idx = Mathf.Clamp(idx, 0, n);
-            d[j] = _points[idx].transform.position;
+            d[j] = _points[idx];
             // // // // // if (idx != 0 || idx == _points.Length - 1) // start end and points are waypoints, so only control points are set
             // // // // // {
             // // // // //     controlPoints[idx - 1].SetClosestPointToSpline(d[j]); 
@@ -506,49 +375,16 @@ public class BSplineDrawer : MonoBehaviour
 
 
 
+    // public float[] GetDistanceArray()
+    // {
+    //     return distanceArray;
+    // }
 
+    // public Vector3[] GetTrajectoryPositionArray()
+    // {
+    //     return trajectoryPositions;
+    // }
 
-
-
-
-
-
-
-    void UpdateDistanceList()
-    {
-        distanceArray = new float[segmentCount - 1];
-        float cumulativeDistance = 0f;
-
-        for (int i = 0; i < segmentCount; i++)
-        {
-            if (i > 1)
-            {
-                float delta = (lineRenderer.GetPosition(i) - lineRenderer.GetPosition(i - 1)).magnitude;
-                cumulativeDistance += delta;
-                distanceArray[i - 1] = cumulativeDistance;
-            }
-        }
-    }
-
-    public float[] GetDistanceArray()
-    {
-        return distanceArray;
-    }
-
-    public Vector3[] GetTrajectoryPositionArray()
-    {
-        return trajectoryPositions;
-    }
-
-    public void UpdateTrajectoryPointsWithTimeInfo()
-    {
-        for (int i = 0; i < trajectoryPositions.Length; i++)
-        {
-            float t = (float)i / (trajectoryPositions.Length - 1);
-            float timeSeconds = Mathf.Lerp(startTime.second, endTime.second, t);
-            trajectoryPoints[i] = new TrajectoryPoint(trajectoryPositions[i], timeSeconds);
-        }
-    }
 
     public List<CollisionInfo> CheckCollisionWithAnotherSegment(BSplineDrawer otherSegment, float geometricCollisionThreshold_m, float timeCollision_s)
     {
@@ -561,9 +397,9 @@ public class BSplineDrawer : MonoBehaviour
         {
             foreach (var traj2Point in traj2Points)
             {
-                if (Mathf.Abs(traj1Point.time - traj2Point.time) < timeCollision_s)
+                if (Mathf.Abs(traj1Point.time.second - traj2Point.time.second) < timeCollision_s)
                 {
-                    if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m) && prev_CollisionPoint != traj1Point.position)
+                    if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m))
                     {
 
                         collisionInfoList.Add(new CollisionInfo
@@ -573,7 +409,6 @@ public class BSplineDrawer : MonoBehaviour
                             point = traj1Point.position,
                             time = traj1Point.time,
                         });
-                        prev_CollisionPoint = traj1Point.position;
 
                     }
                 }
@@ -581,16 +416,25 @@ public class BSplineDrawer : MonoBehaviour
         }
         return collisionInfoList;
     }
+    public TubeManager SpawnTube()
+    {
+        GameObject go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
+        go.transform.SetParent(tubeContainer, true);
+        TubeManager _tubeManager = go.GetComponentInChildren<TubeManager>();
+        return _tubeManager;
+    }
 }
 
 public class TrajectoryPoint
 {
     public Vector3 position;
-    public float time;
-    public TrajectoryPoint(Vector3 pos, float t)
+    public TimeGame time;
+    public float distanceToStart; //Distance percentage from start to end in percent 0-1. 1 Means end point. 0 Means start point.
+    public CollisionInfo collisionInfo;
+    public TrajectoryPoint(Vector3 _pos, TimeGame _t)
     {
-        position = pos;
-        time = t;
+        position = _pos;
+        time = _t;
+        collisionInfo = new CollisionInfo();
     }
 }
-

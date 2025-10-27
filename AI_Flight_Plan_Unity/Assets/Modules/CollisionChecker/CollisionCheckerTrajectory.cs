@@ -88,8 +88,9 @@ public class CollisionCheckerTrajectory : MonoBehaviour
 
 public class CollisionInfo
 {
+    public bool isCollided;
     public GameObject objCurrent;
     public GameObject objCollidedWith;
     public Vector3 point;
-    public float time;
+    public TimeGame time;
 }

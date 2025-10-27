@@ -2,66 +2,32 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class Waypoint : SelectableBehaviour
-{
-    [field:SerializeField]
-    public TimeGame time { get; private set; }
-    private Vector3 oldPos;
-    public ControlPoint[] controlPoints;
-    [SerializeField]
-    private MeshRenderer[] meshRenderers;
+{    
+    [field:SerializeField] public TimeGame time { get; private set; }        
+    [SerializeField] private MeshRenderer[] meshRenderers;
     private Material baseMaterial;
     
     protected void OnEnable()
-    {
-        oldPos = transform.position;
+    {        
         AssignData();
     }
     void AssignData()
     {        
         baseMaterial = meshRenderers[0].material;
     }
-    void CheckAssignment<T>(T obj)
-    {
-        if (obj == null)
-            Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
-    }
 
-    public void setPosition(Vector3 globalPosition)
+    public void SetPosition(Vector3 _position)
     {
-        transform.position = globalPosition;
-        Vector3 deltaPos = globalPosition - oldPos; ;
-        if (controlPoints != null)
-        {
-            foreach (ControlPoint controlPoint in controlPoints)
-            {
-                if (controlPoint != null)
-                {
-                    controlPoint.transform.position += deltaPos;
-                }
-            }
-        }
-        oldPos = globalPosition;
+        if (transform.position == _position) return;                
+        Vector3 oldPosition = transform.position;
+        GameEvents.instance.WaypointPositionChanged(this,oldPosition);
+        transform.position = _position;
     }
     public void SetTime(TimeGame _time)
     {
+        TimeGame oldTime = time;
+        GameEvents.instance.WaypointTimeChanged(this, oldTime);
         time.SetTime(_time.second);
-    }
-    public void setPosition(Vector3 globalPosition, float time_s)
-    {
-        transform.position = globalPosition;
-        Vector3 deltaPos = globalPosition - oldPos;
-        if (controlPoints != null)
-        {
-            foreach (ControlPoint controlPoint in controlPoints)
-            {
-                if (controlPoint != null)
-                {
-                    controlPoint.transform.position += deltaPos;
-                }
-            }
-        }
-        oldPos = globalPosition;
-        time.SetTime(time_s) ;
     }
     public void UpdateMaterial(Material material)
     {
