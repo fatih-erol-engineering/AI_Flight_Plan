@@ -109,29 +109,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bede003c36ff2f641a82dc6ee3cad193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  controlPoints: []
+  <waypointStart>k__BackingField: {fileID: 0}
+  <waypointEnd>k__BackingField: {fileID: 0}
+  isReadyToUpdate: 0
   <controlPointContainer>k__BackingField: {fileID: 781948544774136140}
   <tubeContainer>k__BackingField: {fileID: 2591734894475299980}
   <controlPointPrefab>k__BackingField: {fileID: 517102805373364547, guid: 619f54b1d9dc3ae40b0965f8807610f9, type: 3}
-  <waypointStart>k__BackingField: {fileID: 0}
-  <waypointEnd>k__BackingField: {fileID: 0}
-  prev_startTime:
-    <second>k__BackingField: 0
-  prev_endTime:
-    <second>k__BackingField: 0
   startColor: {r: 0, g: 1, b: 0, a: 1}
   endColor: {r: 1, g: 0, b: 0, a: 1}
-  controlPoints: []
   segmentCount: 100
   lineRenderer: {fileID: 5454687630953241645}
-  points: []
-  prev_pointPositions: []
-  showTube: 1
-  tubePrefab: {fileID: 7706456871423217740, guid: d9225d08beb077a42a1619e63f086b18, type: 3}
-  tubeRadius: 10
-  tubeEdgeSize: 0.1
-  tubeEdgeColor: {r: 0, g: 1.2568283, b: 16, a: 1}
-  tubeSurfaceColor: {r: 0, g: 0, b: 1, a: 0.101960786}
-  tube: {fileID: 0}
+  showTubes: 1
+  tubePrefab: {fileID: 132796536547646836, guid: 1eef6f948def3af499ecd01465493a41, type: 3}
   tubeManagers: []
 --- !u!120 &5454687630953241645
 LineRenderer:

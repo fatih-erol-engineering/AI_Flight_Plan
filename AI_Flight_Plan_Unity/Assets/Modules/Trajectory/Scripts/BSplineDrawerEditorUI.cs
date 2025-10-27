@@ -19,9 +19,9 @@ public class BSplineDrawerEditorUI : Editor
         // {
         //     myScript.Create();
         // }
-        // if (GUILayout.Button("Clear"))
-        // {
-        //     myScript.Clear();
-        // }
+        if (GUILayout.Button("Clear"))
+        {
+            myScript.Clear();
+        }
     }
 }

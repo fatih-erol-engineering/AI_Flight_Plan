@@ -38,6 +38,7 @@ public class TubeManager : MonoBehaviour
         }
         mpb = new MaterialPropertyBlock();
         rend.GetPropertyBlock(mpb);
+        OnValidate();
     }
     void OnValidate()
     {

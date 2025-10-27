@@ -8,8 +8,8 @@ public class TrajectoryDrawer : MonoBehaviour
     [field: SerializeField] public TimeGame startTime { get; private set; }
     [field: SerializeField] public TimeGame endTime { get; private set; }
     [field: SerializeField] public WaypointFactory waypointFactory { get; private set; }
-    [field: SerializeField] public CreateModeWaypointManager createModeWaypointManager { get; private set; }    
-    [SerializeField] private Color startColor = Color.green;    
+    [field: SerializeField] public CreateModeWaypointManager createModeWaypointManager { get; private set; }
+    [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private Transform waypointContainer;
     [SerializeField] private Transform SegmentContainer;
@@ -30,7 +30,7 @@ public class TrajectoryDrawer : MonoBehaviour
     public void AssignData()
     {
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
-        endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;        
+        endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;
         int waypointCount = waypointContainer.childCount;
         waypointPositions_AfterCreation = new Vector3[waypointCount];
         for (int i = 0; i < waypointCount; i++)
@@ -64,19 +64,19 @@ public class TrajectoryDrawer : MonoBehaviour
             }
         }
     }
-    public void UpdateColorWithTotalTime(TimeGame totalStartTime,TimeGame totalEndTime)
+    public void UpdateColorWithTotalTime(TimeGame totalStartTime, TimeGame totalEndTime)
     {
-        
+
         for (int i = 0; i < bSplineDrawerArray.Length; i++)
         {
-            BSplineDrawer bSplineDrawer = bSplineDrawerArray[i];    
+            BSplineDrawer bSplineDrawer = bSplineDrawerArray[i];
             float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - startTime.second) / (endTime.second - startTime.second));
             Color _startColor = Color.Lerp(startColor, endColor, startVal);
 
             float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - startTime.second) / (endTime.second - startTime.second));
             Color _endColor = Color.Lerp(startColor, endColor, endVal);
             bSplineDrawer.SetStartColor(_startColor);
-            bSplineDrawer.SetEndColor(_endColor);            
+            bSplineDrawer.SetEndColor(_endColor);
         }
     }
 
@@ -118,7 +118,7 @@ public class TrajectoryDrawer : MonoBehaviour
 
     }
     public void Create()
-    {        
+    {
         if (waypointContainer == null || bSplineDrawerPrefab == null)
         {
             Debug.LogError("WaypointContainer or BSplineDrawerPrefab is not assigned.");
@@ -133,7 +133,7 @@ public class TrajectoryDrawer : MonoBehaviour
         }
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
         endTime = waypointContainer.GetChild(waypointCount - 1).GetComponent<Waypoint>().time;
-        
+
         bSplineDrawerArray = new BSplineDrawer[waypointCount - 1];
         for (int i = 0; i < waypointCount - 1; i++)
         {
@@ -230,7 +230,7 @@ public class TrajectoryDrawer : MonoBehaviour
                 List<CollisionInfo> currentCollisionInfoList = segment1.CheckCollisionWithAnotherSegment(segment2, geometricCollisionThreshold_m, timeCollision_s);
                 totalCollisionInfoList.AddRange(currentCollisionInfoList);
             }
-        }              
+        }
         return totalCollisionInfoList;
     }
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[ExecuteAlways]
 public class TimeManager : MonoBehaviour
 {
     public static TimeManager Instance { get; private set; }
@@ -17,7 +18,7 @@ public class TimeManager : MonoBehaviour
     [field: SerializeField]
     public float endTime_s { get; private set; }
 
-    [field: SerializeField] 
+    [field: SerializeField]
     public bool playFlag { get; private set; }
     [field: SerializeField]
     public float timeScale { get; private set; } = 1f;
@@ -27,6 +28,12 @@ public class TimeManager : MonoBehaviour
 
 
     void Awake()
+    {
+        // Ensure a single instance
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+    }
+    void OnValidate()
     {
         // Ensure a single instance
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -49,10 +56,10 @@ public class TimeManager : MonoBehaviour
         {
             if (createModeManager.trajectoryCreatedFlag)
             {
-                UpdateTimeWithTrajectoryTimes();                
-            }            
+                UpdateTimeWithTrajectoryTimes();
+            }
         }
-        
+
 
         prev_trajectoryCreatedFlag = createModeManager.trajectoryCreatedFlag;
     }
@@ -73,7 +80,7 @@ public class TimeManager : MonoBehaviour
             }
         }
         startTime_s = minTime;
-        endTime_s = maxTime;        
+        endTime_s = maxTime;
         timeSliderUI.SetTimeSliderMinValue(startTime_s);
         timeSliderUI.SetTimeSliderMaxValue(endTime_s);
         isUpdated = true;

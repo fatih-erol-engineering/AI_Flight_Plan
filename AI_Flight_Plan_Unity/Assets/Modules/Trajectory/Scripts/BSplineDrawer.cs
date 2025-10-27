@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
+
 [RequireComponent(typeof(LineRenderer))]
 [ExecuteAlways]
 public class BSplineDrawer : MonoBehaviour
@@ -10,12 +14,10 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField, HideInInspector] private List<ControlPoint> controlPoints;
     [field: SerializeField] public Waypoint waypointStart { get; private set; }
     [field: SerializeField] public Waypoint waypointEnd { get; private set; }
-    [field:SerializeField, HideInInspector] public TrajectoryPoint[] trajectoryPoints { get; private set; }
+    [field: SerializeField, HideInInspector] public TrajectoryPoint[] trajectoryPoints { get; private set; }
     [SerializeField] public TimeGame startTime { get => waypointStart.time; }
     [SerializeField] public TimeGame endTime { get => waypointEnd.time; }
-    // [SerializeField] private Vector3[] points;
-    // [SerializeField] private Vector3[] positions;
-    // [SerializeField] private float[] distances;        
+    [SerializeField, HideInInspector] private bool isReadyToUpdate = false;
 
     [Header("Containers & Prefabs")]
     [field: SerializeField] public Transform controlPointContainer { get; private set; }
@@ -29,11 +31,36 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
 
     [Header("Tube")]
-    [SerializeField] private bool showTube = true;
+    [SerializeField] private bool showTubes = true;
     [SerializeField] private GameObject tubePrefab;
     [SerializeField] private TubeManager[] tubeManagers;
 
-    
+
+    public void Awake()
+    {
+        GameEvents.instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
+        GameEvents.instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
+    }
+    public void OnValidate()
+    {
+        GameEvents.instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
+        GameEvents.instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
+    }
+    public void OnWaypointPositionChanged(Waypoint wp, Vector3 oldPosition)
+    {
+        if (wp == waypointStart || wp == waypointEnd)
+        {
+            Tick();
+        }
+    }
+    public void OnControlPointPositionChanged(ControlPoint cp, Vector3 oldPosition)
+    {
+        if (controlPoints.Contains(cp))
+        {
+            Tick();
+        }
+    }
+
     public void Create()
     {
         bool initCondition = controlPointContainer != null && tubeContainer != null && controlPointPrefab != null;
@@ -53,12 +80,12 @@ public class BSplineDrawer : MonoBehaviour
             }
 
             // Control Points Initialization
-            controlPoints = new List<ControlPoint>();            
+            controlPoints = new List<ControlPoint>();
             for (int i = 0; i < controlPointContainer.childCount; i++)
             {
                 Transform child = controlPointContainer.GetChild(i);
                 var controlPoint = child.GetComponent<ControlPoint>();
-                controlPoints.Add(controlPoint);                
+                controlPoints.Add(controlPoint);
             }
             DrawCurve();
             // Line Renderer Initialization
@@ -71,37 +98,49 @@ public class BSplineDrawer : MonoBehaviour
 
 
             // Tube Managers Initialization
-            if (showTube)
+            if (showTubes)
             {
                 tubeManagers = new TubeManager[controlPoints.Count + 1];
-                tubeManagers[0] = SpawnTube();
-                tubeManagers[0].SetStartPosition(waypointStart.transform.position);
-                tubeManagers[0].SetEndPosition(controlPoints[0].GetClosestPointToSpline());
-
-                for (int i = 0; i < controlPoints.Count - 1; i++)
+                if (controlPointContainer.childCount != 0)
                 {
-                    if (showTube)
+                    tubeManagers[0] = SpawnTube();
+                    tubeManagers[0].SetStartPosition(waypointStart.transform.position);
+                    tubeManagers[0].SetEndPosition(controlPoints[0].GetClosestPointToSpline());
+
+                    for (int i = 0; i < controlPoints.Count - 1; i++)
                     {
-                        tubeManagers[i + 1] = SpawnTube();
-                        tubeManagers[i + 1].SetStartPosition(controlPoints[i].GetClosestPointToSpline());
-                        tubeManagers[i + 1].SetEndPosition(controlPoints[i + 1].GetClosestPointToSpline());
+                        if (showTubes)
+                        {
+                            tubeManagers[i + 1] = SpawnTube();
+                            tubeManagers[i + 1].SetStartPosition(controlPoints[i].GetClosestPointToSpline());
+                            tubeManagers[i + 1].SetEndPosition(controlPoints[i + 1].GetClosestPointToSpline());
+                        }
                     }
+
+                    tubeManagers[tubeManagers.Length - 1] = SpawnTube();
+                    tubeManagers[tubeManagers.Length - 1].SetStartPosition(controlPoints[controlPoints.Count - 1].GetClosestPointToSpline());
+                    tubeManagers[tubeManagers.Length - 1].SetEndPosition(waypointEnd.transform.position);
                 }
-                
-                tubeManagers[tubeManagers.Length - 1] = SpawnTube();
-                tubeManagers[tubeManagers.Length - 1].SetStartPosition(controlPoints[controlPoints.Count - 1].GetClosestPointToSpline());
-                tubeManagers[tubeManagers.Length - 1].SetEndPosition(waypointEnd.transform.position);                        
+                else
+                {
+                    tubeManagers[0] = SpawnTube();
+                    tubeManagers[0].SetStartPosition(waypointStart.transform.position);
+                    tubeManagers[0].SetEndPosition(waypointEnd.transform.position);
+                }
             }
+            isReadyToUpdate = true;
         }
         else
         {
+            isReadyToUpdate = false;
             Debug.LogWarning("BSplineDrawer: Initialization failed! Missing references or invalid segment count.");
         }
     }
-  
+
     public void Tick()
     {
-        if (CheckReadyToUpdate())
+        CheckReadyToUpdate();
+        if (isReadyToUpdate)
         {
             DrawCurve();
             UpdateLineRenderer();
@@ -112,34 +151,79 @@ public class BSplineDrawer : MonoBehaviour
             Debug.LogWarning("BSplineDrawer: Not ready to update.");
         }
     }
-    
+
     public bool CheckReadyToUpdate()
     {
         bool waypointCondition = waypointStart != null && waypointEnd != null && waypointStart.time.second < waypointEnd.time.second;
+        if (!waypointCondition)
+        {
+            Debug.LogWarning("BSplineDrawer: Waypoints are not properly set or times are invalid.");
+        }
+        isReadyToUpdate = waypointCondition;
         return waypointCondition; // 2 adet waypoint var ve başlangıç bitiş zamanları sıralı. 
     }
-  
+
     public void UpdateTubes()
     {
         if (tubeManagers == null || tubeManagers.Length == 0) return;
-        if (showTube)
+        if (showTubes)
         {
-            tubeManagers[0].SetStartPosition(waypointStart.transform.position);
-            tubeManagers[0].SetEndPosition(controlPoints[0].GetClosestPointToSpline());
-
-            for (int i = 0; i < controlPoints.Count - 1; i++)
+            if (controlPointContainer.childCount != 0)
             {
-                if (showTube)
+
+                tubeManagers[0].SetStartPosition(waypointStart.transform.position);
+                tubeManagers[0].SetEndPosition(controlPoints[0].GetClosestPointToSpline());
+
+                for (int i = 0; i < controlPoints.Count - 1; i++)
                 {
-                    tubeManagers[i + 1].SetStartPosition(controlPoints[i].GetClosestPointToSpline());
-                    tubeManagers[i + 1].SetEndPosition(controlPoints[i + 1].GetClosestPointToSpline());
+                    if (showTubes)
+                    {
+
+                        tubeManagers[i + 1].SetStartPosition(controlPoints[i].GetClosestPointToSpline());
+                        tubeManagers[i + 1].SetEndPosition(controlPoints[i + 1].GetClosestPointToSpline());
+                    }
                 }
+
+                tubeManagers[tubeManagers.Length - 1].SetStartPosition(controlPoints[controlPoints.Count - 1].GetClosestPointToSpline());
+                tubeManagers[tubeManagers.Length - 1].SetEndPosition(waypointEnd.transform.position);
             }
-            tubeManagers[tubeManagers.Length - 1].SetStartPosition(controlPoints[controlPoints.Count - 1].GetClosestPointToSpline());
-            tubeManagers[tubeManagers.Length - 1].SetEndPosition(waypointEnd.transform.position);
-        }        
+            else
+            {
+
+                tubeManagers[0].SetStartPosition(waypointStart.transform.position);
+                tubeManagers[0].SetEndPosition(waypointEnd.transform.position);
+            }
+        }
     }
-    
+    public void Clear()
+    {
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 0;
+        }
+        DeleteTubes();
+    }
+    public void DeleteTubes()
+    {
+        if (tubeContainer == null) return;
+
+        // Iterate backwards to safely remove children without skipping
+        int currentCount = tubeContainer.childCount;
+        for (int i = 0; i < currentCount; i++)
+        {
+            Transform child = tubeContainer.GetChild(0); // Always get the first child since we are removing them
+            if (child == null) continue;
+#if UNITY_EDITOR            
+            DestroyImmediate(child.gameObject);
+#else
+            Destroy(child.gameObject);
+#endif
+        }
+
+        tubeManagers = new TubeManager[0];
+    }
+
+
     public void UpdateLineRenderer()
     {
 
@@ -150,10 +234,10 @@ public class BSplineDrawer : MonoBehaviour
         {
             lineRenderer.SetPosition(i, trajectoryPoints[i].position);
         }
-        
+
         // Color Update 
-        
-        int n = 2;        
+
+        int n = 2;
         var cKeys = new GradientColorKey[n];
         var aKeys = new GradientAlphaKey[n];
 
@@ -181,15 +265,21 @@ public class BSplineDrawer : MonoBehaviour
         if (startColor != _color)
         {
             startColor = _color;
-            UpdateLineRenderer();
+            if (isReadyToUpdate)
+            {
+                UpdateLineRenderer();
+            }
         }
     }
     public void SetEndColor(Color _color)
     {
-        if(endColor != _color)
+        if (endColor != _color)
         {
             endColor = _color;
-            UpdateLineRenderer();
+            if (isReadyToUpdate)
+            {
+                UpdateLineRenderer();
+            }
         }
     }
     public void SetStartWaypoint(Waypoint _waypoint)
@@ -197,104 +287,88 @@ public class BSplineDrawer : MonoBehaviour
         if (waypointStart != _waypoint)
         {
             waypointStart = _waypoint;
-            UpdateLineRenderer();
-        }                
+            if (isReadyToUpdate)
+            {
+                Tick();
+            }
+        }
     }
     public void SetEndWaypoint(Waypoint _waypoint)
     {
         if (waypointEnd != _waypoint)
         {
             waypointEnd = _waypoint;
-            UpdateLineRenderer();
-        }        
-    }
-    // public void SetControlPoints(Vector3[] _controlPointPositions)
-    // {
-    //     DeleteControlPoints();
-    //     controlPoints = new ControlPoint[_controlPointPositions.Length];
-    //     int ct = 0;
-    //     foreach (Vector3 _controlPointPosition in _controlPointPositions)
-    //     {
-    //         ControlPoint controlPoint = Instantiate(controlPointPrefab, _controlPointPosition, Quaternion.identity, controlPointContainer).GetComponent<ControlPoint>();
-    //         controlPoints[ct] = controlPoint;
-    //         ct++;
-    //     }
-    // }
-
-    public void SetControlPoints(List<ControlPoint> _controlPoints)
-    {
-        if (controlPoints != _controlPoints)
-        {
-            DeleteControlPoints();
-            controlPoints = _controlPoints;
+            if (isReadyToUpdate)
+            {
+                Tick();
+            }
         }
     }
+
     public void AddControlPoint(ControlPoint _controlPoint)
     {
         _controlPoint.transform.parent = controlPointContainer;
         controlPoints.Add(_controlPoint);
+        Tick();
     }
-
-
-    public void DeleteControlPoints()
+    public void RemoveLastControlPoint()
     {
-        foreach (Transform child in controlPointContainer)
+        if (controlPoints.Count > 0)
         {
-            var controlPoint = child.GetComponent<ControlPoint>();
-            if (controlPoint != null)
+            ControlPoint lastControlPoint = controlPoints[controlPoints.Count - 1];
+            controlPoints.RemoveAt(controlPoints.Count - 1);
+            Destroy(lastControlPoint.gameObject);
+            if (isReadyToUpdate)
             {
-#if UNITY_EDITOR
-                UnityEditor.Undo.DestroyObjectImmediate(controlPoint);
-#else
-                Destroy(controlPoint);
-#endif
+                Tick();
             }
         }
-        controlPoints = new List<ControlPoint>();
     }
 
-
-        public void DrawCurve()
+    public void DrawCurve()
     {
         // need at least degree+1 control points for cubic B-spline
-        Vector3[] points = new Vector3[2 + controlPoints.Count];
-        points[0] = waypointStart.transform.position;
-        for (int i = 0; i < controlPoints.Count; i++)
+        if (isReadyToUpdate)
         {
-            points[i + 1] = controlPoints[i].transform.position;
-        }
-        points[points.Length - 1] = waypointEnd.transform.position;
-        float cumulativeDistance = 0f;
-
-        int cpCt = 0;
-        bool changeCpFlag = false;
-        for (int i = 0; i < segmentCount; i++)
-        {
-            float t = (float)i / segmentCount;
-            trajectoryPoints[i].position = DeBoorCox(points, t, 2);
-            trajectoryPoints[i].time = new TimeGame(Mathf.Lerp(startTime.second, endTime.second, (float)i / (segmentCount - 1)));
-            if (i > 0)
+            Vector3[] points = new Vector3[2 + controlPoints.Count];
+            points[0] = waypointStart.transform.position;
+            for (int i = 0; i < controlPoints.Count; i++)
             {
-                cumulativeDistance += Vector3.Distance(trajectoryPoints[i].position, trajectoryPoints[i - 1].position);
-                trajectoryPoints[i - 1].distanceToStart = cumulativeDistance;
+                points[i + 1] = controlPoints[i].transform.position;
             }
+            points[points.Length - 1] = waypointEnd.transform.position;
+            float cumulativeDistance = 0f;
 
-            // Set closest points to spline for control points
-            if (i > 0)
+            int cpCt = 0;
+            bool changeCpFlag = false;
+            for (int i = 0; i < segmentCount; i++)
             {
-                if (cpCt <= controlPoints.Count - 1)
+                float t = (float)i / segmentCount;
+                trajectoryPoints[i].position = DeBoorCox(points, t, 2);
+                trajectoryPoints[i].time = new TimeGame(Mathf.Lerp(startTime.second, endTime.second, (float)i / (segmentCount - 1)));
+                if (i > 0)
                 {
-                    float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i - 1].position);
-                    float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i].position);
+                    cumulativeDistance += Vector3.Distance(trajectoryPoints[i].position, trajectoryPoints[i - 1].position);
+                    trajectoryPoints[i - 1].distanceToStart = cumulativeDistance;
+                }
 
-                    changeCpFlag = dist2 > dist1;
-                    if (changeCpFlag)
+                // Set closest points to spline for control points
+                if (i > 0)
+                {
+                    if (cpCt <= controlPoints.Count - 1)
                     {
-                        controlPoints[cpCt].SetClosestPointToSpline(trajectoryPoints[i].position);
-                        cpCt++;
+                        float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i - 1].position);
+                        float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i].position);
+
+                        changeCpFlag = dist2 > dist1;
+                        if (changeCpFlag)
+                        {
+                            controlPoints[cpCt].SetClosestPointToSpline(trajectoryPoints[i].position);
+                            cpCt++;
+                        }
                     }
                 }
-            }            
+            }
         }
     }
 
@@ -422,6 +496,58 @@ public class BSplineDrawer : MonoBehaviour
         go.transform.SetParent(tubeContainer, true);
         TubeManager _tubeManager = go.GetComponentInChildren<TubeManager>();
         return _tubeManager;
+    }
+
+    public void Hidetubes()
+    {
+        if (tubeManagers == null) return;
+        foreach (var tube in tubeManagers)
+        {
+            tube.gameObject.SetActive(false);
+        }
+        showTubes = false;
+    }
+    public void Showtubes()
+    {
+        if (tubeManagers == null) return;
+        foreach (var tube in tubeManagers)
+        {
+            tube.gameObject.SetActive(true);
+        }
+        showTubes = true;
+    }
+    public void SetControlPoints(List<ControlPoint> _controlPoints)
+    {
+        if (_controlPoints != controlPoints)
+        {
+            DeleteControlPoints();
+            controlPoints.Clear();
+            foreach (ControlPoint _controlPoint in _controlPoints)
+            {
+                _controlPoint.transform.parent = controlPointContainer;
+                controlPoints.Add(_controlPoint);
+            }
+            if (isReadyToUpdate)
+            {
+                Tick();
+            }
+        }
+    }
+    public void DeleteControlPoints()
+    {
+        foreach (Transform child in controlPointContainer)
+        {
+            var controlPoint = child.GetComponent<ControlPoint>();
+            if (controlPoint != null)
+            {
+#if UNITY_EDITOR
+                UnityEditor.Undo.DestroyObjectImmediate(controlPoint);
+#else
+                Destroy(controlPoint);
+#endif
+            }
+        }
+        controlPoints.Clear();
     }
 }
 
