@@ -37,6 +37,7 @@ public class TrajectoryDrawer : MonoBehaviour
     //     AssignData();
     //     Create();
     // }
+
     void Update()
     {
         if (isReadyToUpdate)

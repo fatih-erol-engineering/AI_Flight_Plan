@@ -5,17 +5,21 @@ using UnityEditor;
 public class ControlPoint : MonoBehaviour
 {
     [SerializeField] private Vector3 closestPointToSpline;
-
-
+    private Vector3 prev_position = Vector3.zero;
 
 #if UNITY_EDITOR
     void Update()
     {
-        if (Selection.activeTransform != null && Selection.activeTransform.GetComponent<ControlPoint>() != null)
+        if (UnityEditor.EditorApplication.isPlaying)
         {
-            if (Selection.activeTransform.GetComponent<ControlPoint>() == this)
+            var go = UnityEditor.Selection.activeGameObject;
+            if (go != null)
             {
-                GameEvents.instance.ControlPointPositionChanged(this, transform.position);
+                if (go.GetComponent<ControlPoint>() != null && transform.position != prev_position)
+                {
+                    GameEvents.instance.ControlPointPositionChanged(this, prev_position);
+                    prev_position = transform.position;
+                }
             }
         }
     }

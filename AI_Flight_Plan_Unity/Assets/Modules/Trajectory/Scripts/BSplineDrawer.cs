@@ -142,6 +142,7 @@ public class BSplineDrawer : MonoBehaviour
         }
     }
 
+
     public void Tick()
     {
         CheckReadyToUpdate();

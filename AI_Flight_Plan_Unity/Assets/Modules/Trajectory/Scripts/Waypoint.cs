@@ -6,21 +6,41 @@ using UnityEditor;
 public class Waypoint : SelectableBehaviour
 {
     [field: SerializeField] public TimeGame time { get; private set; }
+    private Vector3 prev_position = Vector3.zero;
     [SerializeField] private MeshRenderer[] meshRenderers;
     private Material baseMaterial;
 
-    // #if UNITY_EDITOR
+    // // // // // // #if UNITY_EDITOR
+    // // // // // void Update()
+    // // // // // {
+    // // // // //     if (Selection.activeTransform != null && Selection.activeTransform.GetComponent<Waypoint>() != null)
+    // // // // //     {
+    // // // // //         if (Selection.activeTransform.GetComponent<Waypoint>() == this)
+    // // // // //         {
+    // // // // //             GameEvents.instance.WaypointPositionChanged(this, transform.position);
+    // // // // //         }
+    // // // // //     }
+    // // // // // }
+
+
+
+#if UNITY_EDITOR
     void Update()
     {
-        if (Selection.activeTransform != null && Selection.activeTransform.GetComponent<Waypoint>() != null)
+        if (UnityEditor.EditorApplication.isPlaying)
         {
-            if (Selection.activeTransform.GetComponent<Waypoint>() == this)
+            var go = UnityEditor.Selection.activeGameObject;
+            if (go != null)
             {
-                GameEvents.instance.WaypointPositionChanged(this, transform.position);
+                if (go.GetComponent<Waypoint>() != null && transform.position != prev_position)
+                {
+                    GameEvents.instance.WaypointPositionChanged(this, prev_position);
+                    prev_position = transform.position;
+                }
             }
         }
     }
-    // #endif
+#endif
     public void Awake()
     {
         AssignData();
