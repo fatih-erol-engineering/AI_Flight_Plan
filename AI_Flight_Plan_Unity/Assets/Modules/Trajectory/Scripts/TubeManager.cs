@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [ExecuteAlways]
+
 public class TubeManager : MonoBehaviour
 {
 
@@ -145,6 +146,10 @@ public class TubeManager : MonoBehaviour
             UpdateColorWithTheme();
         }
     }
+    public bool GetIsCollided()
+    {
+        return isCollided;
+    }
 
     public void SetStartPosition(Vector3 _val, bool isImmediate = false)
     {
@@ -194,7 +199,6 @@ public class TubeManager : MonoBehaviour
                 isInside = true;
             }
         }
-        SetIsCollided(isInside);
         return isInside;
     }
 }

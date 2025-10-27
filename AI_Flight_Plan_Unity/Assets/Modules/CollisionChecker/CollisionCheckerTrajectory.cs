@@ -9,9 +9,21 @@ public class CollisionCheckerTrajectory : MonoBehaviour
     public List<GameObject> markers { get; private set; }
     void Awake()
     {
-        markers = new List<GameObject>();   
+        markers = new List<GameObject>();
+        GameEvents.instance.OnSplineChanged += OnSplineChanged;
     }
 
+
+    public void OnDestroy()
+    {
+        GameEvents.instance.OnSplineChanged -= OnSplineChanged;
+    }
+
+    public void OnSplineChanged(BSplineDrawer splineDrawer)
+    {
+        ClearCollisions();
+        CheckCollisions();
+    }
     // Update is called once per frame
     public void CheckCollisions()
     {
@@ -26,10 +38,10 @@ public class CollisionCheckerTrajectory : MonoBehaviour
             // }
             for (int j = 0; j < allTraj.Count; j++)
             {
-                if(allTraj[j] == allTraj[i]) continue;
+                if (allTraj[j] == allTraj[i]) continue;
                 List<CollisionInfo> current_collisionInfoList = allTraj[i].CheckCollisionWithAnotherTrajectory(allTraj[j], geometricCollisionTreshold_m, timeCollision_s);
 
-                if(current_collisionInfoList.Count != 0 && current_collisionInfoList != null)
+                if (current_collisionInfoList.Count != 0 && current_collisionInfoList != null)
                 {
                     // Vector3 cumPos = Vector3.zero;
                     // Vector3 minPos = current_collisionInfoList[0].point;
@@ -58,9 +70,9 @@ public class CollisionCheckerTrajectory : MonoBehaviour
         int ct = 0;
         foreach (var collision in all_collisionInfoList)
         {
-            if (ct+1 < all_collisionInfoList.Count)
+            if (ct + 1 < all_collisionInfoList.Count)
             {
-                if(all_collisionInfoList[ct].point != all_collisionInfoList[ct+1].point)    
+                if (all_collisionInfoList[ct].point != all_collisionInfoList[ct + 1].point)
                 {
                     var marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     marker.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
@@ -83,7 +95,7 @@ public class CollisionCheckerTrajectory : MonoBehaviour
         }
         markers.Clear();
     }
-    
+
 }
 
 public class CollisionInfo

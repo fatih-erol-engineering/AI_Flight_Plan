@@ -37,4 +37,11 @@ public class GameEvents : MonoBehaviour
     }
 
 
+    // Spline Events
+    public event Action<BSplineDrawer> OnSplineChanged;
+    public void SplineChanged(BSplineDrawer splineDrawer)
+    {
+        OnSplineChanged?.Invoke(splineDrawer);
+    }
+
 }

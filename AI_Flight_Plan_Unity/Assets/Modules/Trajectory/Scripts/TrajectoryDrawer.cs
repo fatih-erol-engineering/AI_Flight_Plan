@@ -46,7 +46,6 @@ public class TrajectoryDrawer : MonoBehaviour
                 Clear();
                 Create();
             }
-            Tick();
 
             if (TimeManager.Instance.isUpdated)
             {
@@ -163,6 +162,7 @@ public class TrajectoryDrawer : MonoBehaviour
         }
 
         isReadyToUpdate = true;
+        Tick();
     }
 
 

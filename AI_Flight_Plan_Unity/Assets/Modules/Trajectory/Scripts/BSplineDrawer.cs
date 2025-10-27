@@ -77,7 +77,7 @@ public class BSplineDrawer : MonoBehaviour
         if (initCondition)
         {
             // Trajectory Points Initialization
-            int trajectoryPointCount = segmentCount + 1;
+            int trajectoryPointCount = segmentCount;
             trajectoryPoints = new TrajectoryPoint[trajectoryPointCount];
             for (int i = 0; i < trajectoryPointCount; i++)
             {
@@ -150,6 +150,7 @@ public class BSplineDrawer : MonoBehaviour
             DrawCurve();
             UpdateLineRenderer();
             UpdateTubes();
+            GameEvents.instance.SplineChanged(this);
         }
         else
         {
@@ -469,7 +470,6 @@ public class BSplineDrawer : MonoBehaviour
     {
         TrajectoryPoint[] traj1Points = trajectoryPoints;
         TrajectoryPoint[] traj2Points = otherSegment.trajectoryPoints;
-        List<CollisionInfo> innerCollisionInfoList = new List<CollisionInfo>();
         List<CollisionInfo> collisionInfoList = new List<CollisionInfo>();
 
         foreach (var traj1Point in traj1Points)
@@ -480,15 +480,29 @@ public class BSplineDrawer : MonoBehaviour
                 {
                     if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m))
                     {
-
                         collisionInfoList.Add(new CollisionInfo
                         {
+                            isCollided = true,
                             objCurrent = gameObject,
                             objCollidedWith = otherSegment.gameObject,
                             point = traj1Point.position,
                             time = traj1Point.time,
                         });
-
+                    }
+                }
+            }
+        }
+        if (showTubes)
+        {
+            for (int j = 0; j < tubeManagers.Length; j++)
+            {
+                tubeManagers[j].SetIsCollided(false);
+                for (int i = 0; i < collisionInfoList.Count; i++)
+                {
+                    if (tubeManagers[j].CheckPositionInsideOrNot(collisionInfoList[i].point))
+                    {
+                        tubeManagers[j].SetIsCollided(true);
+                        break;
                     }
                 }
             }
