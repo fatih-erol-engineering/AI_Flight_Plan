@@ -197,6 +197,7 @@ public class TrajectoryDrawer : MonoBehaviour
 #endif
         }
         isReadyToUpdate = false;
+        Debug.ClearDeveloperConsole();
     }
 
 

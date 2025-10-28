@@ -10,18 +10,17 @@ public class ControlPoint : MonoBehaviour
 #if UNITY_EDITOR
     void Update()
     {
-        if (UnityEditor.EditorApplication.isPlaying)
+
+        var go = UnityEditor.Selection.activeGameObject;
+        if (go != null)
         {
-            var go = UnityEditor.Selection.activeGameObject;
-            if (go != null)
+            if (go.GetComponent<ControlPoint>() != null && transform.position != prev_position)
             {
-                if (go.GetComponent<ControlPoint>() != null && transform.position != prev_position)
-                {
-                    GameEvents.instance.ControlPointPositionChanged(this, prev_position);
-                    prev_position = transform.position;
-                }
+                GameEvents.instance.ControlPointPositionChanged(this, prev_position);
+                prev_position = transform.position;
             }
         }
+
     }
 #endif
     public void SetPosition(Vector3 _position)

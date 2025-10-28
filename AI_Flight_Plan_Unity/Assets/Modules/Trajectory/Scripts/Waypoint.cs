@@ -27,20 +27,18 @@ public class Waypoint : SelectableBehaviour
 #if UNITY_EDITOR
     void Update()
     {
-        if (UnityEditor.EditorApplication.isPlaying)
+        var go = UnityEditor.Selection.activeGameObject;
+        if (go != null)
         {
-            var go = UnityEditor.Selection.activeGameObject;
-            if (go != null)
+            if (go.GetComponent<Waypoint>() != null && transform.position != prev_position)
             {
-                if (go.GetComponent<Waypoint>() != null && transform.position != prev_position)
-                {
-                    GameEvents.instance.WaypointPositionChanged(this, prev_position);
-                    prev_position = transform.position;
-                }
+                GameEvents.instance.WaypointPositionChanged(this, prev_position);
+                prev_position = transform.position;
             }
         }
     }
 #endif
+
     public void Awake()
     {
         AssignData();
