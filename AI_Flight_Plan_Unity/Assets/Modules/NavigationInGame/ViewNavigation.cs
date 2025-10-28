@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
- 
+
 /// <summary>
 /// Editor-like scene navigation at runtime:
 /// - RMB = free look (yaw/pitch)
@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 /// </summary>
 [RequireComponent(typeof(Camera))]
 public class ViewNavigation : MonoBehaviour
-{    
+{
     // --- XZ-only pan with fixed plane & anchor ---
     private bool _isPanningXZ = false;
     private Vector3 _panAnchorWorld; // where you first clicked in world
@@ -24,7 +24,7 @@ public class ViewNavigation : MonoBehaviour
     public bool invertY = false;
 
     [Header("Move / Pan / Dolly")]
-    public float moveSpeed = 5f;
+    public float moveSpeed = 30f;
     public float boostMultiplier = 5f;
     public float slowMultiplier = 0.2f;
     public float panSensitivity = 0.5f;
@@ -40,7 +40,7 @@ public class ViewNavigation : MonoBehaviour
     public KeyCode constantFocusKey = KeyCode.K;
     public bool constantFocusFlag = false;
 
-    [Header("Runtime Selection")]        
+    [Header("Runtime Selection")]
     public bool focusOnSelection = false;
     public bool instantOnSelection = false;
 
@@ -54,7 +54,7 @@ public class ViewNavigation : MonoBehaviour
     // Internal state
     private Vector3 _pivot;             // orbit pivot in world
     private float _pivotDistance = 5f;  // camera->pivot distance
-    private bool  _hasPivot = false;
+    private bool _hasPivot = false;
 
     private Vector3 _targetPos;
     private Quaternion _targetRot;
@@ -91,7 +91,7 @@ public class ViewNavigation : MonoBehaviour
 
         // Optional: auto-focus when your selection changes
         if (HoverSelectionSystem.Instance.selectedObject != null)
-        {            
+        {
             if (focusOnSelection && HoverSelectionSystem.Instance.selectedObject != _prevSelected)
             {
                 _prevSelected = HoverSelectionSystem.Instance.selectedObject;
@@ -133,7 +133,7 @@ public class ViewNavigation : MonoBehaviour
             manualInput = true;
 
             float s = lookSensitivity;
-            _yaw   += mx * s;
+            _yaw += mx * s;
             _pitch += (invertY ? my : -my) * s; // correct: use my for pitch
             _pitch = Mathf.Clamp(_pitch, -89.9f, 89.9f);
             _targetRot = Quaternion.Euler(_pitch, _yaw, 0f);
@@ -151,7 +151,7 @@ public class ViewNavigation : MonoBehaviour
             }
 
             float s = orbitSensitivity;
-            _yaw   += mx * s;
+            _yaw += mx * s;
             _pitch += (invertY ? my : -my) * s;
             _pitch = Mathf.Clamp(_pitch, -89.9f, 89.9f);
             _targetRot = Quaternion.Euler(_pitch, _yaw, 0f);
@@ -160,59 +160,59 @@ public class ViewNavigation : MonoBehaviour
             _targetPos = _pivot - (_targetRot * Vector3.forward * _pivotDistance);
         }
 
-// ------- PAN XZ with fixed anchor (MMB) -------
-if (mmbd && !alt)
-{
-    // 1) Try to anchor on actual geometry under cursor
-    var ray = _cam.ScreenPointToRay(Input.mousePosition);
-    if (Physics.Raycast(ray, out var hit, maxFocusDistance, focusMask, QueryTriggerInteraction.Ignore))
-    {
-        _panAnchorWorld = hit.point;
-        _panPlaneY      = _panAnchorWorld.y; // lock plane to the clicked surface height
-    }
-    else
-    {
-        // 2) Fallback: intersect with a horizontal plane (use pivot height)
-        var plane = new Plane(Vector3.up, new Vector3(0f, _pivot.y, 0f));
-        if (plane.Raycast(ray, out float enter))
+        // ------- PAN XZ with fixed anchor (MMB) -------
+        if (mmbd && !alt)
         {
-            _panAnchorWorld = ray.GetPoint(enter);
-            _panPlaneY      = _pivot.y; // lock plane for the whole drag
+            // 1) Try to anchor on actual geometry under cursor
+            var ray = _cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out var hit, maxFocusDistance, focusMask, QueryTriggerInteraction.Ignore))
+            {
+                _panAnchorWorld = hit.point;
+                _panPlaneY = _panAnchorWorld.y; // lock plane to the clicked surface height
+            }
+            else
+            {
+                // 2) Fallback: intersect with a horizontal plane (use pivot height)
+                var plane = new Plane(Vector3.up, new Vector3(0f, _pivot.y, 0f));
+                if (plane.Raycast(ray, out float enter))
+                {
+                    _panAnchorWorld = ray.GetPoint(enter);
+                    _panPlaneY = _pivot.y; // lock plane for the whole drag
+                }
+                else
+                {
+                    // no valid anchor; abort this pan
+                    _isPanningXZ = false;
+                    goto PanEndCheck;
+                }
+            }
+
+            _isPanningXZ = true;
+            // Any manual pan cancels focus smoothing
+            _isFocusing = false;
         }
-        else
+
+        if (_isPanningXZ && mmb && !alt)
         {
-            // no valid anchor; abort this pan
-            _isPanningXZ = false;
-            goto PanEndCheck;
+            // Always raycast onto the SAME horizontal plane (no height drift)
+            var plane = new Plane(Vector3.up, new Vector3(0f, _panPlaneY, 0f));
+            var ray = _cam.ScreenPointToRay(Input.mousePosition);
+
+            if (plane.Raycast(ray, out float enter))
+            {
+                Vector3 currentOnPlane = ray.GetPoint(enter);   // y == _panPlaneY
+                Vector3 delta = _panAnchorWorld - currentOnPlane;
+                delta.y = 0f; // enforce pure XZ translation
+
+                _targetPos += delta;
+                _pivot += delta; // keep orbit sphere & pan plane coherent
+            }
         }
-    }
 
-    _isPanningXZ = true;
-    // Any manual pan cancels focus smoothing
-    _isFocusing = false;
-}
-
-if (_isPanningXZ && mmb && !alt)
-{
-    // Always raycast onto the SAME horizontal plane (no height drift)
-    var plane = new Plane(Vector3.up, new Vector3(0f, _panPlaneY, 0f));
-    var ray   = _cam.ScreenPointToRay(Input.mousePosition);
-
-    if (plane.Raycast(ray, out float enter))
-    {
-        Vector3 currentOnPlane = ray.GetPoint(enter);   // y == _panPlaneY
-        Vector3 delta = _panAnchorWorld - currentOnPlane;
-        delta.y = 0f; // enforce pure XZ translation
-
-        _targetPos += delta;
-        _pivot     += delta; // keep orbit sphere & pan plane coherent
-    }
-}
-
-// release or mode change ends pan
-PanEndCheck:
-if (Input.GetMouseButtonUp(2) || alt) _isPanningXZ = false;
-        if(rmb)
+    // release or mode change ends pan
+    PanEndCheck:
+        if (Input.GetMouseButtonUp(2) || alt) _isPanningXZ = false;
+        if (rmb)
         {
             // RMB held: scroll adjusts fly speed (like Scene view)
             if (Mathf.Abs(scroll) > 0.0001f)
@@ -249,7 +249,7 @@ if (Input.GetMouseButtonUp(2) || alt) _isPanningXZ = false;
         {
             constantFocusFlag = !constantFocusFlag;
         }
-        
+
         if (constantFocusFlag)
         {
             manualInput = false; // pressing F is not "manual nav" that should cancel smoothing
