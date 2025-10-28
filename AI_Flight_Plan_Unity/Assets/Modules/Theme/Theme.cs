@@ -21,12 +21,6 @@ public class Theme : ScriptableObject
     public Material Hover;
     public Material Select;
     public Material Preview;
-    [Header("Trajectory")]
-    public Color startColor;
-
-    public Color endColor;
-    public int linePointNumber;
-
     [Header("Tube Properties")]
 
     [ColorUsage(true, true)] public Color tubeEdgeColor_nonCollided;

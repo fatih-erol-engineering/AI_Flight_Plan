@@ -17,17 +17,17 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="timeSliderRoot" style="flex-grow: 1; bottom: 0; flex-shrink: 1; height: 78px; align-self: center; align-content: auto; align-items: center; flex-direction: column; justify-content: space-between; width: auto; position: absolute; left: 0; right: 0; margin-left: 20px; margin-bottom: 20px; margin-right: 20px; opacity: 1;">
-        <ui:VisualElement name="timeSliderBtnRoot" style="flex-grow: 0; flex-direction: row; align-self: auto; align-content: auto; justify-content: flex-start; background-color: rgba(0, 0, 0, 0); align-items: auto; width: auto; height: auto; margin-left: 0; opacity: 1;">
-            <ui:Button name="backwardStepBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/BackwardStep.png?fileID=2800000&amp;guid=589c2e7719a52934ab629bb8840ec3ee&amp;type=3#BackwardStep&quot;); display: none;" />
-            <ui:Button name="backwardBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/BackwardFull.png?fileID=2800000&amp;guid=07afd40500b6d7b4d95171699af55fbe&amp;type=3#BackwardFull&quot;); background-size: contain; display: flex;" />
-            <ui:Button name="playPauseBtn" class="timeSliderButton timeSliderPlayState timeSliderPauseState" />
-            <ui:Button name="forwardBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/ForwardFull.png?fileID=2800000&amp;guid=49ab9e3ec3d1e4641b3dbb09c7545602&amp;type=3#ForwardFull&quot;); display: flex;" />
-            <ui:Button name="forwardStepBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/ForwardStep.png?fileID=2800000&amp;guid=b96f7d0b02c1849478ff218370bb5f08&amp;type=3#ForwardStep&quot;); display: none;" />
-        </ui:VisualElement>
         <ui:VisualElement name="VisualElement" style="flex-grow: 1; align-content: auto; align-items: auto; align-self: stretch; flex-direction: row; opacity: 1;">
             <ui:FloatField value="0" name="currentTimeField" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" hide-placeholder-on-focus="false" focusable="false" style="align-self: center; justify-content: flex-start; align-items: auto; overflow: visible; flex-shrink: 1; align-content: auto; -unity-text-align: upper-center;" />
             <ui:Slider value="0" high-value="100" name="timeSlider" fill="true" show-input-field="false" direction="Horizontal" inverted="false" style="align-items: auto; flex-shrink: 1; flex-grow: 1; min-height: auto; height: auto; align-self: center; align-content: auto;" />
             <ui:FloatField value="10" name="maxTimeField" select-all-on-mouse-up="false" select-all-on-focus="false" select-word-by-double-click="false" select-line-by-triple-click="false" emoji-fallback-support="false" hide-placeholder-on-focus="false" focusable="false" style="align-self: center; justify-content: flex-start; align-items: auto; overflow: visible; flex-shrink: 1; align-content: auto; -unity-text-align: upper-center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="timeSliderBtnRoot" style="flex-grow: 0; flex-direction: row; align-self: auto; align-content: auto; justify-content: flex-start; background-color: rgba(0, 0, 0, 0); align-items: auto; width: auto; height: auto; margin-left: 0; opacity: 1;">
+            <ui:Button name="backwardStepBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/BackwardStepFull.png?fileID=2800000&amp;guid=1503c879d607ea34499f9f7875cb50ea&amp;type=3#BackwardStepFull&quot;); display: flex;" />
+            <ui:Button name="backwardBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/BackwardFull.png?fileID=2800000&amp;guid=07afd40500b6d7b4d95171699af55fbe&amp;type=3#BackwardFull&quot;); background-size: contain; display: none;" />
+            <ui:Button name="playPauseBtn" class="timeSliderButton timeSliderPlayState timeSliderPauseState" />
+            <ui:Button name="forwardBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/ForwardFull.png?fileID=2800000&amp;guid=49ab9e3ec3d1e4641b3dbb09c7545602&amp;type=3#ForwardFull&quot;); display: none;" />
+            <ui:Button name="forwardStepBtn" class="timeSliderButton" style="background-image: url(&quot;project://database/Assets/Icons/ForwardStepFull.png?fileID=2800000&amp;guid=0e237e8b18b8ba44d88c61fc5e04465d&amp;type=3#ForwardStepFull&quot;); display: flex;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

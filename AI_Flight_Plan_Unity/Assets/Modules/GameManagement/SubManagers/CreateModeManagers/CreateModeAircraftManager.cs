@@ -6,21 +6,21 @@ using System.Globalization;
 
 
 public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
-{        
-    [SerializeField] 
+{
+    [SerializeField]
     private UIDocument uiDocument;
     [SerializeField] private Camera mainCamera;
-    [field: SerializeField] public AircraftFactory aircraftFactory{ get; private set; }  
-    [SerializeField] private VisualTreeAsset popupUxml; 
-    [SerializeField] private LayerMask hitMask= ~0;
+    [field: SerializeField] public AircraftFactory aircraftFactory { get; private set; }
+    [SerializeField] private VisualTreeAsset popupUxml;
+    [SerializeField] private LayerMask hitMask = ~0;
     private float maxDistance;
     [SerializeField] private KeyCode spawnKey = KeyCode.Mouse0;
 
-    [Header("Preview")]    
+    [Header("Preview")]
     private Transform previewContainer;
-    private Material previewMaterialOverride; 
-    [SerializeField] private Theme theme; 
-    private GameObject previewInstance;    
+    private Material previewMaterialOverride;
+    [SerializeField] private Theme theme;
+    private GameObject previewInstance;
     // vertical line under preview (same material as preview)
     private GameObject previewLine;
     [SerializeField] private float previewLineWidth = 0.3f;
@@ -31,7 +31,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     private VisualElement popupInstance;
     private bool popupOpen;
     private Vector3 lastHitPoint;
-    private bool exitFlag;    
+    private bool exitFlag;
     private ExitMode exitMode;
     // altitude-drag controls for popup
     private TextField popupAltField;
@@ -44,7 +44,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         return exitMode;
     }
 
-    [SerializeField] private float altitudeClearanceForMouseSpawn = 0.1f;    
+    [SerializeField] private float altitudeClearanceForMouseSpawn = 0.1f;
 
     void AssignData()
     {
@@ -63,7 +63,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         CheckAssignment(previewContainer);
 
         maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
-                
+
         previewMaterialOverride = theme.Preview;
     }
     void CheckAssignment<T>(T obj)
@@ -72,7 +72,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
             Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
     }
     public void Apply()
-    {       
+    {
         // Create waypoint instance at aircraft position
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.Init();
         aircraftFactory.selectedAircraft.trajectory.createModeWaypointManager.waypointFactory.Spawn(aircraftFactory.selectedAircraft.transform.position, aircraftFactory.selectedAircraft.transform.rotation, aircraftFactory.selectedAircraft.time);
@@ -111,7 +111,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         Vector3 spawnPos = new Vector3(lon, alt, lat);
         // preview'i yok et ve gerçek waypoint oluştur
         DestroyPreview();
-        TimeGame _time = new TimeGame(t);        
+        TimeGame _time = new TimeGame(t);
         aircraftFactory.Spawn(spawnPos, Quaternion.identity, _time);
         ClosePopup();
         exitFlag = true;
@@ -127,7 +127,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         }
         // iptal ise preview'i temizle
         DestroyPreview();
-        popupOpen = false;        
+        popupOpen = false;
     }
     private void OnPopupKeyDown(KeyDownEvent evt)
     {
@@ -159,14 +159,14 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     }
     public void Init()
     {
-        AssignData();        
+        AssignData();
         // Debug.Log("Init: Create Aircraft Mode");
     }
 
     public bool Tick(out ExitMode exitModeOut)
     {
         exitFlag = false;
-        
+
 
         // Bu sureci iptal edecek olan sey ESC tusu olsun            
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -191,7 +191,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                 Ray hoverRay = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, maxDistance, hitMask))
                 {
-                    lastHitPoint = hoverHit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f);
+                    lastHitPoint = hoverHit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f);
                     if (previewInstance == null)
                     {
                         CreatePreview(lastHitPoint);
@@ -212,7 +212,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                                 if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
                                 {
-                                    lastHitPoint = hit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f);
+                                    lastHitPoint = hit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f);
                                     OpenPopupAtMouse(lastHitPoint);
                                 }
                             }
@@ -269,7 +269,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                         var p = previewInstance.transform.position;
                         p.y = newAlt;
                         previewLine.GetComponent<LineRenderer>().SetPosition(0, p);
-                        
+
                         previewInstance.transform.position = p;
                     }
                     lastHitPoint.y = newAlt;
@@ -283,7 +283,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                     isDraggingAltitude = false;
                 }
             }
-            
+
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 SpawnFromPopup();
@@ -292,7 +292,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         exitModeOut = exitMode;
         return exitFlag;
     }
-     private void OpenPopupAtMouse(Vector3 hitPoint)
+    private void OpenPopupAtMouse(Vector3 hitPoint)
     {
         if (popupUxml == null || uiDocument == null)
         {
@@ -454,8 +454,8 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         if (previewInstance == null || mainCamera == null) return;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
-        {            
-            previewInstance.transform.position = hit.point+ new Vector3(0f,altitudeClearanceForMouseSpawn,0f);
+        {
+            previewInstance.transform.position = hit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f);
             // update vertical line: cast down from preview to find ground, else use max length
             if (previewLine != null)
             {
@@ -476,6 +476,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         }
     }
 
-   
+
 }
 

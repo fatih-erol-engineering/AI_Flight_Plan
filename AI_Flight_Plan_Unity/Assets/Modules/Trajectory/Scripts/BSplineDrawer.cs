@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -27,7 +25,9 @@ public class BSplineDrawer : MonoBehaviour
     [field: SerializeField] public GameObject controlPointPrefab { get; private set; }
 
     [Header("Appearance")]
-    [SerializeField] private Theme theme;
+    [SerializeField] private Color startColor = Color.green;
+    [SerializeField] private Color endColor = Color.red;
+    [SerializeField] private int linePointNumber = 32;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
 
     [Header("Tube")]
@@ -73,12 +73,12 @@ public class BSplineDrawer : MonoBehaviour
         initCondition = initCondition && waypointStart != null && waypointEnd != null;
         initCondition = initCondition && waypointStart.time.second < waypointEnd.time.second;
         initCondition = initCondition && tubePrefab != null;
-        initCondition = initCondition && theme.linePointNumber > 1;
+        initCondition = initCondition && linePointNumber > 1;
 
         if (initCondition)
         {
             // Trajectory Points Initialization
-            int trajectoryPointCount = theme.linePointNumber;
+            int trajectoryPointCount = linePointNumber;
             trajectoryPoints = new TrajectoryPoint[trajectoryPointCount];
             for (int i = 0; i < trajectoryPointCount; i++)
             {
@@ -99,7 +99,7 @@ public class BSplineDrawer : MonoBehaviour
             lineRenderer = GetComponent<LineRenderer>();
             if (lineRenderer == null)
                 lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.positionCount = theme.linePointNumber;
+            lineRenderer.positionCount = linePointNumber;
             lineRenderer.colorGradient = new Gradient();
             UpdateLineRenderer();
 
@@ -204,8 +204,8 @@ public class BSplineDrawer : MonoBehaviour
 
         // Position Update
         if (!lineRenderer) return;
-        if (lineRenderer.positionCount != theme.linePointNumber) lineRenderer.positionCount = theme.linePointNumber;
-        for (int i = 0; i < theme.linePointNumber; i++)
+        if (lineRenderer.positionCount != linePointNumber) lineRenderer.positionCount = linePointNumber;
+        for (int i = 0; i < linePointNumber; i++)
         {
             lineRenderer.SetPosition(i, trajectoryPoints[i].position);
         }
@@ -220,10 +220,10 @@ public class BSplineDrawer : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             float t = (n == 1) ? 1f : (float)i / (n - 1);
-            Color c = Color.Lerp(theme.startColor, theme.endColor, t);
+            Color c = Color.Lerp(startColor, endColor, t);
             c = new Color(c.r, c.g, c.b, 1f);
 
-            float a = Mathf.Lerp(theme.startColor.a, theme.endColor.a, t);
+            float a = Mathf.Lerp(startColor.a, endColor.a, t);
 
             cKeys[i] = new GradientColorKey(c, t);
             aKeys[i] = new GradientAlphaKey(a, t);
@@ -237,9 +237,9 @@ public class BSplineDrawer : MonoBehaviour
 
     public void SetStartColor(Color _color)
     {
-        if (theme.startColor != _color)
+        if (startColor != _color)
         {
-            theme.startColor = _color;
+            startColor = _color;
             if (CheckReadyToUpdate())
             {
                 UpdateLineRenderer();
@@ -248,9 +248,9 @@ public class BSplineDrawer : MonoBehaviour
     }
     public void SetEndColor(Color _color)
     {
-        if (theme.endColor != _color)
+        if (endColor != _color)
         {
-            theme.endColor = _color;
+            endColor = _color;
             if (CheckReadyToUpdate())
             {
                 UpdateLineRenderer();
@@ -317,11 +317,11 @@ public class BSplineDrawer : MonoBehaviour
         curveSegments = new CurveSegment[controlPoints.Count + 1];
         int minIdx = 0;
         int maxIdx = 0;
-        for (int i = 0; i < theme.linePointNumber; i++)
+        for (int i = 0; i < linePointNumber; i++)
         {
-            float t = (float)i / (theme.linePointNumber - 1);
+            float t = (float)i / (linePointNumber - 1);
             trajectoryPoints[i].position = DeBoorCox(points, t, 2);
-            trajectoryPoints[i].time = new TimeGame(Mathf.Lerp(startTime.second, endTime.second, (float)i / (theme.linePointNumber - 1)));
+            trajectoryPoints[i].time = new TimeGame(Mathf.Lerp(startTime.second, endTime.second, (float)i / (linePointNumber - 1)));
             if (i > 0)
             {
                 cumulativeDistance += Vector3.Distance(trajectoryPoints[i].position, trajectoryPoints[i - 1].position);
@@ -445,7 +445,14 @@ public class BSplineDrawer : MonoBehaviour
     public List<CollisionInfo> CheckCollisionWithAnotherSpline(BSplineDrawer otherSpline)
     {
         List<CollisionInfo> collisionInfoList = new List<CollisionInfo>();
-
+        for (int i = 0; i < tubeManagers.Length; i++)
+        {
+            tubeManagers[i].SetIsCollided(false);
+        }
+        for (int j = 0; j < otherSpline.tubeManagers.Length; j++)
+        {
+            otherSpline.tubeManagers[j].SetIsCollided(false);
+        }
         for (int i = 0; i < curveSegments.Length; i++)
         {
             CurveSegment curveSegment = curveSegments[i];
@@ -480,13 +487,6 @@ public class BSplineDrawer : MonoBehaviour
                             otherSpline.tubeManagers[j].SetIsCollided(true);
                         }
                     }
-                    else
-                    {
-                        tubeManagers[i].SetIsCollided(false);
-                        otherSpline.tubeManagers[j].SetIsCollided(false);
-                    }
-
-
                 }
 
             }

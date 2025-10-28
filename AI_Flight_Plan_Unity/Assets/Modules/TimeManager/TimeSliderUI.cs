@@ -3,11 +3,11 @@ using UnityEngine.UIElements;
 
 public class TimeSliderUI : MonoBehaviour
 {
-    [SerializeField] private UIDocument uiDocument;    
+    [SerializeField] private UIDocument uiDocument;
     [SerializeField] private TimeManager timeManager;
     private VisualElement root;
-    private Button playPauseBtn;
-    private FloatField maxTimeField,currentTimeField;
+    private Button playPauseBtn, backwardStepBtn, forwardStepBtn;
+    private FloatField maxTimeField, currentTimeField;
 
     [field: SerializeField]
     public bool playFlag { get; private set; } = false;
@@ -40,6 +40,8 @@ public class TimeSliderUI : MonoBehaviour
         currentTimeField = root.Q<FloatField>("currentTimeField");
         maxTimeField = root.Q<FloatField>("maxTimeField");
         playPauseBtn = root.Q<Button>("playPauseBtn");
+        backwardStepBtn = root.Q<Button>("backwardStepBtn");
+        forwardStepBtn = root.Q<Button>("forwardStepBtn");
 
         currentTimeField.formatString = "F1";
         maxTimeField.formatString = "F1";
@@ -50,9 +52,22 @@ public class TimeSliderUI : MonoBehaviour
         SetTimeSliderMaxValue(maxVal);
 
         playPauseBtn.clicked += OnPlayPauseBtnClick;
+        backwardStepBtn.clicked += () =>
+        {
+            timeSlider.value = timeSlider.lowValue + 0.001f;
+            timeManager.SetCurrentTime(timeSlider.value);
+            timeManager.timeIsChanging = true;
+        };
+        forwardStepBtn.clicked += () =>
+        {
+            timeSlider.value = timeSlider.highValue - 0.001f;
+            timeManager.SetCurrentTime(timeSlider.value);
+            timeManager.timeIsChanging = true;
+        };
         timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());
+
     }
-    
+
     void Update()
     {
         currentTimeField.value = timeSlider.value;
@@ -71,12 +86,12 @@ public class TimeSliderUI : MonoBehaviour
             playPauseBtn.RemoveFromClassList("timeSliderPauseState");
         }
     }
-    
+
     private void SliderValueChanged()
     {
         timeManager.SetCurrentTime(timeSlider.value);
         timeManager.timeIsChanging = true;
     }
-    
+
 
 }

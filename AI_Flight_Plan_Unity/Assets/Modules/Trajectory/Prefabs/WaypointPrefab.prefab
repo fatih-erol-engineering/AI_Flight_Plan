@@ -121,7 +121,6 @@ MonoBehaviour:
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   <time>k__BackingField:
     <second>k__BackingField: 0
-  controlPoints: []
   meshRenderers:
   - {fileID: 5169179678102574174}
   - {fileID: 6567050306873335625}

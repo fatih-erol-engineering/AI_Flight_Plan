@@ -44,6 +44,10 @@ public class TimeManager : MonoBehaviour
         isUpdated = false;
         timeIsChanging = false;
         playFlag = timeSliderUI.playFlag;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            playFlag = !playFlag;
+        }
         if (playFlag)
         {
             currentTime_s += Time.deltaTime * timeScale;
