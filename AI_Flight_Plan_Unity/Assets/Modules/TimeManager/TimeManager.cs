@@ -1,6 +1,7 @@
 using UnityEngine;
 
-[ExecuteAlways]
+// [ExecuteAlways]
+// [DefaultExecutionOrder(-999)] // 
 public class TimeManager : MonoBehaviour
 {
     public static TimeManager Instance { get; private set; }

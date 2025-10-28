@@ -3,24 +3,22 @@ using UnityEngine;
 using UnityEditor;
 
 [ExecuteAlways]
-public class Waypoint : SelectableBehaviour
+public class Waypoint : MonoBehaviour
 {
     [field: SerializeField] public TimeGame time { get; private set; }
     private Vector3 prev_position = Vector3.zero;
-    [SerializeField] private MeshRenderer[] meshRenderers;
-    private Material baseMaterial;
 
-    // // // // // // #if UNITY_EDITOR
-    // // // // // void Update()
-    // // // // // {
-    // // // // //     if (Selection.activeTransform != null && Selection.activeTransform.GetComponent<Waypoint>() != null)
-    // // // // //     {
-    // // // // //         if (Selection.activeTransform.GetComponent<Waypoint>() == this)
-    // // // // //         {
-    // // // // //             GameEvents.instance.WaypointPositionChanged(this, transform.position);
-    // // // // //         }
-    // // // // //     }
-    // // // // // }
+    // // // // // #if UNITY_EDITOR
+    // // // // void Update()
+    // // // // {
+    // // // //     if (Selection.activeTransform != null && Selection.activeTransform.GetComponent<Waypoint>() != null)
+    // // // //     {
+    // // // //         if (Selection.activeTransform.GetComponent<Waypoint>() == this)
+    // // // //         {
+    // // // //             GameEvents.Instance.WaypointPositionChanged(this, transform.position);
+    // // // //         }
+    // // // //     }
+    // // // // }
 
 
 
@@ -39,14 +37,6 @@ public class Waypoint : SelectableBehaviour
     }
 #endif
 
-    public void Awake()
-    {
-        AssignData();
-    }
-    void AssignData()
-    {
-        baseMaterial = meshRenderers[0].material;
-    }
 
     public void SetPosition(Vector3 _position)
     {
@@ -61,41 +51,6 @@ public class Waypoint : SelectableBehaviour
         GameEvents.Instance.WaypointTimeChanged(this, oldTime);
         time.SetTime(_time.second);
     }
-    public void UpdateMaterial(Material material)
-    {
-        foreach (MeshRenderer mr in meshRenderers)
-        {
-            mr.material = material;
-        }
-    }
-    public override void OnHoverExit()
-    {
-        base.OnHoverExit();
-        if (!base._selected)
-        {
-            UpdateMaterial(baseMaterial);
-        }
-    }
-    public override void OnHoverEnter()
-    {
-        base.OnHoverEnter();
-        if (!base._selected)
-        {
-            UpdateMaterial(theme.Hover);
-        }
-    }
-
-    public override void OnSelect()
-    {
-        base.OnSelect();
-        UpdateMaterial(theme.Select);
-    }
-    public override void OnDeselect()
-    {
-        base.OnSelect();
-        UpdateMaterial(baseMaterial);
-    }
-
 
 
 }

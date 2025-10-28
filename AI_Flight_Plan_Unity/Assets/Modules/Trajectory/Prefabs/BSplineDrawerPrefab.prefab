@@ -116,7 +116,9 @@ MonoBehaviour:
   <controlPointContainer>k__BackingField: {fileID: 781948544774136140}
   <tubeContainer>k__BackingField: {fileID: 2591734894475299980}
   <controlPointPrefab>k__BackingField: {fileID: 517102805373364547, guid: 619f54b1d9dc3ae40b0965f8807610f9, type: 3}
-  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
+  startColor: {r: 0, g: 1, b: 0, a: 1}
+  endColor: {r: 1, g: 0, b: 0, a: 1}
+  linePointNumber: 32
   lineRenderer: {fileID: 5454687630953241645}
   showTubes: 1
   tubeRadius: 10
@@ -170,7 +172,39 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions: []
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

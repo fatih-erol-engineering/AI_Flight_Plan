@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+// [ExecuteAlways]
+// [DefaultExecutionOrder(-999)] // 
 public class HoverSelectionSystem : MonoBehaviour
 {
     public static HoverSelectionSystem Instance { get; private set; }
@@ -14,6 +16,16 @@ public class HoverSelectionSystem : MonoBehaviour
     private ISelectable _selected;
     public GameObject selectedObject;
 
+
+    void OnValidate()
+    {
+        if (!mainCamera) mainCamera = Camera.main;
+        maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
+
+        // Ensure a single instance
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+    }
 
     void Awake()
     {
@@ -33,7 +45,7 @@ public class HoverSelectionSystem : MonoBehaviour
                 UpdateHover();
                 HandleSelection();
                 break;
-        }            
+        }
     }
 
     private void UpdateHover()
@@ -43,7 +55,7 @@ public class HoverSelectionSystem : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
         {
-                hitSelectable = hit.collider.GetComponentInParent<ISelectable>();
+            hitSelectable = hit.collider.GetComponentInParent<ISelectable>();
         }
 
         if (!ReferenceEquals(hitSelectable, _hovered))
@@ -60,7 +72,7 @@ public class HoverSelectionSystem : MonoBehaviour
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
-                
+
             }
             else
             {
@@ -68,7 +80,7 @@ public class HoverSelectionSystem : MonoBehaviour
                     _selected.OnDeselect();
 
                 _selected = _hovered;
-                selectedObject = (_selected as SelectableBehaviour)?.gameObject;
+                selectedObject = (_selected as Selectable)?.gameObject;
 
                 if (_selected != null)
                     _selected.OnSelect();

@@ -24,6 +24,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     private Material previewMaterialOverride; // inspector fallback
     [SerializeField] private Theme theme; // optional, varsa theme.precreate kullanılır
     private GameObject previewInstance;
+    private Waypoint previewInstanceWaypoint;
 
     [Header("UI")]
     [SerializeField] private UIDocument uiDocument;
@@ -45,7 +46,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
 
 
 
-        // altitude-drag controls for popup
+    // altitude-drag controls for popup
     private TextField popupAltField;
     private bool isDraggingAltitude = false;
     private float altDragStartMouseY;
@@ -53,19 +54,11 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
     [SerializeField] private float altitudeDragSensitivity = 0.02f; // world units per pixel
 
 
-
-    // vertical line under preview (same material as preview)
-    private GameObject previewLine;
-    [SerializeField] private float previewLineWidth = 0.1f;
-    [SerializeField] private float previewLineMaxLength = 100f;
-
-
-
     public void SetUIManager(UIDocument _uIDocument)
     {
         uiDocument = _uIDocument;
     }
-    
+
     public void AssignData()
     {
         if (!waypointFactory) waypointFactory = GetComponent<WaypointFactory>();
@@ -147,7 +140,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 Ray hoverRay = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, maxDistance, hitMask))
                 {
-                    lastHitPoint = hoverHit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f);;
+                    lastHitPoint = hoverHit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f); ;
                     if (previewInstance == null)
                     {
                         CreatePreview(lastHitPoint);
@@ -198,9 +191,9 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 {
                     var p = previewInstance.transform.position;
                     p.y = newAlt;
-                    previewLine.GetComponent<LineRenderer>().SetPosition(0, p);
-                    
+
                     previewInstance.transform.position = p;
+                    GameEvents.Instance.WaypointPositionChanged(previewInstanceWaypoint, p);
                 }
                 lastHitPoint.y = newAlt;
             }
@@ -210,7 +203,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
             {
                 isDraggingAltitude = false;
             }
-            
+
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -250,8 +243,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
                 {
-                    lastHitPoint = hit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f);
-                    OpenPopupAtMouse(hit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f));
+                    lastHitPoint = hit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f);
+                    OpenPopupAtMouse(hit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f));
                     if (previewInstance == null)
                     {
                         CreatePreview(hit.point);
@@ -296,11 +289,11 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         altField.value = (hitPoint.y).ToString("F3", CultureInfo.InvariantCulture);
         // keep a persistent reference so other methods can update the alt field live
         popupAltField = altField;
-        
+
         Waypoint prev_waypoint = aircraftFactory.selectedAircraft.trajectory.waypointFactory.waypointList.Last();
         float dist_m = (hitPoint - prev_waypoint.transform.position).magnitude;
         float aircraft_nom_Vel = aircraftFactory.selectedAircraft.aircraftProperties.nominalVelocity_m_s;
-        float dt=(dist_m / aircraft_nom_Vel);
+        float dt = (dist_m / aircraft_nom_Vel);
         float prevWpTime = prev_waypoint.time.second;
         float finalTime = prevWpTime + dt;
         timeField.value = finalTime.ToString("F2", CultureInfo.InvariantCulture);
@@ -327,7 +320,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (prefabToUse != null && previewContainer != null)
         {
             previewInstance = Instantiate(prefabToUse, position, Quaternion.identity, previewContainer);
-            previewInstance.GetComponent<WaypointShow>()?.ShowWaypoint();
+            previewInstance.GetComponent<WaypointShow>()?.AssignData();
             // // disable runtime behaviours on preview
             // var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
             // for (int i = 0; i < behaviours.Length; i++)
@@ -337,7 +330,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         {
             // parent yoksa world instantiate
             previewInstance = Instantiate(prefabToUse, position, Quaternion.identity);
-            previewInstance.GetComponent<WaypointShow>()?.ShowWaypoint();
+            previewInstance.GetComponent<WaypointShow>()?.AssignData();
             // var behaviours = previewInstance.GetComponentsInChildren<Behaviour>();
             // for (int i = 0; i < behaviours.Length; i++)
             //     behaviours[i].enabled = false;
@@ -379,8 +372,8 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
                 for (int i = 0; i < newMats.Length; i++) newMats[i] = previewMat;
                 r.materials = newMats;
             }
-            var skinned = previewInstance.GetComponentsInChildren<UnityEngine.SkinnedMeshRenderer>();
-            foreach (var r in skinned)
+            var lr = previewInstance.GetComponentsInChildren<LineRenderer>();
+            foreach (var r in lr)
             {
                 if (r == null) continue;
                 var mats = r.materials;
@@ -391,43 +384,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         }
 
 
-        // create vertical line under preview using LineRenderer, reuse material if available
-        if (previewLine != null)
-        {
-            Destroy(previewLine);
-            previewLine = null;
-        }
-        previewLine = new GameObject("PreviewLine");
-        previewLine.transform.SetParent(previewInstance.transform, false);
-        var lr = previewLine.AddComponent<LineRenderer>();
-        lr.useWorldSpace = true;
-        lr.positionCount = 2;
-        lr.startWidth = previewLineWidth;
-        lr.endWidth = previewLineWidth;
-        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        lr.receiveShadows = false;
-        lr.allowOcclusionWhenDynamic = false;
-        if (previewMat != null)
-        {
-            lr.material = previewMat;
-        }
-        else
-        {
-            // fallback simple material
-            var mat = new Material(Shader.Find("Unlit/Color"));
-            mat.color = Color.white;
-            lr.material = mat;
-        }
-        // initial positions (will be updated by UpdatePreviewPositionWithMouse)
-        lr.SetPosition(0, previewInstance.transform.position);
-        lr.SetPosition(1, previewInstance.transform.position + Vector3.down * Mathf.Min(previewLineMaxLength, 1f));
-        lr.startWidth = previewLineWidth;
-        lr.endWidth = previewLineWidth;
-
-
-
-
-
+        previewInstanceWaypoint = previewInstance.GetComponent<Waypoint>();
 
     }
 
@@ -436,37 +393,17 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (previewInstance == null || mainCamera == null) return;
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
-        {             
-            previewInstance.transform.position = hit.point + new Vector3(0f,altitudeClearanceForMouseSpawn,0f); ;
-                // update vertical line: cast down from preview to find ground, else use max length
-            if (previewLine != null)
-            {
-                Vector3 top = previewInstance.transform.position;
-                Vector3 downOrigin = top + Vector3.up * 0.01f;
-                Ray down = new Ray(downOrigin, Vector3.down);
-                if (Physics.Raycast(down, out RaycastHit downHit, previewLineMaxLength, hitMask))
-                {
-                    previewLine.GetComponent<LineRenderer>().SetPosition(0, top);
-                    previewLine.GetComponent<LineRenderer>().SetPosition(1, downHit.point);
-                }
-                else
-                {
-                    previewLine.GetComponent<LineRenderer>().SetPosition(0, top);
-                    previewLine.GetComponent<LineRenderer>().SetPosition(1, top + Vector3.down * previewLineMaxLength);
-                }
-            }
+        {
+            previewInstance.transform.position = hit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f);
+            GameEvents.Instance.WaypointPositionChanged(previewInstanceWaypoint, hit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f));
+            // update vertical line: cast down from preview to find ground, else use max length
         }
     }
 
     private void DestroyPreview()
     {
         if (previewInstance == null) return;
-        // destroy associated line first
-        if (previewLine != null)
-        {
-            Destroy(previewLine);
-            previewLine = null;
-        }
+
         Destroy(previewInstance);
         previewInstance = null;
     }
@@ -531,7 +468,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         // iptal ise preview'i temizle
         DestroyPreview();
         popupOpen = false;
-    }   
+    }
 
 }
 

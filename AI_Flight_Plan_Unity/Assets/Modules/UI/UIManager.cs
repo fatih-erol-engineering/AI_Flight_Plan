@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 // [RequireComponent(typeof(MainGameManager))]
 [RequireComponent(typeof(UIDocument))]
-
+// [ExecuteAlways]
 public class UIManager : MonoBehaviour
 {
 
@@ -24,9 +24,13 @@ public class UIManager : MonoBehaviour
     public bool restartRequestUI { get; private set; }
 
 
-//     // For Create Mode
+    //     // For Create Mode
     public string selectedAircraftModelName;
 
+    void OnValidate()
+    {
+        AssignData();
+    }
     void Start()
     {
         AssignData();
@@ -55,13 +59,13 @@ public class UIManager : MonoBehaviour
 
         // if (!aircraftSpecRegistry) aircraftSpecRegistry = mainGameManager?.aircraftSpecRegistry;
         // CheckAssignment(aircraftSpecRegistry);
-        
+
         // Ensure an EventSystem exists if there is any UI in the scene.
         // If none exists and we detect a Canvas or UIDocument, create a simple EventSystem with StandaloneInputModule.
-        if (EventSystem.current == null)
-        {
-            var go = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-        }
+        // if (EventSystem.current == null)
+        // {
+        //     var go = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+        // }
         if (!uIDocument) uIDocument = GetComponent<UIDocument>();
         CheckAssignment(uIDocument);
 
@@ -85,7 +89,7 @@ public class UIManager : MonoBehaviour
 
         d = root.Q<DropdownField>("fixedWingDDM");
         CheckAssignment(d);
-        
+
         fixedWingDDM = new CustomAircraftDropdownMenu(d, aircraftPropertiesRegistry.fixedWingAircrafts);
         CheckAssignment(fixedWingDDM);
 
@@ -94,7 +98,7 @@ public class UIManager : MonoBehaviour
 
         listenTBtn = root.Q<Toggle>("listenTBtn");
         CheckAssignment(listenTBtn);
-        
+
         settingsTBtn = root.Q<Toggle>("settingsTBtn");
         CheckAssignment(settingsTBtn);
 
@@ -122,7 +126,7 @@ public class UIManager : MonoBehaviour
     {
         if (obj == null)
             Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
-    }    
+    }
 
     void createTBtnClick()
     {
@@ -149,7 +153,7 @@ public class UIManager : MonoBehaviour
             case MainGameMode.Free:
                 // Hide Create buttons;
                 createTBtn.value = false;
-                break;            
+                break;
         }
     }
 

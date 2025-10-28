@@ -11,7 +11,6 @@ public class TubeManager : MonoBehaviour
     [SerializeField] private Vector3 endPosition;
 
     [Header("Appearance Properties")]
-    [SerializeField] private bool isDrivenByThemeManager = false;
     [SerializeField] private Theme currentTheme;
     [SerializeField, ColorUsage(true, true)] private Color edgeColor;
     [SerializeField] private Color surfaceColor;
@@ -64,7 +63,6 @@ public class TubeManager : MonoBehaviour
     {
         if (ThemeManager.Instance != null)
         {
-            isDrivenByThemeManager = true;
             currentTheme = ThemeManager.Instance.theme;
             if (isCollided)
             {
@@ -80,7 +78,6 @@ public class TubeManager : MonoBehaviour
         }
         else
         {
-            isDrivenByThemeManager = false;
             currentTheme = null;
         }
     }

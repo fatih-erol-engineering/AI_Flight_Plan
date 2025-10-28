@@ -1,28 +1,27 @@
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class Aircraft : SelectableBehaviour
+
+public class Aircraft : Selectable
 {
     [Header("Aircraft Settings")]
     [field: SerializeField]
-    public TimeGame time { get; private set; }    
+    public TimeGame time { get; private set; }
     [SerializeField]
     public AircraftProperties aircraftProperties;
 
     [field: SerializeField]
     public TrajectoryDrawer trajectory { get; private set; }
-    
+
     private MeshRenderer[] aircraftMeshRenderers;
     [SerializeField]
     private MeshRenderer[] _baseAircraftMeshRenderers;
     // Saklanan orijinal materyaller (her renderer için dizi)
     private Material[][] _originalMaterials;
-    
+
     protected void OnEnable()
     {
-        if(_baseAircraftMeshRenderers == null) _baseAircraftMeshRenderers = GetComponentsInChildren<MeshRenderer>();
+        if (_baseAircraftMeshRenderers == null) _baseAircraftMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         // Eğer inspector'dan meshler verilmemişse fallback olarak çocukları kullan
         if (aircraftMeshRenderers == null || aircraftMeshRenderers.Length == 0)
             aircraftMeshRenderers = _baseAircraftMeshRenderers;
@@ -67,32 +66,32 @@ public class Aircraft : SelectableBehaviour
         // Hover bittiğinde orijinal materyallere dön
         RestoreOriginalMaterials();
     }
-    
+
     private void RestoreOriginalMaterials()
     {
-        if (_originalMaterials == null || aircraftMeshRenderers == null) 
+        if (_originalMaterials == null || aircraftMeshRenderers == null)
             return;
 
         for (int i = 0; i < aircraftMeshRenderers.Length && i < _originalMaterials.Length; i++)
         {
             var r = aircraftMeshRenderers[i];
             var mats = _originalMaterials[i];
-            if (r == null || mats == null) 
+            if (r == null || mats == null)
                 continue;
             r.materials = mats;
         }
     }
 
     public void MoveAircraftWithTime(float sec)
-    {        
+    {
         foreach (BSplineDrawer segment in trajectory.GetSegmentDrawers())
         {
-            
+
             float startTime_s = segment.startTime.second;
             float endTime_s = segment.endTime.second;
 
             if ((sec < endTime_s) && (sec >= startTime_s))
-            {                
+            {
                 for (int i = 0; i < segment.trajectoryPoints.Length; i++)
                 {
                     if (segment.trajectoryPoints[i].time.second > sec)
@@ -115,8 +114,8 @@ public class Aircraft : SelectableBehaviour
             }
         }
     }
-    
-    public int SelectClosestIdx(float[] list,float val)
+
+    public int SelectClosestIdx(float[] list, float val)
     {
         float lim = Mathf.Infinity;
         int selectedIdx = 0;
@@ -134,7 +133,7 @@ public class Aircraft : SelectableBehaviour
     // Align object's local +X to unitDir, and control roll with upHint.
     // If upHint is null -> uses Vector3.up
     // Align object's local +X to unitDir, and control roll with upHint.
-// If upHint is null -> uses Vector3.up
+    // If upHint is null -> uses Vector3.up
 
 
     public void AlignLocalX_Absolute(Transform t, Vector3 unitDir, Vector3? upHint = null)
@@ -153,7 +152,7 @@ public class Aircraft : SelectableBehaviour
             up = Mathf.Abs(x.y) < 0.9f ? Vector3.up : Vector3.right;
 
         // Create orthonormal axes
-        Vector3 z = Vector3.Cross(up, x).normalized*(1);   // perpendicular to up & x
+        Vector3 z = Vector3.Cross(up, x).normalized * (1);   // perpendicular to up & x
         Vector3 y = Vector3.Cross(z, x).normalized;    // completes right-handed basis
 
         // Compose rotation so that:
@@ -161,7 +160,7 @@ public class Aircraft : SelectableBehaviour
         t.rotation = Quaternion.LookRotation(z, y);
     }
 
-// Align the object's +Z axis to the given unit direction (world-space)
+    // Align the object's +Z axis to the given unit direction (world-space)
     public static void AlignZAxisTo(Transform t, Vector3 unitDir, Vector3? upHint = null)
     {
         // Guard: zero-length or NaN/Inf inputs are unsafe for rotations

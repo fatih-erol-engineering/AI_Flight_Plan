@@ -29,8 +29,12 @@ public class TimeSliderUI : MonoBehaviour
     {
         return timeSlider.value;
     }
+    void OnValidate()
+    {
+        AssignData();
+    }
 
-    void Awake()
+    public void AssignData()
     {
         float minVal = 0f;
         float maxVal = 10f;
@@ -65,6 +69,10 @@ public class TimeSliderUI : MonoBehaviour
             timeManager.timeIsChanging = true;
         };
         timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());
+    }
+    void Awake()
+    {
+        AssignData();
 
     }
 

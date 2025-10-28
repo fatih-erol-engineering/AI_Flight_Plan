@@ -7,7 +7,7 @@ public class ThemeManager : MonoBehaviour
 
     void OnEnable()
     {
-   if (Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -44,7 +44,7 @@ public class ThemeManager : MonoBehaviour
     }
     void Awake()
     {
-   if (Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }

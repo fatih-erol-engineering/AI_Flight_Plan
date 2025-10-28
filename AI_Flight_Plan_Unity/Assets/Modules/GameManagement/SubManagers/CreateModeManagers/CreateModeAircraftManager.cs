@@ -22,9 +22,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     [SerializeField] private Theme theme;
     private GameObject previewInstance;
     // vertical line under preview (same material as preview)
-    private GameObject previewLine;
-    [SerializeField] private float previewLineWidth = 0.3f;
-    [SerializeField] private float previewLineMaxLength = 10000f;
     private Dictionary<CreateMode, ModeHooks> modes;
     public ModeHooks currentHooks { get; private set; }
     public CreateMode currentMode { get; private set; } = CreateMode.CreateAircraft;
@@ -149,11 +146,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
     {
         if (previewInstance == null) return;
         // destroy associated line first
-        if (previewLine != null)
-        {
-            Destroy(previewLine);
-            previewLine = null;
-        }
         Destroy(previewInstance);
         previewInstance = null;
     }
@@ -268,8 +260,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                     {
                         var p = previewInstance.transform.position;
                         p.y = newAlt;
-                        previewLine.GetComponent<LineRenderer>().SetPosition(0, p);
-
                         previewInstance.transform.position = p;
                     }
                     lastHitPoint.y = newAlt;
@@ -369,9 +359,9 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
                 previewInstance = Instantiate(prefabToUse, position, Quaternion.identity);
 
             // runtime davranışları kapat
-            var behaviours = previewInstance.GetComponentsInChildren<Behaviour>(true);
-            for (int i = 0; i < behaviours.Length; i++)
-                behaviours[i].enabled = false;
+            // var behaviours = previewInstance.GetComponentsInChildren<Behaviour>(true);
+            // for (int i = 0; i < behaviours.Length; i++)
+            //     behaviours[i].enabled = false;
 
             previewInstance.name = "AircraftPreview";
         }
@@ -416,37 +406,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         }
 
         // create vertical line under preview using LineRenderer, reuse material if available
-        if (previewLine != null)
-        {
-            Destroy(previewLine);
-            previewLine = null;
-        }
-        previewLine = new GameObject("PreviewLine");
-        previewLine.transform.SetParent(previewInstance.transform, false);
-        var lr = previewLine.AddComponent<LineRenderer>();
-        lr.useWorldSpace = true;
-        lr.positionCount = 2;
-        lr.startWidth = previewLineWidth;
-        lr.endWidth = previewLineWidth;
-        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        lr.receiveShadows = false;
-        lr.allowOcclusionWhenDynamic = false;
-        if (previewMat != null)
-        {
-            lr.material = previewMat;
-        }
-        else
-        {
-            // fallback simple material
-            var mat = new Material(Shader.Find("Unlit/Color"));
-            mat.color = Color.white;
-            lr.material = mat;
-        }
-        // initial positions (will be updated by UpdatePreviewPositionWithMouse)
-        lr.SetPosition(0, previewInstance.transform.position);
-        lr.SetPosition(1, previewInstance.transform.position + Vector3.down * Mathf.Min(previewLineMaxLength, 1f));
-        lr.startWidth = previewLineWidth;
-        lr.endWidth = previewLineWidth;
+
     }
 
     private void UpdatePreviewPositionWithMouse()
@@ -456,23 +416,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, hitMask))
         {
             previewInstance.transform.position = hit.point + new Vector3(0f, altitudeClearanceForMouseSpawn, 0f);
-            // update vertical line: cast down from preview to find ground, else use max length
-            if (previewLine != null)
-            {
-                Vector3 top = previewInstance.transform.position;
-                Vector3 downOrigin = top + Vector3.up * 0.01f;
-                Ray down = new Ray(downOrigin, Vector3.down);
-                if (Physics.Raycast(down, out RaycastHit downHit, previewLineMaxLength, hitMask))
-                {
-                    previewLine.GetComponent<LineRenderer>().SetPosition(0, top);
-                    previewLine.GetComponent<LineRenderer>().SetPosition(1, downHit.point);
-                }
-                else
-                {
-                    previewLine.GetComponent<LineRenderer>().SetPosition(0, top);
-                    previewLine.GetComponent<LineRenderer>().SetPosition(1, top + Vector3.down * previewLineMaxLength);
-                }
-            }
         }
     }
 

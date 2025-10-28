@@ -3,11 +3,13 @@ using UnityEngine;
 
 
 public enum MainGameMode { Free, CreateAircraft, }
-public enum ExitMode { Cancel, Apply, None}
+public enum ExitMode { Cancel, Apply, None }
 
 
 [RequireComponent(typeof(FreeModeManager))]
 [RequireComponent(typeof(CreateModeManager))]
+// [ExecuteAlways]
+// [DefaultExecutionOrder(-999)] // 
 public class MainGameManager : MonoBehaviour
 {
     [SerializeField]
@@ -16,18 +18,23 @@ public class MainGameManager : MonoBehaviour
     private FreeModeManager freeModeController;
     [SerializeField]
     private CreateModeManager createModeManager;
-    public Dictionary<MainGameMode, ModeHooks> modes{ get; private set; }
-    public ModeHooks currentHooks  { get; private set; }
-    public MainGameMode currentMode { get; private set; } = MainGameMode.Free;    
+    public Dictionary<MainGameMode, ModeHooks> modes { get; private set; }
+    public ModeHooks currentHooks { get; private set; }
+    public MainGameMode currentMode { get; private set; } = MainGameMode.Free;
 
+
+    void OnValidate()
+    {
+        AssignData();
+    }
     void Awake()
     {
         AssignData();
     }
 
     void AssignData()
-    {        
-        CheckAssignment(uIManager);    
+    {
+        CheckAssignment(uIManager);
 
         if (!freeModeController) freeModeController = gameObject.GetComponent<FreeModeManager>();
         CheckAssignment(freeModeController);
@@ -58,25 +65,25 @@ public class MainGameManager : MonoBehaviour
         // Current Hook un kendi exit sinyali olabiliyor. O da tick fonksiyonu ile kontrol ediliyor.
         // Boyle bir durumda current hook exit request ediyor ve mode değişikliği yapılıyor.
         ExitMode currentHooksExitMode = ExitMode.None;
-            exitFlag = currentHooks.Tick(out currentHooksExitMode);
+        exitFlag = currentHooks.Tick(out currentHooksExitMode);
         if (exitFlag)
         {
             // Current Hook tarafından gelen exit isteği apply ya da cancel olabilir.
             // Bu yuzden current hookun get exit mode fonksiyonu çağırılıyor. 
             ChangeMode(MainGameMode.Free, currentHooksExitMode);
-        }        
+        }
         else
         {
             // UI den mode değişikliği isteği var mı diye bakılıyor.
             SetModeFromUI();
         }
-        
+
     }
 
     void SetModeFromUI()
     {
         if (uIManager.restartRequestUI)
-        {            
+        {
             InitMode(uIManager.gameModeUI);
         }
         else
@@ -86,10 +93,10 @@ public class MainGameManager : MonoBehaviour
     }
 
     public void InitMode(MainGameMode mode)
-    {        
+    {
         currentMode = mode;
         currentHooks = modes.TryGetValue(mode, out var h) ? h : null;
-        currentHooks?.Init?.Invoke();        
+        currentHooks?.Init?.Invoke();
     }
 
     public void ChangeMode(MainGameMode next, ExitMode exitMode)
@@ -102,14 +109,14 @@ public class MainGameManager : MonoBehaviour
                 break;
             case ExitMode.Cancel:
                 currentHooks?.Cancel?.Invoke();
-                break;                            
+                break;
         }
         currentMode = next;
         currentHooks = modes.TryGetValue(next, out var h) ? h : null;
         currentHooks?.Init?.Invoke();
         uIManager.SetGameMode(currentMode);
     }
-    
+
     private void ConfigureModes()
     {
         modes = new()
@@ -120,7 +127,7 @@ public class MainGameManager : MonoBehaviour
                 Init = freeModeController.Init,
                 Tick = freeModeController.Tick,
                 Apply = freeModeController.Apply,
-                Cancel = freeModeController.Cancel,                
+                Cancel = freeModeController.Cancel,
             },
 
             [MainGameMode.CreateAircraft] = new ModeHooks
@@ -129,7 +136,7 @@ public class MainGameManager : MonoBehaviour
                 Init = createModeManager.Init,
                 Tick = createModeManager.Tick,
                 Apply = createModeManager.Apply,
-                Cancel = createModeManager.Cancel,                
+                Cancel = createModeManager.Cancel,
             },
         };
     }

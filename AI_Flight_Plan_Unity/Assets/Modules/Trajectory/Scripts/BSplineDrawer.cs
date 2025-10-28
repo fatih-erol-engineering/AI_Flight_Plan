@@ -46,6 +46,9 @@ public class BSplineDrawer : MonoBehaviour
     {
         GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
         GameEvents.Instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
+
+        SetLinePointNumber(linePointNumber, true);
+        SetTubeRadius(tubeRadius, true);
     }
     public void OnDestroy()
     {
@@ -233,6 +236,38 @@ public class BSplineDrawer : MonoBehaviour
         g.SetKeys(cKeys, aKeys);
 
         lineRenderer.colorGradient = g;
+    }
+    public void SetLinePointNumber(int _pointNumber, bool isImmediate = false)
+    {
+        if (_pointNumber != linePointNumber || isImmediate)
+        {
+            linePointNumber = Mathf.Max(2, _pointNumber); // Minimum 2 points
+            trajectoryPoints = new TrajectoryPoint[linePointNumber];
+            for (int i = 0; i < linePointNumber; i++)
+            {
+                trajectoryPoints[i] = new TrajectoryPoint(Vector3.zero, new TimeGame(0f));
+            }
+            if (lineRenderer != null)
+            {
+                lineRenderer.positionCount = linePointNumber;
+            }
+            if (CheckReadyToUpdate())
+            {
+                DrawCurve();
+                UpdateLineRenderer();
+            }
+        }
+    }
+    public void SetTubeRadius(float _radius, bool isImmediate = false)
+    {
+        if (_radius != tubeRadius || isImmediate)
+        {
+            tubeRadius = _radius;
+            foreach (var tubeManager in tubeManagers)
+            {
+                tubeManager.SetRadius(tubeRadius, isImmediate);
+            }
+        }
     }
 
     public void SetStartColor(Color _color)

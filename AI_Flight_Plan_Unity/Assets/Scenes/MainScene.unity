@@ -250,8 +250,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192251729}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.44301105, y: -0.011833788, z: 0.0058459644, w: 0.89641905}
-  m_LocalPosition: {x: -19.827562, y: 160.67958, z: -125.363686}
+  m_LocalRotation: {x: 0.016192604, y: 0.9692091, z: -0.23656482, w: 0.06639745}
+  m_LocalPosition: {x: 5.0481534, y: 0.7420681, z: 3.9051166}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -333,7 +333,7 @@ Transform:
   m_GameObject: {fileID: 504976774}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 89.37607, y: -35.7, z: 54.2704}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -493,8 +493,6 @@ MonoBehaviour:
     m_Bits: 64
   spawnKey: 323
   theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
-  previewLineWidth: 0.02
-  previewLineMaxLength: 100
   altitudeDragSensitivity: 0.02
   altitudeClearanceForMouseSpawn: 0.1
 --- !u!114 &587978680
@@ -593,6 +591,74 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7546fadae2b6a647b8460768f758e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!1 &1314717177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1314717180}
+  - component: {fileID: 1314717179}
+  - component: {fileID: 1314717178}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1314717178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314717177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.StandaloneInputModule
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1314717179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314717177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1314717180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314717177}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1400046405
 GameObject:
   m_ObjectHideFlags: 0
@@ -804,7 +870,7 @@ Transform:
   m_GameObject: {fileID: 1851626768}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.100000024, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -845,7 +911,7 @@ MonoBehaviour:
   <uIDocument>k__BackingField: {fileID: 1900046852}
   cam: {fileID: 192251732}
   aircraftPropertiesRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
-  selectedAircraftModelName: 
+  selectedAircraftModelName: Taxi_Drone
 --- !u!114 &1900046852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1145,3 +1211,4 @@ SceneRoots:
   - {fileID: 192251733}
   - {fileID: 1851626772}
   - {fileID: 1744675467}
+  - {fileID: 1314717180}

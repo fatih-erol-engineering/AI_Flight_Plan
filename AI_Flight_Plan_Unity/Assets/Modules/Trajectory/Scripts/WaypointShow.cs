@@ -1,79 +1,82 @@
 // ...existing code...
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaypointShow : MonoBehaviour
 {
     [SerializeField] private Waypoint waypoint;
     [SerializeField] private Camera mainCamera;
-    [SerializeField] Transform referenceMesh;       
+    [SerializeField] Transform referenceMesh;
 
     [Header("Screen size")]
     [Tooltip("Desired vertical size on screen in pixels")]
-    [SerializeField] private float desiredPixelHeight = 48f;
+    [SerializeField] private float desiredPixelHeight = 100f;
+    [SerializeField] private float min_LocalScale = 1f;
+    [SerializeField] private float max_LocalScale = 20f;
 
-    [Tooltip("If true, object will face the camera every frame")]
-    [SerializeField] private bool faceCamera = true;
 
     // cached values for stable scaling
-    private Renderer targetRenderer;
-    private MeshFilter targetMeshFilter;
     private Vector3 originalLocalScale;
     private float originalMeshHeight = 1f; // mesh bounds height in local units
-    [SerializeField]    
 
-    void Awake()
+
+    [Header("Altitude Line")]
+    [SerializeField] private LineRenderer altitudeLineRenderer;
+    [SerializeField] private float altitudeLineLimit = -0.1f;
+    // [SerializeField] private LayerMask hitMask;
+
+    void OnValidate()
+    {
+        AssignData();
+    }
+    public void AssignData()
     {
         if (!waypoint) waypoint = GetComponent<Waypoint>();
         if (!mainCamera) mainCamera = Camera.main;
 
         // find renderer (child or same object)
-        targetRenderer = (waypoint != null) ? waypoint.GetComponentInChildren<Renderer>() : GetComponentInChildren<Renderer>();
-        targetMeshFilter = targetRenderer != null ? targetRenderer.GetComponent<MeshFilter>() : null;
 
         originalLocalScale = referenceMesh.localScale;
 
-        if (targetMeshFilter != null && targetMeshFilter.sharedMesh != null)
-        {
-            // mesh bounds are in local space
-            originalMeshHeight = targetMeshFilter.sharedMesh.bounds.size.y;
-            if (originalMeshHeight <= 0f) originalMeshHeight = 1f;
-        }
-        else if (targetRenderer != null)
-        {
-            // fallback: use renderer.world bounds and remove lossyScale to approximate local size
-            var worldHeight = targetRenderer.bounds.size.y;
-            var lossyY = referenceMesh.lossyScale.y;
-            originalMeshHeight = lossyY != 0f ? worldHeight / lossyY : worldHeight;
-            if (originalMeshHeight <= 0f) originalMeshHeight = 1f;
-        }
-        else
-        {
-            Debug.LogWarning($"[WaypointShow] No Renderer found on '{gameObject.name}' or children. Scaling will use defaults.");
-        }
+        GameEvents.Instance.OnWaypointPositionChanged += DrawAltitudeLine;
+        GameEvents.Instance.OnWaypointSpawned += DrawAltitudeLine;
+
     }
 
-    void Update()
+    void LateUpdate()
     {
         ShowWaypoint();
     }
 
+    void DrawAltitudeLine(Waypoint wp, Vector3 newPosition)
+    {
+        DrawAltitudeLine(wp);
+    }
+    void DrawAltitudeLine(Waypoint wp)
+    {
+        if (waypoint == wp)
+        {
+            if (altitudeLineRenderer == null || waypoint == null) return;
 
+            if (waypoint.transform.position.y <= altitudeLineLimit)
+            {
+                altitudeLineRenderer.enabled = false;
+                return;
+            }
+            altitudeLineRenderer.enabled = true;
+
+            Vector3 startPos = waypoint.transform.position;
+            Vector3 endPos = new Vector3(waypoint.transform.position.x, altitudeLineLimit, waypoint.transform.position.z);
+
+            altitudeLineRenderer.SetPosition(0, startPos);
+            altitudeLineRenderer.SetPosition(1, endPos);
+        }
+    }
     public void ShowWaypoint()
     {
         if (mainCamera == null) mainCamera = Camera.main;
         if (mainCamera == null) return;
 
-        // // Face camera
-        // if (faceCamera)
-        // {
-        //     // Make the object's forward face the camera (billboard).
-        //     // Use camera up to avoid rolling.
-        //     referenceMesh.rotation = Quaternion.LookRotation(referenceMesh.position - mainCamera.transform.position, mainCamera.transform.up);
-        //     // If the object's front is opposite, use: Quaternion.LookRotation(mainCamera.transform.position - transform.position)
-        // }
-
-        // Maintain constant pixel height
-        if (targetRenderer == null && targetMeshFilter == null) return;
 
         // distance from camera to object along view direction (positive in front)
         float distance = Vector3.Dot(referenceMesh.position - mainCamera.transform.position, mainCamera.transform.forward);
@@ -97,10 +100,13 @@ public class WaypointShow : MonoBehaviour
 
         // compute scale factor relative to original mesh height
         float scaleFactor = originalMeshHeight > 0f ? (desiredWorldHeight / originalMeshHeight) : 1f;
+        scaleFactor = Mathf.Clamp(scaleFactor, min_LocalScale, max_LocalScale);
         Vector3 newLocalScale = originalLocalScale * scaleFactor;
-        referenceMesh.localScale = newLocalScale;        
+        altitudeLineRenderer.startWidth = 0.05f * scaleFactor;
+        altitudeLineRenderer.endWidth = 0.05f * scaleFactor;
+        referenceMesh.localScale = newLocalScale;
     }
-    
-    
+
+
 }
 // ...existing code...

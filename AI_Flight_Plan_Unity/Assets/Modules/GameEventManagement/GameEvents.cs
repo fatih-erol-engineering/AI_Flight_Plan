@@ -58,6 +58,12 @@ public class GameEvents : MonoBehaviour
         OnWaypointTimeChanged?.Invoke(waypoint, oldTime);
     }
 
+    public event Action<Waypoint> OnWaypointSpawned;
+    public void WaypointSpawned(Waypoint waypoint)
+    {
+        OnWaypointSpawned?.Invoke(waypoint);
+    }
+
 
     // Control Point Events
     public event Action<ControlPoint, Vector3> OnControlPointPositionChanged;
