@@ -17,8 +17,8 @@ public class BSplineDrawer : MonoBehaviour
     [field: SerializeField, HideInInspector] public TrajectoryPoint[] trajectoryPoints { get; private set; }
     [SerializeField] public TimeGame startTime { get => waypointStart.time; }
     [SerializeField] public TimeGame endTime { get => waypointEnd.time; }
-    [SerializeField, HideInInspector] private bool isReadyToUpdate = false;
-    [field: SerializeField, HideInInspector] public CurveSegment[] curveSegments { get; private set; }
+    [SerializeField] private CurveSegment[] curveSegments;
+    [SerializeField] private bool isCreated = false;
 
 
     [Header("Containers & Prefabs")]
@@ -27,31 +27,30 @@ public class BSplineDrawer : MonoBehaviour
     [field: SerializeField] public GameObject controlPointPrefab { get; private set; }
 
     [Header("Appearance")]
-    [SerializeField] private Color startColor = Color.green;
-    [SerializeField] private Color endColor = Color.red;
-    [SerializeField] private int linePointNumber = 32;
+    [SerializeField] private Theme theme;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
 
     [Header("Tube")]
     [SerializeField] private bool showTubes = true;
+    [SerializeField] private float tubeRadius = 10f;
     [SerializeField] private GameObject tubePrefab;
     [SerializeField] private TubeManager[] tubeManagers;
 
 
     public void Awake()
     {
-        GameEvents.instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
-        GameEvents.instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
+        GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
+        GameEvents.Instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
     }
     public void OnValidate()
     {
-        GameEvents.instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
-        GameEvents.instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
+        GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
+        GameEvents.Instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
     }
     public void OnDestroy()
     {
-        GameEvents.instance.OnWaypointPositionChanged -= OnWaypointPositionChanged;
-        GameEvents.instance.OnControlPointPositionChanged -= OnControlPointPositionChanged;
+        GameEvents.Instance.OnWaypointPositionChanged -= OnWaypointPositionChanged;
+        GameEvents.Instance.OnControlPointPositionChanged -= OnControlPointPositionChanged;
     }
     public void OnWaypointPositionChanged(Waypoint wp, Vector3 oldPosition)
     {
@@ -74,12 +73,12 @@ public class BSplineDrawer : MonoBehaviour
         initCondition = initCondition && waypointStart != null && waypointEnd != null;
         initCondition = initCondition && waypointStart.time.second < waypointEnd.time.second;
         initCondition = initCondition && tubePrefab != null;
-        initCondition = initCondition && linePointNumber > 1;
+        initCondition = initCondition && theme.linePointNumber > 1;
 
         if (initCondition)
         {
             // Trajectory Points Initialization
-            int trajectoryPointCount = linePointNumber;
+            int trajectoryPointCount = theme.linePointNumber;
             trajectoryPoints = new TrajectoryPoint[trajectoryPointCount];
             for (int i = 0; i < trajectoryPointCount; i++)
             {
@@ -100,7 +99,7 @@ public class BSplineDrawer : MonoBehaviour
             lineRenderer = GetComponent<LineRenderer>();
             if (lineRenderer == null)
                 lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.positionCount = linePointNumber;
+            lineRenderer.positionCount = theme.linePointNumber;
             lineRenderer.colorGradient = new Gradient();
             UpdateLineRenderer();
 
@@ -117,12 +116,12 @@ public class BSplineDrawer : MonoBehaviour
                 }
             }
 
-            isReadyToUpdate = true;
             Tick();
+            isCreated = true;
         }
         else
         {
-            isReadyToUpdate = false;
+            isCreated = false;
             Debug.LogWarning("BSplineDrawer: Initialization failed! Missing references or invalid segment count.");
         }
     }
@@ -131,12 +130,12 @@ public class BSplineDrawer : MonoBehaviour
     public void Tick()
     {
         CheckReadyToUpdate();
-        if (isReadyToUpdate)
+        if (CheckReadyToUpdate())
         {
             DrawCurve();
             UpdateLineRenderer();
             UpdateTubes();
-            GameEvents.instance.SplineChanged(this);
+            GameEvents.Instance.SplineChanged(this);
         }
         else
         {
@@ -147,12 +146,12 @@ public class BSplineDrawer : MonoBehaviour
     public bool CheckReadyToUpdate()
     {
         bool waypointCondition = waypointStart != null && waypointEnd != null && waypointStart.time.second < waypointEnd.time.second;
-        if (!waypointCondition)
+        bool isReadyToUpdate = waypointCondition && isCreated;
+        if (!isReadyToUpdate)
         {
             Debug.LogWarning("BSplineDrawer: Waypoints are not properly set or times are invalid.");
         }
-        isReadyToUpdate = waypointCondition;
-        return waypointCondition; // 2 adet waypoint var ve başlangıç bitiş zamanları sıralı. 
+        return isReadyToUpdate; // 2 adet waypoint var ve başlangıç bitiş zamanları sıralı. 
     }
 
     public void UpdateTubes()
@@ -164,7 +163,9 @@ public class BSplineDrawer : MonoBehaviour
             {
                 tubeManagers[i].SetStartPosition(curveSegments[i].startPoint.position);
                 tubeManagers[i].SetEndPosition(curveSegments[i].endPoint.position);
+                tubeManagers[i].SetRadius(tubeRadius);
             }
+
         }
     }
     public void Clear()
@@ -175,6 +176,7 @@ public class BSplineDrawer : MonoBehaviour
         }
         DeleteTubes();
         Debug.ClearDeveloperConsole();
+        isCreated = false;
     }
     public void DeleteTubes()
     {
@@ -202,8 +204,8 @@ public class BSplineDrawer : MonoBehaviour
 
         // Position Update
         if (!lineRenderer) return;
-        if (lineRenderer.positionCount != linePointNumber) lineRenderer.positionCount = linePointNumber;
-        for (int i = 0; i < linePointNumber; i++)
+        if (lineRenderer.positionCount != theme.linePointNumber) lineRenderer.positionCount = theme.linePointNumber;
+        for (int i = 0; i < theme.linePointNumber; i++)
         {
             lineRenderer.SetPosition(i, trajectoryPoints[i].position);
         }
@@ -218,10 +220,10 @@ public class BSplineDrawer : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             float t = (n == 1) ? 1f : (float)i / (n - 1);
-            Color c = Color.Lerp(startColor, endColor, t);
+            Color c = Color.Lerp(theme.startColor, theme.endColor, t);
             c = new Color(c.r, c.g, c.b, 1f);
 
-            float a = Mathf.Lerp(startColor.a, endColor.a, t);
+            float a = Mathf.Lerp(theme.startColor.a, theme.endColor.a, t);
 
             cKeys[i] = new GradientColorKey(c, t);
             aKeys[i] = new GradientAlphaKey(a, t);
@@ -235,10 +237,10 @@ public class BSplineDrawer : MonoBehaviour
 
     public void SetStartColor(Color _color)
     {
-        if (startColor != _color)
+        if (theme.startColor != _color)
         {
-            startColor = _color;
-            if (isReadyToUpdate)
+            theme.startColor = _color;
+            if (CheckReadyToUpdate())
             {
                 UpdateLineRenderer();
             }
@@ -246,10 +248,10 @@ public class BSplineDrawer : MonoBehaviour
     }
     public void SetEndColor(Color _color)
     {
-        if (endColor != _color)
+        if (theme.endColor != _color)
         {
-            endColor = _color;
-            if (isReadyToUpdate)
+            theme.endColor = _color;
+            if (CheckReadyToUpdate())
             {
                 UpdateLineRenderer();
             }
@@ -260,7 +262,7 @@ public class BSplineDrawer : MonoBehaviour
         if (waypointStart != _waypoint)
         {
             waypointStart = _waypoint;
-            if (isReadyToUpdate)
+            if (CheckReadyToUpdate())
             {
                 Tick();
             }
@@ -271,7 +273,7 @@ public class BSplineDrawer : MonoBehaviour
         if (waypointEnd != _waypoint)
         {
             waypointEnd = _waypoint;
-            if (isReadyToUpdate)
+            if (CheckReadyToUpdate())
             {
                 Tick();
             }
@@ -291,7 +293,7 @@ public class BSplineDrawer : MonoBehaviour
             ControlPoint lastControlPoint = controlPoints[controlPoints.Count - 1];
             controlPoints.RemoveAt(controlPoints.Count - 1);
             Destroy(lastControlPoint.gameObject);
-            if (isReadyToUpdate)
+            if (CheckReadyToUpdate())
             {
                 Tick();
             }
@@ -301,58 +303,55 @@ public class BSplineDrawer : MonoBehaviour
     public void DrawCurve()
     {
 
-        // need at least degree+1 control points for cubic B-spline
-        if (isReadyToUpdate)
+        Vector3[] points = new Vector3[2 + controlPoints.Count];
+        points[0] = waypointStart.transform.position;
+        for (int i = 0; i < controlPoints.Count; i++)
         {
-            Vector3[] points = new Vector3[2 + controlPoints.Count];
-            points[0] = waypointStart.transform.position;
-            for (int i = 0; i < controlPoints.Count; i++)
+            points[i + 1] = controlPoints[i].transform.position;
+        }
+        points[points.Length - 1] = waypointEnd.transform.position;
+        float cumulativeDistance = 0f;
+
+        int cpCt = 0;
+        bool changeCpFlag = false;
+        curveSegments = new CurveSegment[controlPoints.Count + 1];
+        int minIdx = 0;
+        int maxIdx = 0;
+        for (int i = 0; i < theme.linePointNumber; i++)
+        {
+            float t = (float)i / (theme.linePointNumber - 1);
+            trajectoryPoints[i].position = DeBoorCox(points, t, 2);
+            trajectoryPoints[i].time = new TimeGame(Mathf.Lerp(startTime.second, endTime.second, (float)i / (theme.linePointNumber - 1)));
+            if (i > 0)
             {
-                points[i + 1] = controlPoints[i].transform.position;
+                cumulativeDistance += Vector3.Distance(trajectoryPoints[i].position, trajectoryPoints[i - 1].position);
             }
-            points[points.Length - 1] = waypointEnd.transform.position;
-            float cumulativeDistance = 0f;
+            trajectoryPoints[i].distanceToStart = cumulativeDistance;
 
-            int cpCt = 0;
-            bool changeCpFlag = false;
-            curveSegments = new CurveSegment[controlPoints.Count + 1];
-            int minIdx = 0;
-            int maxIdx = 0;
-            for (int i = 0; i < linePointNumber; i++)
+            // Set closest points to spline for control points
+            if (i > 0)
             {
-                float t = (float)i / (linePointNumber - 1);
-                trajectoryPoints[i].position = DeBoorCox(points, t, 2);
-                trajectoryPoints[i].time = new TimeGame(Mathf.Lerp(startTime.second, endTime.second, (float)i / (linePointNumber - 1)));
-                if (i > 0)
+                if (cpCt < controlPoints.Count)
                 {
-                    cumulativeDistance += Vector3.Distance(trajectoryPoints[i].position, trajectoryPoints[i - 1].position);
-                }
-                trajectoryPoints[i].distanceToStart = cumulativeDistance;
+                    float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i - 1].position);
+                    float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i].position);
 
-                // Set closest points to spline for control points
-                if (i > 0)
-                {
-                    if (cpCt < controlPoints.Count)
+                    changeCpFlag = dist2 > dist1;
+                    maxIdx = i;
+                    if (changeCpFlag)
                     {
-                        float dist1 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i - 1].position);
-                        float dist2 = Vector3.Distance(controlPoints[cpCt].transform.position, trajectoryPoints[i].position);
-
-                        changeCpFlag = dist2 > dist1;
-                        maxIdx = i;
-                        if (changeCpFlag)
-                        {
-                            curveSegments[cpCt] = new CurveSegment(trajectoryPoints[minIdx], trajectoryPoints[maxIdx]);
-                            controlPoints[cpCt].SetClosestPointToSpline(trajectoryPoints[i].position);
-                            minIdx = i;
-                            cpCt++;
-                        }
+                        curveSegments[cpCt] = new CurveSegment(trajectoryPoints[minIdx], trajectoryPoints[maxIdx], tubeRadius);
+                        controlPoints[cpCt].SetClosestPointToSpline(trajectoryPoints[i].position);
+                        minIdx = i;
+                        cpCt++;
                     }
                 }
             }
-            {
-                curveSegments[curveSegments.Length - 1] = new CurveSegment(trajectoryPoints[minIdx], trajectoryPoints[trajectoryPoints.Length - 1]); // Handle case when all control points are assigned
-            }
         }
+        {
+            curveSegments[curveSegments.Length - 1] = new CurveSegment(trajectoryPoints[minIdx], trajectoryPoints[trajectoryPoints.Length - 1], tubeRadius); // Handle case when all control points are assigned
+        }
+
     }
 
     /// <summary>
@@ -443,48 +442,125 @@ public class BSplineDrawer : MonoBehaviour
     // }
 
 
-    public List<CollisionInfo> CheckCollisionWithAnotherSegment(BSplineDrawer otherSegment, float geometricCollisionThreshold_m, float timeCollision_s)
+    public List<CollisionInfo> CheckCollisionWithAnotherSpline(BSplineDrawer otherSpline)
     {
-        TrajectoryPoint[] traj1Points = trajectoryPoints;
-        TrajectoryPoint[] traj2Points = otherSegment.trajectoryPoints;
         List<CollisionInfo> collisionInfoList = new List<CollisionInfo>();
 
-        foreach (var traj1Point in traj1Points)
+        for (int i = 0; i < curveSegments.Length; i++)
         {
-            foreach (var traj2Point in traj2Points)
+            CurveSegment curveSegment = curveSegments[i];
+            for (int j = 0; j < otherSpline.curveSegments.Length; j++)
             {
-                if (Mathf.Abs(traj1Point.time.second - traj2Point.time.second) < timeCollision_s)
+                CurveSegment otherCurveSegment = otherSpline.curveSegments[j];
+                // Timecheck
+                bool a = (curveSegment.startPoint.time.second > otherCurveSegment.startPoint.time.second);
+                bool b = (curveSegment.startPoint.time.second <= otherCurveSegment.endPoint.time.second);
+                bool c = (curveSegment.endPoint.time.second > otherCurveSegment.startPoint.time.second);
+                bool d = (curveSegment.endPoint.time.second <= otherCurveSegment.endPoint.time.second);
+                bool timeFlag = (a && b) || (c && d);
+                if (timeFlag)
                 {
-                    if ((Vector3.Distance(traj2Point.position, traj1Point.position) < geometricCollisionThreshold_m))
+                    // There is a time overlap, proceed to geometric check
+                    // Implement geometric collision detection between curveSegment and otherCurveSegment here
+                    // If collision detected, create CollisionInfo and add to collisionInfoList
+
+                    bool collisionFlag = AreCylindersIntersecting(curveSegment.startPoint.position, curveSegment.endPoint.position, curveSegment.radious,
+                                            otherCurveSegment.startPoint.position, otherCurveSegment.endPoint.position, otherCurveSegment.radious);
+                    if (collisionFlag)
                     {
-                        collisionInfoList.Add(new CollisionInfo
+                        CollisionInfo collisionInfo = new CollisionInfo
                         {
-                            isCollided = true,
-                            objCurrent = gameObject,
-                            objCollidedWith = otherSegment.gameObject,
-                            point = traj1Point.position,
-                            time = traj1Point.time,
-                        });
+                            segment1 = curveSegment,
+                            segment2 = otherCurveSegment
+                        };
+                        collisionInfoList.Add(collisionInfo);
+                        if (showTubes)
+                        {
+                            tubeManagers[i].SetIsCollided(true);
+                            otherSpline.tubeManagers[j].SetIsCollided(true);
+                        }
                     }
-                }
-            }
-        }
-        if (showTubes)
-        {
-            for (int j = 0; j < tubeManagers.Length; j++)
-            {
-                tubeManagers[j].SetIsCollided(false);
-                for (int i = 0; i < collisionInfoList.Count; i++)
-                {
-                    if (tubeManagers[j].CheckPositionInsideOrNot(collisionInfoList[i].point))
+                    else
                     {
-                        tubeManagers[j].SetIsCollided(true);
-                        break;
+                        tubeManagers[i].SetIsCollided(false);
+                        otherSpline.tubeManagers[j].SetIsCollided(false);
                     }
+
+
                 }
+
             }
         }
         return collisionInfoList;
+    }
+    public static bool AreCylindersIntersecting(
+    Vector3 startA, Vector3 endA, float radiusA,
+    Vector3 startB, Vector3 endB, float radiusB)
+    {
+        // --- 1. Eksen yön vektörlerini ve uzunlukları hesapla
+        Vector3 uA = (endA - startA);
+        Vector3 uB = (endB - startB);
+        float lenA = uA.magnitude;
+        float lenB = uB.magnitude;
+        uA.Normalize();
+        uB.Normalize();
+
+        // --- 2. Eksenler arası en kısa mesafeyi bul
+        Vector3 n = Vector3.Cross(uA, uB);
+        float nMag = n.magnitude;
+
+        float distance;
+        if (nMag < 1e-6f) // Neredeyse paralel doğrular
+        {
+            Vector3 diff = startB - startA;
+            distance = Vector3.Magnitude(diff - Vector3.Dot(diff, uA) * uA);
+        }
+        else
+        {
+            distance = Mathf.Abs(Vector3.Dot((startB - startA), n.normalized));
+        }
+
+        // --- 3. Eğer eksenler çok uzaktaysa zaten çakışmazlar
+        if (distance > radiusA + radiusB)
+            return false;
+
+        // --- 4. En yakın noktaları bul (parametrik çözüm)
+        // Line-line closest points
+        Vector3 w0 = startA - startB;
+        float a = Vector3.Dot(uA, uA);
+        float b = Vector3.Dot(uA, uB);
+        float c = Vector3.Dot(uB, uB);
+        float d = Vector3.Dot(uA, w0);
+        float e = Vector3.Dot(uB, w0);
+
+        float denom = a * c - b * b;
+        float tA, tB;
+
+        if (denom < 1e-6f)
+        {
+            // Neredeyse paralel
+            tA = 0f;
+            tB = (b > c ? d / b : e / c);
+        }
+        else
+        {
+            tA = (b * e - c * d) / denom;
+            tB = (a * e - b * d) / denom;
+        }
+
+        // --- 5. Parametreleri [0, length] aralığına projekte et
+        tA = Mathf.Clamp(tA, 0f, lenA);
+        tB = Mathf.Clamp(tB, 0f, lenB);
+
+        // --- 6. Eksenler üzerindeki en yakın noktaları bul
+        Vector3 closestA = startA + uA * tA;
+        Vector3 closestB = startB + uB * tB;
+
+        // --- 7. Noktalar arası mesafe
+        float centerDist = Vector3.Distance(closestA, closestB);
+
+        // --- 8. Çakışma kontrolü
+        return centerDist <= (radiusA + radiusB);
     }
     public TubeManager SpawnTube()
     {
@@ -523,7 +599,7 @@ public class BSplineDrawer : MonoBehaviour
                 _controlPoint.transform.parent = controlPointContainer;
                 controlPoints.Add(_controlPoint);
             }
-            if (isReadyToUpdate)
+            if (CheckReadyToUpdate())
             {
                 Tick();
             }
@@ -562,9 +638,18 @@ public class CurveSegment
 {
     public TrajectoryPoint startPoint;
     public TrajectoryPoint endPoint;
-    public CurveSegment(TrajectoryPoint _startPoint, TrajectoryPoint _endPoint)
+    public Vector3 midPoint
+    {
+        get
+        {
+            return (startPoint.position + endPoint.position) / 2f;
+        }
+    }
+    public float radious;
+    public CurveSegment(TrajectoryPoint _startPoint, TrajectoryPoint _endPoint, float _radious)
     {
         startPoint = _startPoint;
         endPoint = _endPoint;
+        radious = _radious;
     }
 }

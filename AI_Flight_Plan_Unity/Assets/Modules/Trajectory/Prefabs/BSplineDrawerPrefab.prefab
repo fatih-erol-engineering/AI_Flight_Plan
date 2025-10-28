@@ -112,15 +112,14 @@ MonoBehaviour:
   controlPoints: []
   <waypointStart>k__BackingField: {fileID: 0}
   <waypointEnd>k__BackingField: {fileID: 0}
-  isReadyToUpdate: 0
+  isCreated: 0
   <controlPointContainer>k__BackingField: {fileID: 781948544774136140}
   <tubeContainer>k__BackingField: {fileID: 2591734894475299980}
   <controlPointPrefab>k__BackingField: {fileID: 517102805373364547, guid: 619f54b1d9dc3ae40b0965f8807610f9, type: 3}
-  startColor: {r: 0, g: 1, b: 0, a: 1}
-  endColor: {r: 1, g: 0, b: 0, a: 1}
-  segmentCount: 100
+  theme: {fileID: 11400000, guid: d6ed71dd77a328b4fbd212468c262f22, type: 2}
   lineRenderer: {fileID: 5454687630953241645}
   showTubes: 1
+  tubeRadius: 10
   tubePrefab: {fileID: 132796536547646836, guid: 1eef6f948def3af499ecd01465493a41, type: 3}
   tubeManagers: []
 --- !u!120 &5454687630953241645

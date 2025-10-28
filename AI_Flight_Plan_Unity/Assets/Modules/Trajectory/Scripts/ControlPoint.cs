@@ -16,7 +16,7 @@ public class ControlPoint : MonoBehaviour
         {
             if (go.GetComponent<ControlPoint>() != null && transform.position != prev_position)
             {
-                GameEvents.instance.ControlPointPositionChanged(this, prev_position);
+                GameEvents.Instance.ControlPointPositionChanged(this, prev_position);
                 prev_position = transform.position;
             }
         }
@@ -27,7 +27,7 @@ public class ControlPoint : MonoBehaviour
     {
         if (_position == transform.position) return;
         Vector3 oldposition = transform.position;
-        GameEvents.instance.ControlPointPositionChanged(this, oldposition);
+        GameEvents.Instance.ControlPointPositionChanged(this, oldposition);
         transform.position = _position;
     }
     public void SetClosestPointToSpline(Vector3 point)

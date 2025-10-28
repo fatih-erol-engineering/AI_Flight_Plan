@@ -32,7 +32,7 @@ public class Waypoint : SelectableBehaviour
         {
             if (go.GetComponent<Waypoint>() != null && transform.position != prev_position)
             {
-                GameEvents.instance.WaypointPositionChanged(this, prev_position);
+                GameEvents.Instance.WaypointPositionChanged(this, prev_position);
                 prev_position = transform.position;
             }
         }
@@ -52,13 +52,13 @@ public class Waypoint : SelectableBehaviour
     {
         if (transform.position == _position) return;
         Vector3 oldPosition = transform.position;
-        GameEvents.instance.WaypointPositionChanged(this, oldPosition);
+        GameEvents.Instance.WaypointPositionChanged(this, oldPosition);
         transform.position = _position;
     }
     public void SetTime(TimeGame _time)
     {
         TimeGame oldTime = time;
-        GameEvents.instance.WaypointTimeChanged(this, oldTime);
+        GameEvents.Instance.WaypointTimeChanged(this, oldTime);
         time.SetTime(_time.second);
     }
     public void UpdateMaterial(Material material)

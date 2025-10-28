@@ -1,17 +1,47 @@
 using System;
 using UnityEngine;
 
+
+[DefaultExecutionOrder(-1000)] // 
 public class GameEvents : MonoBehaviour
 {
-    public static GameEvents instance;
+    public static GameEvents Instance;
 
     private void OnValidate()
     {
-        instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Debug.LogWarning("A ThemeManager already exists in the scene. Removing duplicate.", this);
+#if UNITY_EDITOR
+            // Safe to remove component immediately in editor
+            DestroyImmediate(this);
+#else
+            Destroy(this);
+#endif
+            return;
+        }
     }
     private void Awake()
     {
-        instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Debug.LogWarning("A ThemeManager already exists in the scene. Removing duplicate.", this);
+#if UNITY_EDITOR
+            // Safe to remove component immediately in editor
+            DestroyImmediate(this);
+#else
+            Destroy(this);
+#endif
+            return;
+        }
     }
 
     // Waypoint Events

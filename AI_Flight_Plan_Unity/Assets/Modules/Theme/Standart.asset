@@ -27,6 +27,7 @@ MonoBehaviour:
   Preview: {fileID: 2100000, guid: 3e539d689463ba64d982bf504b51d3f1, type: 2}
   startColor: {r: 0, g: 1, b: 0, a: 1}
   endColor: {r: 0, g: 0, b: 1, a: 1}
+  linePointNumber: 100
   tubeEdgeColor_nonCollided: {r: 0, g: 0.62581074, b: 2.9960787, a: 1}
   tubeSurfaceColor_nonCollided: {r: 0, g: 0.3062613, b: 1, a: 0.2}
   tubeEdgeColor_collided: {r: 2.9960787, g: 0.4993465, b: 0, a: 1}

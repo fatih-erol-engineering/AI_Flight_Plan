@@ -50,8 +50,9 @@ public class TimeSliderUI : MonoBehaviour
         SetTimeSliderMaxValue(maxVal);
 
         playPauseBtn.clicked += OnPlayPauseBtnClick;
-        timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());            
+        timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());
     }
+    
     void Update()
     {
         currentTimeField.value = timeSlider.value;

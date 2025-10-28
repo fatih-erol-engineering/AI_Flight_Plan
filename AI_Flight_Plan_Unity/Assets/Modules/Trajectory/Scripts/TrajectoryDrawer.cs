@@ -215,14 +215,14 @@ public class TrajectoryDrawer : MonoBehaviour
 
 
 
-    public List<CollisionInfo> CheckCollisionWithAnotherTrajectory(TrajectoryDrawer otherTrajectory, float geometricCollisionThreshold_m, float timeCollision_s)
+    public List<CollisionInfo> CheckCollisionWithAnotherTrajectory(TrajectoryDrawer otherTrajectory)
     {
         List<CollisionInfo> totalCollisionInfoList = new List<CollisionInfo>();
         foreach (var segment1 in bSplineDrawerArray)
         {
             foreach (BSplineDrawer segment2 in otherTrajectory.bSplineDrawerArray)
             {
-                List<CollisionInfo> currentCollisionInfoList = segment1.CheckCollisionWithAnotherSegment(segment2, geometricCollisionThreshold_m, timeCollision_s);
+                List<CollisionInfo> currentCollisionInfoList = segment1.CheckCollisionWithAnotherSpline(segment2);
                 totalCollisionInfoList.AddRange(currentCollisionInfoList);
             }
         }

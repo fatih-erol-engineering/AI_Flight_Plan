@@ -23,7 +23,9 @@ public class Theme : ScriptableObject
     public Material Preview;
     [Header("Trajectory")]
     public Color startColor;
+
     public Color endColor;
+    public int linePointNumber;
 
     [Header("Tube Properties")]
 
