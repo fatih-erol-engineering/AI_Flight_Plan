@@ -41,10 +41,13 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _edgeSize: 0.1
+    - _intersectionDepth: 0.44
     - _isSelected: 1
-    - _size: 0.01
+    - _scale: 0.021
+    - _size: 0.05
     m_Colors:
-    - _edgeColor: {r: 0, g: 1.368835, b: 4, a: 1}
+    - _Color: {r: 0, g: 2.031662, b: 4, a: 1}
+    - _edgeColor: {r: 3.9999995, g: 0.8783139, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &6745888894943240899
