@@ -84,6 +84,10 @@ public class HoverSelectionSystem : MonoBehaviour
 
                 if (_selected != null)
                     _selected.OnSelect();
+
+                // selectedObject = (_selected as IEditable)?.gameObject;
+
+                // GameEvents.Instance.SelectionChanged(selectedObject);
             }
         }
     }

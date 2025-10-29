@@ -80,4 +80,13 @@ public class GameEvents : MonoBehaviour
         OnSplineChanged?.Invoke(splineDrawer);
     }
 
+
+
+    // Selection Change Events
+    public event Action<IEditable> OnSelectionChanged;
+    public void SelectionChanged(IEditable _editable)
+    {
+        OnSelectionChanged?.Invoke(_editable);
+    }
+
 }

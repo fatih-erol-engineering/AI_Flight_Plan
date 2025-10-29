@@ -3,22 +3,11 @@ using UnityEngine;
 using UnityEditor;
 
 [ExecuteAlways]
-public class Waypoint : MonoBehaviour
+public class Waypoint : MonoBehaviour, IEditable
 {
     [field: SerializeField] public TimeGame time { get; private set; }
     private Vector3 prev_position = Vector3.zero;
 
-    // // // // // #if UNITY_EDITOR
-    // // // // void Update()
-    // // // // {
-    // // // //     if (Selection.activeTransform != null && Selection.activeTransform.GetComponent<Waypoint>() != null)
-    // // // //     {
-    // // // //         if (Selection.activeTransform.GetComponent<Waypoint>() == this)
-    // // // //         {
-    // // // //             GameEvents.Instance.WaypointPositionChanged(this, transform.position);
-    // // // //         }
-    // // // //     }
-    // // // // }
 
 
 
@@ -52,5 +41,11 @@ public class Waypoint : MonoBehaviour
         time.SetTime(_time.second);
     }
 
-
+    public void ShowEditableProperties()
+    {
+        Debug.Log("x: " + transform.position.x);
+        Debug.Log("y: " + transform.position.y);
+        Debug.Log("z: " + transform.position.z);
+        Debug.Log("time: " + time.second);
+    }
 }
