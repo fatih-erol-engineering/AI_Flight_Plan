@@ -17,15 +17,15 @@ public class HoverSelectionSystem : MonoBehaviour
     public GameObject selectedObject;
 
 
-    // void OnValidate()
-    // {
-    //     if (!mainCamera) mainCamera = Camera.main;
-    //     maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
+    void OnValidate()
+    {
+        if (!mainCamera) mainCamera = Camera.main;
+        maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
 
-    //     // Ensure a single instance
-    //     if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-    //     Instance = this;
-    // }
+        // Ensure a single instance
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+    }
 
     void Awake()
     {

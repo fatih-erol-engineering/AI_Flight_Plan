@@ -45,12 +45,12 @@ Material:
     - _intersectionDepth: 0.44
     - _isSelected: 1
     - _scale: 0.021
-    - _selectionEdgeWidth: 0.6
+    - _selectionEdgeWidth: 0.121
     - _size: 0.05
     m_Colors:
     - _Color: {r: 0, g: 2.031662, b: 4, a: 1}
     - _edgeColor: {r: 3.9999995, g: 0.46666667, b: 0, a: 1}
-    - _selectionEdgeColor: {r: 0, g: 2.031662, b: 4, a: 1}
+    - _selectionEdgeColor: {r: 3.9999995, g: 2.1134284, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &6745888894943240899

@@ -12,9 +12,11 @@ public class Aircraft : MonoBehaviour, ISelectable
 
     [field: SerializeField]
     public TrajectoryDrawer trajectory { get; private set; }
+
+    [Header("Selection Appearance")]
     [SerializeField] private MeshRenderer highlightMeshRenderer;
-    [SerializeField] private bool isSelected = false;
-    [SerializeField] private MaterialPropertyBlock mpb;
+    private bool isSelected = false;
+    private MaterialPropertyBlock mpb;
     private Color highlightEdgeColor;
     private float highlightEdgeWidth;
     static readonly int EdgeColorID = Shader.PropertyToID("_selectionEdgeColor"); // URP Lit
@@ -29,7 +31,7 @@ public class Aircraft : MonoBehaviour, ISelectable
     {
         mpb = new MaterialPropertyBlock();
         highlightMeshRenderer.GetPropertyBlock(mpb);
-        // SetHighlightEdgeWidth(0, true);
+        SetHighlightEdgeWidth(1f, true);
         highlightMeshRenderer.gameObject.SetActive(false);
     }
 
@@ -51,13 +53,13 @@ public class Aircraft : MonoBehaviour, ISelectable
         SetHighlightEdgeColor(ThemeManager.Instance.theme.Select);
         highlightMeshRenderer.gameObject.SetActive(true);
         // SetHighlightEdgeWidth(1f);
-        isSelected = true;
+        SetIsSelected(true);
     }
     public void OnDeselect()
     {
         // SetHighlightEdgeWidth(0f);
         highlightMeshRenderer.gameObject.SetActive(false);
-        isSelected = false;
+        SetIsSelected(false);
     }
 
     public void SetTime(TimeGame _time, bool isImmediate = false)
