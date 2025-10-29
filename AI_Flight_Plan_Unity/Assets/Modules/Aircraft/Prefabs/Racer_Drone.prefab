@@ -156,7 +156,6 @@ MonoBehaviour:
   aircraftProperties: {fileID: 11400000, guid: 0e4a9549a4961d9488dfbbfb4872446b, type: 2}
   <trajectory>k__BackingField: {fileID: 1327535988528900658}
   highlightMeshRenderer: {fileID: 2597919095638749568}
-  isSelected: 0
 --- !u!1 &1977331294629503932
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 
 [ExecuteAlways]
-public class Waypoint : MonoBehaviour, IEditable, ISelectable
+public class Waypoint : MonoBehaviour, ISelectable, IEditable
 {
     [field: SerializeField] public TimeGame time { get; private set; }
     private Vector3 prev_position = Vector3.zero;
@@ -68,14 +68,6 @@ public class Waypoint : MonoBehaviour, IEditable, ISelectable
         TimeGame oldTime = time;
         GameEvents.Instance.WaypointTimeChanged(this, oldTime);
         time.SetTime(_time.second);
-    }
-
-    public void ShowEditableProperties()
-    {
-        Debug.Log("x: " + transform.position.x);
-        Debug.Log("y: " + transform.position.y);
-        Debug.Log("z: " + transform.position.z);
-        Debug.Log("time: " + time.second);
     }
 
     public void OnHoverEnter()
@@ -162,5 +154,19 @@ public class Waypoint : MonoBehaviour, IEditable, ISelectable
             _color.b = _color.b / maxComponent;
         }
         return _color;
+    }
+
+    public void OnEditableEnter()
+    {
+        Debug.Log("Editable Entered: " + gameObject.name);
+        Debug.Log("x: " + transform.position.x);
+        Debug.Log("y: " + transform.position.y);
+        Debug.Log("z: " + transform.position.z);
+        Debug.Log("time: " + time.second);
+    }
+
+    public void OnEditableExit()
+    {
+        Debug.Log("Editable Exited: " + gameObject.name);
     }
 }

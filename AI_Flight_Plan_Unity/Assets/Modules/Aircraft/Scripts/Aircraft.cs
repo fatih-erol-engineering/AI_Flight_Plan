@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
 
-public class Aircraft : MonoBehaviour, ISelectable
+public class Aircraft : MonoBehaviour, ISelectable, IEditable
 {
     [Header("Aircraft Settings")]
     [field: SerializeField]
@@ -200,8 +200,18 @@ public class Aircraft : MonoBehaviour, ISelectable
         t.rotation = Quaternion.LookRotation(unitDir, up);
     }
 
+    public void OnEditableEnter()
+    {
+        Debug.Log("Editable Entered: " + gameObject.name);
+        Debug.Log("x: " + transform.position.x);
+        Debug.Log("y: " + transform.position.y);
+        Debug.Log("z: " + transform.position.z);
+        Debug.Log("time: " + time.second);
+    }
 
-
-
+    public void OnEditableExit()
+    {
+        Debug.Log("Editable Entered: " + gameObject.name);
+    }
 }
 

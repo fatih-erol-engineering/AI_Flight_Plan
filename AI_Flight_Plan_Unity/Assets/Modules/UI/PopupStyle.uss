@@ -1,0 +1,176 @@
+:root {
+    --colorTheme: rgb(113, 12, 4);
+    --colorPassive: rgb(56, 6, 2);
+    --colorActive: rgb(156, 17, 6);
+    --colorText: rgb(255, 255, 255);
+    --colorIcon: rgb(255, 255, 255);
+    --sizeTextButton: 16;
+}
+
+.hidden {
+    display: none;
+}
+
+#velocitySlider > .unity-slider__label {
+    display: flex;
+}
+
+#velocitySlider > .unity-slider__input {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0);
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+    color: rgb(0, 0, 0);
+}
+
+#velocitySlider > .unity-slider__input > #unity-drag-container {
+    height: auto;
+}
+
+#velocitySlider > .unity-slider__input .unity-text-field__input {
+    height: auto;
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    color: var(--colorText);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    -unity-text-align: upper-center;
+    font-size: 16px;
+}
+
+#maxTimeField > #unity-text-input {
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    color: var(--colorText);
+    -unity-text-align: upper-center;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    font-size: 16px;
+}
+
+#currentTimeField > #unity-text-input {
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    color: var(--colorText);
+    -unity-text-align: upper-center;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    font-size: 16px;
+}
+
+#velocitySlider > .unity-slider__input > #unity-drag-container > #unity-dragger {
+    align-self: auto;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 57px;
+    border-top-right-radius: 57px;
+    border-bottom-right-radius: 57px;
+    border-bottom-left-radius: 57px;
+    -unity-background-scale-mode: scale-to-fit;
+    background-size: cover;
+    flex-grow: 1;
+    align-items: auto;
+    align-content: auto;
+    width: 26px;
+    height: 26px;
+    scale: 0.7 0.7 0.7;
+    background-color: var(--colorActive);
+}
+
+#velocitySlider > .unity-slider__input > #unity-drag-container > #unity-dragger:hover {
+    align-self: auto;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 57px;
+    border-top-right-radius: 57px;
+    border-bottom-right-radius: 57px;
+    border-bottom-left-radius: 57px;
+    -unity-background-scale-mode: scale-to-fit;
+    background-size: cover;
+    flex-grow: 1;
+    align-items: auto;
+    align-content: auto;
+    width: 26px;
+    height: 26px;
+    background-color: var(--colorActive);
+    scale: 1 1;
+    transition-property: scale;
+    transition-duration: 0.25s;
+}
+
+#velocitySlider > .unity-slider__input > #unity-drag-container > #unity-tracker {
+    background-color: var(--colorIcon);
+}
+
+#velocitySlider > .unity-slider__input > #unity-drag-container > #unity-tracker > #unity-fill {
+    background-color: var(--colorActive);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#velocitySlider > .unity-slider__input > #unity-drag-container > #unity-tracker {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: var(--colorPassive);
+}
+
+#velocitySlider > .unity-slider__input > #unity-drag-container > #unity-dragger:active {
+    align-self: auto;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 57px;
+    border-top-right-radius: 57px;
+    border-bottom-right-radius: 57px;
+    border-bottom-left-radius: 57px;
+    -unity-background-scale-mode: scale-to-fit;
+    background-size: cover;
+    flex-grow: 1;
+    align-items: auto;
+    align-content: auto;
+    width: 26px;
+    height: 26px;
+    background-color: var(--colorActive);
+    scale: 1 1;
+}

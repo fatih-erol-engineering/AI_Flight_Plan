@@ -90,13 +90,13 @@ public class ViewNavigation : MonoBehaviour
         ApplyTransform(manualInput);
 
         // Optional: auto-focus when your selection changes
-        if (HoverSelectionSystem.Instance.selectedObject != null)
+        if (SelectionSystem.Instance.selectedObject != null)
         {
-            if (focusOnSelection && HoverSelectionSystem.Instance.selectedObject != _prevSelected)
+            if (focusOnSelection && SelectionSystem.Instance.selectedObject != _prevSelected)
             {
-                _prevSelected = HoverSelectionSystem.Instance.selectedObject;
-                if (HoverSelectionSystem.Instance.selectedObject != null)
-                    Focus(HoverSelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
+                _prevSelected = SelectionSystem.Instance.selectedObject;
+                if (SelectionSystem.Instance.selectedObject != null)
+                    Focus(SelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
             }
         }
     }
@@ -128,7 +128,7 @@ public class ViewNavigation : MonoBehaviour
         bool manualInput = false;
 
         // ------- LOOK (RMB) -------
-        if (rmb)
+        if (alt && rmb)
         {
             manualInput = true;
 
@@ -254,18 +254,18 @@ public class ViewNavigation : MonoBehaviour
         {
             manualInput = false; // pressing F is not "manual nav" that should cancel smoothing
 
-            if (HoverSelectionSystem.Instance.selectedObject != null)
+            if (SelectionSystem.Instance.selectedObject != null)
             {
-                Focus(HoverSelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: true);
+                Focus(SelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: true);
             }
         }
         if (Input.GetKeyDown(focusKey))
         {
             manualInput = false; // pressing F is not "manual nav" that should cancel smoothing
 
-            if (HoverSelectionSystem.Instance.selectedObject != null)
+            if (SelectionSystem.Instance.selectedObject != null)
             {
-                Focus(HoverSelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: false);
+                Focus(SelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: false);
             }
             // else if (!FocusByRaycast())
             // {

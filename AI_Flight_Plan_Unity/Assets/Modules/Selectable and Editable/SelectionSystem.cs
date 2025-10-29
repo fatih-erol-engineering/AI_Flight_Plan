@@ -3,9 +3,9 @@ using UnityEngine.EventSystems;
 
 // [ExecuteAlways]
 // [DefaultExecutionOrder(-999)] // 
-public class HoverSelectionSystem : MonoBehaviour
+public class SelectionSystem : MonoBehaviour
 {
-    public static HoverSelectionSystem Instance { get; private set; }
+    public static SelectionSystem Instance { get; private set; }
     [SerializeField] private MainGameManager mainGameManager;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask pickMask = ~0; // gerekirse katman daralt

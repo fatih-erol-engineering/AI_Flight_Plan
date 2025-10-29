@@ -34,9 +34,9 @@ public class RuntimeTransformGizmo : MonoBehaviour
 
     void Update()
     {
-        if (HoverSelectionSystem.Instance == null) return;
+        if (SelectionSystem.Instance == null) return;
 
-        var selObj = HoverSelectionSystem.Instance.selectedObject;
+        var selObj = SelectionSystem.Instance.selectedObject;
         if (selObj != null)
         {
             if (target != selObj.transform)

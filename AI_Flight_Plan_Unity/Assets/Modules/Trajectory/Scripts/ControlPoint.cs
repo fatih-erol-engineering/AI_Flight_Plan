@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [ExecuteAlways]
-public class ControlPoint : MonoBehaviour, IEditable, ISelectable
+public class ControlPoint : MonoBehaviour, ISelectable, IEditable
 {
     [SerializeField] private Vector3 closestPointToSpline;
     private Vector3 prev_position = Vector3.zero;
@@ -28,8 +28,6 @@ public class ControlPoint : MonoBehaviour, IEditable, ISelectable
     void Awake()
     {
         AssignData();
-        Debug.Log("ControlPoint Awake");
-
     }
     void AssignData()
     {
@@ -74,13 +72,6 @@ public class ControlPoint : MonoBehaviour, IEditable, ISelectable
     {
         return closestPointToSpline;
     }
-    public void ShowEditableProperties()
-    {
-        Debug.Log("x: " + transform.position.x);
-        Debug.Log("y: " + transform.position.y);
-        Debug.Log("z: " + transform.position.z);
-    }
-
 
     public void OnHoverEnter()
     {
@@ -150,5 +141,18 @@ public class ControlPoint : MonoBehaviour, IEditable, ISelectable
             _color.b = _color.b / maxComponent;
         }
         return _color;
+    }
+
+    public void OnEditableEnter()
+    {
+        Debug.Log("Editable Entered: " + gameObject.name);
+        Debug.Log("x: " + transform.position.x);
+        Debug.Log("y: " + transform.position.y);
+        Debug.Log("z: " + transform.position.z);
+    }
+
+    public void OnEditableExit()
+    {
+        Debug.Log("Editable Exited: " + gameObject.name);
     }
 }
