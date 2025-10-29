@@ -17,10 +17,11 @@ public class Theme : ScriptableObject
     public Texture2D stopIcon;
     public Texture2D pauseIcon;
 
-    [Header("Theme Materials")]
-    public Material Hover;
-    public Material Select;
-    public Material Preview;
+    [Header("Selection Colors")]
+    [ColorUsage(true, true)] public Color Hover;
+    [ColorUsage(true, true)] public Color Select;
+    [ColorUsage(true, true)] public Color Preview;
+
     [Header("Tube Properties")]
 
     [ColorUsage(true, true)] public Color tubeEdgeColor_nonCollided;

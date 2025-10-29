@@ -61,7 +61,7 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
 
         maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
 
-        previewMaterialOverride = theme.Preview;
+        // previewMaterialOverride = theme.Preview;
     }
     void CheckAssignment<T>(T obj)
     {

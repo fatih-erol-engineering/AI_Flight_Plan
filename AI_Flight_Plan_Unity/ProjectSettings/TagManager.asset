@@ -13,6 +13,7 @@ TagManager:
   - CesiumMap
   - TrajectorySegment
   - UIManager
+  - World
   layers:
   - Default
   - TransparentFX

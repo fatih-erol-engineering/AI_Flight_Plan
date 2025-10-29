@@ -71,7 +71,7 @@ public class CreateModeWaypointManager : MonoBehaviour, IGameModeHooks
         if (!previewContainer) previewContainer = new GameObject("Preview").transform;
         CheckAssignment(previewContainer);
 
-        previewMaterialOverride = theme.Preview;
+        // previewMaterialOverride = theme.Preview;
     }
     void CheckAssignment<T>(T obj)
     {

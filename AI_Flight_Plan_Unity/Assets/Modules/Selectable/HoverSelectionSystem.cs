@@ -17,15 +17,15 @@ public class HoverSelectionSystem : MonoBehaviour
     public GameObject selectedObject;
 
 
-    void OnValidate()
-    {
-        if (!mainCamera) mainCamera = Camera.main;
-        maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
+    // void OnValidate()
+    // {
+    //     if (!mainCamera) mainCamera = Camera.main;
+    //     maxDistance = mainCamera ? mainCamera.farClipPlane : 1000f;
 
-        // Ensure a single instance
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-        Instance = this;
-    }
+    //     // Ensure a single instance
+    //     if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+    //     Instance = this;
+    // }
 
     void Awake()
     {
@@ -80,7 +80,7 @@ public class HoverSelectionSystem : MonoBehaviour
                     _selected.OnDeselect();
 
                 _selected = _hovered;
-                selectedObject = (_selected as Selectable)?.gameObject;
+                selectedObject = (_selected as MonoBehaviour)?.gameObject;
 
                 if (_selected != null)
                     _selected.OnSelect();

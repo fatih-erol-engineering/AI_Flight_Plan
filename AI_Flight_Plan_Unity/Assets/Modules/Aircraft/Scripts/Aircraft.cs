@@ -2,85 +2,102 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
 
-public class Aircraft : Selectable
+public class Aircraft : MonoBehaviour, ISelectable
 {
     [Header("Aircraft Settings")]
     [field: SerializeField]
     public TimeGame time { get; private set; }
-    [SerializeField]
+
     public AircraftProperties aircraftProperties;
 
     [field: SerializeField]
     public TrajectoryDrawer trajectory { get; private set; }
+    [SerializeField] private MeshRenderer highlightMeshRenderer;
+    [SerializeField] private bool isSelected = false;
+    [SerializeField] private MaterialPropertyBlock mpb;
+    private Color highlightEdgeColor;
+    private float highlightEdgeWidth;
+    static readonly int EdgeColorID = Shader.PropertyToID("_selectionEdgeColor"); // URP Lit
+    static readonly int EdgeWidthID = Shader.PropertyToID("_selectionEdgeWidth"); // URP Lit
 
-    private MeshRenderer[] aircraftMeshRenderers;
-    [SerializeField]
-    private MeshRenderer[] _baseAircraftMeshRenderers;
-    // Saklanan orijinal materyaller (her renderer için dizi)
-    private Material[][] _originalMaterials;
 
-    protected void OnEnable()
+    void Awake()
     {
-        if (_baseAircraftMeshRenderers == null) _baseAircraftMeshRenderers = GetComponentsInChildren<MeshRenderer>();
-        // Eğer inspector'dan meshler verilmemişse fallback olarak çocukları kullan
-        if (aircraftMeshRenderers == null || aircraftMeshRenderers.Length == 0)
-            aircraftMeshRenderers = _baseAircraftMeshRenderers;
+        AssignData();
+    }
+    void AssignData()
+    {
+        mpb = new MaterialPropertyBlock();
+        highlightMeshRenderer.GetPropertyBlock(mpb);
+        // SetHighlightEdgeWidth(0, true);
+        highlightMeshRenderer.gameObject.SetActive(false);
+    }
 
-        // Orijinal materyalleri kaydet
-        if (aircraftMeshRenderers != null && aircraftMeshRenderers.Length > 0)
+    public void OnHoverEnter()
+    {
+        if (isSelected) return;
+        highlightMeshRenderer.gameObject.SetActive(true);
+        SetHighlightEdgeColor(ThemeManager.Instance.theme.Hover);
+        // SetHighlightEdgeWidth(1f);
+    }
+    public void OnHoverExit()
+    {
+        if (isSelected) return;
+        // SetHighlightEdgeWidth(0f);
+        highlightMeshRenderer.gameObject.SetActive(false);
+    }
+    public void OnSelect()
+    {
+        SetHighlightEdgeColor(ThemeManager.Instance.theme.Select);
+        highlightMeshRenderer.gameObject.SetActive(true);
+        // SetHighlightEdgeWidth(1f);
+        isSelected = true;
+    }
+    public void OnDeselect()
+    {
+        // SetHighlightEdgeWidth(0f);
+        highlightMeshRenderer.gameObject.SetActive(false);
+        isSelected = false;
+    }
+
+    public void SetTime(TimeGame _time, bool isImmediate = false)
+    {
+        if (time != _time || isImmediate)
         {
-            _originalMaterials = new Material[aircraftMeshRenderers.Length][];
-            for (int i = 0; i < aircraftMeshRenderers.Length; i++)
-            {
-                var r = aircraftMeshRenderers[i];
-                if (r != null)
-                    _originalMaterials[i] = r.materials; // renderer.materials returns an array (copy)
-                else
-                    _originalMaterials[i] = null;
-            }
+            time = _time;
         }
     }
-    override public void OnHoverEnter()
+    public void SetHighlightEdgeColor(Color _color, bool isImmediate = false)
     {
-        base.OnHoverEnter();
-        if (base._selected) return;
-        UpdateMaterial(theme.Hover);
-    }
-    override public void OnHoverExit()
-    {
-        base.OnHoverExit();
-        if (base._selected) return;
-        // Hover bittiğinde orijinal materyallere dön
-        RestoreOriginalMaterials();
-    }
-    override public void OnSelect()
-    {
-        base.OnSelect();
-        base._selected = true;
-        UpdateMaterial(theme.Select);
-    }
-    override public void OnDeselect()
-    {
-        base._selected = false;
-        base.OnDeselect();
-        // Hover bittiğinde orijinal materyallere dön
-        RestoreOriginalMaterials();
-    }
-
-    private void RestoreOriginalMaterials()
-    {
-        if (_originalMaterials == null || aircraftMeshRenderers == null)
-            return;
-
-        for (int i = 0; i < aircraftMeshRenderers.Length && i < _originalMaterials.Length; i++)
+        if (highlightEdgeColor != _color || isImmediate)
         {
-            var r = aircraftMeshRenderers[i];
-            var mats = _originalMaterials[i];
-            if (r == null || mats == null)
-                continue;
-            r.materials = mats;
+            highlightEdgeColor = _color;
+            mpb.SetColor(EdgeColorID, _color);
+            highlightMeshRenderer.SetPropertyBlock(mpb);
         }
     }
+    public void SetHighlightEdgeWidth(float _width, bool isImmediate = false)
+    {
+        if (highlightEdgeWidth != _width || isImmediate)
+        {
+            highlightEdgeWidth = _width;
+            mpb.SetFloat(EdgeWidthID, _width);
+            highlightMeshRenderer.SetPropertyBlock(mpb);
+        }
+    }
+
+    public void SetIsSelected(bool _isSelected, bool isImmediate = false)
+    {
+        if (isSelected != _isSelected || isImmediate)
+        {
+            isSelected = _isSelected;
+        }
+    }
+
+
+
+
+
 
     public void MoveAircraftWithTime(float sec)
     {
@@ -181,24 +198,7 @@ public class Aircraft : Selectable
         t.rotation = Quaternion.LookRotation(unitDir, up);
     }
 
-    public void UpdateMaterial(Material material)
-    {
-        foreach (MeshRenderer renderer in aircraftMeshRenderers)
-        {
-            renderer.material = material;
-            if (renderer.materials.Length > 1)
-            {
-                var mats = renderer.materials;
-                for (int i = 0; i < mats.Length; i++)
-                    mats[i] = material;
-                renderer.materials = mats;
-            }
-        }
-    }
-    public void SetTime(TimeGame _time)
-    {
-        time = _time;
-    }
+
 
 
 }
