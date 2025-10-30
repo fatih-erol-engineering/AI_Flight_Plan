@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
   model: 3
   type: 1
-  minVelocity_m_s: 100
-  nominalVelocity_m_s: 10
-  maxVelocity_m_s: 20
+  minVelocity_m_s: 10
+  nominalVelocity_m_s: 50
+  maxVelocity_m_s: 100
   minTurnRadious_m: 100
   mass_kg: 4
   noise_dBA: 200

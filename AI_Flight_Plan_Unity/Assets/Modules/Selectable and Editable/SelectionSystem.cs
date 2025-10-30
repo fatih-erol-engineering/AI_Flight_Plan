@@ -17,7 +17,9 @@ public class SelectionSystem : MonoBehaviour
     private ISelectable _selected;
     public GameObject selectedObject;
 
-
+    private IEditable hitEditable1;
+    private IEditable hitEditable2;
+    private IEditable hitEditable;
     void OnValidate()
     {
         if (!mainCamera) mainCamera = Camera.main;
@@ -44,6 +46,7 @@ public class SelectionSystem : MonoBehaviour
         {
             case MainGameMode.Free:
                 UpdateHover();
+                UpdateEditable();
                 HandleSelection();
                 break;
         }
@@ -80,7 +83,11 @@ public class SelectionSystem : MonoBehaviour
                 if (_selected != null && !ReferenceEquals(_selected, _hovered))
                 {
                     _selected.OnDeselect();
+                    hitEditable1 = null;
+                    hitEditable2 = null;
+                    hitEditable = null;
                     GameEvents.Instance.EditableExit();
+
                 }
 
                 _selected = _hovered;
@@ -89,13 +96,40 @@ public class SelectionSystem : MonoBehaviour
                 if (_selected != null)
                 {
                     _selected.OnSelect();
-                    if (Input.GetKeyDown(selectKey2))
-                    {
-                        GameEvents.Instance.EditableEnter((_selected as IEditable));
-                    }
                 }
 
             }
         }
+
+
+
+    }
+    void UpdateEditable()
+    {
+
+        if (Input.GetKeyDown(selectKey2))
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
+            {
+                hitEditable1 = hit.collider.GetComponentInParent<IEditable>();
+            }
+        }
+        if (Input.GetKeyUp(selectKey2))
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
+            {
+                hitEditable2 = hit.collider.GetComponentInParent<IEditable>();
+            }
+        }
+
+        if (hitEditable1 == hitEditable2 && hitEditable1 != null)
+        {
+            hitEditable = hitEditable1;
+            GameEvents.Instance.EditableEnter(hitEditable);
+        }
+
+
     }
 }

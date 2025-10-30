@@ -37,12 +37,18 @@ public class AircraftPopupUI : MonoBehaviour
 
         northField = popUpRoot.Q<FloatField>("northField");
         CheckAssignment(northField, "northField");
+        // display coordinates with two decimal places
+        northField.formatString = "0.00";
 
         eastField = popUpRoot.Q<FloatField>("eastField");
         CheckAssignment(eastField, "eastField");
+        // display coordinates with two decimal places
+        eastField.formatString = "0.00";
 
         altitudeField = popUpRoot.Q<FloatField>("altitudeField");
         CheckAssignment(altitudeField, "altitudeField");
+        // display coordinates with two decimal places
+        altitudeField.formatString = "0.00";
 
         noiseField = popUpRoot.Q<FloatField>("noiseField");
         CheckAssignment(noiseField, "noiseField");
@@ -82,15 +88,59 @@ public class AircraftPopupUI : MonoBehaviour
         noiseField.value = aircraft.aircraftProperties.noise_dBA;
         velocityField.value = aircraft.aircraftProperties.nominalVelocity_m_s;
 
-        // UI Toolkit uses top-left origin; Input.mousePosition is bottom-left — convert Y
-        Vector2 mp = Input.mousePosition;
-        float x = mp.x;
-        float y = Screen.height - mp.y;
+        // Position popup over the aircraft: project aircraft world position to screen
+        Camera cam = Camera.main;
+        if (cam == null) cam = Camera.current;
+
+        Vector3 worldPoint = aircraft.transform.position;
+        // try to offset above the aircraft using renderer bounds if available
+        var rend = aircraft.GetComponentInChildren<Renderer>();
+        float extraHeight = 1.0f;
+        if (rend != null)
+        {
+            extraHeight = rend.bounds.extents.y + 0.5f;
+        }
+        worldPoint += Vector3.up * extraHeight;
+
+        Vector3 screenPoint;
+        if (cam != null)
+            screenPoint = cam.WorldToScreenPoint(worldPoint);
+        else
+            screenPoint = Input.mousePosition; // fallback
+
+        // UI Toolkit uses top-left origin; we want the popup's BOTTOM-LEFT
+        // corner to sit above the aircraft. Convert screen coords (bottom-left origin)
+        // to UI top-left coords for the bottom point, then subtract the popup height
+        // so style.top represents the correct top position.
+
+        float bottomX = screenPoint.x;
+        float bottomY = Screen.height - screenPoint.y; // bottom coordinate in UI top-left system
+
+        // small pixel offset so popup doesn't overlap the object (applied to bottom coord)
+        const float pixelOffsetBottom = -10f; // move a bit upward
+        bottomY += pixelOffsetBottom;
+
+        // Try to read popup size. Prefer layout values; fall back to resolvedStyle; then defaults.
+        float popupWidth = popUpRoot.layout.width;
+        float popupHeight = popUpRoot.layout.height;
+        if (popupWidth <= 0f) popupWidth = popUpRoot.resolvedStyle.width;
+        if (popupHeight <= 0f) popupHeight = popUpRoot.resolvedStyle.height;
+        // sensible defaults if measurement isn't available yet
+        if (popupWidth <= 0f) popupWidth = 200f;
+        if (popupHeight <= 0f) popupHeight = 100f;
+
+        // Compute top-left from bottom-left
+        float left = bottomX;
+        float top = bottomY - popupHeight;
+
+        // clamp to screen so popup stays visible (account for popup size)
+        left = Mathf.Clamp(left, 5f, Screen.width - popupWidth - 5f);
+        top = Mathf.Clamp(top, 5f, Screen.height - popupHeight - 5f);
 
         // Make sure popup uses absolute positioning and place it
         popUpRoot.style.position = Position.Absolute;
-        popUpRoot.style.left = new StyleLength(new Length(x, LengthUnit.Pixel));
-        popUpRoot.style.top = new StyleLength(new Length(y, LengthUnit.Pixel));
+        popUpRoot.style.left = new StyleLength(new Length(left, LengthUnit.Pixel));
+        popUpRoot.style.top = new StyleLength(new Length(top, LengthUnit.Pixel));
 
         // Show by removing the 'hidden' class (assumes USS defines .hidden { display: none; } or similar)
         popUpRoot.RemoveFromClassList("hidden");

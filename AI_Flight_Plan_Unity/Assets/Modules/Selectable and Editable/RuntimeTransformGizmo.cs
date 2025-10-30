@@ -13,6 +13,7 @@ public class RuntimeTransformGizmo : MonoBehaviour
     [SerializeField] private float handleThickness = 0.06f;
     [SerializeField] private float tipRadius = 0.12f;
     [SerializeField] private LayerMask handleMask = ~0;
+    [SerializeField] private KeyCode selectKey = KeyCode.G;
 
     private GameObject gizmoRoot;
     private GameObject handleX, handleY, handleZ;
@@ -147,7 +148,7 @@ public class RuntimeTransformGizmo : MonoBehaviour
         if (cam == null || target == null) return;
 
         // start drag
-        if (!dragging && Input.GetMouseButtonDown(0))
+        if (!dragging && Input.GetKeyDown(selectKey))
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
             var ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -179,20 +180,22 @@ public class RuntimeTransformGizmo : MonoBehaviour
         }
 
         // dragging
-        if (dragging && Input.GetMouseButton(0))
+        if (dragging && Input.GetKey(selectKey))
         {
             var ray = cam.ScreenPointToRay(Input.mousePosition);
-            var plane = new Plane(dragAxis, dragStartTargetPos);
+            float offset = -0.01f;
+            var plane = new Plane(dragAxis, dragStartTargetPos + dragAxis * offset);
             if (plane.Raycast(ray, out float enter))
             {
-                Vector3 hitPoint = ray.GetPoint(enter);
+                Vector3 hitPoint = ray.GetPoint(enter) - dragAxis * offset;
                 float delta = Vector3.Dot(hitPoint - dragStartMousePoint, dragAxis);
-                target.position = dragStartTargetPos + dragAxis * delta;
+                // target.position = dragStartTargetPos + dragAxis * delta;
+                target.GetComponent<Waypoint>().SetPosition(dragStartTargetPos + dragAxis * delta);
             }
         }
 
         // end drag
-        if (dragging && Input.GetMouseButtonUp(0))
+        if (dragging && Input.GetKeyUp(selectKey))
         {
             dragging = false;
         }

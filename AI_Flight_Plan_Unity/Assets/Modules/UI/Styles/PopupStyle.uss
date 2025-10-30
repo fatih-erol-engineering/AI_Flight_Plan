@@ -177,5 +177,5 @@
 
 .popup-root > .unity-float-field > .unity-float-field__input {
     background-color: rgba(0, 0, 0, 0);
-    -unity-text-align: upper-center;
+    -unity-text-align: upper-right;
 }
