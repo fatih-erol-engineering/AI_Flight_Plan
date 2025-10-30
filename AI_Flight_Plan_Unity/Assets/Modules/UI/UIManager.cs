@@ -15,10 +15,10 @@ public class UIManager : MonoBehaviour
     public UIDocument uIDocument { get; private set; }
     public Camera cam;
     [SerializeField] private AircraftPropertiesRegistry aircraftPropertiesRegistry;
-    private VisualElement root, mainMenuRoot, createRoot;
+    private VisualElement root, mainMenuRoot, createRoot,conflictSolverRoot;
     private CustomToggleButtonGroup mainMenuTBG, createTBG;
     private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;
-    private Toggle createTBtn, listenTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
+    private Toggle createTBtn, listenTBtn, solveTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
 
     public MainGameMode gameModeUI { get; private set; }
     public bool restartRequestUI { get; private set; }
@@ -81,6 +81,9 @@ public class UIManager : MonoBehaviour
         createRoot = root.Q<VisualElement>("createRoot");
         CheckAssignment(createRoot, "createRoot");
 
+        conflictSolverRoot = root.Q<VisualElement>("conflictSolverRoot");
+        CheckAssignment(conflictSolverRoot, "conflictSolverRoot");
+
         DropdownField d = root.Q<DropdownField>("rotorDDM");
         CheckAssignment(d, "rotorDDM");
 
@@ -99,6 +102,9 @@ public class UIManager : MonoBehaviour
         listenTBtn = root.Q<Toggle>("listenTBtn");
         CheckAssignment(listenTBtn, "listenTBtn");
 
+        solveTBtn = root.Q<Toggle>("solveTBtn");
+        CheckAssignment(solveTBtn, "solveTBtn");
+
         settingsTBtn = root.Q<Toggle>("settingsTBtn");
         CheckAssignment(settingsTBtn, "settingsTBtn");
 
@@ -110,7 +116,7 @@ public class UIManager : MonoBehaviour
 
 
         createTBtn.RegisterValueChangedCallback(_ => createTBtnClick());
-
+        solveTBtn.RegisterValueChangedCallback(_ => solveTBtnClick());
         rotorTBtn.RegisterValueChangedCallback(_ => rotorTBtnChange());
         fixedWingTBtn.RegisterValueChangedCallback(_ => fixedWingTBtnChange());
 
@@ -139,6 +145,17 @@ public class UIManager : MonoBehaviour
         {
             createRoot.AddToClassList("submenusHidden");
             gameModeUI = MainGameMode.Free;
+        }
+    }
+    void solveTBtnClick()
+    {
+        if (solveTBtn.value)
+        {
+            conflictSolverRoot.RemoveFromClassList("popupHidden");
+        }
+        else
+        {
+            conflictSolverRoot.AddToClassList("popupHidden");
         }
     }
     public void SetGameMode(MainGameMode gameMode)

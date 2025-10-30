@@ -21,8 +21,11 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     private float highlightEdgeWidth;
     static readonly int EdgeColorID = Shader.PropertyToID("_selectionEdgeColor"); // URP Lit
     static readonly int EdgeWidthID = Shader.PropertyToID("_selectionEdgeWidth"); // URP Lit
-
-
+    [Header("Conflict Solver Settings")]
+    [Range(0f, 1f)]
+    public float timeOrPosition_conflict = 0f; // 0 means time is important 1 means position is important
+    [Range(0f, 1f)]
+    public float editableOrNonEditable_conflict = 0f; // 0 means time is important 1 means position is important
 
     void Awake()
     {

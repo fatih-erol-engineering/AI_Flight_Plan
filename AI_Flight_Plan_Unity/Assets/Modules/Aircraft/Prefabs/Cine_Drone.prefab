@@ -158,7 +158,6 @@ MonoBehaviour:
   aircraftProperties: {fileID: 11400000, guid: 8eb245aeb8b4a0a40a9a63ba36dfebfe, type: 2}
   <trajectory>k__BackingField: {fileID: 2734640221863038550}
   highlightMeshRenderer: {fileID: 5822838744944906649}
-  isSelected: 0
 --- !u!1 &2528670350971851328
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +202,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0, g: 0.49803922, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -330,7 +329,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0, g: 0.49803922, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -615,7 +614,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 0, g: 0.49803922, b: 1, a: 1}
-  m_Intensity: 50
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

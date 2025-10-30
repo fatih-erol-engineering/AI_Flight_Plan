@@ -1,19 +1,42 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Modules/UI/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
-    <Style src="project://database/Assets/Modules/UI/TimeSliderStyle.uss?fileID=7433441132597879392&amp;guid=a1c2ff1e8eb31a6469297f36edb62c1a&amp;type=3#TimeSliderStyle" />
-    <ui:VisualElement name="mainMenuRoot" style="justify-content: space-around; align-self: flex-end; flex-direction: column; margin-top: 20px; margin-right: 20px;">
+    <Style src="project://database/Assets/Modules/UI/Styles/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
+    <Style src="project://database/Assets/Modules/UI/Styles/TimeSliderStyle.uss?fileID=7433441132597879392&amp;guid=a1c2ff1e8eb31a6469297f36edb62c1a&amp;type=3#TimeSliderStyle" />
+    <Style src="project://database/Assets/Modules/UI/Styles/PopupStyle.uss?fileID=7433441132597879392&amp;guid=4c80e6cc20e914447b6b4a07c3d0ddb7&amp;type=3#PopupStyle" />
+    <ui:VisualElement name="mainMenuRoot" style="justify-content: space-around; align-self: flex-end; flex-direction: column; margin-top: 20px; margin-right: 20px; align-items: flex-end;">
         <ui:VisualElement name="mainMenuTBG" style="flex-grow: 1; flex-direction: row;">
             <ui:Toggle toggle-on-label-click="false" value="false" name="createTBtn" class="unity-toggle__input unity-toggle_start" />
-            <ui:Toggle toggle-on-label-click="false" value="false" name="listenTBtn" />
+            <ui:Toggle toggle-on-label-click="false" value="false" name="solveTBtn" />
+            <ui:Toggle toggle-on-label-click="false" value="false" name="listenTBtn" style="display: none;" />
             <ui:Toggle toggle-on-label-click="false" value="false" name="settingsTBtn" class="unity-toggle_end" />
         </ui:VisualElement>
-        <ui:VisualElement name="createRoot" class="submenus submenusHidden" style="flex-grow: 1; align-self: center; display: flex;">
+        <ui:VisualElement name="createRoot" class="submenus submenusHidden" style="flex-grow: 1; align-self: center; display: none; visibility: hidden;">
             <ui:VisualElement name="createTBG" style="flex-grow: 1; flex-direction: row;">
                 <ui:Toggle toggle-on-label-click="false" value="false" name="rotorTBtn" class="unity-toggle__input unity-toggle_start" />
                 <ui:Toggle toggle-on-label-click="false" value="false" name="fixedWingTBtn" class="unity-toggle__input unity-toggle_end" />
             </ui:VisualElement>
             <ui:DropdownField name="rotorDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus" style="transition-duration: 0s;" />
             <ui:DropdownField name="fixedWingDDM" choices="Aircraft 1,Aircraft 2,Aircraft 3" index="0" class="dropDown mainMenuItems submenus" style="transition-duration: 0s;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="conflictSolverRoot" class="popup-root_hidden popup-root" style="align-content: stretch; align-self: flex-start; justify-content: space-between; width: auto; background-color: rgba(34, 34, 34, 0.7); transition-duration: 0.2s; transition-property: all;">
+            <ui:VisualElement name="VisualElement" style="align-self: stretch; height: 50px;">
+                <ui:Label text="Conflict Solver" style="font-size: 24px; -unity-text-align: upper-center;" />
+                <ui:VisualElement name="seperatorLine" style="flex-grow: 0; background-color: rgb(255, 255, 255); height: 1px; align-self: auto; flex-direction: row; align-items: center; justify-content: space-around; align-content: auto; flex-shrink: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="aircraftConflictFoldoutTemplate" style="flex-grow: 1; margin-right: 10px;">
+                <ui:Foldout text="Vehicle - 1" toggle-on-label-click="true" value="true">
+                    <ui:VisualElement style="flex-direction: row; justify-content: space-evenly; align-items: stretch; align-self: stretch; align-content: auto;">
+                        <ui:Label text="Time Change" style="width: 100px;" />
+                        <ui:Slider value="0" high-value="1" fill="true" style="width: 150px;" />
+                        <ui:Label text="Position Change" style="width: 100px; -unity-text-align: upper-left;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-direction: row; justify-content: space-evenly; align-items: stretch; align-self: stretch; align-content: center;">
+                        <ui:Label text="Non- Editable" style="width: 100px;" />
+                        <ui:Slider value="0" high-value="1" fill="true" style="width: 150px; flex-direction: column; align-self: center;" />
+                        <ui:Label text="Editable" style="width: 100px; -unity-text-align: upper-left;" />
+                    </ui:VisualElement>
+                </ui:Foldout>
+            </ui:VisualElement>
+            <ui:Button text="Solve" name="solveConflictBtn" style="border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="timeSliderRoot" style="flex-grow: 1; bottom: 0; flex-shrink: 1; height: 78px; align-self: center; align-content: auto; align-items: center; flex-direction: column; justify-content: space-between; width: auto; position: absolute; left: 0; right: 0; margin-left: 20px; margin-bottom: 20px; margin-right: 20px; opacity: 1;">

@@ -1,0 +1,28 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Modules/UI/Styles/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
+    <Style src="project://database/Assets/Modules/UI/Styles/PopupStyle.uss?fileID=7433441132597879392&amp;guid=4c80e6cc20e914447b6b4a07c3d0ddb7&amp;type=3#PopupStyle" />
+    <ui:VisualElement name="panel" class="popup-root_hidden popup-root" style="align-content: stretch; align-self: flex-start; justify-content: space-between; width: auto; opacity: 1; background-color: rgba(34, 34, 34, 0.5);">
+        <ui:VisualElement name="VisualElement" style="align-self: stretch; height: 50px;">
+            <ui:Label text="Conflict Solver" style="font-size: 24px; -unity-text-align: upper-center;" />
+            <ui:VisualElement name="seperatorLine" style="flex-grow: 0; background-color: rgb(255, 255, 255); height: 1px; align-self: auto; flex-direction: row; align-items: center; justify-content: space-around; align-content: auto; flex-shrink: 0;" />
+        </ui:VisualElement>
+        <ui:ScrollView touch-scroll-type="Clamped" mode="Vertical" style="align-self: auto; flex-grow: 1; flex-direction: row; justify-content: center;">
+            <ui:VisualElement name="aircraftConflictFoldout" style="flex-grow: 1;">
+                <ui:Foldout text="Vehicle - 1" toggle-on-label-click="true" value="true">
+                    <ui:Label text="Importance Parameters" style="-unity-text-align: upper-center;" />
+                    <ui:VisualElement style="flex-direction: row; justify-content: space-evenly; align-items: stretch; align-self: stretch; align-content: auto;">
+                        <ui:Label text="Time" style="width: 100px;" />
+                        <ui:Slider value="0" high-value="1" fill="true" style="width: 150px;" />
+                        <ui:Label text="Position" style="width: 100px; -unity-text-align: upper-left;" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-direction: row; justify-content: space-evenly; align-items: stretch; align-self: stretch; align-content: center;">
+                        <ui:Label text="Non- Editable" style="width: 100px;" />
+                        <ui:Slider value="0" high-value="1" fill="true" style="width: 150px; flex-direction: column; align-self: center;" />
+                        <ui:Label text="Editable" style="width: 100px; -unity-text-align: upper-left;" />
+                    </ui:VisualElement>
+                </ui:Foldout>
+            </ui:VisualElement>
+        </ui:ScrollView>
+        <ui:Button text="Solve" name="solveConflictBtn" style="bottom: auto; align-items: auto; align-self: stretch; border-top-left-radius: 20px; border-top-right-radius: 0; border-bottom-right-radius: 20px; border-bottom-left-radius: 0; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;" />
+    </ui:VisualElement>
+</ui:UXML>

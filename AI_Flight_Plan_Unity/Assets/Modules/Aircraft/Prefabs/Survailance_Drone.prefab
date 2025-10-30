@@ -124,7 +124,6 @@ MonoBehaviour:
   aircraftProperties: {fileID: 11400000, guid: 2a9d4d913a7f89845b4d76d03dc32750, type: 2}
   <trajectory>k__BackingField: {fileID: 4343415782122623791}
   highlightMeshRenderer: {fileID: 4657248760763926511}
-  isSelected: 0
 --- !u!1 &899655751800462911
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,6 +672,10 @@ PrefabInstance:
       propertyPath: m_RenderingLayerMask
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d8b032bed29b9774eab9465d0321efd0, type: 2}
     - target: {fileID: 919132149155446097, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_Name
       value: Survailance Drone
