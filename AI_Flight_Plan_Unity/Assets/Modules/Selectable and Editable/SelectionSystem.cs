@@ -11,6 +11,7 @@ public class SelectionSystem : MonoBehaviour
     [SerializeField] private LayerMask pickMask = ~0; // gerekirse katman daralt
     private float maxDistance = 200f;
     [SerializeField] private KeyCode selectKey = KeyCode.Mouse0;
+    [SerializeField] private KeyCode selectKey2 = KeyCode.Mouse1;
 
     private ISelectable _hovered;
     private ISelectable _selected;
@@ -68,7 +69,7 @@ public class SelectionSystem : MonoBehaviour
 
     private void HandleSelection()
     {
-        if (Input.GetKeyDown(selectKey))
+        if (Input.GetKeyDown(selectKey) || Input.GetKeyDown(selectKey2))
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {

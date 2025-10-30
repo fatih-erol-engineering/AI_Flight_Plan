@@ -24,7 +24,7 @@ public class ViewNavigation : MonoBehaviour
     public bool invertY = false;
 
     [Header("Move / Pan / Dolly")]
-    public float moveSpeed = 30f;
+    public float moveSpeed = 20f;
     public float boostMultiplier = 5f;
     public float slowMultiplier = 0.2f;
     public float panSensitivity = 0.5f;
@@ -128,7 +128,7 @@ public class ViewNavigation : MonoBehaviour
         bool manualInput = false;
 
         // ------- LOOK (RMB) -------
-        if (alt && rmb)
+        if (rmb)
         {
             manualInput = true;
 

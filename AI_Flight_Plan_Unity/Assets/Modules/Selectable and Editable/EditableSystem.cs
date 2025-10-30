@@ -11,7 +11,9 @@ public class EditableSystem : MonoBehaviour
     private float maxDistance = 200f;
     [SerializeField] private KeyCode selectKey = KeyCode.Mouse1;
 
-    private IEditable _editable;
+    private IEditable hitEditable;
+    private IEditable hitEditable1;
+    private IEditable hitEditable2;
     public GameObject editableObject;
 
     ////////////////////////////////////////////////
@@ -51,40 +53,37 @@ public class EditableSystem : MonoBehaviour
     }
     private void HandleEditable()
     {
-        IEditable hitEditable = null;
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Escape) && _editable != null)
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Escape) && hitEditable != null)
         {
             editableObject = null;
-            GameEvents.Instance?.EditableExit(_editable);
-            return;
+            GameEvents.Instance?.EditableExit(hitEditable);
+            hitEditable1 = null;
+            hitEditable2 = null;
         }
 
         if (Input.GetKeyDown(selectKey))
         {
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
             {
-
-            }
-            else
-            {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
-                {
-                    hitEditable = hit.collider.GetComponentInParent<IEditable>();
-                }
-
-                if (!ReferenceEquals(hitEditable, _editable))
-                {
-                    editableObject = (_editable as MonoBehaviour)?.gameObject;
-                    GameEvents.Instance?.EditableEnter(hitEditable);
-                }
+                hitEditable1 = hit.collider.GetComponentInParent<IEditable>();
             }
         }
+
+        if (Input.GetKeyUp(selectKey))
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, pickMask))
+            {
+                hitEditable2 = hit.collider.GetComponentInParent<IEditable>();
+            }
+        }
+
+        if (hitEditable1 == hitEditable2 && hitEditable1 != null && hitEditable2 != null)
+        {
+            hitEditable = hitEditable2;
+            editableObject = (hitEditable as MonoBehaviour)?.gameObject;
+            GameEvents.Instance?.EditableEnter(hitEditable);
+        }
     }
-
-
-
-
-
-
 }

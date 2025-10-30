@@ -49,12 +49,7 @@ public class AircraftPopupUI : MonoBehaviour
         velocityField = popUpRoot.Q<FloatField>("velocityField");
         CheckAssignment(velocityField, "velocityField");
 
-        // If any required field is missing, dump the visual tree under popUpRoot to help diagnose naming/hierarchy issues
-        if (modelField == null || typeField == null || northField == null || eastField == null || altitudeField == null || noiseField == null || velocityField == null)
-        {
-            Debug.LogError($"[{GetType().Name}] One or more popup UI elements were not found under popUpRoot. Dumping visual tree for debugging...");
-            DumpVisualTree(popUpRoot);
-        }
+
         GameEvents.Instance.OnEditableEnter -= ShowPopup;
         GameEvents.Instance.OnEditableExit -= HidePopup;
         GameEvents.Instance.OnEditableEnter += ShowPopup;
@@ -106,22 +101,5 @@ public class AircraftPopupUI : MonoBehaviour
         }
     }
 
-    private void DumpVisualTree(VisualElement parent)
-    {
-        if (parent == null)
-        {
-            Debug.Log($"[{GetType().Name}] DumpVisualTree: parent is null");
-            return;
-        }
 
-        var all = parent.Query<VisualElement>().ToList();
-        Debug.Log($"[{GetType().Name}] Visual tree dump (count={all.Count}) under '{parent.name}'");
-        for (int i = 0; i < all.Count; i++)
-        {
-            var e = all[i];
-            string name = string.IsNullOrEmpty(e.name) ? "(no-name)" : e.name;
-            var classes = string.Join(",", e.GetClasses());
-            Debug.Log($"  [{i}] type={e.GetType().Name} name='{name}' class='{classes}'");
-        }
-    }
 }
