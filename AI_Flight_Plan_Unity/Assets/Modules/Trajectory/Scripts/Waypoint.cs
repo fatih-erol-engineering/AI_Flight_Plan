@@ -19,7 +19,6 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
     private Color originalEmissionColor;
     static readonly int BaseColorID = Shader.PropertyToID("_BaseColor"); // URP Lit
     static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor"); // URP Lit
-
     void OnValidate()
     {
         AssignData();
@@ -36,8 +35,8 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
         {
             highlightMeshRenderer[i].GetPropertyBlock(mpb);
         }
-        originalColor = highlightMeshRenderer[0].material.GetColor(BaseColorID);
-        originalEmissionColor = highlightMeshRenderer[0].material.GetColor(EmissionColorID);
+        originalColor = highlightMeshRenderer[0].sharedMaterial.GetColor(BaseColorID);
+        originalEmissionColor = highlightMeshRenderer[0].sharedMaterial.GetColor(EmissionColorID);
     }
 
 #if UNITY_EDITOR

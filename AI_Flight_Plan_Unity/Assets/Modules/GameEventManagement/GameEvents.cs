@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-[DefaultExecutionOrder(-1000)] // 
+// [DefaultExecutionOrder(-1000)] // 
 public class GameEvents : MonoBehaviour
 {
     public static GameEvents Instance;

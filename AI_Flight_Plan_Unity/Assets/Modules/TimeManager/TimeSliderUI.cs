@@ -12,6 +12,13 @@ public class TimeSliderUI : MonoBehaviour
     [field: SerializeField]
     public bool playFlag { get; private set; } = false;
     private Slider timeSlider;
+
+    void Awake()
+    {
+        AssignData();
+
+    }
+
     public void SetTimeSliderMinValue(float val)
     {
         timeSlider.lowValue = val;
@@ -29,10 +36,10 @@ public class TimeSliderUI : MonoBehaviour
     {
         return timeSlider.value;
     }
-    void OnValidate()
-    {
-        AssignData();
-    }
+    // void OnValidate()
+    // {
+    //     AssignData();
+    // }
 
     public void AssignData()
     {
@@ -69,11 +76,6 @@ public class TimeSliderUI : MonoBehaviour
             timeManager.timeIsChanging = true;
         };
         timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());
-    }
-    void Awake()
-    {
-        AssignData();
-
     }
 
     void Update()

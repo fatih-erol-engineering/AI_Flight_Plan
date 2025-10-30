@@ -27,11 +27,11 @@ public class UIManager : MonoBehaviour
     //     // For Create Mode
     public string selectedAircraftModelName;
 
-    void OnValidate()
-    {
-        AssignData();
-    }
-    void Start()
+    // void OnValidate()
+    // {
+    //     AssignData();
+    // }
+    void Awake()
     {
         AssignData();
     }
@@ -76,37 +76,37 @@ public class UIManager : MonoBehaviour
         CheckAssignment(root);
 
         mainMenuRoot = root.Q<VisualElement>("mainMenuRoot");
-        CheckAssignment(mainMenuRoot);
+        CheckAssignment(mainMenuRoot, "mainMenuRoot");
 
         createRoot = root.Q<VisualElement>("createRoot");
-        CheckAssignment(createRoot);
+        CheckAssignment(createRoot, "createRoot");
 
         DropdownField d = root.Q<DropdownField>("rotorDDM");
-        CheckAssignment(d);
+        CheckAssignment(d, "rotorDDM");
 
         rotorDDM = new CustomAircraftDropdownMenu(d, aircraftPropertiesRegistry.rotorAircrafts);
-        CheckAssignment(rotorDDM);
+        CheckAssignment(rotorDDM, "aircraftPropertiesRegistry.rotorAircrafts");
 
         d = root.Q<DropdownField>("fixedWingDDM");
-        CheckAssignment(d);
+        CheckAssignment(d, "fixedWingDDM");
 
         fixedWingDDM = new CustomAircraftDropdownMenu(d, aircraftPropertiesRegistry.fixedWingAircrafts);
-        CheckAssignment(fixedWingDDM);
+        CheckAssignment(fixedWingDDM, "aircraftPropertiesRegistry.fixedWingAircrafts");
 
         createTBtn = root.Q<Toggle>("createTBtn");
-        CheckAssignment(createTBtn);
+        CheckAssignment(createTBtn, "createTBtn");
 
         listenTBtn = root.Q<Toggle>("listenTBtn");
-        CheckAssignment(listenTBtn);
+        CheckAssignment(listenTBtn, "listenTBtn");
 
         settingsTBtn = root.Q<Toggle>("settingsTBtn");
-        CheckAssignment(settingsTBtn);
+        CheckAssignment(settingsTBtn, "settingsTBtn");
 
         rotorTBtn = root.Q<Toggle>("rotorTBtn");
-        CheckAssignment(rotorTBtn);
+        CheckAssignment(rotorTBtn, "rotorTBtn");
 
         fixedWingTBtn = root.Q<Toggle>("fixedWingTBtn");
-        CheckAssignment(fixedWingTBtn);
+        CheckAssignment(fixedWingTBtn, "fixedWingTBtn");
 
 
         createTBtn.RegisterValueChangedCallback(_ => createTBtnClick());
@@ -122,10 +122,10 @@ public class UIManager : MonoBehaviour
         mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
         createTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("createTBG"), false);
     }
-    void CheckAssignment<T>(T obj)
+    void CheckAssignment<T>(T obj, string name = "")
     {
         if (obj == null)
-            Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name})");
+            Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name}, name: {name} )");
     }
 
     void createTBtnClick()

@@ -8,8 +8,6 @@ public enum ExitMode { Cancel, Apply, None }
 
 [RequireComponent(typeof(FreeModeManager))]
 [RequireComponent(typeof(CreateModeManager))]
-// [ExecuteAlways]
-// [DefaultExecutionOrder(-999)] // 
 public class MainGameManager : MonoBehaviour
 {
     [SerializeField]

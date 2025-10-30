@@ -174,3 +174,8 @@
     background-color: var(--colorActive);
     scale: 1 1;
 }
+
+.popup-root > .unity-float-field > .unity-float-field__input {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-text-align: upper-center;
+}

@@ -120,8 +120,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Waypoint
   <time>k__BackingField:
     <second>k__BackingField: 0
-  highlightMeshRenderer: {fileID: 6153692812956215442}
-  isSelected: 0
+  highlightMeshRenderer:
+  - {fileID: 5169179678102574174}
+  - {fileID: 6567050306873335625}
+  lineRenderer: {fileID: 1354095549359714663}
 --- !u!114 &2476649527627540839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,11 +556,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
---- !u!23 &6153692812956215442 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
-  m_PrefabInstance: {fileID: 4803047924173091862}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5540356440179114957
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -677,5 +674,10 @@ MeshCollider:
 --- !u!4 &5434144533599347750 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
+  m_PrefabInstance: {fileID: 5540356440179114957}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6567050306873335625 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: c0ba09a84ba880049b587cb99fe4afc1, type: 3}
   m_PrefabInstance: {fileID: 5540356440179114957}
   m_PrefabAsset: {fileID: 0}
