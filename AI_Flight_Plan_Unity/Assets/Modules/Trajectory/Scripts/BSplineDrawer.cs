@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -27,7 +29,7 @@ public class BSplineDrawer : MonoBehaviour
     [Header("Appearance")]
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
-    [SerializeField] private int linePointNumber = 32;
+    [SerializeField] private int linePointNumber = 100;
     [SerializeField, HideInInspector] private LineRenderer lineRenderer;
 
     [Header("Tube")]
@@ -36,7 +38,14 @@ public class BSplineDrawer : MonoBehaviour
     [SerializeField] private GameObject tubePrefab;
     [SerializeField] private TubeManager[] tubeManagers;
 
-
+    public void SetIsCollided(bool _isCollided)
+    {
+        for (int i = 0; i < tubeManagers.Length; i++)
+        {
+            tubeManagers[i].SetIsCollided(_isCollided);
+        }
+    }
+    
     public void Awake()
     {
         GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
@@ -96,6 +105,11 @@ public class BSplineDrawer : MonoBehaviour
                 var controlPoint = child.GetComponent<ControlPoint>();
                 controlPoints.Add(controlPoint);
             }
+            curveSegments = new CurveSegment[controlPoints.Count + 1];
+            for (int i = 0; i < curveSegments.Length; i++)
+            {
+                curveSegments[i] = new CurveSegment(); // Temporary initialization
+            }
             DrawCurve();
 
             // Line Renderer Initialization
@@ -107,6 +121,7 @@ public class BSplineDrawer : MonoBehaviour
             UpdateLineRenderer();
 
 
+
             // Tube Managers Initialization
             if (showTubes)
             {
@@ -116,6 +131,7 @@ public class BSplineDrawer : MonoBehaviour
                     tubeManagers[i] = SpawnTube();
                     tubeManagers[i].SetStartPosition(curveSegments[i].startPoint.position);
                     tubeManagers[i].SetEndPosition(curveSegments[i].endPoint.position);
+                    curveSegments[i].SetTubeManager(tubeManagers[i]);
                 }
             }
 
@@ -348,8 +364,7 @@ public class BSplineDrawer : MonoBehaviour
         float cumulativeDistance = 0f;
 
         int cpCt = 0;
-        bool changeCpFlag = false;
-        curveSegments = new CurveSegment[controlPoints.Count + 1];
+        bool changeCpFlag = false;        
         int minIdx = 0;
         int maxIdx = 0;
         for (int i = 0; i < linePointNumber; i++)
@@ -374,17 +389,35 @@ public class BSplineDrawer : MonoBehaviour
                     changeCpFlag = dist2 > dist1;
                     maxIdx = i;
                     if (changeCpFlag)
-                    {
-                        curveSegments[cpCt] = new CurveSegment(trajectoryPoints[minIdx], trajectoryPoints[maxIdx], tubeRadius);
+                    {                        
+                        curveSegments[cpCt].SetStartAndEndPoint(trajectoryPoints[minIdx], trajectoryPoints[maxIdx]);
+                        curveSegments[cpCt].SetRadius(tubeRadius);
                         controlPoints[cpCt].SetClosestPointToSpline(trajectoryPoints[i].position);
-                        minIdx = i;
+                        minIdx = i;                    
                         cpCt++;
                     }
                 }
             }
         }
         {
-            curveSegments[curveSegments.Length - 1] = new CurveSegment(trajectoryPoints[minIdx], trajectoryPoints[trajectoryPoints.Length - 1], tubeRadius); // Handle case when all control points are assigned
+            for (int i = 0; i < controlPoints.Count+1; i++)
+            {
+                if (i == 0)
+                {
+                    curveSegments[i].controlPoint1 = controlPoints[i];
+                }
+                else if(i == controlPoints.Count)
+                {
+                    curveSegments[i].controlPoint1 = controlPoints[i - 1];
+                }
+                else
+                {
+                    curveSegments[i].controlPoint1 = controlPoints[i - 1];
+                    curveSegments[i].controlPoint2 = controlPoints[i];
+                }
+            }
+            curveSegments[curveSegments.Length - 1].SetStartAndEndPoint(trajectoryPoints[minIdx], trajectoryPoints[trajectoryPoints.Length - 1]);
+            curveSegments[curveSegments.Length - 1].SetRadius(tubeRadius);            
         }
 
     }
@@ -480,14 +513,7 @@ public class BSplineDrawer : MonoBehaviour
     public List<CollisionInfo> CheckCollisionWithAnotherSpline(BSplineDrawer otherSpline)
     {
         List<CollisionInfo> collisionInfoList = new List<CollisionInfo>();
-        for (int i = 0; i < tubeManagers.Length; i++)
-        {
-            tubeManagers[i].SetIsCollided(false);
-        }
-        for (int j = 0; j < otherSpline.tubeManagers.Length; j++)
-        {
-            otherSpline.tubeManagers[j].SetIsCollided(false);
-        }
+
         for (int i = 0; i < curveSegments.Length; i++)
         {
             CurveSegment curveSegment = curveSegments[i];
@@ -516,11 +542,7 @@ public class BSplineDrawer : MonoBehaviour
                             segment2 = otherCurveSegment
                         };
                         collisionInfoList.Add(collisionInfo);
-                        if (showTubes)
-                        {
-                            tubeManagers[i].SetIsCollided(true);
-                            otherSpline.tubeManagers[j].SetIsCollided(true);
-                        }
+
                     }
                 }
 
@@ -619,7 +641,7 @@ public class BSplineDrawer : MonoBehaviour
         if (tubeManagers == null) return;
         foreach (var tube in tubeManagers)
         {
-            tube.gameObject.SetActive(true);
+            tube.gameObject.SetActive(true);            
         }
         showTubes = true;
     }
@@ -673,6 +695,9 @@ public class CurveSegment
 {
     public TrajectoryPoint startPoint;
     public TrajectoryPoint endPoint;
+    public ControlPoint controlPoint1;
+    public ControlPoint controlPoint2;
+    public TubeManager tubeManager;
     public Vector3 midPoint
     {
         get
@@ -681,10 +706,19 @@ public class CurveSegment
         }
     }
     public float radious;
-    public CurveSegment(TrajectoryPoint _startPoint, TrajectoryPoint _endPoint, float _radious)
+
+    public void SetStartAndEndPoint(TrajectoryPoint _startPoint, TrajectoryPoint _endPoint)
     {
         startPoint = _startPoint;
         endPoint = _endPoint;
+    }
+    public void SetRadius(float _radious)
+    {
         radious = _radious;
+    }
+
+    public void SetTubeManager(TubeManager _tubeManager)
+    {
+        tubeManager = _tubeManager;
     }
 }

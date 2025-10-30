@@ -5,9 +5,13 @@ public class CollisionCheckerTrajectory : MonoBehaviour
     [SerializeField] private AircraftFactory aircraftFactory;
     [SerializeField] private GameObject collisionMarkerPrefab;
     public List<GameObject> markers { get; private set; }
+    public List<CollisionInfo> all_collisionInfoList { get; private set; }
+    public List<TrajectoryDrawer> allTraj { get; private set; }
     void Awake()
     {
         markers = new List<GameObject>();
+        all_collisionInfoList = new List<CollisionInfo>();
+        allTraj = new List<TrajectoryDrawer>();
         GameEvents.Instance.OnSplineChanged += OnSplineChanged;
     }
 
@@ -25,8 +29,8 @@ public class CollisionCheckerTrajectory : MonoBehaviour
     // Update is called once per frame
     public void CheckCollisions()
     {
-        List<TrajectoryDrawer> allTraj = aircraftFactory.GetAllTrajectories();
-        List<CollisionInfo> all_collisionInfoList = new List<CollisionInfo>();
+        allTraj = aircraftFactory.GetAllTrajectories();
+        all_collisionInfoList.Clear();
         for (int i = 0; i < allTraj.Count; i++)
         {
             // for (int j = i + 1; j < allTraj.Count; j++)
@@ -44,6 +48,11 @@ public class CollisionCheckerTrajectory : MonoBehaviour
                     all_collisionInfoList.AddRange(current_collisionInfoList);
                 }
             }
+        }
+        for (int i = 0; i < all_collisionInfoList.Count; i++)
+        {
+            all_collisionInfoList[i].segment1.tubeManager.SetIsCollided(true);
+            all_collisionInfoList[i].segment2.tubeManager.SetIsCollided(true);
         }
 
         int ct = 0;

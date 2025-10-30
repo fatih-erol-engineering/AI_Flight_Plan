@@ -16,6 +16,7 @@ public class AircraftProperties : ScriptableObject
     public float mass_kg;
     public float noise_dBA;
     public GameObject aircraftPrefab;
+    public float tubeRadius_m;
 }
 public enum AircraftModel
 {

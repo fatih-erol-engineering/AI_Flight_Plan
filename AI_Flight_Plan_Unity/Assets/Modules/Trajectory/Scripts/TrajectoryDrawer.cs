@@ -4,7 +4,8 @@ using System.Collections.Generic;
 [ExecuteAlways]
 public class TrajectoryDrawer : MonoBehaviour
 {
-    [SerializeField] private float segmentLength_m = 10f;
+    [SerializeField] private float segmentLength_m = 50f;
+    [SerializeField] private float tubeRadius_m = 10f;
     [field: SerializeField] public TimeGame startTime { get; private set; }
     [field: SerializeField] public TimeGame endTime { get; private set; }
     [field: SerializeField] public WaypointFactory waypointFactory { get; private set; }
@@ -86,6 +87,18 @@ public class TrajectoryDrawer : MonoBehaviour
         }
         return false;
     }
+    public void SetSegmentLength(float _val)
+    {
+        segmentLength_m = _val;
+    }
+    public void SetTubeRadius(float _val)
+    {
+        tubeRadius_m = _val;
+        foreach (BSplineDrawer bSplineDrawer in bSplineDrawerArray)
+        {
+            bSplineDrawer.SetTubeRadius(tubeRadius_m);
+        }
+    }
     public void Tick()
     {
         foreach (BSplineDrawer bSplineDrawer in bSplineDrawerArray)
@@ -153,6 +166,8 @@ public class TrajectoryDrawer : MonoBehaviour
             bSplineDrawer.SetEndWaypoint(endWaypoint);
             bSplineDrawer.SetControlPoints(controlPoints);
             bSplineDrawer.Create();
+            bSplineDrawer.SetTubeRadius(tubeRadius_m);
+            bSplineDrawer.SetIsCollided(false);
             bSplineDrawerArray[i] = bSplineDrawer;
         }
 
@@ -224,7 +239,9 @@ public class TrajectoryDrawer : MonoBehaviour
             {
                 List<CollisionInfo> currentCollisionInfoList = segment1.CheckCollisionWithAnotherSpline(segment2);
                 totalCollisionInfoList.AddRange(currentCollisionInfoList);
+                segment2.SetIsCollided(false);
             }
+            segment1.SetIsCollided(false);
         }
         return totalCollisionInfoList;
     }

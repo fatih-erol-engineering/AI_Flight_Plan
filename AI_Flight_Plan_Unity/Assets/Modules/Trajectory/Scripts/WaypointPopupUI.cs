@@ -68,8 +68,8 @@ public class WaypointPopupUI : MonoBehaviour
 
 
         northField.value = waypoint.transform.position.x;
-        eastField.value = waypoint.transform.position.y;
-        altitudeField.value = waypoint.transform.position.z;
+        eastField.value = waypoint.transform.position.z;
+        altitudeField.value = waypoint.transform.position.y;
         timeField.value = waypoint.time.second;
 
         // Position popup over the aircraft: project aircraft world position to screen

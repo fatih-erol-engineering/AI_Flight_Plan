@@ -5,6 +5,7 @@ using UnityEngine;
 public class Aircraft : MonoBehaviour, ISelectable, IEditable
 {
     [Header("Aircraft Settings")]
+    public int id;
     [field: SerializeField]
     public TimeGame time { get; private set; }
 
@@ -23,10 +24,10 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     static readonly int EdgeWidthID = Shader.PropertyToID("_selectionEdgeWidth"); // URP Lit
     [Header("Conflict Solver Settings")]
 
-    [SerializeField, Range(0f, 1f)]
-    private float timeOrPositionChangeVal = 0f; // 0 means time is important 1 means position is important
-    [SerializeField, Range(0f, 1f)]
-    private float nonEditableOrEditableVal = 0f; // 0 means time is important 1 means position is important
+    [Range(0f, 1f)]
+    public float timeOrPositionChangeVal = 1f; // 0 means time can be changed 1 means position can be changed
+    [Range(0f, 1f)]
+    public float nonEditableOrEditableVal = 1f; // 0 means non editable, 1 means editable
 
     void Awake()
     {

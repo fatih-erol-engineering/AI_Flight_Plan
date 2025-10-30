@@ -7,7 +7,7 @@ public class AircraftPopupUI : MonoBehaviour
     [SerializeField] private UIDocument uiDocument;
     private VisualElement root, popUpRoot;
     private TextField modelField, typeField;
-    private FloatField northField, eastField, altitudeField, noiseField, velocityField;
+    private FloatField northField, eastField, altitudeField, noiseField, velocityField, TimeOrPositionField, NonEditableOrEditableField;
 
     // void OnValidate()
     // {
@@ -50,11 +50,18 @@ public class AircraftPopupUI : MonoBehaviour
         // display coordinates with two decimal places
         altitudeField.formatString = "0.00";
 
+        velocityField = popUpRoot.Q<FloatField>("velocityField");
+        CheckAssignment(velocityField, "velocityField");
+
         noiseField = popUpRoot.Q<FloatField>("noiseField");
         CheckAssignment(noiseField, "noiseField");
 
-        velocityField = popUpRoot.Q<FloatField>("velocityField");
-        CheckAssignment(velocityField, "velocityField");
+        TimeOrPositionField = popUpRoot.Q<FloatField>("TimeOrPositionField");
+        CheckAssignment(TimeOrPositionField, "TimeOrPositionField");
+
+        NonEditableOrEditableField = popUpRoot.Q<FloatField>("NonEditableOrEditableField");
+        CheckAssignment(NonEditableOrEditableField, "NonEditableOrEditableField");
+        
 
         popUpRoot.AddToClassList("hidden");
 
@@ -83,11 +90,12 @@ public class AircraftPopupUI : MonoBehaviour
         modelField.value = aircraft.aircraftProperties.model.ToString();
         typeField.value = aircraft.aircraftProperties.type.ToString();
         northField.value = aircraft.transform.position.x;
-        eastField.value = aircraft.transform.position.y;
-        altitudeField.value = aircraft.transform.position.z;
+        eastField.value = aircraft.transform.position.z;
+        altitudeField.value = aircraft.transform.position.y;
         noiseField.value = aircraft.aircraftProperties.noise_dBA;
         velocityField.value = aircraft.aircraftProperties.nominalVelocity_m_s;
-
+        TimeOrPositionField.value = aircraft.timeOrPositionChangeVal;
+        NonEditableOrEditableField.value = aircraft.nonEditableOrEditableVal;
         // Position popup over the aircraft: project aircraft world position to screen
         Camera cam = Camera.main;
         if (cam == null) cam = Camera.current;

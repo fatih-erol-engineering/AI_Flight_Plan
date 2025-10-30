@@ -62,8 +62,8 @@ public class ControlPointPopupUI : MonoBehaviour
     public void ShowPopup(ControlPoint controlPoint)
     {
         northField.value = controlPoint.transform.position.x;
-        eastField.value = controlPoint.transform.position.y;
-        altitudeField.value = controlPoint.transform.position.z;
+        eastField.value = controlPoint.transform.position.z;
+        altitudeField.value = controlPoint.transform.position.y;
 
 
         // Position popup over the aircraft: project aircraft world position to screen

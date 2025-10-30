@@ -5,12 +5,12 @@
         <ui:Foldout text="Vehicle - 1" toggle-on-label-click="true" value="true" name="aircraftConflictFoldout">
             <ui:VisualElement style="flex-direction: row; justify-content: space-evenly; align-items: stretch; align-self: stretch; align-content: auto;">
                 <ui:Label text="Time Change" style="width: 100px;" />
-                <ui:Slider value="0" high-value="1" fill="true" name="timeOrPositionChangeVal" style="width: 150px;" />
+                <ui:Slider value="4" high-value="1" fill="true" name="timeOrPositionChangeVal" style="width: 150px;" />
                 <ui:Label text="Position Change" style="width: 100px; -unity-text-align: upper-left;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-direction: row; justify-content: space-evenly; align-items: stretch; align-self: stretch; align-content: center;">
                 <ui:Label text="Non- Editable" style="width: 100px;" />
-                <ui:Slider value="0" high-value="1" fill="true" name="nonEditableOrEditableVal" style="width: 150px; flex-direction: column; align-self: center;" />
+                <ui:Slider value="4" high-value="1" fill="true" name="nonEditableOrEditableVal" style="width: 150px; flex-direction: column; align-self: center;" />
                 <ui:Label text="Editable" style="width: 100px; -unity-text-align: upper-left;" />
             </ui:VisualElement>
         </ui:Foldout>
