@@ -82,17 +82,17 @@ public class GameEvents : MonoBehaviour
 
 
 
-    // Selection Change Events
+    // Editable Events
     public event Action<IEditable> OnEditableEnter;
     public void EditableEnter(IEditable _editable)
     {
         OnEditableEnter?.Invoke(_editable);
     }
 
-    public event Action<IEditable> OnEditableExit;
-    public void EditableExit(IEditable _editable)
+    public event Action OnEditableExit;
+    public void EditableExit()
     {
-        OnEditableExit?.Invoke(_editable);
+        OnEditableExit?.Invoke();
     }
 
 }

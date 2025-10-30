@@ -37,6 +37,16 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
         }
         originalColor = highlightMeshRenderer[0].sharedMaterial.GetColor(BaseColorID);
         originalEmissionColor = highlightMeshRenderer[0].sharedMaterial.GetColor(EmissionColorID);
+
+        GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
+        GameEvents.Instance.OnEditableExit -= OnEditableExit;
+        GameEvents.Instance.OnEditableEnter += OnEditableEnter;
+        GameEvents.Instance.OnEditableExit += OnEditableExit;
+    }
+    void OnDestroy()
+    {
+        GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
+        GameEvents.Instance.OnEditableExit -= OnEditableExit;
     }
 
 #if UNITY_EDITOR
@@ -155,17 +165,18 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
         return _color;
     }
 
-    public void OnEditableEnter()
+
+    public void OnEditableEnter(IEditable _editable)
     {
-        Debug.Log("Editable Entered: " + gameObject.name);
-        Debug.Log("x: " + transform.position.x);
-        Debug.Log("y: " + transform.position.y);
-        Debug.Log("z: " + transform.position.z);
-        Debug.Log("time: " + time.second);
+        if (_editable == (this as IEditable))
+        {
+            WaypointPopupUI.Instance.ShowPopup(this);
+        }
+
     }
 
     public void OnEditableExit()
     {
-        Debug.Log("Editable Exited: " + gameObject.name);
+        WaypointPopupUI.Instance.HidePopup();
     }
 }

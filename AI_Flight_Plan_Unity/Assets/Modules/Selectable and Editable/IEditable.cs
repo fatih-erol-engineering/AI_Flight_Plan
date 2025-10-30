@@ -1,5 +1,5 @@
 public interface IEditable
 {
-    void OnEditableEnter();
+    void OnEditableEnter(IEditable _editable);
     void OnEditableExit();
 }

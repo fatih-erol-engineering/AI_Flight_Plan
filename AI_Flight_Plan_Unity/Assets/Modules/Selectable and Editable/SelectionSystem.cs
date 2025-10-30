@@ -78,17 +78,23 @@ public class SelectionSystem : MonoBehaviour
             else
             {
                 if (_selected != null && !ReferenceEquals(_selected, _hovered))
+                {
                     _selected.OnDeselect();
+                    GameEvents.Instance.EditableExit();
+                }
 
                 _selected = _hovered;
                 selectedObject = (_selected as MonoBehaviour)?.gameObject;
 
                 if (_selected != null)
+                {
                     _selected.OnSelect();
+                    if (Input.GetKeyDown(selectKey2))
+                    {
+                        GameEvents.Instance.EditableEnter((_selected as IEditable));
+                    }
+                }
 
-                // selectedObject = (_selected as IEditable)?.gameObject;
-
-                // GameEvents.Instance.SelectionChanged(selectedObject);
             }
         }
     }

@@ -23,6 +23,7 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     static readonly int EdgeWidthID = Shader.PropertyToID("_selectionEdgeWidth"); // URP Lit
 
 
+
     void Awake()
     {
         AssignData();
@@ -33,6 +34,16 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         highlightMeshRenderer.GetPropertyBlock(mpb);
         SetHighlightEdgeWidth(1f, true);
         highlightMeshRenderer.gameObject.SetActive(false);
+
+        GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
+        GameEvents.Instance.OnEditableExit -= OnEditableExit;
+        GameEvents.Instance.OnEditableEnter += OnEditableEnter;
+        GameEvents.Instance.OnEditableExit += OnEditableExit;
+    }
+    void OnDestroy()
+    {
+        GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
+        GameEvents.Instance.OnEditableExit -= OnEditableExit;
     }
 
     public void OnHoverEnter()
@@ -200,18 +211,18 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         t.rotation = Quaternion.LookRotation(unitDir, up);
     }
 
-    public void OnEditableEnter()
+    public void OnEditableEnter(IEditable _editable)
     {
-        Debug.Log("Editable Entered: " + gameObject.name);
-        Debug.Log("x: " + transform.position.x);
-        Debug.Log("y: " + transform.position.y);
-        Debug.Log("z: " + transform.position.z);
-        Debug.Log("time: " + time.second);
+        if (_editable == (this as IEditable))
+        {
+            AircraftPopupUI.Instance.ShowPopup(this);
+        }
+
     }
 
     public void OnEditableExit()
     {
-        Debug.Log("Editable Entered: " + gameObject.name);
+        AircraftPopupUI.Instance.HidePopup();
     }
 }
 

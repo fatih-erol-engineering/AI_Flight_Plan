@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class AircraftPopupUI : MonoBehaviour
+public class WaypointPopupUI : MonoBehaviour
 {
-    public static AircraftPopupUI Instance { get; private set; }
+    public static WaypointPopupUI Instance { get; private set; }
     [SerializeField] private UIDocument uiDocument;
     private VisualElement root, popUpRoot;
-    private TextField modelField, typeField;
-    private FloatField northField, eastField, altitudeField, noiseField, velocityField;
+    private FloatField northField, eastField, altitudeField, timeField;
 
     // void OnValidate()
     // {
@@ -29,11 +28,6 @@ public class AircraftPopupUI : MonoBehaviour
         CheckAssignment(popUpRoot, "popUpRoot");
 
         // Query fields under the popup root (they are expected to be inside popUpRoot)
-        modelField = popUpRoot.Q<TextField>("modelField");
-        CheckAssignment(modelField, "modelField");
-
-        typeField = popUpRoot.Q<TextField>("typeField");
-        CheckAssignment(typeField, "typeField");
 
         northField = popUpRoot.Q<FloatField>("northField");
         CheckAssignment(northField, "northField");
@@ -44,13 +38,11 @@ public class AircraftPopupUI : MonoBehaviour
         altitudeField = popUpRoot.Q<FloatField>("altitudeField");
         CheckAssignment(altitudeField, "altitudeField");
 
-        noiseField = popUpRoot.Q<FloatField>("noiseField");
-        CheckAssignment(noiseField, "noiseField");
-
-        velocityField = popUpRoot.Q<FloatField>("velocityField");
-        CheckAssignment(velocityField, "velocityField");
+        timeField = popUpRoot.Q<FloatField>("timeField");
+        CheckAssignment(timeField, "timeField");
 
         popUpRoot.AddToClassList("hidden");
+
 
         if (Instance == null)
         {
@@ -70,17 +62,16 @@ public class AircraftPopupUI : MonoBehaviour
     }
 
     // Show the popup at the current mouse position (editor or play mode)
-    public void ShowPopup(Aircraft aircraft)
+    public void ShowPopup(Waypoint waypoint)
     {
         if (popUpRoot == null) return;
 
-        modelField.value = aircraft.aircraftProperties.model.ToString();
-        typeField.value = aircraft.aircraftProperties.type.ToString();
-        northField.value = aircraft.transform.position.x;
-        eastField.value = aircraft.transform.position.y;
-        altitudeField.value = aircraft.transform.position.z;
-        noiseField.value = aircraft.aircraftProperties.noise_dBA;
-        velocityField.value = aircraft.aircraftProperties.nominalVelocity_m_s;
+
+        northField.value = waypoint.transform.position.x;
+        eastField.value = waypoint.transform.position.y;
+        altitudeField.value = waypoint.transform.position.z;
+        timeField.value = waypoint.time.second;
+
 
         // UI Toolkit uses top-left origin; Input.mousePosition is bottom-left — convert Y
         Vector2 mp = Input.mousePosition;
@@ -94,12 +85,12 @@ public class AircraftPopupUI : MonoBehaviour
 
         // Show by removing the 'hidden' class (assumes USS defines .hidden { display: none; } or similar)
         popUpRoot.RemoveFromClassList("hidden");
-
     }
 
     public void HidePopup()
     {
         popUpRoot.AddToClassList("hidden");
     }
+
 
 }
