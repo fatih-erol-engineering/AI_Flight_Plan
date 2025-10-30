@@ -1086,7 +1086,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1251366538}
-  - component: {fileID: 1251366539}
   m_Layer: 0
   m_Name: EditableSystem
   m_TagString: Untagged
@@ -1112,18 +1111,6 @@ Transform:
   - {fileID: 1878074598}
   m_Father: {fileID: 1744675467}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1251366539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251366537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87955c1e3e5768b4bb4391ba8dadd1a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EditableSystem
 --- !u!1 &1400046405
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197,6 +1184,22 @@ PrefabInstance:
     - target: {fileID: 5697215273144170777, guid: 837a776877176c04cb6083315b2574c8, type: 3}
       propertyPath: m_Name
       value: Survailance_Drone
+      objectReference: {fileID: 0}
+    - target: {fileID: 5830740734544297088, guid: 837a776877176c04cb6083315b2574c8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5830740734544297088, guid: 837a776877176c04cb6083315b2574c8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5830740734544297088, guid: 837a776877176c04cb6083315b2574c8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6602597435356866106, guid: 837a776877176c04cb6083315b2574c8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6829256584013129055, guid: 837a776877176c04cb6083315b2574c8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1740,6 +1743,7 @@ MonoBehaviour:
   <uIDocument>k__BackingField: {fileID: 1900046852}
   cam: {fileID: 1613971392}
   aircraftPropertiesRegistry: {fileID: 11400000, guid: daf6a7dac0a9bf744bd9f90be6fd73e1, type: 2}
+  aircraftConflictFoldoutTemplate: {fileID: 9197481963319205126, guid: 666ccbff7becf934bab396d5d3fc38cd, type: 3}
   selectedAircraftModelName: Taxi_Drone
 --- !u!114 &1900046852
 MonoBehaviour:

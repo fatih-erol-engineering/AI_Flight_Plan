@@ -55,6 +55,7 @@ public class AircraftFactory : MonoBehaviour
         ctrl.SetTime(time);
         selectedAircraft = ctrl;
         aircraftSpawnFlag = true;
+        GameEvents.Instance.AircraftSpawned(ctrl);
         return ctrl;
     }
     public void Clear()

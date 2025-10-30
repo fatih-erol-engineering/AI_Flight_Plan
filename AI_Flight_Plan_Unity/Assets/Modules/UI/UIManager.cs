@@ -1,8 +1,6 @@
 ﻿using UnityEngine.UIElements;
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
-
 
 // [RequireComponent(typeof(MainGameManager))]
 [RequireComponent(typeof(UIDocument))]
@@ -15,13 +13,15 @@ public class UIManager : MonoBehaviour
     public UIDocument uIDocument { get; private set; }
     public Camera cam;
     [SerializeField] private AircraftPropertiesRegistry aircraftPropertiesRegistry;
-    private VisualElement root, mainMenuRoot, createRoot,conflictSolverRoot;
+    private VisualElement root, mainMenuRoot, createRoot, conflictSolverRoot, conflictAircraftListRoot;
+    [SerializeField] private VisualTreeAsset aircraftConflictFoldoutTemplate;
     private CustomToggleButtonGroup mainMenuTBG, createTBG;
     private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;
     private Toggle createTBtn, listenTBtn, solveTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
-
+    private Button solveConflictBtn;
     public MainGameMode gameModeUI { get; private set; }
     public bool restartRequestUI { get; private set; }
+    private List<AircraftConflictManager> aircraftConflictManagers;
 
 
     //     // For Create Mode
@@ -84,6 +84,9 @@ public class UIManager : MonoBehaviour
         conflictSolverRoot = root.Q<VisualElement>("conflictSolverRoot");
         CheckAssignment(conflictSolverRoot, "conflictSolverRoot");
 
+        conflictAircraftListRoot = root.Q<VisualElement>("conflictAircraftListRoot");
+        CheckAssignment(conflictAircraftListRoot, "conflictAircraftListRoot");
+
         DropdownField d = root.Q<DropdownField>("rotorDDM");
         CheckAssignment(d, "rotorDDM");
 
@@ -114,6 +117,8 @@ public class UIManager : MonoBehaviour
         fixedWingTBtn = root.Q<Toggle>("fixedWingTBtn");
         CheckAssignment(fixedWingTBtn, "fixedWingTBtn");
 
+        solveConflictBtn = root.Q<Button>("solveConflictBtn");
+        CheckAssignment(solveConflictBtn, "solveConflictBtn");
 
         createTBtn.RegisterValueChangedCallback(_ => createTBtnClick());
         solveTBtn.RegisterValueChangedCallback(_ => solveTBtnClick());
@@ -122,16 +127,43 @@ public class UIManager : MonoBehaviour
 
         rotorDDM.dropdownField.RegisterValueChangedCallback(_ => rotorDDMChange());
         fixedWingDDM.dropdownField.RegisterValueChangedCallback(_ => fixedWingDDMChange());
-
+        solveConflictBtn.clicked += solveConflictBtnClick;
 
         // Custom Toggle Button Groups must be declared after Registering Value Changed Callbacks
         mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
         createTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("createTBG"), false);
+
+        GameEvents.Instance.OnAircraftSpawned += AddConflictSolverPopup;
+        GameEvents.Instance.OnAircraftDeleted += DeleteConflictSolverPopup;
+        conflictSolverRoot.AddToClassList("popupHidden");
+
+        aircraftConflictManagers = new List<AircraftConflictManager>();
     }
     void CheckAssignment<T>(T obj, string name = "")
     {
         if (obj == null)
             Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name}, name: {name} )");
+    }
+
+    void AddConflictSolverPopup(Aircraft aircraft)
+    {
+        VisualElement a = aircraftConflictFoldoutTemplate.CloneTree();
+        conflictAircraftListRoot.hierarchy.Add(a);
+        aircraftConflictManagers.Add(new AircraftConflictManager(a, aircraft));
+    }
+    void DeleteConflictSolverPopup(Aircraft aircraft)
+    {        
+        foreach (var aircraftConflictManager in aircraftConflictManagers)
+        {
+            if (aircraftConflictManager.aircraft == aircraft)
+            {
+                aircraftConflictManager.root.RemoveFromHierarchy();
+                aircraftConflictManagers.Remove(aircraftConflictManager);
+            }
+        }        
+    }
+    void solveConflictBtnClick()
+    {
     }
 
     void createTBtnClick()
@@ -286,4 +318,45 @@ public class CustomAircraftDropdownMenu
         dropdownField.choices = _labels;
         dropdownField.index = 0;
     }
+}
+
+public class AircraftConflictManager
+{
+    public VisualElement root;
+    public Foldout foldout;    
+    public Slider timeOrPositionChangeVal; // 0 means time can be change, 1 means position can be change
+    public Slider nonEditableOrEditableVal; // 0 Non editable, 1 means editable
+    public Aircraft aircraft;
+    public AircraftConflictManager(VisualElement _root, Aircraft _aircraft)
+    {
+        root = _root;
+        aircraft = _aircraft;
+
+        foldout = root.Q<Foldout>("aircraftConflictFoldout");
+        CheckAssignment(foldout, "foldout");
+        foldout.text = _aircraft.aircraftProperties.model.ToString();        
+
+        nonEditableOrEditableVal = root.Q<Slider>("nonEditableOrEditableVal");
+        CheckAssignment(nonEditableOrEditableVal, "nonEditableOrEditableVal");
+
+        timeOrPositionChangeVal = root.Q<Slider>("timeOrPositionChangeVal");
+        CheckAssignment(timeOrPositionChangeVal, "timeOrPositionChangeVal");
+
+        timeOrPositionChangeVal.RegisterValueChangedCallback(_ => OnTimeOrPositionChangeValSliderChanged());
+        nonEditableOrEditableVal.RegisterValueChangedCallback(_ => OnNonEditableOrEditableValSliderChanged());
+    }
+    public void OnTimeOrPositionChangeValSliderChanged()
+    {
+        aircraft.SetTimeOrPositionChange(timeOrPositionChangeVal.value);
+    }
+    public void OnNonEditableOrEditableValSliderChanged()
+    {
+        aircraft.SetNonEditableOrEditableVal(nonEditableOrEditableVal.value);
+    }
+    void CheckAssignment<T>(T obj, string name = "")
+    {
+        if (obj == null)
+            Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name}, name: {name} )");
+    }
+
 }

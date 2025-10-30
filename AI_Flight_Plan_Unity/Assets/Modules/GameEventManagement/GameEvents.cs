@@ -72,6 +72,19 @@ public class GameEvents : MonoBehaviour
         OnControlPointPositionChanged?.Invoke(controlPoint, oldPosition);
     }
 
+    // Aircraft Events
+    public event Action<Aircraft> OnAircraftSpawned;
+    public void AircraftSpawned(Aircraft aircraft)
+    {
+        OnAircraftSpawned?.Invoke(aircraft);
+    }
+
+    public event Action<Aircraft> OnAircraftDeleted;
+    public void AircraftDeleted(Aircraft aircraft)
+    {
+        OnAircraftDeleted?.Invoke(aircraft);
+    }
+
 
     // Spline Events
     public event Action<BSplineDrawer> OnSplineChanged;

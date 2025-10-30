@@ -22,10 +22,11 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     static readonly int EdgeColorID = Shader.PropertyToID("_selectionEdgeColor"); // URP Lit
     static readonly int EdgeWidthID = Shader.PropertyToID("_selectionEdgeWidth"); // URP Lit
     [Header("Conflict Solver Settings")]
-    [Range(0f, 1f)]
-    public float timeOrPosition_conflict = 0f; // 0 means time is important 1 means position is important
-    [Range(0f, 1f)]
-    public float editableOrNonEditable_conflict = 0f; // 0 means time is important 1 means position is important
+
+    [SerializeField, Range(0f, 1f)]
+    private float timeOrPositionChangeVal = 0f; // 0 means time is important 1 means position is important
+    [SerializeField, Range(0f, 1f)]
+    private float nonEditableOrEditableVal = 0f; // 0 means time is important 1 means position is important
 
     void Awake()
     {
@@ -111,9 +112,21 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     }
 
 
+    public void SetTimeOrPositionChange(float _val)
+    {
+        if (_val != timeOrPositionChangeVal)
+        {
+            timeOrPositionChangeVal = _val;
+        }
+    }
 
-
-
+    public void SetNonEditableOrEditableVal(float _val)
+    {
+        if (_val != nonEditableOrEditableVal)
+        {
+            nonEditableOrEditableVal = _val;
+        }
+    }
 
     public void MoveAircraftWithTime(float sec)
     {
