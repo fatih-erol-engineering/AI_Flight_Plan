@@ -4,6 +4,7 @@ using System.Collections.Generic;
 [ExecuteAlways]
 public class TrajectoryDrawer : MonoBehaviour
 {
+     [SerializeField] private Aircraft aircraft;
     [SerializeField] private float segmentLength_m = 50f;
     [SerializeField] private float tubeRadius_m = 10f;
     [field: SerializeField] public TimeGame startTime { get; private set; }
@@ -38,7 +39,10 @@ public class TrajectoryDrawer : MonoBehaviour
     //     AssignData();
     //     Create();
     // }
-
+    public void SetAircraft(Aircraft _aircraft)
+    {
+        aircraft = _aircraft;
+    }
     void Update()
     {
         if (isReadyToUpdate)
@@ -177,6 +181,7 @@ public class TrajectoryDrawer : MonoBehaviour
             bSplineDrawer.SetStartWaypoint(startWaypoint);
             bSplineDrawer.SetEndWaypoint(endWaypoint);
             bSplineDrawer.SetControlPoints(controlPoints);
+            bSplineDrawer.SetAircraft(aircraft);
             bSplineDrawer.Create();
             bSplineDrawer.SetTubeRadius(tubeRadius_m);
             bSplineDrawer.SetIsCollided(false);

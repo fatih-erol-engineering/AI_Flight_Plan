@@ -10,6 +10,8 @@ using System.Collections.Generic;
 [ExecuteAlways]
 public class BSplineDrawer : MonoBehaviour
 {
+    [SerializeField] private Aircraft aircraft;
+
     [Header("Waypoints & Control Points & Curve Segments")]
     [SerializeField, HideInInspector] private List<ControlPoint> controlPoints;
     [field: SerializeField] public Waypoint waypointStart { get; private set; }
@@ -54,9 +56,13 @@ public class BSplineDrawer : MonoBehaviour
         GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
         GameEvents.Instance.OnWaypointTimeChanged += OnWaypointTimeChanged;
         GameEvents.Instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
-        
+
         SetLinePointNumber(linePointNumber, true);
         SetTubeRadius(tubeRadius, true);
+    }
+    public void SetAircraft(Aircraft _aircraft)
+    {
+        aircraft = _aircraft;
     }
     
     public void Awake()
@@ -125,6 +131,7 @@ public class BSplineDrawer : MonoBehaviour
             for (int i = 0; i < curveSegments.Length; i++)
             {
                 curveSegments[i] = new CurveSegment(); // Temporary initialization
+                curveSegments[i].SetAircraft(aircraft);
             }
             DrawCurve();
 
@@ -714,6 +721,7 @@ public class CurveSegment
     public ControlPoint controlPoint1;
     public ControlPoint controlPoint2;
     public TubeManager tubeManager;
+    public Aircraft aircraft;
     public Vector3 midPoint
     {
         get
@@ -732,7 +740,10 @@ public class CurveSegment
     {
         radious = _radious;
     }
-
+    public void SetAircraft(Aircraft _aircraft)
+    {
+        aircraft = _aircraft;
+    }   
     public void SetTubeManager(TubeManager _tubeManager)
     {
         tubeManager = _tubeManager;

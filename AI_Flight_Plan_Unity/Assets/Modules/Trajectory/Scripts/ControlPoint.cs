@@ -71,8 +71,8 @@ public class ControlPoint : MonoBehaviour, ISelectable, IEditable
     {
         if (_position == transform.position) return;
         Vector3 oldposition = transform.position;
-        GameEvents.Instance.ControlPointPositionChanged(this, oldposition);
         transform.position = _position;
+        GameEvents.Instance.ControlPointPositionChanged(this, oldposition);
     }
     public void SetClosestPointToSpline(Vector3 point)
     {
