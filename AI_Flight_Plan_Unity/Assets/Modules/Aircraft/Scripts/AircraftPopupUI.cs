@@ -7,7 +7,7 @@ public class AircraftPopupUI : MonoBehaviour
     [SerializeField] private UIDocument uiDocument;
     private VisualElement root, popUpRoot;
     private TextField modelField, typeField;
-    private FloatField northField, eastField, altitudeField, noiseField, velocityField, TimeOrPositionField, NonEditableOrEditableField;
+    private FloatField idField, northField, eastField, altitudeField, noiseField, velocityField, TimeOrPositionField, NonEditableOrEditableField;
 
     // void OnValidate()
     // {
@@ -34,6 +34,12 @@ public class AircraftPopupUI : MonoBehaviour
 
         typeField = popUpRoot.Q<TextField>("typeField");
         CheckAssignment(typeField, "typeField");
+
+        idField = popUpRoot.Q<FloatField>("idField");
+        CheckAssignment(idField, "idField");
+        idField.formatString = "0"; // display as integer
+
+
 
         northField = popUpRoot.Q<FloatField>("northField");
         CheckAssignment(northField, "northField");
@@ -86,7 +92,7 @@ public class AircraftPopupUI : MonoBehaviour
     public void ShowPopup(Aircraft aircraft)
     {
         if (popUpRoot == null) return;
-
+        idField.value = aircraft.id;
         modelField.value = aircraft.aircraftProperties.model.ToString();
         typeField.value = aircraft.aircraftProperties.type.ToString();
         northField.value = aircraft.transform.position.x;
@@ -94,8 +100,8 @@ public class AircraftPopupUI : MonoBehaviour
         altitudeField.value = aircraft.transform.position.y;
         noiseField.value = aircraft.aircraftProperties.noise_dBA;
         velocityField.value = aircraft.aircraftProperties.nominalVelocity_m_s;
-        TimeOrPositionField.value = aircraft.timeOrPositionChangeVal;
-        NonEditableOrEditableField.value = aircraft.nonEditableOrEditableVal;
+        // TimeOrPositionField.value = aircraft.timeOrPositionChangeVal;
+        // NonEditableOrEditableField.value = aircraft.nonEditableOrEditableVal;
         // Position popup over the aircraft: project aircraft world position to screen
         Camera cam = Camera.main;
         if (cam == null) cam = Camera.current;

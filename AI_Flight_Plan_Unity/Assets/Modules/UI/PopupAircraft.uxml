@@ -1,9 +1,10 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Modules/UI/Styles/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
     <Style src="project://database/Assets/Modules/UI/Styles/PopupStyle.uss?fileID=7433441132597879392&amp;guid=4c80e6cc20e914447b6b4a07c3d0ddb7&amp;type=3#PopupStyle" />
-    <ui:VisualElement name="popUpRoot" class="popup-root_hidden popup-root" style="width: 309px; background-color: rgba(34, 34, 34, 0.69); position: absolute; flex-shrink: 0; justify-content: flex-start; align-items: stretch; align-content: auto; align-self: auto; -unity-text-align: upper-right; transition-property: opacity; right: auto; bottom: auto; top: auto; left: auto;">
+    <ui:VisualElement name="popUpRoot" class="popup-root_hidden popup-root hidden" style="width: 309px; background-color: rgba(34, 34, 34, 0.69); position: absolute; flex-shrink: 0; justify-content: flex-start; align-items: stretch; align-content: auto; align-self: auto; -unity-text-align: upper-right; transition-property: opacity; right: auto; bottom: auto; top: auto; left: auto;">
         <ui:Label text="Air Vehicle" style="font-size: 24px; -unity-text-align: upper-center;" />
         <ui:VisualElement style="flex-grow: 1; background-color: rgb(255, 255, 255); height: 1px;" />
+        <ui:FloatField label="id" value="0" name="idField" readonly="true" />
         <ui:TextField label="Model" name="modelField" readonly="true" />
         <ui:TextField label="Type" name="typeField" readonly="true" />
         <ui:FloatField label="North [m]" value="0" name="northField" readonly="true" />
@@ -11,7 +12,7 @@
         <ui:FloatField label="Altitude [m]" value="0" name="altitudeField" readonly="true" />
         <ui:FloatField label="Velocity [m/s]" value="0" name="velocityField" readonly="true" />
         <ui:FloatField label="Noise [dBA]" value="0" name="noiseField" readonly="true" />
-        <ui:FloatField label="Time or Position " value="0" name="TimeOrPositionField" readonly="true" />
-        <ui:FloatField label="Non-Editable or &#10;Editable " value="0" name="NonEditableOrEditableField" readonly="true" />
+        <ui:FloatField label="Time or Position " value="0" name="TimeOrPositionField" readonly="true" style="display: none;" />
+        <ui:FloatField label="Non-Editable or &#10;Editable " value="0" name="NonEditableOrEditableField" readonly="true" style="display: none;" />
     </ui:VisualElement>
 </ui:UXML>
