@@ -30,14 +30,15 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     public float nonEditableOrEditableVal = 1f; // 0 means non editable, 1 means editable
     [SerializeField] private TimeGame deltaTime; // time step for conflict solver in seconds
 
-    void Awake()
-    {
-        AssignData();
-    }
     void Update()
     {
         SetDeltaTime(deltaTime,true);
     }
+    void Awake()
+    {
+        AssignData();
+    }
+
     void AssignData()
     {
         mpb = new MaterialPropertyBlock();
@@ -98,6 +99,11 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
             deltaTime = _deltaTime;
             trajectory.waypointFactory.waypointList.ForEach(wp => wp.SetTime(new TimeGame(wp.originalTime.second + deltaTime.second)));
         }
+    }
+    public void AddDeltaTime(TimeGame _deltaTime, bool isImmediate = false)
+    {
+        deltaTime.SetTime(deltaTime.second + _deltaTime.second);
+        trajectory.waypointFactory.waypointList.ForEach(wp => wp.SetTime(new TimeGame(wp.originalTime.second + deltaTime.second)));
     }
     public void SetHighlightEdgeColor(Color _color, bool isImmediate = false)
     {
@@ -254,6 +260,11 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     public void OnEditableExit()
     {
         AircraftPopupUI.Instance.HidePopup();
+    }
+
+    public void SetActiveHighlightMeshRenderer(bool _isActive)
+    {
+        highlightMeshRenderer.gameObject.SetActive(_isActive);
     }
 }
 

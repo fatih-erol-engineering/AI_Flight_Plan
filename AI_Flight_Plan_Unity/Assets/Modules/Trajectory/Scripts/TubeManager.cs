@@ -198,4 +198,16 @@ public class TubeManager : MonoBehaviour
         }
         return isInside;
     }
+    public Vector3 GetStartPosition()
+    {
+        return startPosition;
+    }
+    public Vector3 GetEndPosition()
+    {
+        return endPosition;
+    }
+    public float GetRadius()
+    {
+        return radius;
+    }
 }

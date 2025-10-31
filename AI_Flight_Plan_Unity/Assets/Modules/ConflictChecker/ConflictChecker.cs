@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Security.Cryptography;
 
 public class ConflictChecker : MonoBehaviour
 {
@@ -39,7 +40,6 @@ public class ConflictChecker : MonoBehaviour
     {
         int maxIterations = 200; // güvenlik sınırı
         int iteration = 0;
-        float deltaTime = 0f; // saniye
         while (!areAllConflictsResolved() && iteration < maxIterations)
         {
             // snapshot al — listeyi değiştirirsek iterasyon etkilenmesin
@@ -50,29 +50,31 @@ public class ConflictChecker : MonoBehaviour
                 var collision = conflictsSnapshot[i];
 
                 // Position Adjustment
-                float deltaAltitude = 0.1f;
+                float dist = 0.1f;
                 var s1 = collision.segment1;
                 var s2 = collision.segment2;
+                Vector3 deltaPos = dist * CylinderIntersectNormal(s1.tubeManager.GetStartPosition(), s1.tubeManager.GetEndPosition(), s1.tubeManager.GetRadius(),
+                 s2.tubeManager.GetStartPosition(), s2.tubeManager.GetEndPosition(), s2.tubeManager.GetRadius());
 
-                float deltaAltitudeS1 = deltaAltitude * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
-                float deltaAltitudeS2 = deltaAltitude * s2.aircraft.timeOrPositionChangeVal * s2.aircraft.nonEditableOrEditableVal *(-1f);
+                Vector3 deltaPos1 = deltaPos  * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 deltaPos2 = deltaPos  * s2.aircraft.timeOrPositionChangeVal * s2.aircraft.nonEditableOrEditableVal *(-1f);
 
-                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + deltaAltitudeS1 * Vector3.up);
-                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + deltaAltitudeS1 * Vector3.up);
+                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + deltaPos1);
+                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + deltaPos1);
 
-                s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + deltaAltitudeS2 * Vector3.up);
-                s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + deltaAltitudeS2 * Vector3.up);
+                s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + deltaPos2);
+                s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + deltaPos2);
 
                 // Time Adjustment
-                deltaTime += 0.1f; // saniye
+                float deltaTime = 0.1f; // saniye
                 s1 = collision.segment1;
                 s2 = collision.segment2;
 
                 float timeAdjustmentS1 = deltaTime * (1f - s1.aircraft.timeOrPositionChangeVal) * (s1.aircraft.nonEditableOrEditableVal);
                 float timeAdjustmentS2 = deltaTime * (1f - s2.aircraft.timeOrPositionChangeVal) * (s2.aircraft.nonEditableOrEditableVal) * (-1f);
 
-                s1.aircraft.SetDeltaTime(new TimeGame(timeAdjustmentS1));
-                s2.aircraft.SetDeltaTime(new TimeGame(timeAdjustmentS2));
+                s1.aircraft.AddDeltaTime(new TimeGame(timeAdjustmentS1));
+                s2.aircraft.AddDeltaTime(new TimeGame(timeAdjustmentS2));
 
             }
 
@@ -134,7 +136,22 @@ public class ConflictChecker : MonoBehaviour
         }
         markers.Clear();
     }
+ public static Vector3 CylinderIntersectNormal(
+    Vector3 startA, Vector3 endA, float radiusA,
+    Vector3 startB, Vector3 endB, float radiusB)
+    {
+        // --- 1. Eksen yön vektörlerini ve uzunlukları hesapla
+        Vector3 uA = (endA - startA);
+        Vector3 uB = (endB - startB);
+        float lenA = uA.magnitude;
+        float lenB = uB.magnitude;
+        uA.Normalize();
+        uB.Normalize();
 
+        // --- 2. Eksenler arası en kısa mesafeyi bul
+        Vector3 n = Vector3.Cross(uA, uB);
+        return n.normalized;
+    }
 }
 
 public class CollisionInfo

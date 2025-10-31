@@ -119,11 +119,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033256b7ab47820448239597476f1496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
+  id: 0
   <time>k__BackingField:
     <second>k__BackingField: 0
   aircraftProperties: {fileID: 11400000, guid: 2a9d4d913a7f89845b4d76d03dc32750, type: 2}
   <trajectory>k__BackingField: {fileID: 4343415782122623791}
   highlightMeshRenderer: {fileID: 4657248760763926511}
+  timeOrPositionChangeVal: 1
+  nonEditableOrEditableVal: 1
+  deltaTime:
+    <second>k__BackingField: 0
 --- !u!1 &899655751800462911
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,15 +619,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -683,6 +688,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_TagString
@@ -861,15 +870,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 02d1120fdc3db0c459b2c538360bf53e, type: 3}
       propertyPath: m_LocalPosition.x

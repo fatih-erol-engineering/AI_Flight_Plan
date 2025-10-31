@@ -376,36 +376,39 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
             if (previewContainer != null) previewInstance.transform.SetParent(previewContainer, true);
         }
 
-        // Materyal uygula: önce previewMaterialOverride, yoksa theme içindeki olası alanlara bak
-        Material previewMat = previewMaterialOverride;
-        if (previewMat == null && theme != null)
-        {
-            var t = theme.GetType();
-            var prop = t.GetProperty("precreate") ?? t.GetProperty("Preview") ?? t.GetProperty("PreCreate") ?? t.GetProperty("preview");
-            if (prop != null) previewMat = prop.GetValue(theme) as Material;
-            else
-            {
-                var field = t.GetField("precreate") ?? t.GetField("Preview") ?? t.GetField("PreCreate") ?? t.GetField("preview");
-                if (field != null) previewMat = field.GetValue(theme) as Material;
-            }
-        }
+        // // Materyal uygula: önce previewMaterialOverride, yoksa theme içindeki olası alanlara bak
+        // Material previewMat = previewMaterialOverride;
+        // if (previewMat == null && theme != null)
+        // {
+        //     var t = theme.GetType();
+        //     var prop = t.GetProperty("precreate") ?? t.GetProperty("Preview") ?? t.GetProperty("PreCreate") ?? t.GetProperty("preview");
+        //     if (prop != null) previewMat = prop.GetValue(theme) as Material;
+        //     else
+        //     {
+        //         var field = t.GetField("precreate") ?? t.GetField("Preview") ?? t.GetField("PreCreate") ?? t.GetField("preview");
+        //         if (field != null) previewMat = field.GetValue(theme) as Material;
+        //     }
+        // }
 
-        if (previewMat != null)
-        {
-            // Tüm renderer tipleri için uygula (MeshRenderer, SkinnedMeshRenderer vb.)
-            var renderers = previewInstance.GetComponentsInChildren<Renderer>(true);
-            foreach (var r in renderers)
-            {
-                if (r == null) continue;
-                var shared = r.sharedMaterials;
-                int len = Mathf.Max(1, shared.Length);
-                var newMats = new Material[len];
-                for (int i = 0; i < len; i++) newMats[i] = previewMat;
-                r.materials = newMats;
-            }
-        }
+        // if (previewMat != null)
+        // {
+        //     // Tüm renderer tipleri için uygula (MeshRenderer, SkinnedMeshRenderer vb.)
+        //     var renderers = previewInstance.GetComponentsInChildren<Renderer>(true);
+        //     foreach (var r in renderers)
+        //     {
+        //         if (r == null) continue;
+        //         var shared = r.sharedMaterials;
+        //         int len = Mathf.Max(1, shared.Length);
+        //         var newMats = new Material[len];
+        //         for (int i = 0; i < len; i++) newMats[i] = previewMat;
+        //         r.materials = newMats;
+        //     }
+        // }
 
         // create vertical line under preview using LineRenderer, reuse material if available
+
+        previewInstance.GetComponentInChildren<Aircraft>().SetHighlightEdgeColor(ThemeManager.Instance.theme.Preview);
+        previewInstance.GetComponentInChildren<Aircraft>().SetActiveHighlightMeshRenderer(true);
 
     }
 

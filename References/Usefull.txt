@@ -26,4 +26,8 @@ Matris formatta nasıl yazıldığına.
 
 Cesium:
 https://tile.googleapis.com/v1/3dtiles/root.json?key=YourAPIkey
+AIzaSyDZFuE-JMmq_hvDDeYyKSS2PbHFxbAD5hA
+
+	
+
 https://www.youtube.com/watch?v=sHrXO_5-YJg
