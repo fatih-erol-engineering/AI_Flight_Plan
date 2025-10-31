@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
 
+    [SerializeField] private ConflictChecker conflictChecker;
     //     private MainGameManager mainGameManager;
     [field: SerializeField]
     public UIDocument uIDocument { get; private set; }
@@ -164,6 +165,7 @@ public class UIManager : MonoBehaviour
     }
     void solveConflictBtnClick()
     {
+        conflictChecker.SolveConflicts();
     }
 
     void createTBtnClick()

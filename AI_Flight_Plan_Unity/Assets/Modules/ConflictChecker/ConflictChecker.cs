@@ -49,22 +49,30 @@ public class ConflictChecker : MonoBehaviour
             {
                 var collision = conflictsSnapshot[i];
 
-                // float deltaAltitude = 0.1f;
-                // var s1 = collision.segment1;
-                // var s2 = collision.segment2;
-
-                // s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + new Vector3(0, deltaAltitude, 0));
-                // s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + new Vector3(0, deltaAltitude, 0));
-                // s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + new Vector3(0, -deltaAltitude, 0));
-                // s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + new Vector3(0, -deltaAltitude, 0));
-
-
-                deltaTime += 0.1f; // saniye
+                // Position Adjustment
+                float deltaAltitude = 0.1f;
                 var s1 = collision.segment1;
                 var s2 = collision.segment2;
 
-                s1.aircraft.SetDeltaTime(new TimeGame(deltaTime));
-                s2.aircraft.SetDeltaTime(new TimeGame(-deltaTime));
+                float deltaAltitudeS1 = deltaAltitude * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                float deltaAltitudeS2 = deltaAltitude * s2.aircraft.timeOrPositionChangeVal * s2.aircraft.nonEditableOrEditableVal *(-1f);
+
+                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + deltaAltitudeS1 * Vector3.up);
+                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + deltaAltitudeS1 * Vector3.up);
+
+                s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + deltaAltitudeS2 * Vector3.up);
+                s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + deltaAltitudeS2 * Vector3.up);
+
+                // Time Adjustment
+                deltaTime += 0.1f; // saniye
+                s1 = collision.segment1;
+                s2 = collision.segment2;
+
+                float timeAdjustmentS1 = deltaTime * (1f - s1.aircraft.timeOrPositionChangeVal) * (s1.aircraft.nonEditableOrEditableVal);
+                float timeAdjustmentS2 = deltaTime * (1f - s2.aircraft.timeOrPositionChangeVal) * (s2.aircraft.nonEditableOrEditableVal) * (-1f);
+
+                s1.aircraft.SetDeltaTime(new TimeGame(timeAdjustmentS1));
+                s2.aircraft.SetDeltaTime(new TimeGame(timeAdjustmentS2));
 
             }
 
