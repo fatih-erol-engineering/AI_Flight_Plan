@@ -58,16 +58,28 @@ public class TrajectoryDrawer : MonoBehaviour
             }
         }
     }
-    public void UpdateColorWithTotalTime(TimeGame totalStartTime, TimeGame totalEndTime)
+    public void UpdateColorWithTotalTime(TimeGame _totalStartTime, TimeGame _totalEndTime)
     {
 
+        // for (int i = 0; i < bSplineDrawerArray.Length; i++)
+        // {
+        //     BSplineDrawer bSplineDrawer = bSplineDrawerArray[i];
+        //     float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - startTime.second) / (endTime.second - startTime.second));
+        //     Color _startColor = Color.Lerp(startColor, endColor, startVal);
+
+        //     float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - startTime.second) / (endTime.second - startTime.second));
+        //     Color _endColor = Color.Lerp(startColor, endColor, endVal);
+        //     bSplineDrawer.SetStartColor(_startColor);
+        //     bSplineDrawer.SetEndColor(_endColor);
+        // }
+        
         for (int i = 0; i < bSplineDrawerArray.Length; i++)
         {
             BSplineDrawer bSplineDrawer = bSplineDrawerArray[i];
-            float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - startTime.second) / (endTime.second - startTime.second));
+            float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - _totalStartTime.second) / (_totalEndTime.second - _totalStartTime.second));
             Color _startColor = Color.Lerp(startColor, endColor, startVal);
 
-            float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - startTime.second) / (endTime.second - startTime.second));
+            float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - _totalStartTime.second) / (_totalEndTime.second - _totalStartTime.second));
             Color _endColor = Color.Lerp(startColor, endColor, endVal);
             bSplineDrawer.SetStartColor(_startColor);
             bSplineDrawer.SetEndColor(_endColor);
@@ -178,6 +190,7 @@ public class TrajectoryDrawer : MonoBehaviour
         }
 
         isReadyToUpdate = true;
+        GameEvents.Instance.TrajectoryCreated(this);
         Tick();
     }
 

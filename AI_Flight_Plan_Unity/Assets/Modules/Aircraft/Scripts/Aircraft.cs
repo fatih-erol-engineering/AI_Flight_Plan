@@ -28,10 +28,15 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     public float timeOrPositionChangeVal = 1f; // 0 means time can be changed 1 means position can be changed
     [Range(0f, 1f)]
     public float nonEditableOrEditableVal = 1f; // 0 means non editable, 1 means editable
+    [SerializeField] private TimeGame deltaTime; // time step for conflict solver in seconds
 
     void Awake()
     {
         AssignData();
+    }
+    void Update()
+    {
+        SetDeltaTime(deltaTime,true);
     }
     void AssignData()
     {
@@ -39,6 +44,7 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         highlightMeshRenderer.GetPropertyBlock(mpb);
         SetHighlightEdgeWidth(1f, true);
         highlightMeshRenderer.gameObject.SetActive(false);
+        deltaTime = new TimeGame(0f);
 
         GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
         GameEvents.Instance.OnEditableExit -= OnEditableExit;
@@ -83,6 +89,14 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         if (time != _time || isImmediate)
         {
             time = _time;
+        }
+    }
+    public void SetDeltaTime(TimeGame _deltaTime, bool isImmediate = false)
+    {
+        if (deltaTime != _deltaTime || isImmediate)
+        {
+            deltaTime = _deltaTime;
+            trajectory.waypointFactory.waypointList.ForEach(wp => wp.SetTime(new TimeGame(wp.originalTime.second + deltaTime.second)));
         }
     }
     public void SetHighlightEdgeColor(Color _color, bool isImmediate = false)

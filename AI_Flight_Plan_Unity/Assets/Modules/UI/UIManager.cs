@@ -334,7 +334,7 @@ public class AircraftConflictManager
 
         foldout = root.Q<Foldout>("aircraftConflictFoldout");
         CheckAssignment(foldout, "foldout");
-        foldout.text = _aircraft.aircraftProperties.model.ToString();        
+        foldout.text = _aircraft.aircraftProperties.model.ToString() + " - " +  _aircraft.id.ToString();        
 
         nonEditableOrEditableVal = root.Q<Slider>("nonEditableOrEditableVal");
         CheckAssignment(nonEditableOrEditableVal, "nonEditableOrEditableVal");

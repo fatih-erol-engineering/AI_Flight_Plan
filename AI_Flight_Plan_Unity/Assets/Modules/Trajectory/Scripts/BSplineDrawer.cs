@@ -45,26 +45,42 @@ public class BSplineDrawer : MonoBehaviour
             tubeManagers[i].SetIsCollided(_isCollided);
         }
     }
+    void AssignData()
+    {
+        GameEvents.Instance.OnWaypointPositionChanged -= OnWaypointPositionChanged;
+        GameEvents.Instance.OnWaypointTimeChanged -= OnWaypointTimeChanged;
+        GameEvents.Instance.OnControlPointPositionChanged -= OnControlPointPositionChanged;
+
+        GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
+        GameEvents.Instance.OnWaypointTimeChanged += OnWaypointTimeChanged;
+        GameEvents.Instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
+        
+        SetLinePointNumber(linePointNumber, true);
+        SetTubeRadius(tubeRadius, true);
+    }
     
     public void Awake()
     {
-        GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
-        GameEvents.Instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
+        AssignData();
     }
     public void OnValidate()
     {
-        GameEvents.Instance.OnWaypointPositionChanged += OnWaypointPositionChanged;
-        GameEvents.Instance.OnControlPointPositionChanged += OnControlPointPositionChanged;
-
-        SetLinePointNumber(linePointNumber, true);
-        SetTubeRadius(tubeRadius, true);
+        AssignData();
     }
     public void OnDestroy()
     {
         GameEvents.Instance.OnWaypointPositionChanged -= OnWaypointPositionChanged;
+        GameEvents.Instance.OnWaypointTimeChanged -= OnWaypointTimeChanged;
         GameEvents.Instance.OnControlPointPositionChanged -= OnControlPointPositionChanged;
     }
     public void OnWaypointPositionChanged(Waypoint wp, Vector3 oldPosition)
+    {
+        if (wp == waypointStart || wp == waypointEnd)
+        {
+            Tick();
+        }
+    }
+    public void OnWaypointTimeChanged(Waypoint wp, TimeGame oldTime)
     {
         if (wp == waypointStart || wp == waypointEnd)
         {

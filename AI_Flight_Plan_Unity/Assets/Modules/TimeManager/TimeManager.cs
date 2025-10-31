@@ -30,15 +30,23 @@ public class TimeManager : MonoBehaviour
 
     void Awake()
     {
-        // Ensure a single instance
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-        Instance = this;
+        AssignData();
     }
+
     void OnValidate()
+    {
+        AssignData();           
+    }
+    void AssignData()
     {
         // Ensure a single instance
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+
+        GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
+        GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
+        GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
+        GameEvents.Instance.OnSplineChanged += OnSplineChanged;
     }
     void Update()
     {
@@ -56,17 +64,15 @@ public class TimeManager : MonoBehaviour
             timeSliderUI.SetTimeSliderValue(currentTime_s);
             timeIsChanging = true;
         }
+    }
 
-        if (createModeManager.trajectoryCreatedFlag != prev_trajectoryCreatedFlag)
-        {
-            if (createModeManager.trajectoryCreatedFlag)
-            {
-                UpdateTimeWithTrajectoryTimes();
-            }
-        }
-
-
-        prev_trajectoryCreatedFlag = createModeManager.trajectoryCreatedFlag;
+    public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
+    {
+        UpdateTimeWithTrajectoryTimes();
+    }
+        public void OnSplineChanged(BSplineDrawer _)
+    {
+        UpdateTimeWithTrajectoryTimes();
     }
 
     void UpdateTimeWithTrajectoryTimes()
@@ -86,6 +92,12 @@ public class TimeManager : MonoBehaviour
         }
         startTime_s = minTime;
         endTime_s = maxTime;
+
+        foreach (Aircraft aircraft in aircraftFactory.AircraftList)
+        {
+             aircraft.trajectory.UpdateColorWithTotalTime(new TimeGame(startTime_s), new TimeGame(endTime_s));           
+        }
+        
         timeSliderUI.SetTimeSliderMinValue(startTime_s);
         timeSliderUI.SetTimeSliderMaxValue(endTime_s);
         isUpdated = true;

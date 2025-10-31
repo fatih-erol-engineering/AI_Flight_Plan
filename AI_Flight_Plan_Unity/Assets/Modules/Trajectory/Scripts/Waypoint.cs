@@ -6,6 +6,7 @@ using UnityEditor;
 public class Waypoint : MonoBehaviour, ISelectable, IEditable
 {
     [field: SerializeField] public TimeGame time { get; private set; }
+    [field: SerializeField] public TimeGame originalTime { get; private set; }
     private Vector3 prev_position = Vector3.zero;
 
     [Header("Selection Appearance")]
@@ -18,7 +19,7 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
     private Color originalColor;
     private Color originalEmissionColor;
     static readonly int BaseColorID = Shader.PropertyToID("_BaseColor"); // URP Lit
-    static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor"); // URP Lit
+    static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor"); // URP Lit    
     void OnValidate()
     {
         AssignData();
@@ -77,6 +78,11 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
         TimeGame oldTime = time;
         GameEvents.Instance.WaypointTimeChanged(this, oldTime);
         time.SetTime(_time.second);
+    }
+    public void SetOriginalTime(TimeGame _time)
+    {
+        originalTime = _time;
+        SetTime(_time);
     }
 
     public void OnHoverEnter()

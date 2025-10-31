@@ -14,8 +14,8 @@ public class WaypointFactory : MonoBehaviour
     {
         var go = Instantiate(_waypointPrefab, globalPosition, globalRotation, transform);
         var ctrl = go.GetComponent<Waypoint>();
-        go.GetComponent<WaypointShow>()?.AssignData();
-        ctrl.SetTime(time);
+        go.GetComponent<WaypointShow>()?.AssignData();        
+        ctrl.SetOriginalTime(time);
         CheckAssignment(ctrl);
         waypointList.Add(ctrl);
         GameEvents.Instance.WaypointSpawned(ctrl);

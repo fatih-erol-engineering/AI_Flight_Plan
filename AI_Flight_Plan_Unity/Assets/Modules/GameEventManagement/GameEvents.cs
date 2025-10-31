@@ -72,6 +72,14 @@ public class GameEvents : MonoBehaviour
         OnControlPointPositionChanged?.Invoke(controlPoint, oldPosition);
     }
 
+
+    // Trajectory Events
+    public event Action<TrajectoryDrawer> OnTrajectoryCreated;
+    public void TrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
+    {
+        OnTrajectoryCreated?.Invoke(trajectoryDrawer);
+    }
+    
     // Aircraft Events
     public event Action<Aircraft> OnAircraftSpawned;
     public void AircraftSpawned(Aircraft aircraft)
