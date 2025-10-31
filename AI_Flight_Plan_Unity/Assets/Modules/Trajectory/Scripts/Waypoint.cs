@@ -70,14 +70,14 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
     {
         if (transform.position == _position) return;
         Vector3 oldPosition = transform.position;
-        GameEvents.Instance.WaypointPositionChanged(this, oldPosition);
         transform.position = _position;
+        GameEvents.Instance.WaypointPositionChanged(this, oldPosition);
     }
     public void SetTime(TimeGame _time)
     {
         TimeGame oldTime = time;
-        GameEvents.Instance.WaypointTimeChanged(this, oldTime);
         time.SetTime(_time.second);
+        GameEvents.Instance.WaypointTimeChanged(this, oldTime);
     }
     public void SetOriginalTime(TimeGame _time)
     {

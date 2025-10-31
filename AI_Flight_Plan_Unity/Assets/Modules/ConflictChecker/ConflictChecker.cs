@@ -39,7 +39,7 @@ public class ConflictChecker : MonoBehaviour
     {
         int maxIterations = 200; // güvenlik sınırı
         int iteration = 0;
-
+        float deltaTime = 0f; // saniye
         while (!areAllConflictsResolved() && iteration < maxIterations)
         {
             // snapshot al — listeyi değiştirirsek iterasyon etkilenmesin
@@ -49,14 +49,23 @@ public class ConflictChecker : MonoBehaviour
             {
                 var collision = conflictsSnapshot[i];
 
-                float deltaAltitude = 0.1f;
+                // float deltaAltitude = 0.1f;
+                // var s1 = collision.segment1;
+                // var s2 = collision.segment2;
+
+                // s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + new Vector3(0, deltaAltitude, 0));
+                // s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + new Vector3(0, deltaAltitude, 0));
+                // s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + new Vector3(0, -deltaAltitude, 0));
+                // s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + new Vector3(0, -deltaAltitude, 0));
+
+
+                deltaTime += 0.1f; // saniye
                 var s1 = collision.segment1;
                 var s2 = collision.segment2;
 
-                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + new Vector3(0, deltaAltitude, 0));
-                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + new Vector3(0, deltaAltitude, 0));
-                s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + new Vector3(0, -deltaAltitude, 0));
-                s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + new Vector3(0, -deltaAltitude, 0));
+                s1.aircraft.SetDeltaTime(new TimeGame(deltaTime));
+                s2.aircraft.SetDeltaTime(new TimeGame(-deltaTime));
+
             }
 
             CheckConflicts(); // güncelle
