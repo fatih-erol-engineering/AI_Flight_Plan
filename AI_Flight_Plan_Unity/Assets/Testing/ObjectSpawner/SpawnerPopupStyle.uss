@@ -1,0 +1,120 @@
+:root {
+    --panelBackground: rgba(0, 0, 0, 0.5);
+    --textColor: rgb(255, 255, 255);
+    --themeColor1: rgb(132, 0, 0);
+    --themeColor2: rgb(0, 0, 0);
+    --themeColor1Active: rgb(158, 0, 0);
+}
+
+#popUpRoot {
+    flex-grow: 0;
+    align-items: auto;
+    align-content: flex-start;
+    align-self: flex-start;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    justify-content: flex-start;
+    padding-top: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    background-color: var(--panelBackground);
+}
+
+.customFloatField {
+}
+
+.customFloatField > .unity-base-field__label--with-dragger {
+    -unity-text-outline-color: rgb(255, 255, 255);
+    -unity-text-align: upper-right;
+    align-self: center;
+    align-items: center;
+    align-content: auto;
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+    color: var(--textColor);
+}
+
+.customFloatField > #unity-text-input {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.5);
+    border-right-color: rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+}
+
+.customFloatField > #unity-text-input > .unity-text-element--inner-input-field-component {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    color: var(--textColor);
+}
+
+.customButton {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: var(--themeColor1);
+    color: var(--textColor);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+.customButton:hover {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: var(--themeColor1);
+    color: var(--textColor);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    scale: 1.02 1.02 1.02;
+}
+
+.customButton:active {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: var(--themeColor1Active);
+    color: var(--textColor);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    scale: 1 1;
+}
+
+.shown {
+    transition-property: opacity, display;
+    transition-duration: 0.5s, 0s;
+    display: flex;
+    opacity: 1;
+    transition-delay: 0s, 0.5s;
+}
+
+.hidden {
+    opacity: 0;
+    display: none;
+    transition-property: opacity, display;
+    transition-duration: 0.5s, 0s;
+    transition-delay: 0s, 0.5s;
+}

@@ -79,7 +79,7 @@ public class GameEvents : MonoBehaviour
     {
         OnTrajectoryCreated?.Invoke(trajectoryDrawer);
     }
-    
+
     // Aircraft Events
     public event Action<Aircraft> OnAircraftSpawned;
     public void AircraftSpawned(Aircraft aircraft)
@@ -114,6 +114,13 @@ public class GameEvents : MonoBehaviour
     public void EditableExit()
     {
         OnEditableExit?.Invoke();
+    }
+
+    // Camera Events
+    public event Action<Camera> OnCameraStateChanged;
+    public void CameraStateChanged(Camera camera)
+    {
+        OnCameraStateChanged?.Invoke(camera);
     }
 
 }
