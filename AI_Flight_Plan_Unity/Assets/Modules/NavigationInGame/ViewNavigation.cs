@@ -90,15 +90,15 @@ public class ViewNavigation : MonoBehaviour
         ApplyTransform(manualInput);
 
         // Optional: auto-focus when your selection changes
-        if (SelectionSystem.Instance.selectedObject != null)
-        {
-            if (focusOnSelection && SelectionSystem.Instance.selectedObject != _prevSelected)
-            {
-                _prevSelected = SelectionSystem.Instance.selectedObject;
-                if (SelectionSystem.Instance.selectedObject != null)
-                    Focus(SelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
-            }
-        }
+        // if (SelectionSystem.Instance.selectedObject != null)
+        // {
+        //     if (focusOnSelection && SelectionSystem.Instance.selectedObject != _prevSelected)
+        //     {
+        //         _prevSelected = SelectionSystem.Instance.selectedObject;
+        //         if (SelectionSystem.Instance.selectedObject != null)
+        //             Focus(SelectionSystem.Instance.selectedObject.transform, includeChildren: true, keepOrientation: true, instant: instantOnSelection);
+        //     }
+        // }
     }
 
     /// <summary>

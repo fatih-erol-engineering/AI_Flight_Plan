@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Testing/ObjectSpawner/SpawnerPopupStyle.uss?fileID=7433441132597879392&amp;guid=e822e106da3a09f47bd1e5a90764e48a&amp;type=3#SpawnerPopupStyle" />
+    <ui:VisualElement name="popUpRoot" class="shown hidden">
+        <ui:FloatField label="North [m]" value="0" name="northField" class="customFloatField" />
+        <ui:FloatField label="East [m]" value="0" name="eastField" class="customFloatField" />
+        <ui:FloatField label="Altitude [m]" value="0" name="altitudeField" class="customFloatField" />
+    </ui:VisualElement>
+</ui:UXML>

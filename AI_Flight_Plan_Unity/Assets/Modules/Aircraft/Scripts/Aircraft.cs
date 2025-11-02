@@ -32,7 +32,7 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
 
     void Update()
     {
-        SetDeltaTime(deltaTime,true);
+        SetDeltaTime(deltaTime, true);
     }
     void Awake()
     {
@@ -61,7 +61,7 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     public void OnHoverEnter()
     {
         if (isSelected) return;
-        highlightMeshRenderer.gameObject.SetActive(true);
+        SetHighlightMeshRendererEnabled(true);
         SetHighlightEdgeColor(ThemeManager.Instance.theme.Hover);
         // SetHighlightEdgeWidth(1f);
     }
@@ -69,20 +69,24 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     {
         if (isSelected) return;
         // SetHighlightEdgeWidth(0f);
-        highlightMeshRenderer.gameObject.SetActive(false);
+        SetHighlightMeshRendererEnabled(false);
     }
     public void OnSelect()
     {
         SetHighlightEdgeColor(ThemeManager.Instance.theme.Select);
-        highlightMeshRenderer.gameObject.SetActive(true);
+        SetHighlightMeshRendererEnabled(true);
         // SetHighlightEdgeWidth(1f);
         SetIsSelected(true);
     }
     public void OnDeselect()
     {
         // SetHighlightEdgeWidth(0f);
-        highlightMeshRenderer.gameObject.SetActive(false);
+        SetHighlightMeshRendererEnabled(false);
         SetIsSelected(false);
+    }
+    public void SetHighlightMeshRendererEnabled(bool _isEnabled)
+    {
+        highlightMeshRenderer.gameObject.SetActive(_isEnabled);
     }
 
     public void SetTime(TimeGame _time, bool isImmediate = false)

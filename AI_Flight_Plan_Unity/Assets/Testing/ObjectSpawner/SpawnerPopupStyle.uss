@@ -21,6 +21,7 @@
     padding-bottom: 2px;
     padding-left: 2px;
     background-color: var(--panelBackground);
+    flex-shrink: 0;
 }
 
 .customFloatField {
@@ -52,6 +53,8 @@
     border-right-color: rgba(255, 255, 255, 0.5);
     border-top-color: rgba(255, 255, 255, 0.5);
     border-bottom-color: rgba(255, 255, 255, 0.5);
+    width: 70px;
+    -unity-text-align: upper-right;
 }
 
 .customFloatField > #unity-text-input > .unity-text-element--inner-input-field-component {
