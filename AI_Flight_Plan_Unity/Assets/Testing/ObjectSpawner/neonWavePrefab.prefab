@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1568820840061229226}
+  - component: {fileID: 7803430997202018497}
   - component: {fileID: 4191287439224069750}
   m_Layer: 0
-  m_Name: neonCircles
+  m_Name: neonWavePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,12 +27,26 @@ Transform:
   m_GameObject: {fileID: 1308888168897654660}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.93218124, y: 0, z: 2.5381138}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &7803430997202018497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308888168897654660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50c8c47a4b98e0940bb8238417b527e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NeonWave
+  neonWaveMaterial: {fileID: 2100000, guid: e4109046f0faa69408901ef0616c6523, type: 2}
+  spriteRenderer: {fileID: 4191287439224069750}
 --- !u!212 &4191287439224069750
 SpriteRenderer:
   m_ObjectHideFlags: 0

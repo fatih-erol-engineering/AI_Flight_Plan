@@ -9,7 +9,7 @@ public class SpawnerPositionWindowUI : MonoBehaviour
 
     private FloatField northField, eastField, altitudeField;
 
-    private void Start()
+    private void Awake()
     {
         AssignData();
     }
@@ -53,7 +53,7 @@ public class SpawnerPositionWindowUI : MonoBehaviour
         popUpRoot.AddToClassList("hidden");
     }
 
-    public void SetPositionFields(Transform _transform)
+    public void SetPositionToUI(Transform _transform)
     {
         if (new Vector3(northField.value, altitudeField.value, eastField.value) != _transform.position)
         {
@@ -118,7 +118,7 @@ public class SpawnerPositionWindowUI : MonoBehaviour
 
     }
 
-    public Vector3 GetPositionFields()
+    public Vector3 GetPositionFromUI()
     {
         Vector3 _position = new Vector3();
         _position.x = northField.value;

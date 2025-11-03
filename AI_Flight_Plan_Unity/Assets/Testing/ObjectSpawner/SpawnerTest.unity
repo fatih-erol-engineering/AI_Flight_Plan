@@ -323,18 +323,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5acef7c5f1852240b943ab79b7c62dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AircraftSpawner
-  objectToSpawn: {fileID: 0}
-  selectionKey: 13
-  lineRenderer: {fileID: 0}
-  neonCirclePrefab: {fileID: 0}
+  spawnedObjectPrefab: {fileID: 0}
+  neonWavePrefab: {fileID: 0}
+  idleStatePrefab: {fileID: 0}
+  positionSelectionStatePrefab: {fileID: 0}
+  propertySelectionStatePrefab: {fileID: 0}
   spawnedObject: {fileID: 0}
-  previewMat: {fileID: 0}
-  originalMat: {fileID: 0}
-  positionSelectionUIDocument: {fileID: 0}
-  propertySelectionUIDocument: {fileID: 0}
+  neonWave: {fileID: 0}
+  idleState: {fileID: 0}
+  positionSelectionState: {fileID: 0}
+  propertySelectionState: {fileID: 0}
+  spawnerPositionWindowUI: {fileID: 0}
+  spawnerPropertyPopupUI: {fileID: 0}
   idleSpawnerState: {fileID: 0}
   positionSelectionSpawnerState: {fileID: 0}
   propertySelectionSpawnerState: {fileID: 0}
+  selectionKey: 13
+  lineRenderer: {fileID: 0}
+  originalMat: {fileID: 0}
+  previewMat: {fileID: 0}
   aircraftPrefabList: []
   selectedAircraftToSpawn: {fileID: 0}
   spawnedAircraft: {fileID: 0}
@@ -495,18 +502,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f35d8f149e463944fbc5576d3610ed11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
-  objectToSpawn: {fileID: 1321358994586774896, guid: 9ae0e4b7cad174249ac5205cdc0d8590, type: 3}
+  spawnedObjectPrefab: {fileID: 1321358994586774896, guid: 9ae0e4b7cad174249ac5205cdc0d8590, type: 3}
+  neonWavePrefab: {fileID: 1308888168897654660, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+  idleStatePrefab: {fileID: 797185008109754598, guid: d7d022f9c1b6ba54a9132d121fb597b2, type: 3}
+  positionSelectionStatePrefab: {fileID: 5589230018280812217, guid: daa45b32159e36443b69efe1892a0a47, type: 3}
+  propertySelectionStatePrefab: {fileID: 3034546590968795379, guid: ed65ac36a5660b64696e2c9938ea852f, type: 3}
+  spawnedObject: {fileID: 0}
+  neonWave: {fileID: 0}
+  idleState: {fileID: 0}
+  positionSelectionState: {fileID: 0}
+  propertySelectionState: {fileID: 0}
+  spawnerPositionWindowUI: {fileID: 0}
+  spawnerPropertyPopupUI: {fileID: 0}
+  idleSpawnerState: {fileID: 0}
+  positionSelectionSpawnerState: {fileID: 0}
+  propertySelectionSpawnerState: {fileID: 0}
   selectionKey: 13
   lineRenderer: {fileID: 1306793828}
-  neonCirclePrefab: {fileID: 1308888168897654660, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
-  spawnedObject: {fileID: 0}
+  originalMat: {fileID: 2100000, guid: 5be257c2dd12acc41b2e5084612565dc, type: 2}
   previewMat: {fileID: 2100000, guid: c69e9aee497337f44be0b7db3129f0d0, type: 2}
-  originalMat: {fileID: 0}
-  positionSelectionUIDocument: {fileID: 0}
-  propertySelectionUIDocument: {fileID: 0}
-  idleSpawnerState: {fileID: 1314816179}
-  positionSelectionSpawnerState: {fileID: 1314816178}
-  propertySelectionSpawnerState: {fileID: 1314816175}
 --- !u!4 &1306793830
 Transform:
   m_ObjectHideFlags: 0
@@ -519,113 +533,9 @@ Transform:
   m_LocalPosition: {x: 1.02379, y: 9.698, z: -6.4698}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1314816177}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1314816174
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1314816177}
-  - component: {fileID: 1314816175}
-  - component: {fileID: 1314816178}
-  - component: {fileID: 1314816179}
-  - component: {fileID: 1314816176}
-  m_Layer: 0
-  m_Name: SpawnerStates
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1314816175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314816174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7591fbb0cd92f949a2a93510863602b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PropertySelectionSpanerState
-  cam: {fileID: 222617147}
-  uiDocument: {fileID: 1314816176}
-  selectionKeys: 430100000d000000
-  cancelKeys: 1b000000
---- !u!114 &1314816176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314816174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: 1b2f6b427cb9d3b48a594dcaf032f340, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 628b33f6b90041b4c98b9518b08a365e, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
---- !u!4 &1314816177
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314816174}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.95776, y: -9.698, z: 9.85569}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1306793830}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1314816178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314816174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14d29f9c88f85f2479e5a0730fe8423f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PositionSelectionSpawnerState
-  selectionKeys: 430100000d000000
-  cancelKeys: 1b000000
-  hitMask:
-    serializedVersion: 2
-    m_Bits: 64
---- !u!114 &1314816179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314816174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 617c55b731063204e9b797e1d46ed821, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IdleSpawnerState
 --- !u!1 &1336075491
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,6 +585,7 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 64
+  mainCamera: {fileID: 0}
 --- !u!114 &1336075494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -688,7 +599,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PropertySelectionSpanerState
   cam: {fileID: 222617147}
-  uiDocument: {fileID: 1336075497}
   selectionKeys: 430100000d000000
   cancelKeys: 1b000000
 --- !u!4 &1336075496

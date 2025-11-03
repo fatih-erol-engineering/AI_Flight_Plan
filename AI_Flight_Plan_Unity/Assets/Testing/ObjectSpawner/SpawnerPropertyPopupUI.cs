@@ -8,7 +8,7 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
     private VisualElement root, popUpRoot;
 
     private FloatField northField, eastField, altitudeField;
-    private Button createBtn;
+    public Button createBtn;
 
     private void Start()
     {
@@ -51,13 +51,18 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
     public void ShowPopup()
     {
         popUpRoot.RemoveFromClassList("hidden");
+        focusField();
+    }
+    public void focusField()
+    {
+        altitudeField.Focus();
     }
     public void HidePopup()
     {
         popUpRoot.AddToClassList("hidden");
     }
 
-    public void SetPositionFields(Transform _transform)
+    public void SetPositionToUI(Transform _transform)
     {
         if (new Vector3(northField.value, altitudeField.value, eastField.value) != _transform.position)
         {
@@ -122,7 +127,7 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
 
     }
 
-    public Vector3 GetPositionFields()
+    public Vector3 GetPositionFromUI()
     {
         Vector3 _position = new Vector3();
         _position.x = northField.value;

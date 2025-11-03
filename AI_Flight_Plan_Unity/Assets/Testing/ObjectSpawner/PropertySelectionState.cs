@@ -4,7 +4,7 @@ public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
 {
 
     [SerializeField] private Camera cam;
-    [SerializeField] private KeyCode[] selectionKeys = new KeyCode[] { KeyCode.Mouse0, KeyCode.Return };
+    [SerializeField] private KeyCode[] selectionKeys = new KeyCode[] {KeyCode.Return , KeyCode.KeypadEnter};
     [SerializeField] private KeyCode[] cancelKeys = new KeyCode[] { KeyCode.Escape };
 
     void AssignData()
@@ -17,35 +17,44 @@ public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
     {
         AssignData();
         spawner.spawnerPropertyPopupUI.ShowPopup();
-        spawner.spawnerPropertyPopupUI.ShowPopup();
-        spawner.spawnerPropertyPopupUI.ShowPopupOnTransform(spawner.spawnedObject.transform);
+
+        spawner.spawnerPropertyPopupUI.SetPositionToUI(spawner.spawnedObject.transform);
+        spawner.spawnerPropertyPopupUI.createBtn.clicked -= () =>
+        {
+            OnExit(spawner, true);                        
+        };
+        spawner.spawnerPropertyPopupUI.createBtn.clicked += () =>
+        {
+            OnExit(spawner, true);
+        };                
     }
 
-    public void OnExit(Spawner spawner, bool isCancelled)
+    public void OnExit(Spawner spawner, bool isApplied)
     {
-        if (isCancelled)
+        if (!isApplied)
         {
-            spawner.CancelSpawning();
+            spawner.Cancel();            
         }
         else
-        {
-            spawner.SetObjectPreview(false);
+        {            
+            spawner.Apply();            
         }
-
+            spawner.spawnerPositionWindowUI.HidePopup();
+            spawner.SetCurrentState(spawner.idleState);
     }
 
     public void Tick(Spawner spawner)
     {
-        spawner.spawnerPropertyPopupUI.ShowPopupOnTransform(spawner.spawnedObject.transform);
-        spawner.SetObjectPosition(spawner.spawnerPropertyPopupUI.GetPositionFields());
+        spawner.spawnerPropertyPopupUI.ShowPopupOnTransform(spawner.spawnedObject.transform);                
+        spawner.SetObjectPositionWithAnim(spawner.spawnerPropertyPopupUI.GetPositionFromUI(), 0.2f);
+        
 
         foreach (var key in selectionKeys)
         {
             if (Input.GetKeyDown(key))
             {
-                Debug.Log("Apllied Spawning");
-                OnExit(spawner, false);
-                spawner.SetCurrentState(spawner.idleSpawnerState);
+                OnExit(spawner, true);
+                Debug.Log("Applied Spawning");
             }
         }
 
@@ -53,9 +62,8 @@ public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
         {
             if (Input.GetKeyDown(key))
             {
-                OnExit(spawner, true);
+                OnExit(spawner, false);
                 Debug.Log("Cancelled Spawning");
-                spawner.SetCurrentState(spawner.idleSpawnerState);
             }
         }
     }

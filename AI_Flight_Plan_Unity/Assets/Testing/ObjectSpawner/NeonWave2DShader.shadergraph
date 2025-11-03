@@ -578,7 +578,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "055ebffcca944206b7587cbdf9073c6c",
     "m_Id": 0,
-    "m_DisplayName": "rate",
+    "m_DisplayName": "neonWaveRate",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1145,10 +1145,10 @@
     "m_Guid": {
         "m_GuidSerialized": "8976a788-82d9-4876-919c-ef216b4c36ec"
     },
-    "m_Name": "rate",
+    "m_Name": "neonWaveRate",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "rate",
-    "m_DefaultReferenceName": "_rate",
+    "m_RefNameGeneratedByDisplayName": "neonWaveRate",
+    "m_DefaultReferenceName": "_neonWaveRate",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -1392,7 +1392,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "568399266ff144478dfe0451ac4c3503",
     "m_Id": 0,
-    "m_DisplayName": "neonSize",
+    "m_DisplayName": "neonWaveDensity",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -2105,8 +2105,8 @@
     "m_ObjectId": "7ea48936038947268946160ff3619a04",
     "m_Title": "Outside Mask",
     "m_Position": {
-        "x": -993.5999145507813,
-        "y": 1066.39990234375
+        "x": -993.0001831054688,
+        "y": 1068.0001220703125
     }
 }
 
@@ -3275,10 +3275,10 @@
     "m_Guid": {
         "m_GuidSerialized": "7b6836ce-a3bd-403b-b15b-8cc8f64575b7"
     },
-    "m_Name": "neonSize",
+    "m_Name": "neonWaveDensity",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "neonSize",
-    "m_DefaultReferenceName": "_neonSize",
+    "m_RefNameGeneratedByDisplayName": "neonWaveDensity",
+    "m_DefaultReferenceName": "_neonWaveDensity",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,

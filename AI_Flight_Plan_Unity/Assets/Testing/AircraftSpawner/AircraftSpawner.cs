@@ -22,7 +22,7 @@ public class AircraftSpawner : Spawner
 
     public new void CancelSpawning()
     {
-        base.CancelSpawning();
+        base.Cancel();
         Clear();
     }
     public void Clear()
@@ -34,7 +34,7 @@ public class AircraftSpawner : Spawner
         spawnedAircraftList.Clear();
     }
 
-    public override void SetObjectPreview(bool isPreview)
+    public override void SetActivePreviewMode(bool isPreview)
     {
         if (isPreview)
         {
@@ -51,7 +51,7 @@ public class AircraftSpawner : Spawner
     public void SelectAircraftToSpawn(GameObject aircraftPrefab)
     {
         selectedAircraftToSpawn = aircraftPrefab;
-        objectToSpawn = selectedAircraftToSpawn;
+        // spawned = selectedAircraftToSpawn;
     }
 
 }
