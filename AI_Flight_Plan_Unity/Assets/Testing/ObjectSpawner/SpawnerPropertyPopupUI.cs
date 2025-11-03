@@ -40,6 +40,8 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
         eastField.formatString = "0.00";
         altitudeField.formatString = "0.00";
 
+     
+
         cam = Camera.main;
     }
     void CheckAssignment<T>(T obj, string name = "")
@@ -128,11 +130,11 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
     }
 
     public Vector3 GetPositionFromUI()
-    {
-        Vector3 _position = new Vector3();
+    {                
+        Vector3 _position = Vector3.zero;
         _position.x = northField.value;
         _position.z = eastField.value;
-        _position.y = altitudeField.value;
+        _position.y = altitudeField.value;        
         return _position;
     }
 

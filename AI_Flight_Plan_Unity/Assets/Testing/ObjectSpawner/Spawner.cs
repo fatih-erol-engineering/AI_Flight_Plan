@@ -16,13 +16,13 @@ public class Spawner : MonoBehaviour
     #endregion
 
     #region Prefab Instances
-    [HideInInspector] public GameObject spawnedObject;
-    [HideInInspector] public NeonWave neonWave;
-    [HideInInspector] public IdleSpawnerState idleState;
-    [HideInInspector] public PositionSelectionSpawnerState positionSelectionState;
-    [HideInInspector] public PropertySelectionSpawnerState propertySelectionState;
-    [HideInInspector] public SpawnerPositionWindowUI spawnerPositionWindowUI;
-    [HideInInspector] public SpawnerPropertyPopupUI spawnerPropertyPopupUI;
+    [SerializeField] public GameObject spawnedObject;
+    [SerializeField] public NeonWave neonWave;
+    [SerializeField] public IdleSpawnerState idleState;
+    [SerializeField] public PositionSelectionSpawnerState positionSelectionState;
+    [SerializeField] public PropertySelectionSpawnerState propertySelectionState;
+    [SerializeField] public SpawnerPositionWindowUI spawnerPositionWindowUI;   
+    [SerializeField] public SpawnerPropertyPopupUI spawnerPropertyPopupUI;
     #endregion
 
     #region State Instances
@@ -57,8 +57,9 @@ public class Spawner : MonoBehaviour
 
     void Initialize()
     {
-        spawnedObject = Instantiate(spawnedObjectPrefab, transform);        
-
+        spawnedObject = Instantiate(spawnedObjectPrefab, transform);
+        spawnedObject.SetActive(false);
+        
         neonWave = Instantiate(neonWavePrefab, transform).GetComponent<NeonWave>();
 
         idleState = Instantiate(idleStatePrefab, transform).GetComponent<IdleSpawnerState>();
@@ -79,8 +80,11 @@ public class Spawner : MonoBehaviour
         lineRenderer.enabled = true;
         lineRenderer.positionCount = 2;
 
-        currentState = positionSelectionState;
-        currentState.OnEnter(this);
+        SetCurrentState(idleState);
+        // SetCurrentState(positionSelectionState);
+        spawnerPositionWindowUI.HidePopup();
+        spawnerPropertyPopupUI.HidePopup();
+
     }
 
     public void Update() // Will be controller from GameManeger in future So it will Call Tick method
@@ -88,7 +92,7 @@ public class Spawner : MonoBehaviour
         currentState.Tick(this);
         if (Input.GetKeyDown(selectionKey))
         {
-            SetCurrentState(positionSelectionState);
+            TriggerSpawning();
         }
     }
     public void SetCurrentState(ISpawnerState newState)
@@ -102,21 +106,34 @@ public class Spawner : MonoBehaviour
         Clear();
     }
     public void Clear()
-    {        
+    {
         spawnedObject.SetActive(false);
-
-        idleState.gameObject.SetActive(false);
-        positionSelectionState.gameObject.SetActive(false);
-        propertySelectionState.gameObject.SetActive(false);
 
         neonWave.gameObject.SetActive(false);
         lineRenderer.enabled = false;
     }
+    
+    public void TriggerSpawning()
+    {
+        if (spawnedObject == null)
+        {
+            spawnedObject = Instantiate(spawnedObjectPrefab, transform);
+        }        
+        spawnedObject.SetActive(true);
+
+        neonWave.gameObject.SetActive(true);
+        lineRenderer.enabled = true;
+
+        SetCurrentState(positionSelectionState);
+    }
     public void Apply()
     {
-        Clear();
+        // Clear();
         spawnedObject.SetActive(true);
+        Instantiate(spawnedObjectPrefab, spawnedObject.transform.position, spawnedObject.transform.rotation, transform);
+        spawnedObject.SetActive(false);
         SetActivePreviewMode(false);
+        SetCurrentState(idleState);
     }
 
     public virtual void SetActivePreviewMode(bool _isActive)
@@ -139,6 +156,21 @@ public class Spawner : MonoBehaviour
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public virtual void SetObjectPosition(Vector3 _position)
     {
         if (spawnedObject.transform.position != _position)
@@ -149,32 +181,10 @@ public class Spawner : MonoBehaviour
             lineRenderer.SetPosition(1, spawnedObject.transform.position);
         }
     }
-    public virtual void SetObjectPositionWithAnim(Vector3 _position, float _duration)
-    {
-        if (spawnedObject.transform.position != _position)
-        {
-            StartCoroutine(SetPositionAnim(_position, _duration));
-        }
-    }
-
     void CheckAssignment<T>(T obj, string name = "")
     {
         if (obj == null)
             Debug.LogError($"[{GetType().Name}]  Missing required dependency: (type: {typeof(T).Name}), name: {name} )");
-    }
-
-    IEnumerator SetPositionAnim(Vector3 _position, float _duration)
-    {
-        Vector3 startPosition = spawnedObject.transform.position;
-        float elapsed = 0f;
-
-        while (elapsed < _duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / _duration);
-            SetObjectPosition(Vector3.Lerp(startPosition, _position, t));
-            yield return null;
-        }
     }
 
 }

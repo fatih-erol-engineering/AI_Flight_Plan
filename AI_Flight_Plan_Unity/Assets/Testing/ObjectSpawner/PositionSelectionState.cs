@@ -43,7 +43,7 @@ public class PositionSelectionSpawnerState : MonoBehaviour, ISpawnerState
 
 
     public void Tick(Spawner spawner)
-    {
+    {        
         Ray hitPoint = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(hitPoint, out RaycastHit hoverHit, Mathf.Infinity, hitMask))
         {

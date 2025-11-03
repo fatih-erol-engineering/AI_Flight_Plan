@@ -335,9 +335,6 @@ MonoBehaviour:
   propertySelectionState: {fileID: 0}
   spawnerPositionWindowUI: {fileID: 0}
   spawnerPropertyPopupUI: {fileID: 0}
-  idleSpawnerState: {fileID: 0}
-  positionSelectionSpawnerState: {fileID: 0}
-  propertySelectionSpawnerState: {fileID: 0}
   selectionKey: 13
   lineRenderer: {fileID: 0}
   originalMat: {fileID: 0}
@@ -514,10 +511,7 @@ MonoBehaviour:
   propertySelectionState: {fileID: 0}
   spawnerPositionWindowUI: {fileID: 0}
   spawnerPropertyPopupUI: {fileID: 0}
-  idleSpawnerState: {fileID: 0}
-  positionSelectionSpawnerState: {fileID: 0}
-  propertySelectionSpawnerState: {fileID: 0}
-  selectionKey: 13
+  selectionKey: 32
   lineRenderer: {fileID: 1306793828}
   originalMat: {fileID: 2100000, guid: 5be257c2dd12acc41b2e5084612565dc, type: 2}
   previewMat: {fileID: 2100000, guid: c69e9aee497337f44be0b7db3129f0d0, type: 2}
