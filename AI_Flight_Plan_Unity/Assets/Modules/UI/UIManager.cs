@@ -12,7 +12,6 @@ public class UIManager : MonoBehaviour
     //     private MainGameManager mainGameManager;
     [field: SerializeField]
     public UIDocument uIDocument { get; private set; }
-    public Camera cam;
     [SerializeField] private AircraftPropertiesRegistry aircraftPropertiesRegistry;
     private VisualElement root, mainMenuRoot, createRoot, conflictSolverRoot, conflictAircraftListRoot;
     [SerializeField] private VisualTreeAsset aircraftConflictFoldoutTemplate;
@@ -69,9 +68,6 @@ public class UIManager : MonoBehaviour
         // }
         if (!uIDocument) uIDocument = GetComponent<UIDocument>();
         CheckAssignment(uIDocument);
-
-        if (!cam) cam = Camera.main;
-        CheckAssignment(cam);
 
         root = uIDocument.rootVisualElement;
         CheckAssignment(root);
@@ -153,7 +149,7 @@ public class UIManager : MonoBehaviour
         aircraftConflictManagers.Add(new AircraftConflictManager(a, aircraft));
     }
     void DeleteConflictSolverPopup(Aircraft aircraft)
-    {        
+    {
         foreach (var aircraftConflictManager in aircraftConflictManagers)
         {
             if (aircraftConflictManager.aircraft == aircraft)
@@ -161,7 +157,7 @@ public class UIManager : MonoBehaviour
                 aircraftConflictManager.root.RemoveFromHierarchy();
                 aircraftConflictManagers.Remove(aircraftConflictManager);
             }
-        }        
+        }
     }
     void solveConflictBtnClick()
     {
@@ -325,7 +321,7 @@ public class CustomAircraftDropdownMenu
 public class AircraftConflictManager
 {
     public VisualElement root;
-    public Foldout foldout;    
+    public Foldout foldout;
     public Slider timeOrPositionChangeVal; // 0 means time can be change, 1 means position can be change
     public Slider nonEditableOrEditableVal; // 0 Non editable, 1 means editable
     public Aircraft aircraft;
@@ -336,7 +332,7 @@ public class AircraftConflictManager
 
         foldout = root.Q<Foldout>("aircraftConflictFoldout");
         CheckAssignment(foldout, "foldout");
-        foldout.text = _aircraft.aircraftProperties.model.ToString() + " - " +  _aircraft.id.ToString();        
+        foldout.text = _aircraft.aircraftProperties.model.ToString() + " - " + _aircraft.id.ToString();
 
         nonEditableOrEditableVal = root.Q<Slider>("nonEditableOrEditableVal");
         CheckAssignment(nonEditableOrEditableVal, "nonEditableOrEditableVal");

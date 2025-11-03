@@ -47,11 +47,13 @@ public class SpawnerPositionWindowUI : MonoBehaviour
     public void ShowPopup()
     {
         popUpRoot.RemoveFromClassList("hidden");
+        popUpRoot.style.display = DisplayStyle.Flex;
     }
 
     public void HidePopup()
     {
         popUpRoot.AddToClassList("hidden");
+        popUpRoot.style.display = DisplayStyle.None;
     }
 
     public void SetPositionToUI(Transform _transform)
@@ -67,9 +69,9 @@ public class SpawnerPositionWindowUI : MonoBehaviour
     public void ShowPopupOnTransform(Transform _transform)
     {
 
-        // Vector3 worldPoint = _transform.position;
-        Vector3 worldPoint =new Vector3(0f,0f,0f);
-        
+        Vector3 worldPoint = _transform.position;
+        // Vector3 worldPoint =new Vector3(0f,0f,0f);
+
         // try to offset above the aircraft using renderer bounds if available
         var rend = _transform.GetComponentInChildren<Renderer>();
         float extraHeight = 1.0f;

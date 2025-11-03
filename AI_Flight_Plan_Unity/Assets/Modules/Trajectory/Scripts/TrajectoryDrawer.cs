@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [ExecuteAlways]
 public class TrajectoryDrawer : MonoBehaviour
 {
-     [SerializeField] private Aircraft aircraft;
+    [SerializeField] private Aircraft aircraft;
     [SerializeField] private float segmentLength_m = 50f;
     [SerializeField] private float tubeRadius_m = 10f;
     [field: SerializeField] public TimeGame startTime { get; private set; }
@@ -53,13 +53,13 @@ public class TrajectoryDrawer : MonoBehaviour
                 Create();
             }
 
-            if (TimeManager.Instance.isUpdated)
-            {
-                TimeGame startTimeFromTimeManager = new TimeGame(TimeManager.Instance.startTime_s);
-                TimeGame endTimeFromTimeManager = new TimeGame(TimeManager.Instance.endTime_s);
+            // if (TimeManager.Instance.isUpdated)
+            // {
+            //     TimeGame startTimeFromTimeManager = new TimeGame(TimeManager.Instance.startTime_s);
+            //     TimeGame endTimeFromTimeManager = new TimeGame(TimeManager.Instance.endTime_s);
 
-                UpdateColorWithTotalTime(startTimeFromTimeManager, endTimeFromTimeManager);
-            }
+            //     UpdateColorWithTotalTime(startTimeFromTimeManager, endTimeFromTimeManager);
+            // }
         }
     }
     public void UpdateColorWithTotalTime(TimeGame _totalStartTime, TimeGame _totalEndTime)
@@ -76,7 +76,7 @@ public class TrajectoryDrawer : MonoBehaviour
         //     bSplineDrawer.SetStartColor(_startColor);
         //     bSplineDrawer.SetEndColor(_endColor);
         // }
-        
+
         for (int i = 0; i < bSplineDrawerArray.Length; i++)
         {
             BSplineDrawer bSplineDrawer = bSplineDrawerArray[i];

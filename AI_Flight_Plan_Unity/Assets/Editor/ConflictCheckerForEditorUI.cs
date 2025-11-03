@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ConflictChecker))]
-public class ConflictCheckerEditor : Editor
+[CustomEditor(typeof(ConflictCheckerForEditor))]
+[ExecuteAlways]
+public class ConflictCheckerForEditorUI : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        ConflictChecker myScript = (ConflictChecker)target;
+        ConflictCheckerForEditor myScript = (ConflictCheckerForEditor)target;
 
         if (GUILayout.Button("Check Conflicts"))
         {
@@ -17,10 +18,6 @@ public class ConflictCheckerEditor : Editor
         if (GUILayout.Button("Solve Conflicts"))
         {
             myScript.SolveConflicts();
-        }
-        if (GUILayout.Button("Clear Conflicts"))
-        {
-            myScript.ClearConflicts();
         }
     }
 }

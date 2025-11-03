@@ -169,17 +169,17 @@ MonoBehaviour:
   _ionAssetID: 0
   _ionAccessToken: 
   _ionServer: {fileID: 11400000, guid: 9942c6f4cd1e5194ca3577077145f6e1, type: 2}
-  _maximumScreenSpaceError: 20
+  _maximumScreenSpaceError: 16
   _preloadAncestors: 1
   _preloadSiblings: 1
   _forbidHoles: 0
   _maximumSimultaneousTileLoads: 20
-  _maximumCachedBytes: 5368709120
+  _maximumCachedBytes: 536870912
   _loadingDescendantLimit: 20
   _enableFrustumCulling: 1
   _enableFogCulling: 1
   _enforceCulledScreenSpaceError: 1
-  _culledScreenSpaceError: 30
+  _culledScreenSpaceError: 64
   _opaqueMaterial: {fileID: 0}
   _generateSmoothNormals: 0
   _ignoreKhrMaterialsUnlit: 0
@@ -437,12 +437,12 @@ MonoBehaviour:
   _ellipsoidOverride: {fileID: 0}
   _originPlacement: 1
   _originAuthority: 1
-  _latitude: 39.747083125030244
-  _longitude: -105.22332539517168
-  _height: 1797.7788185375584
-  _ecefX: -1289827.3116540965
-  _ecefY: -4739726.101199324
-  _ecefZ: 4057583.3047048897
+  _latitude: 39.752200403670344
+  _longitude: -105.23180050965078
+  _height: 1777.5771737963414
+  _ecefX: -1290428.8340691824
+  _ecefY: -4739169.630015516
+  _ecefZ: 4058007.3453997895
   _scale: 1
 --- !u!4 &578482414
 Transform:
@@ -598,8 +598,8 @@ MonoBehaviour:
   createModeManager: {fileID: 510241424}
   timeSliderUI: {fileID: 762850601}
   <currentTime_s>k__BackingField: 0
-  <startTime_s>k__BackingField: 0
-  <endTime_s>k__BackingField: 10
+  <startTime_s>k__BackingField: Infinity
+  <endTime_s>k__BackingField: -Infinity
   <playFlag>k__BackingField: 0
   <timeScale>k__BackingField: 1
   isUpdated: 0
@@ -743,9 +743,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521517240}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17974193, y: -0.053193286, z: 0.009733751, w: 0.9822264}
-  m_LocalPosition: {x: 3.3482504, y: 1.5560793, z: 6.5080724}
-  m_LocalScale: {x: 1.0000015, y: 1.0000004, z: 1.0000015}
+  m_LocalRotation: {x: 0.13589044, y: 0.7284015, z: -0.151036, w: 0.6543342}
+  m_LocalPosition: {x: -0.000011444092, y: -0.00003194902, z: 0.000028609764}
+  m_LocalScale: {x: 1.0000017, y: 1.0000004, z: 1.0000017}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 578482414}
@@ -808,82 +808,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flyToAltitudeProfileCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 4.76524
-      outSlope: 4.76524
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.061909087
-    - serializedVersion: 3
-      time: 0.5
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -4.821313
-      outSlope: -4.821313
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.0535717
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   _flyToProgressCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   _flyToMaximumAltitudeCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0.16666667
-      outSlope: 0.16666667
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 12000000
-      value: 2000000
-      inSlope: 0.16666667
-      outSlope: 0.16666667
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -917,24 +854,24 @@ MonoBehaviour:
   _detectTransformChanges: 1
   _localToGlobeFixedMatrix:
     c0:
-      x: 0.9773998023364175
-      y: -0.1944172433272352
-      z: 0.08303410298146867
+      x: -0.2701179105769443
+      y: -0.5856605987255189
+      z: -0.7642258903794955
       w: 0
     c1:
-      x: -0.16660175236569366
-      y: -0.46656663337045734
-      z: 0.868654222479079
+      x: 0.18932312369116333
+      y: -0.8105418035687377
+      z: 0.5542377170626797
       w: 0
     c2:
-      x: 0.1301403703424984
-      y: 0.8628557838366133
-      z: 0.48841221407326907
+      x: 0.9440318882939333
+      y: -0.005023880563318879
+      z: -0.32982084434417946
       w: 0
     c3:
-      x: -1289823.3023820966
-      y: -4739724.119590083
-      z: 4057589.3035491332
+      x: -1290428.8340689647
+      y: -4739169.629971157
+      z: 4058007.3454013555
       w: 1
   _localToGlobeFixedMatrixIsValid: 1
 --- !u!114 &1521517246
@@ -962,7 +899,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: bed58d3a-2603-45a7-b9af-1703d0d0d495
+      m_Id: b10d19e2-df15-4b14-87e9-4a38403934c1
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -974,7 +911,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: a98275b2-3c71-4ada-872c-d81f8ade3b46
+      m_Id: bf8af878-ecc2-48ca-92ff-d3ac56b3bbd8
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -986,7 +923,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 5e2100bf-50be-4539-ba32-32586433d21f
+      m_Id: b9a08ee0-382a-4013-ae83-121ab6cc5d75
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -998,7 +935,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 28da0075-0f1c-440c-984c-07bff6418173
+      m_Id: cca17277-fa82-4ea0-93a9-835e865dffee
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -1010,7 +947,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 47f3bf1e-ceeb-4080-b7bd-ab11cf48473b
+      m_Id: 952df90b-09e9-4a03-842b-dd589d460ce6
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -1022,7 +959,7 @@ MonoBehaviour:
       m_Name: 
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: a93324a2-8f46-4c92-bbfe-c1e390022e3b
+      m_Id: 292c5910-0174-415f-8c81-0b17d08b230a
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []

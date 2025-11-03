@@ -5,37 +5,25 @@ using UnityEngine;
 public class TimeManager : MonoBehaviour
 {
     public static TimeManager Instance { get; private set; }
-    [SerializeField]
-    private AircraftFactory aircraftFactory;
-    [SerializeField]
-    private CreateModeManager createModeManager;
-
-    [field: SerializeField]
-    private TimeSliderUI timeSliderUI;
-    [field: SerializeField]
-    public float currentTime_s { get; private set; }
-    [field: SerializeField]
-    public float startTime_s { get; private set; }
-    [field: SerializeField]
-    public float endTime_s { get; private set; }
-
-    [field: SerializeField]
-    public bool playFlag { get; private set; }
-    [field: SerializeField]
-    public float timeScale { get; private set; } = 1f;
-    private bool prev_trajectoryCreatedFlag = false;
-    public bool isUpdated = false;
-    public bool timeIsChanging = false;
-
+    [field: SerializeField] public TimeState currentTimeState { get; private set; } = TimeState.Paused;
+    [field: SerializeField] public float currentTime_s { get; private set; } = 0f;
+    [field: SerializeField] public float startTime_s { get; private set; } = 0f;
+    [field: SerializeField] public float endTime_s { get; private set; } = 10f;
+    [field: SerializeField] public float timeScale { get; private set; } = 1f;
 
     void Awake()
     {
-        AssignData();
+        OnValidate();
     }
 
     void OnValidate()
     {
-        AssignData();           
+        AssignData();
+        SetTimeState(currentTimeState, false, true);
+        SetCurrentTime(currentTime_s, false, true);
+        SetStartTime(startTime_s, true);
+        SetEndTime(endTime_s, true);
+        SetTimeScale(timeScale, false, true);
     }
     void AssignData()
     {
@@ -43,76 +31,106 @@ public class TimeManager : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
-        GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
-        GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
-        GameEvents.Instance.OnSplineChanged += OnSplineChanged;
+        // GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
+        // GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
+        // GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
+        // GameEvents.Instance.OnSplineChanged += OnSplineChanged;
+
+        GameEvents.Instance.OnTimeChangedInUI -= (_time) => SetCurrentTime(_time, true);
+        GameEvents.Instance.OnTimeChangedInUI += (_time) => SetCurrentTime(_time, true);
+
+        GameEvents.Instance.OnTimePausedInUI -= () => SetTimeState(TimeState.Paused, true);
+        GameEvents.Instance.OnTimePausedInUI += () => SetTimeState(TimeState.Paused, true);
+
+        GameEvents.Instance.OnTimePlayedInUI -= () => SetTimeState(TimeState.Playing, true);
+        GameEvents.Instance.OnTimePlayedInUI += () => SetTimeState(TimeState.Playing, true);
     }
     void Update()
     {
-        isUpdated = false;
-        timeIsChanging = false;
-        playFlag = timeSliderUI.playFlag;
-        if (Input.GetKeyDown(KeyCode.Space))
+        switch (currentTimeState)
         {
-            playFlag = !playFlag;
-        }
-        if (playFlag)
-        {
-            currentTime_s += Time.deltaTime * timeScale;
-            currentTime_s = Mathf.Clamp(currentTime_s, startTime_s, endTime_s);
-            timeSliderUI.SetTimeSliderValue(currentTime_s);
-            timeIsChanging = true;
+            case TimeState.Playing:
+                SetCurrentTime(Mathf.Clamp(currentTime_s + Time.deltaTime * timeScale, startTime_s, endTime_s), false);
+                break;
+            case TimeState.Paused:
+                break;
         }
     }
 
-    public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
-    {
-        UpdateTimeWithTrajectoryTimes();
-    }
-        public void OnSplineChanged(BSplineDrawer _)
-    {
-        UpdateTimeWithTrajectoryTimes();
-    }
+    // public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
+    // {
+    //     UpdateTimeWithTrajectoryTimes();
+    // }
+    // public void OnSplineChanged(BSplineDrawer _)
+    // {
+    //     UpdateTimeWithTrajectoryTimes();
+    // }
 
-    void UpdateTimeWithTrajectoryTimes()
+    void UpdateTimeWithTrajectoryTimes(TrajectoryDrawer[] trajectoryDrawers)
     {
         float minTime = Mathf.Infinity;
         float maxTime = Mathf.NegativeInfinity;
-        foreach (Aircraft aircraft in aircraftFactory.AircraftList)
+        foreach (TrajectoryDrawer trajectory in trajectoryDrawers)
         {
-            if (minTime > aircraft.trajectory.startTime.second)
+            if (minTime > trajectory.startTime.second)
             {
-                minTime = aircraft.trajectory.startTime.second;
+                minTime = trajectory.startTime.second;
             }
-            if (maxTime < aircraft.trajectory.endTime.second)
+            if (maxTime < trajectory.endTime.second)
             {
-                maxTime = aircraft.trajectory.endTime.second;
+                maxTime = trajectory.endTime.second;
             }
         }
         startTime_s = minTime;
         endTime_s = maxTime;
-
-        foreach (Aircraft aircraft in aircraftFactory.AircraftList)
+    }
+    public void SetCurrentTime(float _val, bool _isUIChange = false, bool _isImmediate = false)
+    {
+        if (_val != currentTime_s || _isImmediate)
         {
-             aircraft.trajectory.UpdateColorWithTotalTime(new TimeGame(startTime_s), new TimeGame(endTime_s));           
+            currentTime_s = _val;
+            GameEvents.Instance.TimeChanged(this, _isUIChange);
         }
-        
-        timeSliderUI.SetTimeSliderMinValue(startTime_s);
-        timeSliderUI.SetTimeSliderMaxValue(endTime_s);
-        isUpdated = true;
     }
-    public void SetCurrentTime(float second)
+    public void SetStartTime(float _val, bool _isImmediate = false)
     {
-        currentTime_s = second;
+        if (_val != startTime_s || _isImmediate)
+        {
+            startTime_s = _val;
+            GameEvents.Instance.StartTimeChanged(this);
+        }
     }
-    public void SetStartTime(float second)
+    public void SetEndTime(float _val, bool _isImmediate = false)
     {
-        startTime_s = second;
+        if (_val != endTime_s || _isImmediate)
+        {
+            endTime_s = _val;
+            GameEvents.Instance.EndTimeChanged(this);
+        }
     }
-    public void SetEndTime(float second)
+    public void SetTimeScale(float _val, bool _isUIChange = false, bool _isImmediate = false)
     {
-        endTime_s = second;
+        if (_val != timeScale || _isImmediate)
+        {
+            timeScale = _val;
+            GameEvents.Instance.TimeScaleChanged(this, _isUIChange);
+        }
     }
 
+    public void SetTimeState(TimeState _state, bool _isUIChange = false, bool _isImmediate = false)
+    {
+        if (_state != currentTimeState || _isImmediate)
+        {
+            currentTimeState = _state;
+            GameEvents.Instance.TimeStateChanged(this, _isUIChange);
+        }
+    }
+
+
+}
+
+public enum TimeState
+{
+    Playing,
+    Paused
 }

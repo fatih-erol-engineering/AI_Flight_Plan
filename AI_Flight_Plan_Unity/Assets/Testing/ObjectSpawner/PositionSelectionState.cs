@@ -18,11 +18,11 @@ public class PositionSelectionSpawnerState : MonoBehaviour, ISpawnerState
         {
             mainCamera = Camera.main;
         }
-        
+
         spawner.SetActivePreviewMode(true);
         spawner.spawnerPositionWindowUI.ShowPopup();
         spawner.spawnerPositionWindowUI.ShowPopupOnTransform(spawner.spawnedObject.transform);
-        foundBounds  = TryGetWorldBounds(spawner.spawnedObject, out objectBounds);
+        foundBounds = TryGetWorldBounds(spawner.spawnedObject, out objectBounds);
 
     }
 
@@ -35,7 +35,7 @@ public class PositionSelectionSpawnerState : MonoBehaviour, ISpawnerState
         }
         else
         {
-            spawner.SetObjectPosition(spawner.spawnerPositionWindowUI.GetPositionFromUI());            
+            spawner.SetObjectPosition(spawner.spawnerPositionWindowUI.GetPositionFromUI());
             spawner.SetCurrentState(spawner.propertySelectionState);
         }
         spawner.spawnerPositionWindowUI.HidePopup();
@@ -43,7 +43,7 @@ public class PositionSelectionSpawnerState : MonoBehaviour, ISpawnerState
 
 
     public void Tick(Spawner spawner)
-    {        
+    {
         Ray hitPoint = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(hitPoint, out RaycastHit hoverHit, Mathf.Infinity, hitMask))
         {
@@ -65,7 +65,7 @@ public class PositionSelectionSpawnerState : MonoBehaviour, ISpawnerState
         {
             if (Input.GetKeyDown(key))
             {
-                OnExit(spawner, true);    
+                OnExit(spawner, true);
                 Debug.Log("Applied Spawning");
             }
         }

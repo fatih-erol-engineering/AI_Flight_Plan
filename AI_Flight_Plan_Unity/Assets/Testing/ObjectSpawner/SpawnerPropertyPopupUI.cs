@@ -10,7 +10,7 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
     private FloatField northField, eastField, altitudeField;
     public Button createBtn;
 
-    private void Start()
+    private void Awake()
     {
         AssignData();
     }
@@ -40,7 +40,7 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
         eastField.formatString = "0.00";
         altitudeField.formatString = "0.00";
 
-     
+
 
         cam = Camera.main;
     }
@@ -130,11 +130,11 @@ public class SpawnerPropertyPopupUI : MonoBehaviour
     }
 
     public Vector3 GetPositionFromUI()
-    {                
+    {
         Vector3 _position = Vector3.zero;
         _position.x = northField.value;
         _position.z = eastField.value;
-        _position.y = altitudeField.value;        
+        _position.y = altitudeField.value;
         return _position;
     }
 

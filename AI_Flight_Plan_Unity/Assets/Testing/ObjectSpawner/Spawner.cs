@@ -1,6 +1,3 @@
-using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 
@@ -21,12 +18,13 @@ public class Spawner : MonoBehaviour
     [SerializeField] public IdleSpawnerState idleState;
     [SerializeField] public PositionSelectionSpawnerState positionSelectionState;
     [SerializeField] public PropertySelectionSpawnerState propertySelectionState;
-    [SerializeField] public SpawnerPositionWindowUI spawnerPositionWindowUI;   
+    [SerializeField] public SpawnerPositionWindowUI spawnerPositionWindowUI;
     [SerializeField] public SpawnerPropertyPopupUI spawnerPropertyPopupUI;
     #endregion
 
     #region State Instances
-    [SerializeField] public ISpawnerState currentState
+    [SerializeField]
+    public ISpawnerState currentState
     {
         get => _currentState;
         private set
@@ -59,24 +57,24 @@ public class Spawner : MonoBehaviour
     {
         spawnedObject = Instantiate(spawnedObjectPrefab, transform);
         spawnedObject.SetActive(false);
-        
+
         neonWave = Instantiate(neonWavePrefab, transform).GetComponent<NeonWave>();
 
         idleState = Instantiate(idleStatePrefab, transform).GetComponent<IdleSpawnerState>();
-        CheckAssignment(idleState,"idleSpawnerState");
+        CheckAssignment(idleState, "idleSpawnerState");
 
         positionSelectionState = Instantiate(positionSelectionStatePrefab, transform).GetComponent<PositionSelectionSpawnerState>();
         CheckAssignment(positionSelectionState, "positionSelectionSpawnerState");
-        
+
         propertySelectionState = Instantiate(propertySelectionStatePrefab, transform).GetComponent<PropertySelectionSpawnerState>();
-        CheckAssignment(propertySelectionState,"propertySelectionSpawnerState");
+        CheckAssignment(propertySelectionState, "propertySelectionSpawnerState");
 
         spawnerPositionWindowUI = positionSelectionState.GetComponent<SpawnerPositionWindowUI>();
         CheckAssignment(spawnerPositionWindowUI, "spawnerPositionWindowUI");
-        
+
         spawnerPropertyPopupUI = propertySelectionState.GetComponent<SpawnerPropertyPopupUI>();
         CheckAssignment(spawnerPropertyPopupUI, "spawnerPropertyPopupUI");
-        
+
         lineRenderer.enabled = true;
         lineRenderer.positionCount = 2;
 
@@ -112,13 +110,13 @@ public class Spawner : MonoBehaviour
         neonWave.gameObject.SetActive(false);
         lineRenderer.enabled = false;
     }
-    
+
     public void TriggerSpawning()
     {
         if (spawnedObject == null)
         {
             spawnedObject = Instantiate(spawnedObjectPrefab, transform);
-        }        
+        }
         spawnedObject.SetActive(true);
 
         neonWave.gameObject.SetActive(true);
@@ -151,7 +149,7 @@ public class Spawner : MonoBehaviour
             spawnedObject.GetComponent<Renderer>().sharedMaterial = originalMat;
             lineRenderer.material = originalMat;
             neonWave.SetColor(originalMat.color);
-            lineRenderer.enabled = false;            
+            lineRenderer.enabled = false;
             neonWave.gameObject.SetActive(false);
         }
     }

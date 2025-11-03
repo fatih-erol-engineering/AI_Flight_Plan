@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class AircraftFactory : MonoBehaviour
-{        
+{
     [SerializeField]
     private UIManager uIManager;
     [SerializeField]
@@ -12,7 +12,7 @@ public class AircraftFactory : MonoBehaviour
     private AircraftPropertiesRegistry aircraftPropertiesRegistry;
     [SerializeField]
     public GameObject aircraftPrefab;
-    public List<Aircraft> AircraftList { get; private set; } = new List<Aircraft>();
+    public List<Aircraft> AircraftList;
     public Aircraft selectedAircraft;
     [SerializeField]
     public bool aircraftSpawnFlag { get; private set; } = false;
@@ -43,7 +43,7 @@ public class AircraftFactory : MonoBehaviour
         prev_selectedAircraftModelName = uIManager.selectedAircraftModelName;
     }
 
-    public Aircraft Spawn(Vector3 globalPosition, Quaternion globalRotation,TimeGame time)
+    public Aircraft Spawn(Vector3 globalPosition, Quaternion globalRotation, TimeGame time)
     {
         ChangeAircraftPrefabWithUI();
         var go = Instantiate(aircraftPrefab, Vector3.zero, Quaternion.identity, transform);
@@ -52,11 +52,11 @@ public class AircraftFactory : MonoBehaviour
         ctrl.transform.rotation = globalRotation;
         CheckAssignment(ctrl);
         AircraftList.Add(ctrl);
-        ctrl.id = AircraftList.Count; 
+        ctrl.id = AircraftList.Count;
         ctrl.SetTime(time);
         selectedAircraft = ctrl;
         aircraftSpawnFlag = true;
-    
+
         ctrl.trajectory.SetSegmentLength(ctrl.aircraftProperties.nominalVelocity_m_s * 2f); // segment length is 1 second worth of travel at nominal speed
         ctrl.trajectory.SetTubeRadius(ctrl.aircraftProperties.tubeRadius_m); // set tube radius
         ctrl.trajectory.SetAircraft(ctrl);
@@ -77,7 +77,7 @@ public class AircraftFactory : MonoBehaviour
     {
         if (obj == null)
             Debug.LogError($"(type: {typeof(T).Name}) is null at [{GetType().Name}]");
-    } 
+    }
     public GameObject Get(string modelName)
     {
         return aircraftPropertiesRegistry.Get(modelName).aircraftPrefab;

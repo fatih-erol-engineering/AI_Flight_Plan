@@ -4,7 +4,6 @@ using UnityEngine.UIElements;
 public class TimeSliderUI : MonoBehaviour
 {
     [SerializeField] private UIDocument uiDocument;
-    [SerializeField] private TimeManager timeManager;
     private VisualElement root;
     private Button playPauseBtn, backwardStepBtn, forwardStepBtn;
     private FloatField maxTimeField, currentTimeField;
@@ -19,27 +18,7 @@ public class TimeSliderUI : MonoBehaviour
 
     }
 
-    public void SetTimeSliderMinValue(float val)
-    {
-        timeSlider.lowValue = val;
-    }
-    public void SetTimeSliderMaxValue(float val)
-    {
-        timeSlider.highValue = val;
-        maxTimeField.value = val;
-    }
-    public void SetTimeSliderValue(float val)
-    {
-        timeSlider.value = val;
-    }
-    public float GetTime()
-    {
-        return timeSlider.value;
-    }
-    // void OnValidate()
-    // {
-    //     AssignData();
-    // }
+
 
     public void AssignData()
     {
@@ -65,22 +44,24 @@ public class TimeSliderUI : MonoBehaviour
         playPauseBtn.clicked += OnPlayPauseBtnClick;
         backwardStepBtn.clicked += () =>
         {
-            timeSlider.value = timeSlider.lowValue + 0.001f;
-            timeManager.SetCurrentTime(timeSlider.value);
-            timeManager.timeIsChanging = true;
+            timeSlider.value = timeSlider.lowValue;
+            GameEvents.Instance.TimeChangedInUI(timeSlider.value);
         };
         forwardStepBtn.clicked += () =>
         {
-            timeSlider.value = timeSlider.highValue - 0.001f;
-            timeManager.SetCurrentTime(timeSlider.value);
-            timeManager.timeIsChanging = true;
+            timeSlider.value = timeSlider.highValue;
+            GameEvents.Instance.TimeChangedInUI(timeSlider.value);
         };
         timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());
-    }
 
-    void Update()
-    {
-        currentTimeField.value = timeSlider.value;
+        GameEvents.Instance.OnTimeChanged -= SetTimeSliderValueFromManager;
+        GameEvents.Instance.OnTimeChanged += SetTimeSliderValueFromManager;
+        GameEvents.Instance.OnTimeStateChanged += SetTimeStateFromManager;
+        GameEvents.Instance.OnStartTimeChanged -= (_timeManager) => SetTimeSliderMinValue(_timeManager.startTime_s);
+        GameEvents.Instance.OnStartTimeChanged += (_timeManager) => SetTimeSliderMinValue(_timeManager.startTime_s);
+        GameEvents.Instance.OnEndTimeChanged -= (_timeManager) => SetTimeSliderMaxValue(_timeManager.endTime_s);
+        GameEvents.Instance.OnEndTimeChanged += (_timeManager) => SetTimeSliderMaxValue(_timeManager.endTime_s);
+
     }
 
     private void OnPlayPauseBtnClick()
@@ -89,18 +70,59 @@ public class TimeSliderUI : MonoBehaviour
         {
             playFlag = false;
             playPauseBtn.AddToClassList("timeSliderPauseState");
+            GameEvents.Instance.TimePausedInUI();
         }
         else
         {
             playFlag = true;
             playPauseBtn.RemoveFromClassList("timeSliderPauseState");
+            GameEvents.Instance.TimePlayedInUI();
+        }
+    }
+    private void SetTimeStateFromManager(TimeManager _timeManager, bool _isFromUI)
+    {
+        if (!_isFromUI)
+        {
+            if (_timeManager.currentTimeState == TimeState.Playing && !playFlag)
+            {
+                playFlag = true;
+                playPauseBtn.RemoveFromClassList("timeSliderPauseState");
+            }
+            else if (_timeManager.currentTimeState == TimeState.Paused && playFlag)
+            {
+                playFlag = false;
+                playPauseBtn.AddToClassList("timeSliderPauseState");
+            }
+        }
+    }
+
+    private void SetTimeSliderValue(float _time)
+    {
+        if (_time != timeSlider.value)
+        {
+            timeSlider.value = _time;
+        }
+    }
+    public void SetTimeSliderMinValue(float val, bool)
+    {
+        timeSlider.lowValue = val;
+    }
+    public void SetTimeSliderMaxValue(float val)
+    {
+        timeSlider.highValue = val;
+        maxTimeField.value = val;
+    }
+    public void SetTimeSliderValueFromManager(TimeManager _timeManager, bool _isFromUI)
+    {
+        if (!_isFromUI)
+        {
+            SetTimeSliderValue(_timeManager.currentTime_s);
         }
     }
 
     private void SliderValueChanged()
     {
-        timeManager.SetCurrentTime(timeSlider.value);
-        timeManager.timeIsChanging = true;
+        GameEvents.Instance.TimeChangedInUI(timeSlider.value);
     }
 
 

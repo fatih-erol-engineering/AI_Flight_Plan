@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.UIElements;
 public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
 {
 
@@ -39,7 +37,7 @@ public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
 
     public void OnExit(Spawner spawner, bool isApplied)
     {
-        spawner.spawnerPositionWindowUI.HidePopup();        
+        spawner.spawnerPositionWindowUI.HidePopup();
         if (!isApplied)
         {
             spawner.Cancel();
@@ -58,7 +56,6 @@ public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
         {
             StartCoroutine(SetPositionCoroutine(spawner, positionFromUI, 0.2f));
         }
-
 
         foreach (var key in selectionKeys)
         {
@@ -79,6 +76,7 @@ public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
         }
         prev_positionFromUI = spawner.spawnerPropertyPopupUI.GetPositionFromUI();
     }
+
     void CheckAssignment<T>(T obj, string name = "")
     {
         if (obj == null)
@@ -108,7 +106,7 @@ public class PropertySelectionSpawnerState : MonoBehaviour, ISpawnerState
         Vector3 startPosition = _spawner.spawnedObject.transform.position;
         float elapsed = 0f;
         if (_position != startPosition)
-        {            
+        {
             while (elapsed < _duration)
             {
                 elapsed += Time.deltaTime;

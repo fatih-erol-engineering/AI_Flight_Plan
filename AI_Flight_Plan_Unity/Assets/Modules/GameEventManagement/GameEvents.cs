@@ -44,6 +44,57 @@ public class GameEvents : MonoBehaviour
         }
     }
 
+    // Time Manager Events
+    public event Action<TimeManager, bool> OnTimeChanged;
+    public void TimeChanged(TimeManager _timeManager, bool _isUIChange)
+    {
+        OnTimeChanged?.Invoke(_timeManager, _isUIChange);
+    }
+    public event Action<TimeManager> OnStartTimeChanged;
+    public void StartTimeChanged(TimeManager _timeManager)
+    {
+        OnStartTimeChanged?.Invoke(_timeManager);
+    }
+
+    public event Action<TimeManager> OnEndTimeChanged;
+    public void EndTimeChanged(TimeManager _timeManager)
+    {
+        OnEndTimeChanged?.Invoke(_timeManager);
+    }
+
+
+    public event Action<TimeManager, bool> OnTimeScaleChanged;
+    public void TimeScaleChanged(TimeManager _timeManager, bool _isUIChange)
+    {
+        OnTimeScaleChanged?.Invoke(_timeManager, _isUIChange);
+    }
+    public event Action<TimeManager, bool> OnTimeStateChanged;
+    public void TimeStateChanged(TimeManager _timeManager, bool _isUIChange)
+    {
+        OnTimeStateChanged?.Invoke(_timeManager, _isUIChange);
+    }
+
+    // Time UI Events
+    public event Action<float> OnTimeChangedInUI;
+    public void TimeChangedInUI(float _time)
+    {
+        OnTimeChangedInUI?.Invoke(_time);
+    }
+
+    public event Action OnTimePausedInUI;
+    public void TimePausedInUI()
+    {
+        OnTimePausedInUI?.Invoke();
+    }
+
+    public event Action OnTimePlayedInUI;
+    public void TimePlayedInUI()
+    {
+        OnTimePlayedInUI?.Invoke();
+    }
+
+
+
     // Waypoint Events
     public event Action<Waypoint, Vector3> OnWaypointPositionChanged;
     public void WaypointPositionChanged(Waypoint waypoint, Vector3 oldPosition)
