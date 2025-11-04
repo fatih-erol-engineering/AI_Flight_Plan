@@ -27,7 +27,10 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        AssignData();
+        if (!Application.isPlaying)
+        {
+            AssignData();
+        }
     }
     void Awake()
     {

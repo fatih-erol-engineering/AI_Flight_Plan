@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SoundLimitedRestrictedArea : MonoBehaviour
 {
-    [field:SerializeField] public float currentSound_dBa{ get; private set; }
+    [field: SerializeField] public float currentSound_dBa { get; private set; }
     [SerializeField] private AircraftFactory aircraftFactory;
     public float radius = 100f;
 
@@ -20,9 +20,9 @@ public class SoundLimitedRestrictedArea : MonoBehaviour
     {
         currentSound_dBa = 0f;
         float deltaSound_dBa = 0f;
-        if(aircraftFactory.AircraftList != null) 
+        if (aircraftFactory.aircraftList != null)
         {
-            foreach (Aircraft aircraft in aircraftFactory.AircraftList)
+            foreach (Aircraft aircraft in aircraftFactory.aircraftList)
             {
                 float dist = Vector3.Distance(transform.position, aircraft.transform.position);
                 if (dist >= radius)

@@ -10,19 +10,31 @@ public class ConflictChecker : MonoBehaviour
     public List<TrajectoryDrawer> allTraj = new List<TrajectoryDrawer>();
     public List<AbsoluteRestrictedArea> allAbsoluteRestrictedAreas = new List<AbsoluteRestrictedArea>();
     private bool _eventsBound;
+    void Start()
+    {
+        CheckConflicts();
+    }
     void OnEnable()
     {
         if (!_eventsBound && GameEvents.Instance != null)
         {
             GameEvents.Instance.OnSplineChanged += OnSplineChanged;
+            GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
             _eventsBound = true;
         }
+    }
+    public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
+    {
+        allTraj.Clear();
+        allTraj.AddRange(aircraftFactory.GetAllTrajectories());
+        CheckConflicts();
     }
     void OnDisable()
     {
         if (_eventsBound && GameEvents.Instance != null)
         {
             GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
+            GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
             _eventsBound = false;
         }
     }

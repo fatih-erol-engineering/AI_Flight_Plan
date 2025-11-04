@@ -120,7 +120,10 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     }
     public void SetHighlightMeshRendererEnabled(bool _isEnabled)
     {
-        highlightMeshRenderer?.gameObject.SetActive(_isEnabled);
+        if (highlightMeshRenderer != null)
+        {
+            highlightMeshRenderer.gameObject.SetActive(_isEnabled);
+        }
     }
 
     public void SetTime(TimeGame _time, bool isImmediate = false)

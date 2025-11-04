@@ -8,10 +8,11 @@ public class AircraftFactory : MonoBehaviour
     private AircraftPropertiesRegistry aircraftPropertiesRegistry;
     [SerializeField]
     public GameObject aircraftPrefab;
-    public List<Aircraft> AircraftList;
+    public List<Aircraft> aircraftList;
     public Aircraft selectedAircraft;
     [SerializeField]
     public bool aircraftSpawnFlag { get; private set; } = false;
+    private int updateCounter = 0;
     public void Awake()
     {
         AssignData();
@@ -22,10 +23,19 @@ public class AircraftFactory : MonoBehaviour
 
         GameEvents.Instance.OnSelectedAircraftToSpawnChangedUI -= ChangeAircraftPrefabWithUI;
         GameEvents.Instance.OnSelectedAircraftToSpawnChangedUI += ChangeAircraftPrefabWithUI;
+        updateCounter = 0;
     }
     void Update()
     {
+        if (updateCounter == 0)
+        {
+            foreach (var _aircraft in aircraftList)
+            {
+                GameEvents.Instance.AircraftSpawned(_aircraft);
+            }
+        }
         aircraftSpawnFlag = false;
+        updateCounter++;
     }
     private void ChangeAircraftPrefabWithUI(string _val)
     {
@@ -39,8 +49,8 @@ public class AircraftFactory : MonoBehaviour
         ctrl.transform.position = globalPosition;
         ctrl.transform.rotation = globalRotation;
         CheckAssignment(ctrl);
-        AircraftList.Add(ctrl);
-        ctrl.id = AircraftList.Count;
+        aircraftList.Add(ctrl);
+        ctrl.id = aircraftList.Count;
         ctrl.SetTime(time);
         selectedAircraft = ctrl;
         aircraftSpawnFlag = true;
@@ -53,12 +63,12 @@ public class AircraftFactory : MonoBehaviour
     }
     public void Clear()
     {
-        foreach (var aircraft in AircraftList)
+        foreach (var aircraft in aircraftList)
         {
             if (aircraft != null)
                 Destroy(aircraft.gameObject);
         }
-        AircraftList.Clear();
+        aircraftList.Clear();
     }
 
     void CheckAssignment<T>(T obj)
@@ -73,7 +83,7 @@ public class AircraftFactory : MonoBehaviour
     public List<TrajectoryDrawer> GetAllTrajectories()
     {
         List<TrajectoryDrawer> trajList = new List<TrajectoryDrawer>();
-        foreach (var aircraft in AircraftList)
+        foreach (var aircraft in aircraftList)
         {
             trajList.Add(aircraft.trajectory);
         }

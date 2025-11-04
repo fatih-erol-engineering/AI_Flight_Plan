@@ -1,6 +1,7 @@
 using UnityEngine;
 public class FreeModeManager : MonoBehaviour, IGameModeHooks
 {
+    [SerializeField] private AircraftFactory aircraftFactory;
     private ExitMode exitMode = ExitMode.Cancel;
     public void Apply()
     {
@@ -21,7 +22,19 @@ public class FreeModeManager : MonoBehaviour, IGameModeHooks
 
     public bool Tick(out ExitMode exitMode)
     {
-        Debug.Log("Tick: Free Mode");
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                foreach (Aircraft aircraft in aircraftFactory.aircraftList)
+                {
+                    aircraft.trajectory.Clear();
+                    aircraft.trajectory.Create();
+                }
+
+            }
+            Debug.Log("Tick: Free Mode");
+        }
         exitMode = ExitMode.None;
         return false;
     }

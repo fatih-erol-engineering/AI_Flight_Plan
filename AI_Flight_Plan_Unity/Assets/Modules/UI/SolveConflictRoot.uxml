@@ -9,9 +9,9 @@
                 <ui:Label text="Position Change" style="width: 100px; -unity-text-align: upper-left;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-direction: row; justify-content: space-evenly; align-items: stretch; align-self: stretch; align-content: center;">
-                <ui:Label text="Non- Editable" style="width: 100px;" />
+                <ui:Label text="Prior" style="width: 100px;" />
                 <ui:Slider value="4" high-value="1" fill="true" name="nonEditableOrEditableVal" style="width: 150px; flex-direction: column; align-self: center;" />
-                <ui:Label text="Editable" style="width: 100px; -unity-text-align: upper-left;" />
+                <ui:Label text="Posterior" style="width: 100px; -unity-text-align: upper-left;" />
             </ui:VisualElement>
         </ui:Foldout>
     </ui:VisualElement>
