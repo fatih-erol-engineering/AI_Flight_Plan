@@ -27,10 +27,10 @@ public class UIManager : MonoBehaviour
     //     // For Create Mode
     public string selectedAircraftModelName;
 
-    // void OnValidate()
-    // {
-    //     AssignData();
-    // }
+    void OnValidate()
+    {
+        AssignData();
+    }
     void Awake()
     {
         AssignData();
