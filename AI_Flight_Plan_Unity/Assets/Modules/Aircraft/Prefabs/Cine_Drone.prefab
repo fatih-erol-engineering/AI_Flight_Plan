@@ -67,9 +67,9 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6506809318899833818}
-  - {fileID: 7533808964782910604}
   - {fileID: 3641352799714503626}
   - {fileID: 1283676654378488176}
+  - {fileID: 7533808964782910604}
   m_Father: {fileID: 6829256584013129055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &4661849316190145015
@@ -165,7 +165,6 @@ MonoBehaviour:
   nonEditableOrEditableVal: 1
   deltaTime:
     <second>k__BackingField: 0
-  _neonWaveActive: 1
   neonWave: {fileID: 7520518820656245019}
 --- !u!1 &2528670350971851328
 GameObject:

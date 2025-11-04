@@ -34,6 +34,7 @@ Transform:
   - {fileID: 5534225113293581145}
   - {fileID: 231493401939224171}
   - {fileID: 8332915472362764080}
+  - {fileID: 6314582581312769060}
   m_Father: {fileID: 6829256584013129055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1288290877605290423
@@ -107,7 +108,6 @@ MonoBehaviour:
   nonEditableOrEditableVal: 1
   deltaTime:
     <second>k__BackingField: 0
-  _neonWaveActive: 1
   neonWave: {fileID: 732608311674933083}
 --- !u!1 &3463887414340607040
 GameObject:
@@ -141,7 +141,7 @@ Transform:
   - {fileID: 3331882522797286671}
   - {fileID: 3164491289721921084}
   - {fileID: 779766287932568475}
-  m_Father: {fileID: 6829256584013129055}
+  m_Father: {fileID: 113578939797663538}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5697215273144170777
 GameObject:
@@ -172,7 +172,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6314582581312769060}
   - {fileID: 113578939797663538}
   - {fileID: 2297075669462977610}
   m_Father: {fileID: 0}
