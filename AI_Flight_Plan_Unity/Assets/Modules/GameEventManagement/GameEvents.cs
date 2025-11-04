@@ -153,4 +153,12 @@ public class GameEvents : MonoBehaviour
         OnCameraStateChanged?.Invoke(camera);
     }
 
+
+    // Menu UI Events
+    public event Action<string> OnSelectedAircraftToSpawnChangedUI;
+    public void ChangeAircraftPrefabWithUI(string _val)
+    {
+        OnSelectedAircraftToSpawnChangedUI?.Invoke(_val);
+    }
+
 }

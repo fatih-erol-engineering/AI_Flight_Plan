@@ -7,7 +7,6 @@ using System.Collections.Generic;
 // [ExecuteAlways]
 public class UIManager : MonoBehaviour
 {
-
     [SerializeField] private ConflictChecker conflictChecker;
     //     private MainGameManager mainGameManager;
     [field: SerializeField]
@@ -212,6 +211,7 @@ public class UIManager : MonoBehaviour
             rotorDDM.dropdownField.style.display = DisplayStyle.Flex;
             UpdateSelectedAircraft();
             restartRequestUI = true;
+            GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
         }
     }
 
@@ -223,6 +223,7 @@ public class UIManager : MonoBehaviour
             fixedWingDDM.dropdownField.style.display = DisplayStyle.Flex;
             UpdateSelectedAircraft();
             restartRequestUI = true;
+            GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
         }
     }
 

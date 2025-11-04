@@ -5,10 +5,6 @@ using UnityEngine;
 public class AircraftFactory : MonoBehaviour
 {
     [SerializeField]
-    private UIManager uIManager;
-    [SerializeField]
-    private Theme theme;
-    [SerializeField]
     private AircraftPropertiesRegistry aircraftPropertiesRegistry;
     [SerializeField]
     public GameObject aircraftPrefab;
@@ -16,36 +12,27 @@ public class AircraftFactory : MonoBehaviour
     public Aircraft selectedAircraft;
     [SerializeField]
     public bool aircraftSpawnFlag { get; private set; } = false;
-
-    private string prev_selectedAircraftModelName;
     public void Awake()
     {
         AssignData();
     }
     private void AssignData()
     {
-        if (!uIManager) uIManager = GetComponent<UIManager>();
-        CheckAssignment(uIManager);
-
         aircraftPrefab = aircraftPropertiesRegistry.rotorAircrafts[0].GameObject();
+
+        GameEvents.Instance.OnSelectedAircraftToSpawnChangedUI -= ChangeAircraftPrefabWithUI;
     }
     void Update()
     {
         aircraftSpawnFlag = false;
-        ChangeAircraftPrefabWithUI();
     }
-    private void ChangeAircraftPrefabWithUI()
+    private void ChangeAircraftPrefabWithUI(string _val)
     {
-        if ((prev_selectedAircraftModelName != uIManager.selectedAircraftModelName) && (uIManager.selectedAircraftModelName != null))
-        {
-            aircraftPrefab = Get(uIManager.selectedAircraftModelName);
-        }
-        prev_selectedAircraftModelName = uIManager.selectedAircraftModelName;
+        aircraftPrefab = Get(_val);
     }
 
     public Aircraft Spawn(Vector3 globalPosition, Quaternion globalRotation, TimeGame time)
     {
-        ChangeAircraftPrefabWithUI();
         var go = Instantiate(aircraftPrefab, Vector3.zero, Quaternion.identity, transform);
         var ctrl = go.GetComponentInChildren<Aircraft>();
         ctrl.transform.position = globalPosition;
