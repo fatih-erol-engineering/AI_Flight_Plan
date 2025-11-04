@@ -1,13 +1,12 @@
 using System;
 using UnityEngine;
 
-
-// [DefaultExecutionOrder(-1000)] // 
+[ExecuteAlways]
 public class GameEvents : MonoBehaviour
 {
     public static GameEvents Instance;
 
-    private void OnValidate()
+    private void OnEnable()
     {
         if (Instance == null)
         {

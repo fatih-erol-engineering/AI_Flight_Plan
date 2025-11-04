@@ -1,6 +1,5 @@
 
 using UnityEngine;
-using UnityEditor;
 
 [ExecuteAlways]
 public class Waypoint : MonoBehaviour, ISelectable, IEditable
@@ -22,7 +21,10 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
     static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor"); // URP Lit    
     void OnValidate()
     {
-        AssignData();
+        if (!Application.isPlaying)
+        {
+            AssignData();
+        }
     }
 
     void Awake()

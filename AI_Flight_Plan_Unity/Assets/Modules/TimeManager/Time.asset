@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8a18ca9e5bdb454da198ec2eb32074f, type: 3}
   m_Name: Time
   m_EditorClassIdentifier: Assembly-CSharp::TimeSO
-  currentTimeState: 0
-  currentTime: 6.2357306
+  currentTimeState: 1
+  currentTime: 0
   startTime: 0
-  endTime: 10
+  endTime: 20
   timeScale: 1

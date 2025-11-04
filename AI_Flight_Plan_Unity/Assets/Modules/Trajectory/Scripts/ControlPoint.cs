@@ -22,7 +22,10 @@ public class ControlPoint : MonoBehaviour, ISelectable, IEditable
 
     void OnValidate()
     {
-        AssignData();
+        if (!Application.isPlaying)
+        {
+            AssignData();
+        }
     }
 
     void Awake()

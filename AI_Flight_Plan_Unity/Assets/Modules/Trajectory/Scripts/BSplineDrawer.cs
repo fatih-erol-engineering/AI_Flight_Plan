@@ -1,9 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -64,15 +59,12 @@ public class BSplineDrawer : MonoBehaviour
     {
         aircraft = _aircraft;
     }
-    
+
     public void Awake()
     {
         AssignData();
     }
-    public void OnValidate()
-    {
-        AssignData();
-    }
+
     public void OnDestroy()
     {
         GameEvents.Instance.OnWaypointPositionChanged -= OnWaypointPositionChanged;
@@ -387,7 +379,7 @@ public class BSplineDrawer : MonoBehaviour
         float cumulativeDistance = 0f;
 
         int cpCt = 0;
-        bool changeCpFlag = false;        
+        bool changeCpFlag = false;
         int minIdx = 0;
         int maxIdx = 0;
         for (int i = 0; i < linePointNumber; i++)
@@ -412,24 +404,24 @@ public class BSplineDrawer : MonoBehaviour
                     changeCpFlag = dist2 > dist1;
                     maxIdx = i;
                     if (changeCpFlag)
-                    {                        
+                    {
                         curveSegments[cpCt].SetStartAndEndPoint(trajectoryPoints[minIdx], trajectoryPoints[maxIdx]);
                         curveSegments[cpCt].SetRadius(tubeRadius);
                         controlPoints[cpCt].SetClosestPointToSpline(trajectoryPoints[i].position);
-                        minIdx = i;                    
+                        minIdx = i;
                         cpCt++;
                     }
                 }
             }
         }
         {
-            for (int i = 0; i < controlPoints.Count+1; i++)
+            for (int i = 0; i < controlPoints.Count + 1; i++)
             {
                 if (i == 0)
                 {
                     curveSegments[i].controlPoint1 = controlPoints[i];
                 }
-                else if(i == controlPoints.Count)
+                else if (i == controlPoints.Count)
                 {
                     curveSegments[i].controlPoint1 = controlPoints[i - 1];
                 }
@@ -440,7 +432,7 @@ public class BSplineDrawer : MonoBehaviour
                 }
             }
             curveSegments[curveSegments.Length - 1].SetStartAndEndPoint(trajectoryPoints[minIdx], trajectoryPoints[trajectoryPoints.Length - 1]);
-            curveSegments[curveSegments.Length - 1].SetRadius(tubeRadius);            
+            curveSegments[curveSegments.Length - 1].SetRadius(tubeRadius);
         }
 
     }
@@ -664,7 +656,7 @@ public class BSplineDrawer : MonoBehaviour
         if (tubeManagers == null) return;
         foreach (var tube in tubeManagers)
         {
-            tube.gameObject.SetActive(true);            
+            tube.gameObject.SetActive(true);
         }
         showTubes = true;
     }
@@ -743,7 +735,7 @@ public class CurveSegment
     public void SetAircraft(Aircraft _aircraft)
     {
         aircraft = _aircraft;
-    }   
+    }
     public void SetTubeManager(TubeManager _tubeManager)
     {
         tubeManager = _tubeManager;

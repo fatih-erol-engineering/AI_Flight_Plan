@@ -2,21 +2,19 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
 
+[ExecuteAlways]
 public class Aircraft : MonoBehaviour, ISelectable, IEditable
 {
     [Header("Aircraft Settings")]
     public int id;
-    [field: SerializeField]
-    public TimeGame time { get; private set; }
+    public TimeGame time;
 
     public AircraftProperties aircraftProperties;
-
-    [field: SerializeField]
-    public TrajectoryDrawer trajectory { get; private set; }
+    public TrajectoryDrawer trajectory;
 
     [Header("Selection Appearance")]
     [SerializeField] private MeshRenderer highlightMeshRenderer;
-    private bool isSelected = false;
+    [SerializeField] private bool isSelected = false;
     private MaterialPropertyBlock mpb;
     private Color highlightEdgeColor;
     private float highlightEdgeWidth;
@@ -30,11 +28,16 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     public float nonEditableOrEditableVal = 1f; // 0 means non editable, 1 means editable
     [SerializeField] private TimeGame deltaTime; // time step for conflict solver in seconds
 
-    void Update()
-    {
-        SetDeltaTime(deltaTime, true);
-    }
+    // void Update()
+    // {
+    //     SetDeltaTime(deltaTime, true);
+    // }
     void Awake()
+    {
+        AssignData();
+    }
+
+    void OnEnable()
     {
         AssignData();
     }
@@ -49,13 +52,18 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
 
         GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
         GameEvents.Instance.OnEditableExit -= OnEditableExit;
+
         GameEvents.Instance.OnEditableEnter += OnEditableEnter;
         GameEvents.Instance.OnEditableExit += OnEditableExit;
+
+        GameEvents.Instance.OnTimeChanged -= MoveAircraftWithTime;
+        GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;
     }
     void OnDestroy()
     {
         GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
         GameEvents.Instance.OnEditableExit -= OnEditableExit;
+        GameEvents.Instance.OnTimeChanged -= MoveAircraftWithTime;
     }
 
     public void OnHoverEnter()

@@ -2,6 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "TimeSO", menuName = "ScriptableObjects/TimeSO", order = 1)]
+[ExecuteAlways]
 public class TimeSO : ScriptableObject
 {
     public TimeState currentTimeState = TimeState.Paused;

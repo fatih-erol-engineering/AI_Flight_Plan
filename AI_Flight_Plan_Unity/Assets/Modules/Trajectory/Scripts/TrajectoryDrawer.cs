@@ -7,20 +7,20 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField] private Aircraft aircraft;
     [SerializeField] private float segmentLength_m = 50f;
     [SerializeField] private float tubeRadius_m = 10f;
-    [field: SerializeField] public TimeGame startTime { get; private set; }
-    [field: SerializeField] public TimeGame endTime { get; private set; }
-    [field: SerializeField] public WaypointFactory waypointFactory { get; private set; }
-    [field: SerializeField] public CreateModeWaypointManager createModeWaypointManager { get; private set; }
+    public TimeGame startTime;
+    public TimeGame endTime;
+    public WaypointFactory waypointFactory;
+    public CreateModeWaypointManager createModeWaypointManager;
     [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private Transform waypointContainer;
     [SerializeField] private Transform SegmentContainer;
     [SerializeField] private GameObject bSplineDrawerPrefab;
     [SerializeField] private GameObject controlPointPrefab;
-    [SerializeField, HideInInspector] private BSplineDrawer[] bSplineDrawerArray;
-    [SerializeField, HideInInspector] private bool isReadyToUpdate = false;
+    [SerializeField] private BSplineDrawer[] bSplineDrawerArray;
+    [SerializeField] private bool isReadyToUpdate = false;
 
-    [SerializeField, HideInInspector] private Vector3[] waypointPositions_AfterCreation;
+    [SerializeField] private Vector3[] waypointPositions_AfterCreation;
 
     public void AssignData()
     {
@@ -32,6 +32,12 @@ public class TrajectoryDrawer : MonoBehaviour
         {
             waypointPositions_AfterCreation[i] = waypointContainer.GetChild(i).position;
         }
+    }
+    public void OnEnable()
+    {
+        Clear();
+        AssignData();
+        Create();
     }
     // void Awake()
     // {
