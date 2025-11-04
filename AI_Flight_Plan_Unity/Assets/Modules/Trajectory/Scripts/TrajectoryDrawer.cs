@@ -273,6 +273,18 @@ public class TrajectoryDrawer : MonoBehaviour
         return totalCollisionInfoList;
     }
 
+    public List<CollisionInfoRestrictedArea> CheckCollisionWithRestrictedArea(AbsoluteRestrictedArea _restrictedArea)
+    {
+        List<CollisionInfoRestrictedArea> totalCollisionInfoList = new List<CollisionInfoRestrictedArea>();
+        foreach (var segment1 in bSplineDrawerArray)
+        {
+            List<CollisionInfoRestrictedArea> currentCollisionInfoList = segment1.CheckCollisionWithRestrictedArea(_restrictedArea);
+            totalCollisionInfoList.AddRange(currentCollisionInfoList);
+            segment1.SetIsCollided(false);
+        }
+        return totalCollisionInfoList;
+    }
+
 
 
 }

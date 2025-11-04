@@ -565,7 +565,74 @@ public class BSplineDrawer : MonoBehaviour
         }
         return collisionInfoList;
     }
-    public static bool AreCylindersIntersecting(
+
+    public List<CollisionInfoRestrictedArea> CheckCollisionWithRestrictedArea(AbsoluteRestrictedArea restrictedArea)
+    {
+        List<CollisionInfoRestrictedArea> collisionInfoList = new List<CollisionInfoRestrictedArea>();
+
+        for (int i = 0; i < curveSegments.Length; i++)
+        {
+            CurveSegment curveSegment = curveSegments[i];
+            // Check if the curve segment intersects with the restricted area
+            if (IsCurveSegmentIntersectingWithRestrictedArea(curveSegment, restrictedArea))
+            {
+                CollisionInfoRestrictedArea collisionInfo = new CollisionInfoRestrictedArea
+                {
+                    segment = curveSegment,
+                    restrictedArea = restrictedArea
+                };
+                collisionInfoList.Add(collisionInfo);
+            }
+        }
+
+        return collisionInfoList;
+    }
+    private bool IsCurveSegmentIntersectingWithRestrictedArea(CurveSegment segment, AbsoluteRestrictedArea area)
+    {
+        Vector3 endA = segment.endPoint.position;
+        Vector3 startA = segment.startPoint.position;
+        Vector3 posB = area.transform.position;
+        float radiusB = area.radius;
+        bool _isCollided = CylinderSphereIntersect(startA, endA, segment.tubeManager.GetRadius(), posB, radiusB);
+        return _isCollided;
+    }
+
+    public static bool CylinderSphereIntersect(
+      Vector3 cylinderStart, Vector3 cylinderEnd, float cylinderRadius,
+      Vector3 sphereCenter, float sphereRadius)
+    {
+        Vector3 axis = cylinderEnd - cylinderStart;
+        float height = axis.magnitude;
+        if (height < 1e-6f)
+            return false; // çok kısa, güvenlik
+
+        Vector3 dir = axis / height;
+        Vector3 v = sphereCenter - cylinderStart;
+
+        // Küre merkezinin silindir eksenine izdüşüm oranı
+        float t = Vector3.Dot(v, dir);
+
+        // Eksen dışına çıkarsa, uç kapaklara göre kontrol
+        if (t < 0f)
+        {
+            float dist = Vector3.Distance(sphereCenter, cylinderStart);
+            return dist <= (sphereRadius + cylinderRadius);
+        }
+        else if (t > height)
+        {
+            float dist = Vector3.Distance(sphereCenter, cylinderEnd);
+            return dist <= (sphereRadius + cylinderRadius);
+        }
+        else
+        {
+            // Dik uzaklık
+            Vector3 closestPoint = cylinderStart + t * dir;
+            float distToAxis = Vector3.Distance(sphereCenter, closestPoint);
+            return distToAxis <= (sphereRadius + cylinderRadius);
+        }
+    }
+
+    static bool AreCylindersIntersecting(
     Vector3 startA, Vector3 endA, float radiusA,
     Vector3 startB, Vector3 endB, float radiusB)
     {
@@ -706,7 +773,7 @@ public class TrajectoryPoint
         time = _t;
     }
 }
-public class CurveSegment
+public class CurveSegment : ICollidable
 {
     public TrajectoryPoint startPoint;
     public TrajectoryPoint endPoint;
@@ -721,6 +788,9 @@ public class CurveSegment
             return (startPoint.position + endPoint.position) / 2f;
         }
     }
+
+    public bool isCollided { get; set; }
+
     public float radious;
 
     public void SetStartAndEndPoint(TrajectoryPoint _startPoint, TrajectoryPoint _endPoint)
@@ -739,5 +809,14 @@ public class CurveSegment
     public void SetTubeManager(TubeManager _tubeManager)
     {
         tubeManager = _tubeManager;
+    }
+
+    public void SetIsCollided(bool _val, bool isImmediate = false)
+    {
+        if (isCollided != _val || isImmediate)
+        {
+            tubeManager.SetIsCollided(_val, isImmediate);
+            isCollided = _val;
+        }
     }
 }

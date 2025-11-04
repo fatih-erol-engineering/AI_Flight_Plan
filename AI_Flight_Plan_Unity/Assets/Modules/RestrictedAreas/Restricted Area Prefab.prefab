@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2052101487879225902}
   - component: {fileID: 4524635423006400827}
   m_Layer: 0
-  m_Name: Restricted Area
+  m_Name: Restricted Area Prefab
   m_TagString: RestrictedArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -121,8 +121,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2974273728743173281}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9de1b4e6b460d974caca2925dd06376d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8382c5bdf333ef44391b2062025b5de8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RestrictedArea
-  isSelected: 0
   radius: 10

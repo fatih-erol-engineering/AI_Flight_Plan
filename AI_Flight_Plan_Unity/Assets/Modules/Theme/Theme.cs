@@ -30,5 +30,10 @@ public class Theme : ScriptableObject
     public Color tubeSurfaceColor_collided;
     public float tubeEdgeSize = 0.2f;
 
+    [Header("Restricted Area Properties")]
+    public Material nonCollidedRestrictedAreaMaterial;
+    public Material collidedRestrictedAreaMaterial;
+
+
 
 }
