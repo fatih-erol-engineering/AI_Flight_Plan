@@ -45,54 +45,34 @@ public class GameEvents : MonoBehaviour
     }
 
     // Time Manager Events
-    public event Action<TimeManager, bool> OnTimeChanged;
-    public void TimeChanged(TimeManager _timeManager, bool _isUIChange)
+    public event Action<float> OnTimeChanged;
+    public void TimeChanged(float _val)
     {
-        OnTimeChanged?.Invoke(_timeManager, _isUIChange);
-    }
-    public event Action<TimeManager> OnStartTimeChanged;
-    public void StartTimeChanged(TimeManager _timeManager)
-    {
-        OnStartTimeChanged?.Invoke(_timeManager);
+        OnTimeChanged?.Invoke(_val);
     }
 
-    public event Action<TimeManager> OnEndTimeChanged;
-    public void EndTimeChanged(TimeManager _timeManager)
+    public event Action<TimeState> OnTimeStateChanged;
+    public void TimeStateChanged(TimeState _val)
     {
-        OnEndTimeChanged?.Invoke(_timeManager);
+        OnTimeStateChanged?.Invoke(_val);
     }
 
-
-    public event Action<TimeManager, bool> OnTimeScaleChanged;
-    public void TimeScaleChanged(TimeManager _timeManager, bool _isUIChange)
+    public event Action<float> OnStartTimeChanged;
+    public void StartTimeChanged(float _val)
     {
-        OnTimeScaleChanged?.Invoke(_timeManager, _isUIChange);
-    }
-    public event Action<TimeManager, bool> OnTimeStateChanged;
-    public void TimeStateChanged(TimeManager _timeManager, bool _isUIChange)
-    {
-        OnTimeStateChanged?.Invoke(_timeManager, _isUIChange);
+        OnStartTimeChanged?.Invoke(_val);
     }
 
-    // Time UI Events
-    public event Action<float> OnTimeChangedInUI;
-    public void TimeChangedInUI(float _time)
+    public event Action<float> OnEndTimeChanged;
+    public void EndTimeChanged(float _val)
     {
-        OnTimeChangedInUI?.Invoke(_time);
+        OnEndTimeChanged?.Invoke(_val);
     }
-
-    public event Action OnTimePausedInUI;
-    public void TimePausedInUI()
+    public event Action<float> OnTimeScaleChanged;
+    public void TimeScaleChanged(float _val)
     {
-        OnTimePausedInUI?.Invoke();
+        OnTimeScaleChanged?.Invoke(_val);
     }
-
-    public event Action OnTimePlayedInUI;
-    public void TimePlayedInUI()
-    {
-        OnTimePlayedInUI?.Invoke();
-    }
-
 
 
     // Waypoint Events

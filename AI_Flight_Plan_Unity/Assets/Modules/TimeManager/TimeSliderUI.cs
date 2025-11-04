@@ -4,27 +4,28 @@ using UnityEngine.UIElements;
 public class TimeSliderUI : MonoBehaviour
 {
     [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private TimeSO time;
     private VisualElement root;
     private Button playPauseBtn, backwardStepBtn, forwardStepBtn;
     private FloatField maxTimeField, currentTimeField;
-
-    [field: SerializeField]
-    public bool playFlag { get; private set; } = false;
     private Slider timeSlider;
-
+    private TimeState currentTimeState;
     void Awake()
     {
         AssignData();
 
     }
-
-
+    void OnValidate()
+    {
+        AssignData();
+        SetTimeSliderValue(time.currentTime, true);
+        SetTimeSliderMaxValue(time.endTime, true);
+        SetTimeSliderMinValue(time.startTime, true);
+        SetTimeState(time.currentTimeState, true);
+    }
 
     public void AssignData()
     {
-        float minVal = 0f;
-        float maxVal = 10f;
-
         root = uiDocument.rootVisualElement;
         timeSlider = root.Q<Slider>("timeSlider");
         currentTimeField = root.Q<FloatField>("currentTimeField");
@@ -38,91 +39,88 @@ public class TimeSliderUI : MonoBehaviour
 
         timeSlider.value = 0f;
 
-        SetTimeSliderMinValue(minVal);
-        SetTimeSliderMaxValue(maxVal);
-
         playPauseBtn.clicked += OnPlayPauseBtnClick;
         backwardStepBtn.clicked += () =>
         {
             timeSlider.value = timeSlider.lowValue;
-            GameEvents.Instance.TimeChangedInUI(timeSlider.value);
+            time.SetCurrentTime(timeSlider.value);
         };
         forwardStepBtn.clicked += () =>
         {
             timeSlider.value = timeSlider.highValue;
-            GameEvents.Instance.TimeChangedInUI(timeSlider.value);
+            time.SetCurrentTime(timeSlider.value);
         };
         timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());
+    }
 
-        GameEvents.Instance.OnTimeChanged -= SetTimeSliderValueFromManager;
-        GameEvents.Instance.OnTimeChanged += SetTimeSliderValueFromManager;
-        GameEvents.Instance.OnTimeStateChanged += SetTimeStateFromManager;
-        GameEvents.Instance.OnStartTimeChanged -= (_timeManager) => SetTimeSliderMinValue(_timeManager.startTime_s);
-        GameEvents.Instance.OnStartTimeChanged += (_timeManager) => SetTimeSliderMinValue(_timeManager.startTime_s);
-        GameEvents.Instance.OnEndTimeChanged -= (_timeManager) => SetTimeSliderMaxValue(_timeManager.endTime_s);
-        GameEvents.Instance.OnEndTimeChanged += (_timeManager) => SetTimeSliderMaxValue(_timeManager.endTime_s);
-
+    void Update()
+    {
+        SetTimeSliderValue(time.currentTime);
+        SetTimeSliderMaxValue(time.endTime);
+        SetTimeSliderMinValue(time.startTime);
+        SetTimeState(time.currentTimeState);
     }
 
     private void OnPlayPauseBtnClick()
     {
-        if (playFlag)
+        switch (time.currentTimeState)
         {
-            playFlag = false;
-            playPauseBtn.AddToClassList("timeSliderPauseState");
-            GameEvents.Instance.TimePausedInUI();
-        }
-        else
-        {
-            playFlag = true;
-            playPauseBtn.RemoveFromClassList("timeSliderPauseState");
-            GameEvents.Instance.TimePlayedInUI();
-        }
-    }
-    private void SetTimeStateFromManager(TimeManager _timeManager, bool _isFromUI)
-    {
-        if (!_isFromUI)
-        {
-            if (_timeManager.currentTimeState == TimeState.Playing && !playFlag)
-            {
-                playFlag = true;
-                playPauseBtn.RemoveFromClassList("timeSliderPauseState");
-            }
-            else if (_timeManager.currentTimeState == TimeState.Paused && playFlag)
-            {
-                playFlag = false;
-                playPauseBtn.AddToClassList("timeSliderPauseState");
-            }
+            case TimeState.Playing:
+                SetTimeState(TimeState.Paused);
+                break;
+            case TimeState.Paused:
+                SetTimeState(TimeState.Playing);
+                break;
         }
     }
 
-    private void SetTimeSliderValue(float _time)
+    private void SetTimeSliderValue(float _time, bool isImmediate = false)
     {
-        if (_time != timeSlider.value)
+        if (isImmediate || _time != timeSlider.value)
         {
             timeSlider.value = _time;
+            currentTimeField.value = _time;
         }
     }
-    public void SetTimeSliderMinValue(float val, bool)
+
+    public void SetTimeSliderMaxValue(float _val, bool isImmediate = false)
     {
-        timeSlider.lowValue = val;
-    }
-    public void SetTimeSliderMaxValue(float val)
-    {
-        timeSlider.highValue = val;
-        maxTimeField.value = val;
-    }
-    public void SetTimeSliderValueFromManager(TimeManager _timeManager, bool _isFromUI)
-    {
-        if (!_isFromUI)
+        if (isImmediate || _val != timeSlider.highValue)
         {
-            SetTimeSliderValue(_timeManager.currentTime_s);
+            timeSlider.highValue = _val;
+            maxTimeField.value = _val;
+        }
+    }
+    public void SetTimeState(TimeState _val, bool isImmediate = false)
+    {
+        if (isImmediate || _val != currentTimeState)
+        {
+            switch (_val)
+            {
+                case TimeState.Playing:
+                    playPauseBtn.RemoveFromClassList("timeSliderPauseState");
+                    break;
+                case TimeState.Paused:
+                    playPauseBtn.AddToClassList("timeSliderPauseState");
+                    break;
+            }
+            currentTimeState = _val;
+            time.SetTimeState(_val);
+        }
+    }
+    public void SetTimeSliderMinValue(float _val, bool isImmediate = false)
+    {
+        if (isImmediate || _val != timeSlider.lowValue)
+        {
+            timeSlider.lowValue = _val;
+            time.startTime = _val;
         }
     }
 
     private void SliderValueChanged()
     {
-        GameEvents.Instance.TimeChangedInUI(timeSlider.value);
+        time.SetCurrentTime(timeSlider.value);
+        currentTimeField.value = timeSlider.value;
     }
 
 

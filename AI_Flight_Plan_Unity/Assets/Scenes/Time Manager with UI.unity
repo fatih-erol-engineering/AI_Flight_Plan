@@ -287,7 +287,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   uiDocument: {fileID: 1900046852}
-  <playFlag>k__BackingField: 0
+  time: {fileID: 11400000, guid: 7db24007a932cc84db60684e642a0dd9, type: 2}
+  playFlag: 0
 --- !u!114 &762850602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,11 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e143a8a99477fd4e9f016d57e6626dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeManager
-  _currentTimeState: 1
-  _currentTime_s: 0
-  _startTime_s: 0
-  _endTime_s: 10
-  _timeScale: 1
+  time: {fileID: 11400000, guid: 7db24007a932cc84db60684e642a0dd9, type: 2}
 --- !u!4 &762850603
 Transform:
   m_ObjectHideFlags: 0

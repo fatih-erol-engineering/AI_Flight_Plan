@@ -4,8 +4,65 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TimeSO", menuName = "ScriptableObjects/TimeSO", order = 1)]
 public class TimeSO : ScriptableObject
 {
-    [field: SerializeField] public float currentTime { get; private set; } = 0f;
-    [field: SerializeField] public float startTime { get; private set; } = 0f;
-    [field: SerializeField] public float endTime { get; private set; } = 10f;
-    [field: SerializeField] public float timeScale { get; private set; } = 1f;
+    public TimeState currentTimeState = TimeState.Paused;
+    public float currentTime = 0f;
+    public float startTime = 0f;
+    public float endTime = 10f;
+    public float timeScale = 1f;
+    void OnValidate()
+    {
+        SetTimeState(currentTimeState, true);
+        SetCurrentTime(currentTime, true);
+        SetStartTime(startTime, true);
+        SetEndTime(endTime, true);
+        SetTimeScale(timeScale, true);
+    }
+
+    public void SetTimeState(TimeState _val, bool isImmediate = false)
+    {
+        if (currentTimeState != _val || isImmediate)
+        {
+            currentTimeState = _val;
+            GameEvents.Instance.TimeStateChanged(currentTimeState);
+        }
+    }
+    public void SetCurrentTime(float _val, bool isImmediate = false)
+    {
+        if (currentTime != _val || isImmediate)
+        {
+            currentTime = Mathf.Clamp(_val, startTime, endTime);
+            GameEvents.Instance.TimeChanged(currentTime);
+        }
+    }
+    public void SetStartTime(float _val, bool isImmediate = false)
+    {
+        if (startTime != _val || isImmediate)
+        {
+            startTime = _val;
+            GameEvents.Instance.StartTimeChanged(startTime);
+        }
+    }
+    public void SetEndTime(float _val, bool isImmediate = false)
+    {
+        if (endTime != _val || isImmediate)
+        {
+            endTime = _val;
+            GameEvents.Instance.EndTimeChanged(endTime);
+        }
+    }
+    public void SetTimeScale(float _val, bool isImmediate = false)
+    {
+        if (timeScale != _val || isImmediate)
+        {
+            timeScale = _val;
+            GameEvents.Instance.TimeScaleChanged(timeScale);
+        }
+    }
+
+}
+
+public enum TimeState
+{
+    Playing,
+    Paused
 }
