@@ -17,7 +17,7 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField] private Transform SegmentContainer;
     [SerializeField] private GameObject bSplineDrawerPrefab;
     [SerializeField] private GameObject controlPointPrefab;
-    [SerializeField] private BSplineDrawer[] bSplineDrawerArray;
+    [SerializeField] public BSplineDrawer[] bSplineDrawerArray;
     [SerializeField] private bool isReadyToUpdate = false;
 
     [SerializeField] private Vector3[] waypointPositions_AfterCreation;
@@ -266,9 +266,7 @@ public class TrajectoryDrawer : MonoBehaviour
             {
                 List<CollisionInfo> currentCollisionInfoList = segment1.CheckCollisionWithAnotherSpline(segment2);
                 totalCollisionInfoList.AddRange(currentCollisionInfoList);
-                segment2.SetIsCollided(false);
             }
-            segment1.SetIsCollided(false);
         }
         return totalCollisionInfoList;
     }
@@ -280,7 +278,6 @@ public class TrajectoryDrawer : MonoBehaviour
         {
             List<CollisionInfoRestrictedArea> currentCollisionInfoList = segment1.CheckCollisionWithRestrictedArea(_restrictedArea);
             totalCollisionInfoList.AddRange(currentCollisionInfoList);
-            segment1.SetIsCollided(false);
         }
         return totalCollisionInfoList;
     }

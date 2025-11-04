@@ -14,7 +14,7 @@ public class BSplineDrawer : MonoBehaviour
     [field: SerializeField, HideInInspector] public TrajectoryPoint[] trajectoryPoints { get; private set; }
     [SerializeField] public TimeGame startTime { get => waypointStart.time; }
     [SerializeField] public TimeGame endTime { get => waypointEnd.time; }
-    [SerializeField] private CurveSegment[] curveSegments;
+    [SerializeField] public CurveSegment[] curveSegments;
     [SerializeField] private bool isCreated = false;
 
 
@@ -557,7 +557,6 @@ public class BSplineDrawer : MonoBehaviour
                             segment2 = otherCurveSegment
                         };
                         collisionInfoList.Add(collisionInfo);
-
                     }
                 }
 

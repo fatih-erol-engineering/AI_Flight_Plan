@@ -13,7 +13,6 @@ public class ConflictCheckerEditorUI : Editor
         if (GUILayout.Button("Check Conflicts"))
         {
             myScript.CheckConflicts();
-            myScript.CheckRestrictedAreaConflicts();
         }
         if (GUILayout.Button("Solve Conflicts"))
         {

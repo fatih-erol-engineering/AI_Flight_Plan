@@ -62,7 +62,7 @@ public class ConflictChecker : MonoBehaviour
                 var collision = conflictsSnapshot[i];
 
                 // Position Adjustment
-                float dist = 0.1f;
+                float dist = 0.5f;
                 var s1 = collision.segment1;
                 var s2 = collision.segment2;
                 Vector3 deltaPos = dist * CylinderIntersectNormal(s1.tubeManager.GetStartPosition(), s1.tubeManager.GetEndPosition(), s1.tubeManager.GetRadius(),
@@ -90,7 +90,7 @@ public class ConflictChecker : MonoBehaviour
 
             }
 
-            CheckConflicts(); // güncelle
+            CheckTrajConflicts(); // güncelle
             iteration++;
             yield return null;
         }
@@ -173,11 +173,25 @@ public class ConflictChecker : MonoBehaviour
         CheckConflicts();
     }
 
-
+    public void CheckConflicts()
+    {
+        foreach (TrajectoryDrawer traj in allTraj)
+        {
+            foreach (BSplineDrawer bSplineDrawer in traj.bSplineDrawerArray)
+            {
+                foreach (CurveSegment segment in bSplineDrawer.curveSegments)
+                {
+                    segment.SetIsCollided(false);
+                }
+            }
+        }
+        CheckTrajConflicts();
+        CheckRestrictedAreaConflicts();
+    }
 
 
     // Update is called once per frame
-    public void CheckConflicts()
+    public void CheckTrajConflicts()
     {
         if (all_collisionInfoList == null)
             all_collisionInfoList = new List<CollisionInfo>();
@@ -196,8 +210,8 @@ public class ConflictChecker : MonoBehaviour
         }
         for (int i = 0; i < all_collisionInfoList.Count; i++)
         {
-            all_collisionInfoList[i].segment1.SetIsCollided(true);
-            all_collisionInfoList[i].segment2.SetIsCollided(true);
+            all_collisionInfoList[i].segment1.SetIsCollided(true, true);
+            all_collisionInfoList[i].segment2.SetIsCollided(true, true);
         }
     }
 
