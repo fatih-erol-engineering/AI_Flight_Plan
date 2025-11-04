@@ -115,14 +115,19 @@ public class ConflictChecker : MonoBehaviour
 
                 var s1 = collision.segment;
                 var s2 = collision.restrictedArea;
-                Vector3 deltaPos = CylinderAndSphereIntersectNormal(s1.tubeManager.GetStartPosition(), s1.tubeManager.GetEndPosition(), s1.tubeManager.GetRadius(),
-                 s2.transform.position, s2.radius, out float dist);
-                deltaPos = dist * deltaPos;
+                float dist = s2.radius / 20f;
+                Vector3 deltaPos1 = s2.transform.position - s1.startPoint.position;
+                Vector3 deltaPos2 = s2.transform.position - s1.endPoint.position;
+                float t1 = deltaPos1.magnitude / (deltaPos1.magnitude + deltaPos2.magnitude);
+                float t2 = deltaPos2.magnitude / (deltaPos1.magnitude + deltaPos2.magnitude);
 
+                float dist1 = dist * t2; //Ters oran var
+                float dist2 = dist * t1;//Ters oran var
+                Vector3 movePos1 = deltaPos1.normalized * dist1 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 movePos2 = deltaPos2.normalized * dist2 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
 
-                Vector3 deltaPos1 = deltaPos * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
-                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + deltaPos1);
-                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + deltaPos1);
+                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + movePos1);
+                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + movePos2);
             }
 
             CheckRestrictedAreaConflicts(); // güncelle
@@ -228,20 +233,7 @@ public class ConflictChecker : MonoBehaviour
         Vector3 n = Vector3.Cross(uA, uB);
         return n.normalized;
     }
-    public static Vector3 CylinderAndSphereIntersectNormal(
-    Vector3 startA, Vector3 endA, float radiusA,
-    Vector3 posB, float radiusB, out float dist)
-    {
-        // --- 1. Eksen yön vektörlerini ve uzunlukları hesapla
-        Vector3 l2 = (endA - startA);
-        Vector3 l1 = (posB - startA);
-        Vector3 l3 = l2 - l1;
-        dist = radiusB - l3.magnitude;
-        if (dist < 0)
-            dist = 0;
 
-        return l3.normalized;
-    }
 }
 
 public class CollisionInfo

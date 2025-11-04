@@ -598,8 +598,8 @@ public class BSplineDrawer : MonoBehaviour
     }
 
     public static bool CylinderSphereIntersect(
-      Vector3 cylinderStart, Vector3 cylinderEnd, float cylinderRadius,
-      Vector3 sphereCenter, float sphereRadius)
+    Vector3 cylinderStart, Vector3 cylinderEnd, float cylinderRadius,
+    Vector3 sphereCenter, float sphereRadius)
     {
         Vector3 axis = cylinderEnd - cylinderStart;
         float height = axis.magnitude;
