@@ -35,9 +35,12 @@ public class TrajectoryDrawer : MonoBehaviour
     }
     public void OnEnable()
     {
-        Clear();
-        AssignData();
-        Create();
+        if (isReadyToUpdate)
+        {
+            Clear();
+            AssignData();
+            Create();
+        }
     }
     // void Awake()
     // {

@@ -10,18 +10,9 @@ public class TimeSliderUI : MonoBehaviour
     private FloatField maxTimeField, currentTimeField;
     private Slider timeSlider;
     private TimeState currentTimeState;
-    void Awake()
+    void Start()
     {
         AssignData();
-
-    }
-    void OnValidate()
-    {
-        AssignData();
-        SetTimeSliderValue(time.currentTime, true);
-        SetTimeSliderMaxValue(time.endTime, true);
-        SetTimeSliderMinValue(time.startTime, true);
-        SetTimeState(time.currentTimeState, true);
     }
 
     public void AssignData()
@@ -51,6 +42,11 @@ public class TimeSliderUI : MonoBehaviour
             time.SetCurrentTime(timeSlider.value);
         };
         timeSlider.RegisterValueChangedCallback(_ => SliderValueChanged());
+
+        SetTimeSliderValue(time.currentTime, true);
+        SetTimeSliderMaxValue(time.endTime, true);
+        SetTimeSliderMinValue(time.startTime, true);
+        SetTimeState(time.currentTimeState, true);
     }
 
     void Update()

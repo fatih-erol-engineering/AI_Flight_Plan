@@ -69,6 +69,7 @@ Transform:
   - {fileID: 6506809318899833818}
   - {fileID: 7533808964782910604}
   - {fileID: 3641352799714503626}
+  - {fileID: 1283676654378488176}
   m_Father: {fileID: 6829256584013129055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &4661849316190145015
@@ -153,11 +154,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033256b7ab47820448239597476f1496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
-  <time>k__BackingField:
+  id: 0
+  time:
     <second>k__BackingField: 0
   aircraftProperties: {fileID: 11400000, guid: 8eb245aeb8b4a0a40a9a63ba36dfebfe, type: 2}
-  <trajectory>k__BackingField: {fileID: 2734640221863038550}
+  trajectory: {fileID: 2734640221863038550}
   highlightMeshRenderer: {fileID: 5822838744944906649}
+  isSelected: 0
+  timeOrPositionChangeVal: 1
+  nonEditableOrEditableVal: 1
+  deltaTime:
+    <second>k__BackingField: 0
+  _neonWaveActive: 1
+  neonWave: {fileID: 7520518820656245019}
 --- !u!1 &2528670350971851328
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,6 +706,79 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1001 &294171176369211866
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 113578939797663538}
+    m_Modifications:
+    - target: {fileID: 1308888168897654660, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_Name
+      value: neonWavePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+--- !u!4 &1283676654378488176 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+  m_PrefabInstance: {fileID: 294171176369211866}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7520518820656245019 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7803430997202018497, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+  m_PrefabInstance: {fileID: 294171176369211866}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50c8c47a4b98e0940bb8238417b527e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NeonWave
 --- !u!1001 &3021528722479001806
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -706,9 +788,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 6829256584013129055}
     m_Modifications:
     - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: aircraft
+      value: 
+      objectReference: {fileID: 6427827277073058405}
     - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: <waypointFactory>k__BackingField
       value: 

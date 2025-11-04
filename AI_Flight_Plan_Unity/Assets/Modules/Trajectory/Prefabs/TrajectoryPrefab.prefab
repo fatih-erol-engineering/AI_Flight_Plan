@@ -101,8 +101,6 @@ MonoBehaviour:
   uiDocument: {fileID: 0}
   altitudeClearanceForMouseSpawn: 1
   altitudeDragSensitivity: 0.02
-  previewLineWidth: 0.1
-  previewLineMaxLength: 100
 --- !u!1 &8064563952328812410
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,13 +162,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73412e3e37930e14885babcfaf3dccd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryDrawer
+  aircraft: {fileID: 0}
   segmentLength_m: 50
-  <startTime>k__BackingField:
+  tubeRadius_m: 10
+  startTime:
     <second>k__BackingField: 0
-  <endTime>k__BackingField:
-    <second>k__BackingField: 10
-  <waypointFactory>k__BackingField: {fileID: 0}
-  <createModeWaypointManager>k__BackingField: {fileID: 0}
+  endTime:
+    <second>k__BackingField: 0
+  waypointFactory: {fileID: 2546198646138960698}
+  createModeWaypointManager: {fileID: 937270970343944918}
   startColor: {r: 0, g: 1, b: 0, a: 1}
   endColor: {r: 1, g: 0, b: 0, a: 1}
   waypointContainer: {fileID: 5513755076722954520}
@@ -180,8 +180,3 @@ MonoBehaviour:
   bSplineDrawerArray: []
   isReadyToUpdate: 0
   waypointPositions_AfterCreation: []
-  showTube: 1
-  tubeRadius: 10
-  tubeEdgeSize: 0.2
-  tubeEdgeColor: {r: 0, g: 0.4928585, b: 2.1185477, a: 1}
-  tubeSurfaceColor: {r: 0, g: 0.16230345, b: 1, a: 0.15686275}

@@ -18,8 +18,6 @@ public class CreateModeAircraftManager : MonoBehaviour, IGameModeHooks
 
     [Header("Preview")]
     private Transform previewContainer;
-    private Material previewMaterialOverride;
-    [SerializeField] private Theme theme;
     private GameObject previewInstance;
     // vertical line under preview (same material as preview)
     private Dictionary<CreateMode, ModeHooks> modes;

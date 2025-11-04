@@ -8,9 +8,7 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private ConflictChecker conflictChecker;
-    //     private MainGameManager mainGameManager;
-    [field: SerializeField]
-    public UIDocument uIDocument { get; private set; }
+    public UIDocument uIDocument;
     [SerializeField] private AircraftPropertiesRegistry aircraftPropertiesRegistry;
     private VisualElement root, mainMenuRoot, createRoot, conflictSolverRoot, conflictAircraftListRoot;
     [SerializeField] private VisualTreeAsset aircraftConflictFoldoutTemplate;
@@ -25,8 +23,9 @@ public class UIManager : MonoBehaviour
 
     //     // For Create Mode
     public string selectedAircraftModelName;
+    private int updateCount = 0;
 
-    void OnValidate()
+    void OnEnable()
     {
         AssignData();
     }
@@ -36,8 +35,13 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        restartRequestUI = false;
+        if (updateCount == 0)
+        {
+            selectedAircraftModelName = rotorDDM.dropdownField.value;
+            GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
+        }
         UpdateSelectedAircraft();
+        updateCount++;
     }
     public void UpdateSelectedAircraft()
     {
@@ -53,18 +57,7 @@ public class UIManager : MonoBehaviour
 
     void AssignData()
     {
-        // if (!mainGameManager) mainGameManager = GetComponent<MainGameManager>();
-        // CheckAssignment(mainGameManager);
 
-        // if (!aircraftSpecRegistry) aircraftSpecRegistry = mainGameManager?.aircraftSpecRegistry;
-        // CheckAssignment(aircraftSpecRegistry);
-
-        // Ensure an EventSystem exists if there is any UI in the scene.
-        // If none exists and we detect a Canvas or UIDocument, create a simple EventSystem with StandaloneInputModule.
-        // if (EventSystem.current == null)
-        // {
-        //     var go = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-        // }
         if (!uIDocument) uIDocument = GetComponent<UIDocument>();
         CheckAssignment(uIDocument);
 
@@ -123,7 +116,7 @@ public class UIManager : MonoBehaviour
 
         rotorDDM.dropdownField.RegisterValueChangedCallback(_ => rotorDDMChange());
         fixedWingDDM.dropdownField.RegisterValueChangedCallback(_ => fixedWingDDMChange());
-        solveConflictBtn.clicked += solveConflictBtnClick;
+        // solveConflictBtn.clicked += solveConflictBtnClick;
 
         // Custom Toggle Button Groups must be declared after Registering Value Changed Callbacks
         mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
@@ -134,6 +127,7 @@ public class UIManager : MonoBehaviour
         conflictSolverRoot.AddToClassList("popupHidden");
 
         aircraftConflictManagers = new List<AircraftConflictManager>();
+
     }
     void CheckAssignment<T>(T obj, string name = "")
     {
@@ -175,6 +169,7 @@ public class UIManager : MonoBehaviour
             createRoot.AddToClassList("submenusHidden");
             gameModeUI = MainGameMode.Free;
         }
+        GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
     }
     void solveTBtnClick()
     {
@@ -210,7 +205,6 @@ public class UIManager : MonoBehaviour
             fixedWingDDM.dropdownField.style.display = DisplayStyle.None;
             rotorDDM.dropdownField.style.display = DisplayStyle.Flex;
             UpdateSelectedAircraft();
-            restartRequestUI = true;
             GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
         }
     }
@@ -222,7 +216,6 @@ public class UIManager : MonoBehaviour
             rotorDDM.dropdownField.style.display = DisplayStyle.None;
             fixedWingDDM.dropdownField.style.display = DisplayStyle.Flex;
             UpdateSelectedAircraft();
-            restartRequestUI = true;
             GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
         }
     }
@@ -230,12 +223,12 @@ public class UIManager : MonoBehaviour
     void rotorDDMChange()
     {
         UpdateSelectedAircraft();
-        restartRequestUI = true;
+        GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
     }
     void fixedWingDDMChange()
     {
         UpdateSelectedAircraft();
-        restartRequestUI = true;
+        GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
     }
 }
 
@@ -316,6 +309,7 @@ public class CustomAircraftDropdownMenu
 
         dropdownField.choices = _labels;
         dropdownField.index = 0;
+        GameEvents.Instance.ChangeAircraftPrefabWithUI(_labels[0]);
     }
 }
 

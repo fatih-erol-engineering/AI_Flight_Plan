@@ -33,6 +33,7 @@ Transform:
   m_Children:
   - {fileID: 5534225113293581145}
   - {fileID: 231493401939224171}
+  - {fileID: 8332915472362764080}
   m_Father: {fileID: 6829256584013129055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1288290877605290423
@@ -96,15 +97,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
   id: 0
-  <time>k__BackingField:
+  time:
     <second>k__BackingField: 0
   aircraftProperties: {fileID: 11400000, guid: f1057860b63009e4aa8b26b830b55b88, type: 2}
-  <trajectory>k__BackingField: {fileID: 7608579817030596569}
+  trajectory: {fileID: 7608579817030596569}
   highlightMeshRenderer: {fileID: 1404352160370580740}
+  isSelected: 0
   timeOrPositionChangeVal: 1
   nonEditableOrEditableVal: 1
   deltaTime:
     <second>k__BackingField: 0
+  _neonWaveActive: 1
+  neonWave: {fileID: 732608311674933083}
 --- !u!1 &3463887414340607040
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,17 +882,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 6829256584013129055}
     m_Modifications:
     - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+      propertyPath: aircraft
+      value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: <waypointFactory>k__BackingField
-      value: 
-      objectReference: {fileID: 5106859549458281083}
-    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-      propertyPath: <createModeWaypointManager>k__BackingField
-      value: 
-      objectReference: {fileID: 7533120733465426839}
     - target: {fileID: 8064563952328812410, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_Name
       value: TrajectoryPrefab
@@ -947,28 +943,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8820869112042112267, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
   m_PrefabInstance: {fileID: 7316906415756724545}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5106859549458281083 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2546198646138960698, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  m_PrefabInstance: {fileID: 7316906415756724545}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 948d7c142516f6548b62d6f49676bff9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WaypointFactory
---- !u!114 &7533120733465426839 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 937270970343944918, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
-  m_PrefabInstance: {fileID: 7316906415756724545}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa6b738ae46a0f244b3c7f450025c6b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CreateModeWaypointManager
 --- !u!114 &7608579817030596569 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
@@ -980,3 +954,88 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73412e3e37930e14885babcfaf3dccd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryDrawer
+--- !u!1001 &7377428649774788506
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 113578939797663538}
+    m_Modifications:
+    - target: {fileID: 1308888168897654660, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_Name
+      value: neonWavePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+--- !u!114 &732608311674933083 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7803430997202018497, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+  m_PrefabInstance: {fileID: 7377428649774788506}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50c8c47a4b98e0940bb8238417b527e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NeonWave
+--- !u!4 &8332915472362764080 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1568820840061229226, guid: 16c068d75bbcc1d4e87a67a1cd07b2be, type: 3}
+  m_PrefabInstance: {fileID: 7377428649774788506}
+  m_PrefabAsset: {fileID: 0}

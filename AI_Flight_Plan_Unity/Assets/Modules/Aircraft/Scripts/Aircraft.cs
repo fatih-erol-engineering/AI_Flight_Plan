@@ -26,20 +26,54 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     public float timeOrPositionChangeVal = 1f; // 0 means time can be changed 1 means position can be changed
     [Range(0f, 1f)]
     public float nonEditableOrEditableVal = 1f; // 0 means non editable, 1 means editable
-    [SerializeField] private TimeGame deltaTime; // time step for conflict solver in seconds
+    [SerializeField] private TimeGame deltaTime; // time step for conflict solver in seconds    
+
+    // [SerializeField] private bool _neonWaveActive = true;
+
+    // public bool neonWaveActive
+    // {
+    //     get => _neonWaveActive;
+    //     set => SetNeonWaveActive(value);
+    // }
+
+
+    [SerializeField] private NeonWave neonWave;
 
     // void Update()
     // {
     //     SetDeltaTime(deltaTime, true);
     // }
-    void Awake()
-    {
-        AssignData();
-    }
+    // public void SetNeonWaveActive(bool _isActive, bool isImmediate = false)
+    // {
+    //     if (_neonWaveActive != _isActive)
+    //     {
+    //         _neonWaveActive = _isActive;
+    //         neonWave.gameObject.SetActive(_neonWaveActive);
+    //     }
+    // }
+
+    private bool _eventsBound;
 
     void OnEnable()
     {
         AssignData();
+        if (!_eventsBound && GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnEditableEnter += OnEditableEnter;
+            GameEvents.Instance.OnEditableExit += OnEditableExit;
+            GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;
+            _eventsBound = true;
+        }
+    }
+    void OnDisable()
+    {
+        if (_eventsBound && GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
+            GameEvents.Instance.OnEditableExit -= OnEditableExit;
+            GameEvents.Instance.OnTimeChanged -= MoveAircraftWithTime;
+            _eventsBound = false;
+        }
     }
 
     void AssignData()
@@ -50,26 +84,14 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         highlightMeshRenderer.gameObject.SetActive(false);
         deltaTime = new TimeGame(0f);
 
-        GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
-        GameEvents.Instance.OnEditableExit -= OnEditableExit;
-
-        GameEvents.Instance.OnEditableEnter += OnEditableEnter;
-        GameEvents.Instance.OnEditableExit += OnEditableExit;
-
-        GameEvents.Instance.OnTimeChanged -= MoveAircraftWithTime;
-        GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;
-    }
-    void OnDestroy()
-    {
-        GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
-        GameEvents.Instance.OnEditableExit -= OnEditableExit;
-        GameEvents.Instance.OnTimeChanged -= MoveAircraftWithTime;
     }
 
     public void OnHoverEnter()
     {
         if (isSelected) return;
         SetHighlightMeshRendererEnabled(true);
+
+        if (ThemeManager.Instance == null) return;
         SetHighlightEdgeColor(ThemeManager.Instance.theme.Hover);
         // SetHighlightEdgeWidth(1f);
     }
@@ -78,23 +100,27 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         if (isSelected) return;
         // SetHighlightEdgeWidth(0f);
         SetHighlightMeshRendererEnabled(false);
+        SetHighlightEdgeColor(ThemeManager.Instance.theme.Preview);
     }
     public void OnSelect()
     {
-        SetHighlightEdgeColor(ThemeManager.Instance.theme.Select);
         SetHighlightMeshRendererEnabled(true);
         // SetHighlightEdgeWidth(1f);
         SetIsSelected(true);
+        if (ThemeManager.Instance == null) return;
+        SetHighlightEdgeColor(ThemeManager.Instance.theme.Select);
     }
     public void OnDeselect()
     {
         // SetHighlightEdgeWidth(0f);
         SetHighlightMeshRendererEnabled(false);
         SetIsSelected(false);
+        if (ThemeManager.Instance == null) return;
+        SetHighlightEdgeColor(ThemeManager.Instance.theme.Preview);
     }
     public void SetHighlightMeshRendererEnabled(bool _isEnabled)
     {
-        highlightMeshRenderer.gameObject.SetActive(_isEnabled);
+        highlightMeshRenderer?.gameObject.SetActive(_isEnabled);
     }
 
     public void SetTime(TimeGame _time, bool isImmediate = false)
@@ -124,6 +150,7 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
             highlightEdgeColor = _color;
             mpb.SetColor(EdgeColorID, _color);
             highlightMeshRenderer.SetPropertyBlock(mpb);
+            neonWave.SetColor(_color, isImmediate);
         }
     }
     public void SetHighlightEdgeWidth(float _width, bool isImmediate = false)

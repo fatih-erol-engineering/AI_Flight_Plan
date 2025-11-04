@@ -180,7 +180,7 @@ public class BSplineDrawer : MonoBehaviour
     public bool CheckReadyToUpdate()
     {
         bool waypointCondition = waypointStart != null && waypointEnd != null && waypointStart.time.second < waypointEnd.time.second;
-        bool isReadyToUpdate = waypointCondition && isCreated;
+        bool isReadyToUpdate = waypointCondition && isCreated && curveSegments != null;
         if (!isReadyToUpdate)
         {
             Debug.LogWarning("BSplineDrawer: Waypoints are not properly set or times are invalid.");

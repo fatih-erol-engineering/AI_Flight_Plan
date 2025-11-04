@@ -2105,8 +2105,8 @@
     "m_ObjectId": "7ea48936038947268946160ff3619a04",
     "m_Title": "Outside Mask",
     "m_Position": {
-        "x": -993.0001831054688,
-        "y": 1068.0001220703125
+        "x": -993.60009765625,
+        "y": 1066.39990234375
     }
 }
 
@@ -2419,7 +2419,7 @@
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
-    "m_RenderFace": 2,
+    "m_RenderFace": 0,
     "m_AlphaClip": false,
     "m_CastShadows": true,
     "m_ReceiveShadows": true,

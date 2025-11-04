@@ -10,7 +10,7 @@ public class TimeSO : ScriptableObject
     public float startTime = 0f;
     public float endTime = 10f;
     public float timeScale = 1f;
-    void OnValidate()
+    void OnEnable()
     {
         SetTimeState(currentTimeState, true);
         SetCurrentTime(currentTime, true);

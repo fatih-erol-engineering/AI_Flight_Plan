@@ -55,9 +55,12 @@ Material:
     - _QueueOffset: 0
     - _dissapearRate: 0
     - _lineSize: 1
+    - _neonWaveDensity: 1
+    - _neonWaveRate: 1
     - _radious: 0
     - _rate: 3
     m_Colors:
     - _lineColor: {r: 4.8969665, g: 0.92917526, b: 0, a: 1}
+    - _neonWaveColor: {r: 0, g: 1.3515064, b: 2.9960787, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

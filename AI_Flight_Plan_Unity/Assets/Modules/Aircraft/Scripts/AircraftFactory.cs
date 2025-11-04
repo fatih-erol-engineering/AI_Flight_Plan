@@ -21,6 +21,7 @@ public class AircraftFactory : MonoBehaviour
         aircraftPrefab = aircraftPropertiesRegistry.rotorAircrafts[0].GameObject();
 
         GameEvents.Instance.OnSelectedAircraftToSpawnChangedUI -= ChangeAircraftPrefabWithUI;
+        GameEvents.Instance.OnSelectedAircraftToSpawnChangedUI += ChangeAircraftPrefabWithUI;
     }
     void Update()
     {

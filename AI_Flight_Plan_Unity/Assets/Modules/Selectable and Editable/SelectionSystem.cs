@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 public class SelectionSystem : MonoBehaviour
 {
     public static SelectionSystem Instance { get; private set; }
-    [SerializeField] private MainGameManager mainGameManager;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask pickMask = ~0; // gerekirse katman daralt
     private float maxDistance = 200f;
@@ -42,14 +41,9 @@ public class SelectionSystem : MonoBehaviour
 
     void Update()
     {
-        switch (mainGameManager.currentMode)
-        {
-            case MainGameMode.Free:
-                UpdateHover();
-                UpdateEditable();
-                HandleSelection();
-                break;
-        }
+        UpdateHover();
+        UpdateEditable();
+        HandleSelection();
     }
 
     private void UpdateHover()

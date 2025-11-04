@@ -2,39 +2,49 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Security.Cryptography;
-
+[ExecuteAlways]
 public class ConflictChecker : MonoBehaviour
 {
     [SerializeField] private AircraftFactory aircraftFactory;
-    [SerializeField] private GameObject collisionMarkerPrefab;
-    public List<GameObject> markers { get; private set; }
-    public List<CollisionInfo> all_collisionInfoList { get; private set; }
-    public List<TrajectoryDrawer> allTraj { get; private set; }
-    void Awake()
+    public List<CollisionInfo> all_collisionInfoList;
+    public List<TrajectoryDrawer> allTraj;
+    private bool _eventsBound;
+    void OnEnable()
     {
-        markers = new List<GameObject>();
         all_collisionInfoList = new List<CollisionInfo>();
         allTraj = new List<TrajectoryDrawer>();
-        GameEvents.Instance.OnSplineChanged += OnSplineChanged;
+        if (!_eventsBound && GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnSplineChanged += OnSplineChanged;
+            _eventsBound = true;
+        }
+    }
+    void OnDisable()
+    {
+        if (_eventsBound && GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
+            _eventsBound = false;
+        }
     }
 
     public void SolveConflicts()
     {
         StopCoroutine(SolveConflictsCoroutine());
         StartCoroutine(SolveConflictsCoroutine());
-    //   var conflictsSnapshot = all_collisionInfoList.ToArray();
+        //   var conflictsSnapshot = all_collisionInfoList.ToArray();
 
-    //     foreach (var collision in conflictsSnapshot)
-    //     {
-    //         float deltaAltitude = 0.1f;
-    //         var s1 = collision.segment1;
-    //         var s2 = collision.segment2;
+        //     foreach (var collision in conflictsSnapshot)
+        //     {
+        //         float deltaAltitude = 0.1f;
+        //         var s1 = collision.segment1;
+        //         var s2 = collision.segment2;
 
-    //         s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + new Vector3(0, deltaAltitude, 0));
-    //         s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + new Vector3(0, deltaAltitude, 0));
-    //         s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + new Vector3(0, -deltaAltitude, 0));
-    //         s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + new Vector3(0, -deltaAltitude, 0));
-    //     }
+        //         s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + new Vector3(0, deltaAltitude, 0));
+        //         s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + new Vector3(0, deltaAltitude, 0));
+        //         s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + new Vector3(0, -deltaAltitude, 0));
+        //         s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + new Vector3(0, -deltaAltitude, 0));
+        //     }
     }
     IEnumerator SolveConflictsCoroutine()
     {
@@ -56,8 +66,8 @@ public class ConflictChecker : MonoBehaviour
                 Vector3 deltaPos = dist * CylinderIntersectNormal(s1.tubeManager.GetStartPosition(), s1.tubeManager.GetEndPosition(), s1.tubeManager.GetRadius(),
                  s2.tubeManager.GetStartPosition(), s2.tubeManager.GetEndPosition(), s2.tubeManager.GetRadius());
 
-                Vector3 deltaPos1 = deltaPos  * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
-                Vector3 deltaPos2 = deltaPos  * s2.aircraft.timeOrPositionChangeVal * s2.aircraft.nonEditableOrEditableVal *(-1f);
+                Vector3 deltaPos1 = deltaPos * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 deltaPos2 = deltaPos * s2.aircraft.timeOrPositionChangeVal * s2.aircraft.nonEditableOrEditableVal * (-1f);
 
                 s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + deltaPos1);
                 s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + deltaPos1);
@@ -130,15 +140,10 @@ public class ConflictChecker : MonoBehaviour
     }
     public void ClearConflicts()
     {
-        foreach (GameObject marker in markers)
-        {
-            Destroy(marker);
-        }
-        markers.Clear();
     }
- public static Vector3 CylinderIntersectNormal(
-    Vector3 startA, Vector3 endA, float radiusA,
-    Vector3 startB, Vector3 endB, float radiusB)
+    public static Vector3 CylinderIntersectNormal(
+       Vector3 startA, Vector3 endA, float radiusA,
+       Vector3 startB, Vector3 endB, float radiusB)
     {
         // --- 1. Eksen yön vektörlerini ve uzunlukları hesapla
         Vector3 uA = (endA - startA);
