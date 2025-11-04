@@ -124,19 +124,17 @@ public class ConflictChecker : MonoBehaviour
                 float dist1 = deltaPos1.magnitude;//Ters oran var
                 float dist2 = deltaPos2.magnitude;
                 float dist3 = DistancePointToLine(s2.transform.position, s1.startPoint.position, s1.endPoint.position, out _dir3);
-                float distTotal = dist1 + dist2 + dist3;
+                float distTotal = dist1 + dist2;
 
                 float t1 = dist1 / distTotal;
                 float t2 = dist2 / distTotal;
-                float t3 = dist3 / distTotal;
 
                 float distUnit1 = dist * t2;
                 float distUnit2 = dist * t1;
-                float distUnit3 = dist * t3;
 
                 Vector3 movePos1 = deltaPos1.normalized * distUnit1 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
                 Vector3 movePos2 = deltaPos2.normalized * distUnit2 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
-                Vector3 movePos3 = _dir3 * distUnit3 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 movePos3 = _dir3 * dist * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
 
                 s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + movePos3);
                 s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + movePos3);
