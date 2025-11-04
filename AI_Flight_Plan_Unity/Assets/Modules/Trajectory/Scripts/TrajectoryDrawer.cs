@@ -42,12 +42,12 @@ public class TrajectoryDrawer : MonoBehaviour
             Create();
         }
     }
-    // void Awake()
-    // {
-    //     Clear();
-    //     AssignData();
-    //     Create();
-    // }
+    void Awake()
+    {
+        Clear();
+        AssignData();
+        Create();
+    }
     public void SetAircraft(Aircraft _aircraft)
     {
         aircraft = _aircraft;

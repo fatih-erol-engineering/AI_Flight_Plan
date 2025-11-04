@@ -62,7 +62,7 @@ public class ConflictChecker : MonoBehaviour
                 var collision = conflictsSnapshot[i];
 
                 // Position Adjustment
-                float dist = 0.5f;
+                float dist = 1f;
                 var s1 = collision.segment1;
                 var s2 = collision.segment2;
                 Vector3 deltaPos = dist * CylinderIntersectNormal(s1.tubeManager.GetStartPosition(), s1.tubeManager.GetEndPosition(), s1.tubeManager.GetRadius(),

@@ -116,7 +116,7 @@ public class UIManager : MonoBehaviour
 
         rotorDDM.dropdownField.RegisterValueChangedCallback(_ => rotorDDMChange());
         fixedWingDDM.dropdownField.RegisterValueChangedCallback(_ => fixedWingDDMChange());
-        // solveConflictBtn.clicked += solveConflictBtnClick;
+        solveConflictBtn.clicked += solveConflictBtnClick;
 
         // Custom Toggle Button Groups must be declared after Registering Value Changed Callbacks
         mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
@@ -154,6 +154,7 @@ public class UIManager : MonoBehaviour
     }
     void solveConflictBtnClick()
     {
+        conflictChecker.CheckConflicts();
         conflictChecker.SolveConflicts();
     }
 
