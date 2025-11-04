@@ -116,16 +116,30 @@ public class ConflictChecker : MonoBehaviour
                 var s1 = collision.segment;
                 var s2 = collision.restrictedArea;
                 float dist = s2.radius / 20f;
+
+
                 Vector3 deltaPos1 = s2.transform.position - s1.startPoint.position;
                 Vector3 deltaPos2 = s2.transform.position - s1.endPoint.position;
-                float t1 = deltaPos1.magnitude / (deltaPos1.magnitude + deltaPos2.magnitude);
-                float t2 = deltaPos2.magnitude / (deltaPos1.magnitude + deltaPos2.magnitude);
+                Vector3 _dir3;
+                float dist1 = deltaPos1.magnitude;//Ters oran var
+                float dist2 = deltaPos2.magnitude;
+                float dist3 = DistancePointToLine(s2.transform.position, s1.startPoint.position, s1.endPoint.position, out _dir3);
+                float distTotal = dist1 + dist2 + dist3;
 
-                float dist1 = dist * t2; //Ters oran var
-                float dist2 = dist * t1;//Ters oran var
-                Vector3 movePos1 = deltaPos1.normalized * dist1 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
-                Vector3 movePos2 = deltaPos2.normalized * dist2 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                float t1 = dist1 / distTotal;
+                float t2 = dist2 / distTotal;
+                float t3 = dist3 / distTotal;
 
+                float distUnit1 = dist * t2;
+                float distUnit2 = dist * t1;
+                float distUnit3 = dist * t3;
+
+                Vector3 movePos1 = deltaPos1.normalized * distUnit1 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 movePos2 = deltaPos2.normalized * distUnit2 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 movePos3 = _dir3 * distUnit3 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+
+                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + movePos3);
+                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + movePos3);
                 s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + movePos1);
                 s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + movePos2);
             }
@@ -138,6 +152,7 @@ public class ConflictChecker : MonoBehaviour
         if (iteration >= maxIterations)
             Debug.LogWarning($"[{GetType().Name}] SolveConflictsCoroutine stopped after {maxIterations} iterations (possible unresolved conflicts).");
     }
+
     bool areAllConflictsResolved()
     {
         return all_collisionInfoList.Count == 0;
@@ -232,6 +247,20 @@ public class ConflictChecker : MonoBehaviour
         // --- 2. Eksenler arası en kısa mesafeyi bul
         Vector3 n = Vector3.Cross(uA, uB);
         return n.normalized;
+    }
+
+    public static float DistancePointToLine(Vector3 point, Vector3 linePointA, Vector3 linePointB, out Vector3 direction)
+    {
+        Vector3 lineDir = linePointB - linePointA;
+        Vector3 ap = point - linePointA;
+        Vector3 cross = Vector3.Cross(lineDir, ap);
+
+
+        float t = Vector3.Dot(ap, lineDir) / lineDir.sqrMagnitude;
+        Vector3 closest = linePointA + t * lineDir;
+
+        direction = (closest - point).normalized;
+        return cross.magnitude / lineDir.magnitude;
     }
 
 }

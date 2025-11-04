@@ -596,41 +596,73 @@ public class BSplineDrawer : MonoBehaviour
         bool _isCollided = CylinderSphereIntersect(startA, endA, segment.tubeManager.GetRadius(), posB, radiusB);
         return _isCollided;
     }
-
     public static bool CylinderSphereIntersect(
-    Vector3 cylinderStart, Vector3 cylinderEnd, float cylinderRadius,
-    Vector3 sphereCenter, float sphereRadius)
+       Vector3 cylinderStart, Vector3 cylinderEnd, float cylinderRadius,
+       Vector3 sphereCenter, float sphereRadius)
     {
         Vector3 axis = cylinderEnd - cylinderStart;
         float height = axis.magnitude;
-        if (height < 1e-6f)
-            return false; // çok kısa, güvenlik
+        if (height <= 1e-6f) return false;
 
-        Vector3 dir = axis / height;
-        Vector3 v = sphereCenter - cylinderStart;
+        Vector3 dir = axis / height;                 // eksen birim vektörü
+        Vector3 v = sphereCenter - cylinderStart;  // alt kapaktan merkeze vektör
 
-        // Küre merkezinin silindir eksenine izdüşüm oranı
+        // Küre merkezinin eksen boyunca izdüşümü (0..height aralığı)
         float t = Vector3.Dot(v, dir);
 
-        // Eksen dışına çıkarsa, uç kapaklara göre kontrol
+        if (t >= 0f && t <= height)
+        {
+            // Silindirin gövde bölgesi: eksene dik uzaklık
+            Vector3 closestOnAxis = cylinderStart + t * dir;
+            float distToAxis = Vector3.Distance(sphereCenter, closestOnAxis);
+            return distToAxis <= (cylinderRadius + sphereRadius);
+        }
+
+        // Kapak bölgeleri: düzlem + disk + çember kenarı kontrolü
         if (t < 0f)
         {
-            float dist = Vector3.Distance(sphereCenter, cylinderStart);
-            return dist <= (sphereRadius + cylinderRadius);
+            // Alt kapak düzlemi
+            // Kapak düzlemine dik mesafe:
+            float dPlane = Mathf.Abs(Vector3.Dot(v, dir)); // = -t (mutlak)
+            // Kapak düzlemindeki projeksiyon noktası:
+            Vector3 projOnPlane = sphereCenter - (Vector3.Dot(v, dir)) * dir;
+            // Eksene olan radyal mesafe:
+            float rPerp = Vector3.Distance(projOnPlane, cylinderStart);
+
+            if (rPerp <= cylinderRadius)
+            {
+                // Diskin içi → tek kriter: düzleme mesafe
+                return dPlane <= sphereRadius;
+            }
+            else
+            {
+                // Kenara en yakın nokta: çember üzerinde
+                float radialExcess = rPerp - cylinderRadius;
+                float distToRim = Mathf.Sqrt(radialExcess * radialExcess + dPlane * dPlane);
+                return distToRim <= sphereRadius;
+            }
         }
-        else if (t > height)
+        else // t > height
         {
-            float dist = Vector3.Distance(sphereCenter, cylinderEnd);
-            return dist <= (sphereRadius + cylinderRadius);
-        }
-        else
-        {
-            // Dik uzaklık
-            Vector3 closestPoint = cylinderStart + t * dir;
-            float distToAxis = Vector3.Distance(sphereCenter, closestPoint);
-            return distToAxis <= (sphereRadius + cylinderRadius);
+            // Üst kapak düzlemi
+            Vector3 w = sphereCenter - cylinderEnd;
+            float dPlane = Mathf.Abs(Vector3.Dot(w, dir)); // = t - height (mutlak)
+            Vector3 projOnPlane = sphereCenter - (Vector3.Dot(w, dir)) * dir;
+            float rPerp = Vector3.Distance(projOnPlane, cylinderEnd);
+
+            if (rPerp <= cylinderRadius)
+            {
+                return dPlane <= sphereRadius;
+            }
+            else
+            {
+                float radialExcess = rPerp - cylinderRadius;
+                float distToRim = Mathf.Sqrt(radialExcess * radialExcess + dPlane * dPlane);
+                return distToRim <= sphereRadius;
+            }
         }
     }
+
 
     static bool AreCylindersIntersecting(
     Vector3 startA, Vector3 endA, float radiusA,
