@@ -62,7 +62,7 @@ public class MainGameManager : MonoBehaviour
 
         // Current Hook un kendi exit sinyali olabiliyor. O da tick fonksiyonu ile kontrol ediliyor.
         // Boyle bir durumda current hook exit request ediyor ve mode değişikliği yapılıyor.
-        ExitMode currentHooksExitMode = ExitMode.None;
+        ExitMode currentHooksExitMode;
         exitFlag = currentHooks.Tick(out currentHooksExitMode);
         if (exitFlag)
         {

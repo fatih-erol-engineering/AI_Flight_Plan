@@ -12,7 +12,7 @@ public class AbsoluteRestrictedAreaEditor : Editor
         DrawDefaultInspector();
         AbsoluteRestrictedAreaFactory myScript = (AbsoluteRestrictedAreaFactory)target;
 
-        position = EditorGUILayout.Vector3Field("Position", position);
+        position = EditorGUILayout.Vector3Field("Position", position);  
         radius = EditorGUILayout.FloatField("Radius", radius);
 
         if (GUILayout.Button("Spawn"))

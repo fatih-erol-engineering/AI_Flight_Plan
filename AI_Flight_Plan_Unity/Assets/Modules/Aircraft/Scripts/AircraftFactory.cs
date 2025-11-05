@@ -29,9 +29,19 @@ public class AircraftFactory : MonoBehaviour
     {
         if (updateCounter == 0)
         {
-            foreach (var _aircraft in aircraftList)
+            foreach (Aircraft _aircraft in aircraftList)
             {
-                GameEvents.Instance.AircraftSpawned(_aircraft);
+                if (_aircraft != null)
+                {
+                    GameEvents.Instance.AircraftSpawned(_aircraft);
+                }
+            }
+            foreach (TrajectoryDrawer trajectoryDrawer in GetAllTrajectories())
+            {
+                if (trajectoryDrawer != null)
+                {
+                    GameEvents.Instance.TrajectoryCreated(trajectoryDrawer);
+                }
             }
         }
         aircraftSpawnFlag = false;

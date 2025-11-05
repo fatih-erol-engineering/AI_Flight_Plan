@@ -22,7 +22,7 @@ public class FreeModeManager : MonoBehaviour, IGameModeHooks
 
     public bool Tick(out ExitMode exitMode)
     {
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {

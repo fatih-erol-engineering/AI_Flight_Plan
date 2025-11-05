@@ -61,7 +61,7 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         {
             GameEvents.Instance.OnEditableEnter += OnEditableEnter;
             GameEvents.Instance.OnEditableExit += OnEditableExit;
-            GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;
+            GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;            
             _eventsBound = true;
         }
     }

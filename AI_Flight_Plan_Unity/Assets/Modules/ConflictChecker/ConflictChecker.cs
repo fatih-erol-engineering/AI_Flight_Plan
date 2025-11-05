@@ -20,6 +20,7 @@ public class ConflictChecker : MonoBehaviour
         {
             GameEvents.Instance.OnSplineChanged += OnSplineChanged;
             GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
+            GameEvents.Instance.OnAbsoluteRestrictedAreaCreated += OnAbsoluteRestrictedAreaCreated;
             _eventsBound = true;
         }
     }
@@ -35,6 +36,7 @@ public class ConflictChecker : MonoBehaviour
         {
             GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
             GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
+            GameEvents.Instance.OnAbsoluteRestrictedAreaCreated -= OnAbsoluteRestrictedAreaCreated;
             _eventsBound = false;
         }
     }
@@ -46,19 +48,6 @@ public class ConflictChecker : MonoBehaviour
 
         StopCoroutine(SolveRestrictedAreaConflictsCoroutine());
         StartCoroutine(SolveRestrictedAreaConflictsCoroutine());
-        //   var conflictsSnapshot = all_collisionInfoList.ToArray();
-
-        //     foreach (var collision in conflictsSnapshot)
-        //     {
-        //         float deltaAltitude = 0.1f;
-        //         var s1 = collision.segment1;
-        //         var s2 = collision.segment2;
-
-        //         s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + new Vector3(0, deltaAltitude, 0));
-        //         s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + new Vector3(0, deltaAltitude, 0));
-        //         s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + new Vector3(0, -deltaAltitude, 0));
-        //         s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + new Vector3(0, -deltaAltitude, 0));
-        //     }
     }
     IEnumerator SolveConflictsCoroutine()
     {
@@ -110,8 +99,6 @@ public class ConflictChecker : MonoBehaviour
         if (iteration >= maxIterations)
             Debug.LogWarning($"[{GetType().Name}] SolveConflictsCoroutine stopped after {maxIterations} iterations (possible unresolved conflicts).");
     }
-
-
     IEnumerator SolveRestrictedAreaConflictsCoroutine()
     {
         int maxIterations = 200; // güvenlik sınırı
@@ -177,11 +164,19 @@ public class ConflictChecker : MonoBehaviour
     public void OnDestroy()
     {
         GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
+        GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
+        GameEvents.Instance.OnAbsoluteRestrictedAreaCreated -= OnAbsoluteRestrictedAreaCreated;
     }
 
     public void OnSplineChanged(BSplineDrawer splineDrawer)
     {
         ClearConflicts();
+        CheckConflicts();
+    }
+    public void OnAbsoluteRestrictedAreaCreated(AbsoluteRestrictedAreaFactory _val)
+    {
+        allAbsoluteRestrictedAreas.Clear();
+        allAbsoluteRestrictedAreas.AddRange(_val.GetAllAbsoluteRestrictedAreas());
         CheckConflicts();
     }
 

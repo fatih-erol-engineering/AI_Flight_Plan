@@ -161,4 +161,11 @@ public class GameEvents : MonoBehaviour
         OnSelectedAircraftToSpawnChangedUI?.Invoke(_val);
     }
 
+    // Restricted Area Events
+    public event Action<AbsoluteRestrictedAreaFactory> OnAbsoluteRestrictedAreaCreated;
+    public void AbsoluteRestrictedAreaCreated(AbsoluteRestrictedAreaFactory _val)
+    {
+        OnAbsoluteRestrictedAreaCreated?.Invoke(_val);
+    }   
+
 }

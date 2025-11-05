@@ -26,7 +26,7 @@ public class WaypointShow : MonoBehaviour
     // [SerializeField] private LayerMask hitMask;
 
     void OnValidate()
-    {
+    {        
         AssignData();
     }
     public void AssignData()
@@ -38,14 +38,16 @@ public class WaypointShow : MonoBehaviour
 
         originalLocalScale = referenceMesh.localScale;
 
+        GameEvents.Instance.OnWaypointPositionChanged -= DrawAltitudeLine;
+        GameEvents.Instance.OnWaypointSpawned -= DrawAltitudeLine;
         GameEvents.Instance.OnWaypointPositionChanged += DrawAltitudeLine;
-        GameEvents.Instance.OnWaypointSpawned += DrawAltitudeLine;
-
+            GameEvents.Instance.OnWaypointSpawned += DrawAltitudeLine;
     }
 
     void LateUpdate()
     {
         ShowWaypoint();
+        DrawAltitudeLine(waypoint);
     }
 
     void DrawAltitudeLine(Waypoint wp, Vector3 newPosition)

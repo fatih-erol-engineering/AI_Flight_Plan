@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d32ccb994185dee44bb8f1bdd4c68921, type: 2}
+  - {fileID: 2100000, guid: af41bbb0712046c4e82ae93563097f20, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,4 +130,3 @@ MonoBehaviour:
   soundLimit_dBa: 10
   minSoundColor: {r: 0, g: 1, b: 0.16973758, a: 1}
   maxSoundColor: {r: 1, g: 0.058096346, b: 0, a: 1}
-  prefab: {fileID: 2974273728743173281, guid: b1193eea8f097d4498bde36bd9e6d14c, type: 3}

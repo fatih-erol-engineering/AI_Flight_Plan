@@ -120,6 +120,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Waypoint
   <time>k__BackingField:
     <second>k__BackingField: 0
+  <originalTime>k__BackingField:
+    <second>k__BackingField: 0
   highlightMeshRenderer:
   - {fileID: 5169179678102574174}
   - {fileID: 6567050306873335625}
@@ -143,7 +145,7 @@ MonoBehaviour:
   min_LocalScale: 1
   max_LocalScale: 20
   altitudeLineRenderer: {fileID: 1354095549359714663}
-  altitudeLineLimit: -0.1
+  altitudeLineLimit: -100
 --- !u!1 &2521410053571870100
 GameObject:
   m_ObjectHideFlags: 0

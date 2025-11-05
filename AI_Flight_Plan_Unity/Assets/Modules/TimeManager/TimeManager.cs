@@ -4,8 +4,39 @@ using UnityEngine;
 [ExecuteAlways]
 public class TimeManager : MonoBehaviour
 {
+    public AircraftFactory aircraftFactory;
     public static TimeManager Instance { get; private set; }
     public TimeSO time;
+    void OnEnable()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Debug.LogWarning("A TimeManager already exists in the scene. Removing duplicate.", this);
+            Destroy(this);
+        }
+        GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
+        GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
+    }
+    public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
+    {
+    
+        aircraftFactory.aircraftList.ForEach(aircraft =>
+        {
+            if (aircraft.trajectory.startTime.second < time.startTime)
+            {
+                time.SetStartTime(aircraft.trajectory.startTime.second);
+            }
+            if (aircraft.trajectory.endTime.second > time.endTime)
+            {
+                time.SetEndTime(aircraft.trajectory.endTime.second);
+            }
+        });
+        
+    }
     void Update()
     {
         switch (time.currentTimeState)
@@ -17,6 +48,8 @@ public class TimeManager : MonoBehaviour
                 break;
         }
     }
+
+
 
     // public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
     // {
