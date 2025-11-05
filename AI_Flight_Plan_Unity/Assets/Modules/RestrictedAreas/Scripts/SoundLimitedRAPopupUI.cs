@@ -7,6 +7,7 @@ public class SoundLimitedRAPopupUI : MonoBehaviour
     [SerializeField] private UIDocument uiDocument;
     private VisualElement root, popUpRoot;
     private FloatField currentNoiseField, limitNoiseField;
+    private StyleColor originalFieldColor;
 
     // void OnValidate()
     // {
@@ -35,7 +36,7 @@ public class SoundLimitedRAPopupUI : MonoBehaviour
         limitNoiseField = popUpRoot.Q<FloatField>("limitNoiseField");
         CheckAssignment(limitNoiseField, "limitNoiseField");
         limitNoiseField.formatString = "0.00";
-
+        originalFieldColor = currentNoiseField.style.color;
 
         popUpRoot.AddToClassList("popupHidden");
 
@@ -115,6 +116,15 @@ public class SoundLimitedRAPopupUI : MonoBehaviour
         popUpRoot.style.left = new StyleLength(new Length(left, LengthUnit.Pixel));
         popUpRoot.style.top = new StyleLength(new Length(top, LengthUnit.Pixel));
 
+
+        if (currentNoiseField.value > limitNoiseField.value)
+        {
+            currentNoiseField.style.color = Color.red;
+        }
+        else
+        {
+            currentNoiseField.style.color = originalFieldColor;
+        }
         // Show by removing the 'hidden' class (assumes USS defines .hidden { display: none; } or similar)
         popUpRoot.RemoveFromClassList("popupHidden");
 

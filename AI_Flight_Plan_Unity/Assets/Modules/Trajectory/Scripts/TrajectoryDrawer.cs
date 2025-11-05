@@ -71,6 +71,7 @@ public class TrajectoryDrawer : MonoBehaviour
         if (waypointContainer.childCount == 0) return;
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
         endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;
+        GameEvents.Instance.TrajectoryTimeChanged(this);
         UpdateColorWithTotalTime(TimeManager.Instance.time.startTime, TimeManager.Instance.time.endTime);
     }
     public void SetAircraft(Aircraft _aircraft)

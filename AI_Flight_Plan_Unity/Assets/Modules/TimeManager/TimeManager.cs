@@ -8,7 +8,22 @@ public class TimeManager : MonoBehaviour
     public static TimeManager Instance { get; private set; }
     public TimeSO time;
     public int updateCount = 0;
+    private bool isInitialized = false;
+    void OnEnable()
+    {
+        if (isInitialized) return;
+        if (!Application.isPlaying)
+        {
+            AssignData();
+        }
+    }
+
     void Awake()
+    {
+        AssignData();
+        updateCount = 0;
+    }
+    void AssignData()
     {
         if (Instance == null)
         {
@@ -19,10 +34,16 @@ public class TimeManager : MonoBehaviour
             Debug.LogWarning("A TimeManager already exists in the scene. Removing duplicate.", this);
             Destroy(this);
         }
-        GameEvents.Instance.OnTrajectoryCreated -= (_traj) => OnTrajectoryCreated();
         GameEvents.Instance.OnTrajectoryCreated += (_traj) => OnTrajectoryCreated();
-
-        updateCount = 0;
+        GameEvents.Instance.OnTrajectoryTimeChanged += (_traj) => OnTrajectoryCreated();
+        isInitialized = true;
+        time.startTime = 0f;
+        time.endTime = 1f;
+    }
+    void OnDestroy()
+    {
+        GameEvents.Instance.OnTrajectoryCreated -= (_traj) => OnTrajectoryCreated();
+        GameEvents.Instance.OnTrajectoryTimeChanged -= (_traj) => OnTrajectoryCreated();
     }
 
     public void OnTrajectoryCreated()
@@ -41,6 +62,7 @@ public class TimeManager : MonoBehaviour
         });
 
     }
+
 
     void Update()
     {

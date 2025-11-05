@@ -106,6 +106,11 @@ public class GameEvents : MonoBehaviour
     {
         OnTrajectoryCreated?.Invoke(trajectoryDrawer);
     }
+    public event Action<TrajectoryDrawer> OnTrajectoryTimeChanged;
+    public void TrajectoryTimeChanged(TrajectoryDrawer trajectoryDrawer)
+    {
+        OnTrajectoryTimeChanged?.Invoke(trajectoryDrawer);
+    }
 
     // Aircraft Events
     public event Action<Aircraft> OnAircraftSpawned;
