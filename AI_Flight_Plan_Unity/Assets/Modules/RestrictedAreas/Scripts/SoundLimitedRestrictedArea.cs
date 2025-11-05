@@ -94,6 +94,7 @@ public class SoundLimitedRestrictedArea : MonoBehaviour, ISelectable, IEditable
         MaterialPropertyBlock mpb = new MaterialPropertyBlock();
         rend.GetPropertyBlock(mpb);
         mpb.SetColor("_BaseColor", currentColor); // URP/HDRP için _BaseColor, Standart Shader için _Color olabilir
+        mpb.SetColor("_intersectionColor", new Color(currentColor.r * 15f, currentColor.g * 15f, currentColor.b * 15f, 1f)); // URP/HDRP için _BaseColor, Standart Shader için _Color olabilir
         rend.SetPropertyBlock(mpb);
     }
 

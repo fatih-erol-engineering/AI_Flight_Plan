@@ -274,6 +274,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d32ccb994185dee44bb8f1bdd4c68921, type: 2}
+  - {fileID: 2100000, guid: 03741297c493d4141a6a1a3b8bfeb3d5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -346,8 +347,8 @@ Transform:
   m_GameObject: {fileID: 70796245}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -307.9, y: -198.9, z: 613.6}
-  m_LocalScale: {x: 200, y: 200, z: 200}
+  m_LocalPosition: {x: -301.9, y: -198.9, z: 615.4}
+  m_LocalScale: {x: 150, y: 150, z: 150}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 290426006}
@@ -366,7 +367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundLimitedRestrictedArea
   <currentSound_dBa>k__BackingField: 0
   aircraftFactory: {fileID: 2113739927}
-  radius: 100
+  radius: 75
   soundLimit_dBa: 20
   minSoundColor: {r: 0, g: 1, b: 0.16973758, a: 0.5019608}
   maxSoundColor: {r: 1, g: 0.058096346, b: 0, a: 0.8}
@@ -417,6 +418,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: af41bbb0712046c4e82ae93563097f20, type: 2}
+  - {fileID: 2100000, guid: 3ab050df4c4b9564caddc3716123f93e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -716,6 +718,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: 2100000, guid: 03741297c493d4141a6a1a3b8bfeb3d5, type: 2}
   - {fileID: 2100000, guid: d32ccb994185dee44bb8f1bdd4c68921, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1041,6 +1044,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d32ccb994185dee44bb8f1bdd4c68921, type: 2}
+  - {fileID: 2100000, guid: 03741297c493d4141a6a1a3b8bfeb3d5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1248,8 +1252,8 @@ Transform:
   m_GameObject: {fileID: 1209043296}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 65, y: -204.9, z: 246}
-  m_LocalScale: {x: 300, y: 300, z: 300}
+  m_LocalPosition: {x: 61.4, y: -151.5, z: 238.3}
+  m_LocalScale: {x: 150, y: 150, z: 150}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 290426006}
@@ -1268,9 +1272,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundLimitedRestrictedArea
   <currentSound_dBa>k__BackingField: 0
   aircraftFactory: {fileID: 2113739927}
-  radius: 150
+  radius: 75
   soundLimit_dBa: 20
-  minSoundColor: {r: 0, g: 1, b: 0.16973758, a: 0.5019608}
+  minSoundColor: {r: 0.041684605, g: 0.7490196, b: 0.029960802, a: 0.5019608}
   maxSoundColor: {r: 1, g: 0.058096346, b: 0, a: 0.8}
 --- !u!135 &1209043299
 SphereCollider:
@@ -1319,6 +1323,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: af41bbb0712046c4e82ae93563097f20, type: 2}
+  - {fileID: 2100000, guid: 3ab050df4c4b9564caddc3716123f93e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2289,6 +2294,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: 2100000, guid: 03741297c493d4141a6a1a3b8bfeb3d5, type: 2}
   - {fileID: 2100000, guid: d32ccb994185dee44bb8f1bdd4c68921, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
