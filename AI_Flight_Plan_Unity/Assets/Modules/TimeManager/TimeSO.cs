@@ -10,6 +10,7 @@ public class TimeSO : ScriptableObject
     public float startTime = 0f;
     public float endTime = 10f;
     public float timeScale = 1f;
+
     void OnEnable()
     {
         SetTimeState(currentTimeState, true);
@@ -19,6 +20,7 @@ public class TimeSO : ScriptableObject
         SetTimeScale(timeScale, true);
     }
 
+
     public void SetTimeState(TimeState _val, bool isImmediate = false)
     {
         if (currentTimeState != _val || isImmediate)
@@ -26,6 +28,13 @@ public class TimeSO : ScriptableObject
             currentTimeState = _val;
             GameEvents.Instance.TimeStateChanged(currentTimeState);
         }
+    }
+    public void SendEvents()
+    {
+        GameEvents.Instance.TimeStateChanged(currentTimeState);
+        GameEvents.Instance.TimeChanged(currentTime);
+        GameEvents.Instance.StartEndTimeChanged(startTime, endTime);
+        GameEvents.Instance.TimeScaleChanged(timeScale);
     }
     public void SetCurrentTime(float _val, bool isImmediate = false)
     {
@@ -40,7 +49,7 @@ public class TimeSO : ScriptableObject
         if (startTime != _val || isImmediate)
         {
             startTime = _val;
-            GameEvents.Instance.StartTimeChanged(startTime);
+            GameEvents.Instance.StartEndTimeChanged(startTime, endTime);
         }
     }
     public void SetEndTime(float _val, bool isImmediate = false)
@@ -48,7 +57,7 @@ public class TimeSO : ScriptableObject
         if (endTime != _val || isImmediate)
         {
             endTime = _val;
-            GameEvents.Instance.EndTimeChanged(endTime);
+            GameEvents.Instance.StartEndTimeChanged(startTime, endTime);
         }
     }
     public void SetTimeScale(float _val, bool isImmediate = false)

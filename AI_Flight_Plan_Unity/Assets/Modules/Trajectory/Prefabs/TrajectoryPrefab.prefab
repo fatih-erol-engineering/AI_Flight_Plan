@@ -163,8 +163,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrajectoryDrawer
   aircraft: {fileID: 0}
-  segmentLength_m: 50
-  tubeRadius_m: 10
+  segmentLength_m: 150
+  tubeRadius_m: 30
   startTime:
     <second>k__BackingField: 0
   endTime:

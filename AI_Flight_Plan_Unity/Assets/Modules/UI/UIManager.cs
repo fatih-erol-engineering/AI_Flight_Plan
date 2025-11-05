@@ -38,13 +38,16 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        if (updateCount == 0)
+        if (updateCount < 4 )
         {
-            selectedAircraftModelName = rotorDDM.dropdownField.value;
-            GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
+            if (updateCount == 3)
+            {
+                selectedAircraftModelName = rotorDDM.dropdownField.value;
+                GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);                
+            }
+            updateCount++;
         }
         UpdateSelectedAircraft();
-        updateCount++;
     }
     public void UpdateSelectedAircraft()
     {

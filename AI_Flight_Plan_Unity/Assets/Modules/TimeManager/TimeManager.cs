@@ -7,6 +7,7 @@ public class TimeManager : MonoBehaviour
     public AircraftFactory aircraftFactory;
     public static TimeManager Instance { get; private set; }
     public TimeSO time;
+    public int updateCount = 0;
     void OnEnable()
     {
         if (Instance == null)
@@ -20,6 +21,7 @@ public class TimeManager : MonoBehaviour
         }
         GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
         GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
+        updateCount = 0;
     }
     public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
     {
@@ -39,6 +41,16 @@ public class TimeManager : MonoBehaviour
     }
     void Update()
     {
+
+        if (updateCount < 4)
+        {
+            if (updateCount == 3)
+            {                
+                time.SendEvents();
+            }
+            updateCount++;
+        }
+
         switch (time.currentTimeState)
         {
             case TimeState.Playing:

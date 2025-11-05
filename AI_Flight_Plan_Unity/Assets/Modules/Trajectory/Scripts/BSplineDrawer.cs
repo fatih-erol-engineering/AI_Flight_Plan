@@ -301,9 +301,9 @@ public class BSplineDrawer : MonoBehaviour
         }
     }
 
-    public void SetStartColor(Color _color)
+    public void SetStartColor(Color _color,bool isImmediate = false)
     {
-        if (startColor != _color)
+        if (startColor != _color || isImmediate)
         {
             startColor = _color;
             if (CheckReadyToUpdate())
@@ -312,9 +312,9 @@ public class BSplineDrawer : MonoBehaviour
             }
         }
     }
-    public void SetEndColor(Color _color)
+    public void SetEndColor(Color _color,bool isImmediate = false)
     {
-        if (endColor != _color)
+        if (endColor != _color|| isImmediate)
         {
             endColor = _color;
             if (CheckReadyToUpdate())

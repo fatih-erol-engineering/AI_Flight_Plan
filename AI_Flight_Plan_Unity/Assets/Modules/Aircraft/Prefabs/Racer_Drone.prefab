@@ -163,7 +163,6 @@ MonoBehaviour:
   nonEditableOrEditableVal: 1
   deltaTime:
     <second>k__BackingField: 0
-  _neonWaveActive: 1
   neonWave: {fileID: 5800968750818675904}
 --- !u!1 &1977331294629503932
 GameObject:

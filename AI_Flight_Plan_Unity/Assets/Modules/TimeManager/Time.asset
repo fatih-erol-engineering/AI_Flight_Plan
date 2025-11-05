@@ -15,5 +15,5 @@ MonoBehaviour:
   currentTimeState: 1
   currentTime: 0
   startTime: 0
-  endTime: 1
+  endTime: 20
   timeScale: 1

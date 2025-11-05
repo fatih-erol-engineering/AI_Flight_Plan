@@ -131,7 +131,6 @@ MonoBehaviour:
   nonEditableOrEditableVal: 1
   deltaTime:
     <second>k__BackingField: 0
-  _neonWaveActive: 1
   neonWave: {fileID: 1666227920095363225}
 --- !u!1 &899655751800462911
 GameObject:
@@ -226,7 +225,7 @@ Transform:
   m_GameObject: {fileID: 4295529387632072959}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.87, y: 0.95, z: 0}
+  m_LocalPosition: {x: 3.64, y: 1.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -753,6 +752,10 @@ PrefabInstance:
       propertyPath: aircraft
       value: 
       objectReference: {fileID: 6427827277073058405}
+    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2956600280934288491, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -824,7 +827,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 3484428431479467447}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73412e3e37930e14885babcfaf3dccd0, type: 3}
   m_Name: 

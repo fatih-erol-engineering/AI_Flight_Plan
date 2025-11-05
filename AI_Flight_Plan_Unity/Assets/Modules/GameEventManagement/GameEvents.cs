@@ -56,17 +56,13 @@ public class GameEvents : MonoBehaviour
         OnTimeStateChanged?.Invoke(_val);
     }
 
-    public event Action<float> OnStartTimeChanged;
-    public void StartTimeChanged(float _val)
+    public event Action<float,float> OnStartEndTimeChanged;
+    public void StartEndTimeChanged(float _startTime,float _endTime)
     {
-        OnStartTimeChanged?.Invoke(_val);
+        OnStartEndTimeChanged?.Invoke(_startTime, _endTime);
     }
 
-    public event Action<float> OnEndTimeChanged;
-    public void EndTimeChanged(float _val)
-    {
-        OnEndTimeChanged?.Invoke(_val);
-    }
+
     public event Action<float> OnTimeScaleChanged;
     public void TimeScaleChanged(float _val)
     {

@@ -32,3 +32,12 @@ https://tile.googleapis.com/v1/3dtiles/root.json?key=AIzaSyDZFuE-JMmq_hvDDeYyKSS
 	
 
 https://www.youtube.com/watch?v=sHrXO_5-YJg
+
+
+Neurosymbolic Transformers for Multi-Agent Communication
+
+Program Synthesis Guided Reinforcement Learning for Partially Observed Environments
+
+https://jinala.github.io
+
+https://www.neurosymbolic.org

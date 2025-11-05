@@ -21,6 +21,7 @@ public class TrajectoryDrawer : MonoBehaviour
     [SerializeField] private bool isReadyToUpdate = false;
 
     [SerializeField] private Vector3[] waypointPositions_AfterCreation;
+    private bool isBinded = false;
 
     public void AssignData()
     {
@@ -32,6 +33,7 @@ public class TrajectoryDrawer : MonoBehaviour
         {
             waypointPositions_AfterCreation[i] = waypointContainer.GetChild(i).position;
         }
+        isBinded = false;
     }
     public void OnEnable()
     {
@@ -41,6 +43,20 @@ public class TrajectoryDrawer : MonoBehaviour
             AssignData();
             Create();
         }
+        if (!isBinded)
+        {            
+            GameEvents.Instance.OnStartEndTimeChanged += UpdateColorWithTotalTime;
+            isBinded = true;
+        }
+    }
+
+    public void OnDisable()
+    {
+        if (isBinded)
+        {
+            GameEvents.Instance.OnStartEndTimeChanged -= UpdateColorWithTotalTime;
+            isBinded = false;
+        }        
     }
     void Awake()
     {
@@ -71,7 +87,7 @@ public class TrajectoryDrawer : MonoBehaviour
             // }
         }
     }
-    public void UpdateColorWithTotalTime(TimeGame _totalStartTime, TimeGame _totalEndTime)
+    public void UpdateColorWithTotalTime(float _totalStartTime,float _totalEndTime)
     {
 
         // for (int i = 0; i < bSplineDrawerArray.Length; i++)
@@ -89,13 +105,13 @@ public class TrajectoryDrawer : MonoBehaviour
         for (int i = 0; i < bSplineDrawerArray.Length; i++)
         {
             BSplineDrawer bSplineDrawer = bSplineDrawerArray[i];
-            float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - _totalStartTime.second) / (_totalEndTime.second - _totalStartTime.second));
+            float startVal = Mathf.Lerp(0, 1, (bSplineDrawer.startTime.second - _totalStartTime) / (_totalEndTime - _totalStartTime));
             Color _startColor = Color.Lerp(startColor, endColor, startVal);
 
-            float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - _totalStartTime.second) / (_totalEndTime.second - _totalStartTime.second));
+            float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - _totalStartTime) / (_totalEndTime - _totalStartTime));
             Color _endColor = Color.Lerp(startColor, endColor, endVal);
-            bSplineDrawer.SetStartColor(_startColor);
-            bSplineDrawer.SetEndColor(_endColor);
+            bSplineDrawer.SetStartColor(_startColor,true);
+            bSplineDrawer.SetEndColor(_endColor,true);
         }
     }
 

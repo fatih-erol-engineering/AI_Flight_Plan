@@ -27,25 +27,28 @@ public class AircraftFactory : MonoBehaviour
     }
     void Update()
     {
-        if (updateCounter == 0)
+        if (updateCounter < 4)
         {
-            foreach (Aircraft _aircraft in aircraftList)
+            if (updateCounter == 3)
             {
-                if (_aircraft != null)
+                foreach (Aircraft _aircraft in aircraftList)
                 {
-                    GameEvents.Instance.AircraftSpawned(_aircraft);
+                    if (_aircraft != null)
+                    {
+                        GameEvents.Instance.AircraftSpawned(_aircraft);
+                    }
+                }
+                foreach (TrajectoryDrawer trajectoryDrawer in GetAllTrajectories())
+                {
+                    if (trajectoryDrawer != null)
+                    {
+                        GameEvents.Instance.TrajectoryCreated(trajectoryDrawer);
+                    }
                 }
             }
-            foreach (TrajectoryDrawer trajectoryDrawer in GetAllTrajectories())
-            {
-                if (trajectoryDrawer != null)
-                {
-                    GameEvents.Instance.TrajectoryCreated(trajectoryDrawer);
-                }
-            }
+            updateCounter++;
         }
         aircraftSpawnFlag = false;
-        updateCounter++;
     }
     private void ChangeAircraftPrefabWithUI(string _val)
     {
