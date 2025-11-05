@@ -98,8 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
   id: 0
-  time:
-    <second>k__BackingField: 0
   aircraftProperties: {fileID: 11400000, guid: f1057860b63009e4aa8b26b830b55b88, type: 2}
   trajectory: {fileID: 7608579817030596569}
   highlightMeshRenderer: {fileID: 1404352160370580740}
@@ -883,6 +881,14 @@ PrefabInstance:
     - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: aircraft
       value: 
+      objectReference: {fileID: 6427827277073058405}
+    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      propertyPath: tubeRadius_m
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      propertyPath: segmentLength_m
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8064563952328812410, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_Name

@@ -121,8 +121,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aircraft
   id: 0
-  time:
-    <second>k__BackingField: 0
   aircraftProperties: {fileID: 11400000, guid: 2a9d4d913a7f89845b4d76d03dc32750, type: 2}
   trajectory: {fileID: 4343415782122623791}
   highlightMeshRenderer: {fileID: 4657248760763926511}
@@ -754,7 +752,11 @@ PrefabInstance:
       objectReference: {fileID: 6427827277073058405}
     - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 873070052421959320, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
+      propertyPath: segmentLength_m
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2956600280934288491, guid: 03d9dfda41e05264fbcd41b759e98879, type: 3}
       propertyPath: m_Layer
@@ -827,7 +829,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 3484428431479467447}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 73412e3e37930e14885babcfaf3dccd0, type: 3}
   m_Name: 

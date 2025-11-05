@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class AircraftPopupUI : MonoBehaviour
+public class SoundLimitedRAPopupUI : MonoBehaviour
 {
-    public static AircraftPopupUI Instance { get; private set; }
+    public static SoundLimitedRAPopupUI Instance { get; private set; }
     [SerializeField] private UIDocument uiDocument;
     private VisualElement root, popUpRoot;
-    private TextField modelField, typeField;
-    private FloatField idField, northField, eastField, altitudeField, noiseField, velocityField, TimeOrPositionField, NonEditableOrEditableField;
+    private FloatField currentNoiseField, limitNoiseField;
 
     // void OnValidate()
     // {
@@ -29,47 +28,16 @@ public class AircraftPopupUI : MonoBehaviour
         CheckAssignment(popUpRoot, "popUpRoot");
 
         // Query fields under the popup root (they are expected to be inside popUpRoot)
-        modelField = popUpRoot.Q<TextField>("modelField");
-        CheckAssignment(modelField, "modelField");
+        currentNoiseField = popUpRoot.Q<FloatField>("currentNoiseField");
+        CheckAssignment(currentNoiseField, "currentNoiseField");
+        currentNoiseField.formatString = "0.00";
 
-        typeField = popUpRoot.Q<TextField>("typeField");
-        CheckAssignment(typeField, "typeField");
-
-        idField = popUpRoot.Q<FloatField>("idField");
-        CheckAssignment(idField, "idField");
-        idField.formatString = "0"; // display as integer
+        limitNoiseField = popUpRoot.Q<FloatField>("limitNoiseField");
+        CheckAssignment(limitNoiseField, "limitNoiseField");
+        limitNoiseField.formatString = "0.00";
 
 
-
-        northField = popUpRoot.Q<FloatField>("northField");
-        CheckAssignment(northField, "northField");
-        // display coordinates with two decimal places
-        northField.formatString = "0.00";
-
-        eastField = popUpRoot.Q<FloatField>("eastField");
-        CheckAssignment(eastField, "eastField");
-        // display coordinates with two decimal places
-        eastField.formatString = "0.00";
-
-        altitudeField = popUpRoot.Q<FloatField>("altitudeField");
-        CheckAssignment(altitudeField, "altitudeField");
-        // display coordinates with two decimal places
-        altitudeField.formatString = "0.00";
-
-        velocityField = popUpRoot.Q<FloatField>("velocityField");
-        CheckAssignment(velocityField, "velocityField");
-
-        noiseField = popUpRoot.Q<FloatField>("noiseField");
-        CheckAssignment(noiseField, "noiseField");
-
-        TimeOrPositionField = popUpRoot.Q<FloatField>("TimeOrPositionField");
-        CheckAssignment(TimeOrPositionField, "TimeOrPositionField");
-
-        NonEditableOrEditableField = popUpRoot.Q<FloatField>("NonEditableOrEditableField");
-        CheckAssignment(NonEditableOrEditableField, "NonEditableOrEditableField");
-
-
-        popUpRoot.AddToClassList("hidden");
+        popUpRoot.AddToClassList("popupHidden");
 
         if (Instance == null)
         {
@@ -78,7 +46,6 @@ public class AircraftPopupUI : MonoBehaviour
         else if (Instance != this)
         {
             Debug.LogWarning("An AircraftPopupUI already exists in the scene. Removing duplicate.", this);
-            Destroy(Instance.gameObject);
             Instance = this;
         }
     }
@@ -89,26 +56,18 @@ public class AircraftPopupUI : MonoBehaviour
     }
 
     // Show the popup at the current mouse position (editor or play mode)
-    public void ShowPopup(Aircraft aircraft)
+    public void ShowPopup(SoundLimitedRestrictedArea soundLimitedRestrictedArea)
     {
         if (popUpRoot == null) return;
-        idField.value = aircraft.id;
-        modelField.value = aircraft.aircraftProperties.model.ToString();
-        typeField.value = aircraft.aircraftProperties.type.ToString();
-        northField.value = aircraft.transform.position.x;
-        eastField.value = aircraft.transform.position.z;
-        altitudeField.value = aircraft.transform.position.y;
-        noiseField.value = aircraft.aircraftProperties.noise_dBA;
-        velocityField.value = aircraft.aircraftProperties.nominalVelocity_m_s;
-        // TimeOrPositionField.value = aircraft.timeOrPositionChangeVal;
-        // NonEditableOrEditableField.value = aircraft.nonEditableOrEditableVal;
-        // Position popup over the aircraft: project aircraft world position to screen
+        currentNoiseField.value = soundLimitedRestrictedArea.currentSound_dBa;
+        limitNoiseField.value = soundLimitedRestrictedArea.soundLimit_dBa;
+
         Camera cam = Camera.main;
         if (cam == null) cam = Camera.current;
 
-        Vector3 worldPoint = aircraft.transform.position;
+        Vector3 worldPoint = soundLimitedRestrictedArea.transform.position;
         // try to offset above the aircraft using renderer bounds if available
-        var rend = aircraft.GetComponentInChildren<Renderer>();
+        var rend = soundLimitedRestrictedArea.GetComponentInChildren<Renderer>();
         float extraHeight = 1.0f;
         if (rend != null)
         {
@@ -157,13 +116,13 @@ public class AircraftPopupUI : MonoBehaviour
         popUpRoot.style.top = new StyleLength(new Length(top, LengthUnit.Pixel));
 
         // Show by removing the 'hidden' class (assumes USS defines .hidden { display: none; } or similar)
-        popUpRoot.RemoveFromClassList("hidden");
+        popUpRoot.RemoveFromClassList("popupHidden");
 
     }
 
     public void HidePopup()
     {
-        popUpRoot.AddToClassList("hidden");
+        popUpRoot.AddToClassList("popupHidden");
     }
 
 }

@@ -66,6 +66,19 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
             _eventsBound = true;
         }
     }
+    void OnEnable()
+    {
+        AssignData();
+        if (!_eventsBound && GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnEditableEnter += OnEditableEnter;
+            GameEvents.Instance.OnEditableExit += OnEditableExit;
+            GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;
+            GameEvents.Instance.OnWaypointPositionChanged += (_wp, _oldPos) => MoveAircraftWithTime(TimeManager.Instance.time.currentTime);
+            GameEvents.Instance.OnWaypointTimeChanged += (_wp, _oldTime) => MoveAircraftWithTime(TimeManager.Instance.time.currentTime);
+            _eventsBound = true;
+        }
+    }
     void OnDisable()
     {
         if (_eventsBound && GameEvents.Instance != null)
@@ -82,9 +95,9 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
     void AssignData()
     {
         mpb = new MaterialPropertyBlock();
-        highlightMeshRenderer.GetPropertyBlock(mpb);
+        highlightMeshRenderer?.GetPropertyBlock(mpb);
         SetHighlightEdgeWidth(1f, true);
-        highlightMeshRenderer.gameObject.SetActive(false);
+        highlightMeshRenderer?.gameObject.SetActive(false);
         deltaTime = new TimeGame(0f);
 
     }
@@ -154,9 +167,9 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         if (highlightEdgeColor != _color || isImmediate)
         {
             highlightEdgeColor = _color;
-            mpb.SetColor(EdgeColorID, _color);
-            highlightMeshRenderer.SetPropertyBlock(mpb);
-            neonWave.SetColor(_color, isImmediate);
+            if (mpb != null) mpb.SetColor(EdgeColorID, _color);
+            if (highlightMeshRenderer != null) highlightMeshRenderer.SetPropertyBlock(mpb);
+            neonWave?.SetColor(_color, isImmediate);
         }
     }
     public void SetHighlightEdgeWidth(float _width, bool isImmediate = false)
@@ -164,8 +177,8 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         if (highlightEdgeWidth != _width || isImmediate)
         {
             highlightEdgeWidth = _width;
-            mpb.SetFloat(EdgeWidthID, _width);
-            highlightMeshRenderer.SetPropertyBlock(mpb);
+            if (mpb != null) mpb.SetFloat(EdgeWidthID, _width);
+            if (highlightMeshRenderer != null) highlightMeshRenderer.SetPropertyBlock(mpb);
         }
     }
 

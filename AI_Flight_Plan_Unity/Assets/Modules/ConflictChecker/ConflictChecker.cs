@@ -228,7 +228,7 @@ public class ConflictChecker : MonoBehaviour
 
                 var s1 = collision.segment;
                 var s2 = collision.restrictedArea;
-                float dist = s2.radius / 20f;
+                float dist = s2.radius / 200f;
 
 
                 Vector3 deltaPos1 = s2.transform.position - s1.startPoint.position;

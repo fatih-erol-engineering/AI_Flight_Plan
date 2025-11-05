@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Modules/UI/Styles/MenuStyle.uss?fileID=7433441132597879392&amp;guid=bdb532c554170404fa758dffbbdb0d62&amp;type=3#MenuStyle" />
+    <Style src="project://database/Assets/Modules/UI/Styles/PopupStyle.uss?fileID=7433441132597879392&amp;guid=4c80e6cc20e914447b6b4a07c3d0ddb7&amp;type=3#PopupStyle" />
+    <ui:VisualElement name="popUpRoot" class="popup-root_hidden popup-root popupHidden" style="width: 309px; background-color: rgba(34, 34, 34, 0.69); position: absolute; flex-shrink: 0; justify-content: flex-start; align-items: stretch; align-content: auto; align-self: auto; -unity-text-align: upper-right; transition-property: opacity; right: auto; bottom: auto; top: auto; left: auto;">
+        <ui:Label text="Sound Limited Area" style="font-size: 24px; -unity-text-align: upper-center;" />
+        <ui:VisualElement style="flex-grow: 1; background-color: rgb(255, 255, 255); height: 1px;" />
+        <ui:FloatField label="Current Noise [dB]" value="0" name="currentNoiseField" readonly="true" />
+        <ui:FloatField label="Limit Noise [dB]" value="0" name="limitNoiseField" readonly="true" />
+    </ui:VisualElement>
+</ui:UXML>

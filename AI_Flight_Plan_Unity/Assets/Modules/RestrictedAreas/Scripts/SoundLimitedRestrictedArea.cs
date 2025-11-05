@@ -1,17 +1,35 @@
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 
-public class SoundLimitedRestrictedArea : MonoBehaviour
+public class SoundLimitedRestrictedArea : MonoBehaviour, ISelectable, IEditable
 {
     [field: SerializeField] public float currentSound_dBa { get; private set; }
     [SerializeField] private AircraftFactory aircraftFactory;
     public float radius = 100f;
 
-    [SerializeField] private float soundLimit_dBa = 50f;
+    public float soundLimit_dBa = 50f;
     [SerializeField] private Color minSoundColor;
     [SerializeField] private Color maxSoundColor;
+    private bool _eventsBound = false;
     // [SerializeField] GameObject prefab;
-
+    void OnEnable()
+    {
+        if (!_eventsBound && GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnEditableEnter += OnEditableEnter;
+            GameEvents.Instance.OnEditableExit += OnEditableExit;
+            _eventsBound = true;
+        }
+    }
+    void OnDisable()
+    {
+        if (_eventsBound && GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
+            GameEvents.Instance.OnEditableExit -= OnEditableExit;
+            _eventsBound = false;
+        }
+    }
     public void Update()
     {
         UpdateSound();
@@ -79,5 +97,36 @@ public class SoundLimitedRestrictedArea : MonoBehaviour
         rend.SetPropertyBlock(mpb);
     }
 
+    public void OnEditableEnter(IEditable _editable)
+    {
+        if (_editable == (this as IEditable))
+        {
+            SoundLimitedRAPopupUI.Instance.ShowPopup(this);
+        }
+    }
 
+    public void OnEditableExit()
+    {
+        SoundLimitedRAPopupUI.Instance.HidePopup();
+    }
+
+    public void OnHoverEnter()
+    {
+        Debug.Log("Hover Entered: Limited Restricted Area");
+    }
+
+    public void OnHoverExit()
+    {
+        Debug.Log("Hover Exited: Limited Restricted Area");
+    }
+
+    public void OnSelect()
+    {
+        Debug.Log("Selected: Limited Restricted Area");
+    }
+
+    public void OnDeselect()
+    {
+        Debug.Log("Deselected: Limited Restricted Area");
+    }
 }

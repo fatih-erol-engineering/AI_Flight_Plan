@@ -18,11 +18,11 @@ public class ControlPoint : MonoBehaviour, ISelectable, IEditable
     private Color originalEmissionColor;
     static readonly int BaseColorID = Shader.PropertyToID("_BaseColor"); // URP Lit
     static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor"); // URP Lit
+    private bool isInitialized = false;
 
-
-    void OnValidate()
+    void OnEnable()
     {
-        if (!Application.isPlaying)
+        if (!isInitialized)
         {
             AssignData();
         }
@@ -46,6 +46,7 @@ public class ControlPoint : MonoBehaviour, ISelectable, IEditable
         GameEvents.Instance.OnEditableExit -= OnEditableExit;
         GameEvents.Instance.OnEditableEnter += OnEditableEnter;
         GameEvents.Instance.OnEditableExit += OnEditableExit;
+        isInitialized = true;
     }
     void OnDestroy()
     {

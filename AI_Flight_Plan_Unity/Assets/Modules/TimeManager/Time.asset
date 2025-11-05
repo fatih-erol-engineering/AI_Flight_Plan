@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Time
   m_EditorClassIdentifier: Assembly-CSharp::TimeSO
   currentTimeState: 1
-  currentTime: 0
+  currentTime: 0.4106895
   startTime: 0
-  endTime: 64.27
+  endTime: 115.57
   timeScale: 1

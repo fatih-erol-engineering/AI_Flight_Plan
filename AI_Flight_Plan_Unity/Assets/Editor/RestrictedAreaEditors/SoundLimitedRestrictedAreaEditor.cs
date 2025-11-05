@@ -18,12 +18,10 @@ public class SoundLimitedRestrictedAreaEditor : Editor
         position = EditorGUILayout.Vector3Field("Position", position);
         radius = EditorGUILayout.FloatField("Radius", radius);
         soundLimit_dBa = EditorGUILayout.FloatField("Sound Limit (dBA)", soundLimit_dBa);
-        minSoundColor = EditorGUILayout.ColorField("Min Sound Color", minSoundColor);
-        maxSoundColor = EditorGUILayout.ColorField("Max Sound Color", maxSoundColor);
 
         if (GUILayout.Button("Spawn"))
         {
-            myScript.Spawn(position, radius, soundLimit_dBa, minSoundColor, maxSoundColor);
+            myScript.Spawn(position, radius, soundLimit_dBa);
         }
         if (GUILayout.Button("Clear"))
         {

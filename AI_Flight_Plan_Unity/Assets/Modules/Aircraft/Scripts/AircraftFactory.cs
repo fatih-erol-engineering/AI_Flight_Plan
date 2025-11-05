@@ -69,7 +69,7 @@ public class AircraftFactory : MonoBehaviour
         selectedAircraft = ctrl;
         aircraftSpawnFlag = true;
 
-        ctrl.trajectory.SetSegmentLength(ctrl.aircraftProperties.nominalVelocity_m_s * 2f); // segment length is 1 second worth of travel at nominal speed
+        ctrl.trajectory.SetSegmentLength(ctrl.aircraftProperties.nominalVelocity_m_s * 6f); // segment length is 1 second worth of travel at nominal speed
         ctrl.trajectory.SetTubeRadius(ctrl.aircraftProperties.tubeRadius_m); // set tube radius
         ctrl.trajectory.SetAircraft(ctrl);
         GameEvents.Instance.AircraftSpawned(ctrl);

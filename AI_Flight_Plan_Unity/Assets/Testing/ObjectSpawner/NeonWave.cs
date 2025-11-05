@@ -21,6 +21,14 @@ public class NeonWave : MonoBehaviour
         rate = neonWaveMaterial.GetFloat(RateID);
         density = neonWaveMaterial.GetFloat(DensityID);
     }
+    private void OnEnable()
+    {
+        mpb = new MaterialPropertyBlock();
+        spriteRenderer.GetPropertyBlock(mpb);
+        color = neonWaveMaterial.GetColor(ColorID);
+        rate = neonWaveMaterial.GetFloat(RateID);
+        density = neonWaveMaterial.GetFloat(DensityID);
+    }
 
     public void SetColor(Color _color, bool isImmediate = false)
     {
@@ -28,7 +36,7 @@ public class NeonWave : MonoBehaviour
         {
             color = _color;
             mpb.SetColor(ColorID, _color);
-            spriteRenderer.SetPropertyBlock(mpb);
+            if (spriteRenderer != null) spriteRenderer.SetPropertyBlock(mpb);
         }
     }
     public void SetRate(float _rate, bool isImmediate = false)
@@ -37,7 +45,7 @@ public class NeonWave : MonoBehaviour
         {
             rate = _rate;
             mpb.SetFloat(RateID, _rate);
-            spriteRenderer.SetPropertyBlock(mpb);
+            if (spriteRenderer != null) spriteRenderer.SetPropertyBlock(mpb);
         }
     }
 
@@ -47,9 +55,9 @@ public class NeonWave : MonoBehaviour
         {
             density = _density;
             mpb.SetFloat(DensityID, _density);
-            spriteRenderer.SetPropertyBlock(mpb);
+            if (spriteRenderer != null) spriteRenderer.SetPropertyBlock(mpb);
         }
     }
- 
+
 
 }

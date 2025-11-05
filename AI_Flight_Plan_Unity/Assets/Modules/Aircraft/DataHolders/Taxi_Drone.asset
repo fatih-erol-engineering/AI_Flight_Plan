@@ -19,6 +19,6 @@ MonoBehaviour:
   maxVelocity_m_s: 30
   minTurnRadious_m: 0
   mass_kg: 250
-  noise_dBA: 50
+  noise_dBA: 30
   aircraftPrefab: {fileID: 5697215273144170777, guid: c968c15d3cdcf584f9e019f4bb24a86e, type: 3}
-  tubeRadius_m: 5
+  tubeRadius_m: 20
