@@ -16,7 +16,7 @@ public class ConflictCheckerEditorUI : Editor
         }
         if (GUILayout.Button("Solve Conflicts"))
         {
-            myScript.SolveConflicts();
+            myScript.SolveConflictsWithRuleBased();
         }
         if (GUILayout.Button("Solve with AI"))
         {

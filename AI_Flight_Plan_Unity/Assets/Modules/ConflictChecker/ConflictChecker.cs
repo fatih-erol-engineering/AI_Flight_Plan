@@ -49,7 +49,7 @@ public class ConflictChecker : MonoBehaviour
         }
     }
 
-    public void SolveConflicts()
+    public void SolveConflictsWithRuleBased()
     {
         StopCoroutine(SolveConflictsCoroutine());
         StartCoroutine(SolveConflictsCoroutine());
@@ -60,24 +60,11 @@ public class ConflictChecker : MonoBehaviour
 
     public void SolveConflictsWithAI()
     {
-        CurveSegment _tempSegment;
-        foreach (CollisionInfo conflict in all_collisionInfoList)
-        {
-            float randNum = Random.Range(0f, 1f);
-            // if (randNum < 0.5f)
-            // {
-            _tempSegment = conflict.segment1;
-            conflict.segment1 = conflict.segment2;
-            conflict.segment2 = _tempSegment;
-            // }
-        }
         StopCoroutine(SolveConflictsCoroutineWithAI());
         StartCoroutine(SolveConflictsCoroutineWithAI());
 
         StopCoroutine(SolveRestrictedAreaConflictsCoroutine());
         StartCoroutine(SolveRestrictedAreaConflictsCoroutine());
-        // StopCoroutine(SolveRestrictedAreaConflictsCoroutineWithAI());
-        // StartCoroutine(SolveRestrictedAreaConflictsCoroutineWithAI());
     }
 
 

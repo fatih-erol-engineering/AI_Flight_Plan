@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     private CustomToggleButtonGroup mainMenuTBG, createTBG;
     private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;
     private Toggle createTBtn, listenTBtn, solveTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
-    private Button solveConflictBtn;
+    private Button solveConflictAIBtn, solveConflictRuleBasedBtn;
     public MainGameMode gameModeUI { get; private set; }
     public bool restartRequestUI { get; private set; }
     private List<AircraftConflictManager> aircraftConflictManagers;
@@ -106,8 +106,11 @@ public class UIManager : MonoBehaviour
         fixedWingTBtn = root.Q<Toggle>("fixedWingTBtn");
         CheckAssignment(fixedWingTBtn, "fixedWingTBtn");
 
-        solveConflictBtn = root.Q<Button>("solveConflictBtn");
-        CheckAssignment(solveConflictBtn, "solveConflictBtn");
+        solveConflictAIBtn = root.Q<Button>("solveConflictAIBtn");
+        CheckAssignment(solveConflictAIBtn, "solveConflictAIBtn");
+
+        solveConflictRuleBasedBtn = root.Q<Button>("solveConflictRuleBasedBtn");
+        CheckAssignment(solveConflictRuleBasedBtn, "solveConflictRuleBasedBtn");
 
         createTBtn.RegisterValueChangedCallback(_ => createTBtnClick());
         solveTBtn.RegisterValueChangedCallback(_ => solveTBtnClick());
@@ -116,7 +119,9 @@ public class UIManager : MonoBehaviour
 
         rotorDDM.dropdownField.RegisterValueChangedCallback(_ => rotorDDMChange());
         fixedWingDDM.dropdownField.RegisterValueChangedCallback(_ => fixedWingDDMChange());
-        solveConflictBtn.clicked += solveConflictBtnClick;
+
+        solveConflictRuleBasedBtn.clicked += solveConflictRuleBasedBtnClick;
+        solveConflictAIBtn.clicked += solveConflictAIBtnClick;
 
         // Custom Toggle Button Groups must be declared after Registering Value Changed Callbacks
         mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
@@ -152,10 +157,16 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    void solveConflictBtnClick()
+    void solveConflictRuleBasedBtnClick()
     {
         conflictChecker.CheckConflicts();
-        conflictChecker.SolveConflicts();
+        conflictChecker.SolveConflictsWithRuleBased();
+    }
+
+    void solveConflictAIBtnClick()
+    {
+        conflictChecker.CheckConflicts();
+        conflictChecker.SolveConflictsWithAI();
     }
 
     void createTBtnClick()

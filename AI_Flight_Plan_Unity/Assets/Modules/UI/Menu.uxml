@@ -23,7 +23,10 @@
                 <ui:VisualElement name="seperatorLine" style="flex-grow: 0; background-color: rgb(255, 255, 255); height: 1px; align-self: auto; flex-direction: row; align-items: center; justify-content: space-around; align-content: auto; flex-shrink: 0;" />
             </ui:VisualElement>
             <ui:ListView name="conflictAircraftListRoot" />
-            <ui:Button text="Solve" name="solveConflictBtn" style="border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;" />
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: center; align-content: flex-end; height: 42px; align-self: auto;">
+                <ui:Button name="solveConflictRuleBasedBtn" class="button_popup" style="padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; align-self: stretch; background-image: url(&quot;project://database/Assets/Icons/Rule%20Based.png?fileID=2800000&amp;guid=705da6fdc8501404d94873ddcdea110d&amp;type=3#Rule Based&quot;); -unity-background-scale-mode: scale-to-fit; background-size: 22px 20px;" />
+                <ui:Button name="solveConflictAIBtn" class="button_popup" style="background-image: url(&quot;project://database/Assets/Icons/AI.png?fileID=2800000&amp;guid=ef5912caebf372e419238263c5809e52&amp;type=3#AI&quot;); background-position-x: center; -unity-background-scale-mode: scale-to-fit; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; width: 0%; background-size: 25px 25px; align-self: stretch;" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="timeSliderRoot" style="flex-grow: 1; bottom: 0; flex-shrink: 1; height: 78px; align-self: center; align-content: auto; align-items: center; flex-direction: column; justify-content: space-between; width: auto; position: absolute; left: 0; right: 0; margin-left: 20px; margin-bottom: 40px; margin-right: 20px; opacity: 1;">
