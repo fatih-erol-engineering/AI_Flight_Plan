@@ -30,6 +30,7 @@ public class FreeModeManager : MonoBehaviour, IGameModeHooks
                 {
                     aircraft.trajectory.Clear();
                     aircraft.trajectory.Create();
+                    aircraft.SetDeltaTime(new TimeGame(0f), true);                    
                 }
 
             }

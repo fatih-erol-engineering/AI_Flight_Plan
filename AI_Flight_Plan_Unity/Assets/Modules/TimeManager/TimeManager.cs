@@ -19,13 +19,15 @@ public class TimeManager : MonoBehaviour
             Debug.LogWarning("A TimeManager already exists in the scene. Removing duplicate.", this);
             Destroy(this);
         }
-        GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
-        GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
+        GameEvents.Instance.OnTrajectoryCreated -= (_traj) => OnTrajectoryCreated();
+        GameEvents.Instance.OnTrajectoryCreated += (_traj) => OnTrajectoryCreated();
+
         updateCount = 0;
     }
-    public void OnTrajectoryCreated(TrajectoryDrawer trajectoryDrawer)
+
+    public void OnTrajectoryCreated()
     {
-    
+
         aircraftFactory.aircraftList.ForEach(aircraft =>
         {
             if (aircraft.trajectory.startTime.second < time.startTime)
@@ -37,20 +39,25 @@ public class TimeManager : MonoBehaviour
                 time.SetEndTime(aircraft.trajectory.endTime.second);
             }
         });
-        
+
     }
+
     void Update()
     {
 
-        if (updateCount < 4)
+        if (Application.isPlaying)
         {
-            if (updateCount == 3)
-            {                
-                time.SendEvents();
+            
+            if (updateCount < 4)
+            {
+                if (updateCount == 3)
+                {                
+                    time.SendEvents();
+                }
+                updateCount++;
             }
-            updateCount++;
         }
-
+        
         switch (time.currentTimeState)
         {
             case TimeState.Playing:

@@ -5,7 +5,7 @@ public class WaypointFactory : MonoBehaviour
 {
     [SerializeField]
     private GameObject _waypointPrefab;
-    public List<Waypoint> waypointList { get; private set; } = new List<Waypoint>();
+    public List<Waypoint> waypointList = new List<Waypoint>();
 
     // public getter for other scripts to instantiate previews from the same prefab
     public GameObject WaypointPrefab => _waypointPrefab;

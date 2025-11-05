@@ -44,8 +44,9 @@ public class TrajectoryDrawer : MonoBehaviour
             Create();
         }
         if (!isBinded)
-        {            
+        {
             GameEvents.Instance.OnStartEndTimeChanged += UpdateColorWithTotalTime;
+            GameEvents.Instance.OnWaypointTimeChanged += (wp, oldTime) => OnWaypointTimeChanged(wp);
             isBinded = true;
         }
     }
@@ -55,8 +56,15 @@ public class TrajectoryDrawer : MonoBehaviour
         if (isBinded)
         {
             GameEvents.Instance.OnStartEndTimeChanged -= UpdateColorWithTotalTime;
+            GameEvents.Instance.OnWaypointTimeChanged -= (wp, oldTime) => OnWaypointTimeChanged(wp);
             isBinded = false;
         }        
+    }
+    public void OnWaypointTimeChanged(Waypoint waypoint)
+    {        
+        startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
+        endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;  
+        UpdateColorWithTotalTime(TimeManager.Instance.time.startTime, TimeManager.Instance.time.endTime);
     }
     void Awake()
     {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-
+[ExecuteAlways]
 public class ConflictChecker : MonoBehaviour
 {
     [SerializeField] private AircraftFactory aircraftFactory;
@@ -20,6 +20,7 @@ public class ConflictChecker : MonoBehaviour
         {
             GameEvents.Instance.OnSplineChanged += OnSplineChanged;
             GameEvents.Instance.OnTrajectoryCreated += OnTrajectoryCreated;
+            GameEvents.Instance.OnWaypointTimeChanged += (wp, oldTime) => OnWaypointTimeChanged(wp);
             GameEvents.Instance.OnAbsoluteRestrictedAreaCreated += OnAbsoluteRestrictedAreaCreated;
             _eventsBound = true;
         }
@@ -30,6 +31,11 @@ public class ConflictChecker : MonoBehaviour
         allTraj.AddRange(aircraftFactory.GetAllTrajectories());
         CheckConflicts();
     }
+    public void OnWaypointTimeChanged(Waypoint waypoint)
+    {
+        ClearConflicts();
+        CheckConflicts();
+    }
     void OnDisable()
     {
         if (_eventsBound && GameEvents.Instance != null)
@@ -37,6 +43,7 @@ public class ConflictChecker : MonoBehaviour
             GameEvents.Instance.OnSplineChanged -= OnSplineChanged;
             GameEvents.Instance.OnTrajectoryCreated -= OnTrajectoryCreated;
             GameEvents.Instance.OnAbsoluteRestrictedAreaCreated -= OnAbsoluteRestrictedAreaCreated;
+            GameEvents.Instance.OnWaypointTimeChanged -= (wp, oldTime) => OnWaypointTimeChanged(wp);
             _eventsBound = false;
         }
     }
@@ -182,14 +189,27 @@ public class ConflictChecker : MonoBehaviour
 
     public void CheckConflicts()
     {
-        foreach (TrajectoryDrawer traj in allTraj)
+        if (allTraj !=null)
         {
-            foreach (BSplineDrawer bSplineDrawer in traj.bSplineDrawerArray)
+            
+            foreach (TrajectoryDrawer traj in allTraj)
             {
-                foreach (CurveSegment segment in bSplineDrawer.curveSegments)
-                {
-                    segment.SetIsCollided(false);
-                }
+                if (traj != null)
+                {                
+                    foreach (BSplineDrawer bSplineDrawer in traj.bSplineDrawerArray)
+                    {
+                        if (bSplineDrawer != null)
+                        {
+                            foreach (CurveSegment segment in bSplineDrawer.curveSegments)
+                            {
+                                if (segment != null)
+                                {
+                                    segment.SetIsCollided(false);                            
+                                }
+                            }
+                        }
+                    }
+                }   
             }
         }
         CheckTrajConflicts();

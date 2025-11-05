@@ -39,10 +39,10 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
 
     [SerializeField] private NeonWave neonWave;
 
-    // void Update()
-    // {
-    //     SetDeltaTime(deltaTime, true);
-    // }
+    void Update()
+    {
+        SetDeltaTime(deltaTime, true);
+    }
     // public void SetNeonWaveActive(bool _isActive, bool isImmediate = false)
     // {
     //     if (_neonWaveActive != _isActive)
