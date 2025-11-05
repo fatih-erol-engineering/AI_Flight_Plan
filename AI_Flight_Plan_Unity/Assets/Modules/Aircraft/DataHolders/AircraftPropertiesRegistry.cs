@@ -6,23 +6,23 @@ public class AircraftPropertiesRegistry : ScriptableObject
 {
     public List<AircraftProperties> aircraftPropertiesList = new();
 
-    Dictionary<AircraftModel, AircraftProperties> _map;  
-    
-    public List<AircraftProperties> rotorAircrafts { get;  private set; }
+    Dictionary<AircraftModel, AircraftProperties> _map;
+
+    public List<AircraftProperties> rotorAircrafts { get; private set; }
     public List<AircraftProperties> fixedWingAircrafts { get; private set; }
 
-    void OnEnable()
+    void Awake()
     {
         _map = new Dictionary<AircraftModel, AircraftProperties>();
         rotorAircrafts = new List<AircraftProperties>();
         fixedWingAircrafts = new List<AircraftProperties>();
-        
+
         rotorAircrafts.Clear();
         fixedWingAircrafts.Clear();
         foreach (var s in aircraftPropertiesList)
         {
             if (!s) continue;
-            _map[s.model] = s; 
+            _map[s.model] = s;
             switch (s.type)
             {
                 case AircraftType.Rotor:
@@ -33,13 +33,13 @@ public class AircraftPropertiesRegistry : ScriptableObject
                     break;
                 default:
                     break;
-            }            
+            }
         }
     }
 
     public bool TryGet(AircraftModel t, out AircraftProperties spec)
     {
-        if (_map == null) OnEnable();
+        // if (_map == null) OnEnable();
         return _map.TryGetValue(t, out spec) && spec != null;
     }
 

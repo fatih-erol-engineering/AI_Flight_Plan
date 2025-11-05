@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(SoundLimitedRestrictedAreaFactory))]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class SoundLimitedRestrictedAreaEditor : Editor
 {
     Vector3 position = Vector3.zero;
-    float radius = 1.0f;    
+    float radius = 1.0f;
     float soundLimit_dBa = 50f;
     Color minSoundColor;
     Color maxSoundColor;
@@ -23,12 +23,12 @@ public class SoundLimitedRestrictedAreaEditor : Editor
 
         if (GUILayout.Button("Spawn"))
         {
-            myScript.Spawn(position, radius,soundLimit_dBa, minSoundColor, maxSoundColor);
+            myScript.Spawn(position, radius, soundLimit_dBa, minSoundColor, maxSoundColor);
         }
         if (GUILayout.Button("Clear"))
         {
             myScript.Clear();
-        
-        }        
+
+        }
     }
 }

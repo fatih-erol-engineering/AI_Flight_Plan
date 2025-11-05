@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(TimeSO))]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class TimeSOEditor : Editor
 {
     // local editor field (keeps value while editor session active)
@@ -16,6 +16,6 @@ public class TimeSOEditor : Editor
         if (GUILayout.Button("Send Events"))
         {
             myScript.SendEvents();
-        }        
+        }
     }
 }

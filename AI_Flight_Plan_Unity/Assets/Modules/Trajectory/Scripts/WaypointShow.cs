@@ -25,8 +25,8 @@ public class WaypointShow : MonoBehaviour
     [SerializeField] private float altitudeLineLimit = -0.1f;
     // [SerializeField] private LayerMask hitMask;
 
-    void OnValidate()
-    {        
+    void Awake()
+    {
         AssignData();
     }
     public void AssignData()
@@ -41,7 +41,8 @@ public class WaypointShow : MonoBehaviour
         GameEvents.Instance.OnWaypointPositionChanged -= DrawAltitudeLine;
         GameEvents.Instance.OnWaypointSpawned -= DrawAltitudeLine;
         GameEvents.Instance.OnWaypointPositionChanged += DrawAltitudeLine;
-            GameEvents.Instance.OnWaypointSpawned += DrawAltitudeLine;
+        GameEvents.Instance.OnWaypointSpawned += DrawAltitudeLine;
+
     }
 
     void LateUpdate()

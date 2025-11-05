@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 // [RequireComponent(typeof(MainGameManager))]
 [RequireComponent(typeof(UIDocument))]
-// [ExecuteAlways]
+// //[ExecuteAlways]
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private ConflictChecker conflictChecker;
@@ -25,25 +25,19 @@ public class UIManager : MonoBehaviour
     public string selectedAircraftModelName;
     private int updateCount = 0;
 
-    void OnEnable()
-    {
-        if (!Application.isPlaying)
-        {
-            AssignData();
-        }
-    }
     void Awake()
     {
         AssignData();
     }
+
     private void Update()
     {
-        if (updateCount < 4 )
+        if (updateCount < 4)
         {
             if (updateCount == 3)
             {
                 selectedAircraftModelName = rotorDDM.dropdownField.value;
-                GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);                
+                GameEvents.Instance.ChangeAircraftPrefabWithUI(selectedAircraftModelName);
             }
             updateCount++;
         }

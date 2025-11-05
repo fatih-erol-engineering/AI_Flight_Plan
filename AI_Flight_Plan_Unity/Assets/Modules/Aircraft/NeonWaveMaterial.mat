@@ -61,6 +61,6 @@ Material:
     - _rate: 3
     m_Colors:
     - _lineColor: {r: 4.8969665, g: 0.92917526, b: 0, a: 1}
-    - _neonWaveColor: {r: 0, g: 1.3515064, b: 2.9960787, a: 0}
+    - _neonWaveColor: {r: 0, g: 1.2516212, b: 5.9921565, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class BSplineDrawer : MonoBehaviour
 {
     [SerializeField] private Aircraft aircraft;
@@ -144,6 +144,7 @@ public class BSplineDrawer : MonoBehaviour
                 for (int i = 0; i < curveSegments.Length; i++)
                 {
                     tubeManagers[i] = SpawnTube();
+                    tubeManagers[i].EnsureAssigned();
                     tubeManagers[i].SetStartPosition(curveSegments[i].startPoint.position);
                     tubeManagers[i].SetEndPosition(curveSegments[i].endPoint.position);
                     curveSegments[i].SetTubeManager(tubeManagers[i]);
@@ -301,7 +302,7 @@ public class BSplineDrawer : MonoBehaviour
         }
     }
 
-    public void SetStartColor(Color _color,bool isImmediate = false)
+    public void SetStartColor(Color _color, bool isImmediate = false)
     {
         if (startColor != _color || isImmediate)
         {
@@ -312,9 +313,9 @@ public class BSplineDrawer : MonoBehaviour
             }
         }
     }
-    public void SetEndColor(Color _color,bool isImmediate = false)
+    public void SetEndColor(Color _color, bool isImmediate = false)
     {
-        if (endColor != _color|| isImmediate)
+        if (endColor != _color || isImmediate)
         {
             endColor = _color;
             if (CheckReadyToUpdate())
@@ -737,6 +738,7 @@ public class BSplineDrawer : MonoBehaviour
         GameObject go = Instantiate(tubePrefab, Vector3.zero, Quaternion.identity);
         go.transform.SetParent(tubeContainer, true);
         TubeManager _tubeManager = go.GetComponentInChildren<TubeManager>();
+        _tubeManager.EnsureAssigned();
         return _tubeManager;
     }
 

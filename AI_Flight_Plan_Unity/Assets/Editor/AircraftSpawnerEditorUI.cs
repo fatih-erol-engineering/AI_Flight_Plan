@@ -2,7 +2,7 @@
 // using UnityEditor;
 
 // [CustomEditor(typeof(AircraftSpawner))]
-// [ExecuteAlways]
+// //[ExecuteAlways]
 // public class AircraftSpawnerEditorUI : Editor
 // {
 //     public override void OnInspectorGUI()

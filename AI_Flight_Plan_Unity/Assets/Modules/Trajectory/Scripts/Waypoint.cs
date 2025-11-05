@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-[ExecuteAlways]
+//[ExecuteAlways]
 public class Waypoint : MonoBehaviour, ISelectable, IEditable
 {
     [field: SerializeField] public TimeGame time { get; private set; }

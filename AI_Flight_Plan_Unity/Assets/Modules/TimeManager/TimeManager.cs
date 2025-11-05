@@ -1,14 +1,14 @@
 using UnityEngine;
 // [DefaultExecutionOrder(-999)] // 
 
-[ExecuteAlways]
+//[ExecuteAlways]
 public class TimeManager : MonoBehaviour
 {
     public AircraftFactory aircraftFactory;
     public static TimeManager Instance { get; private set; }
     public TimeSO time;
     public int updateCount = 0;
-    void OnEnable()
+    void Awake()
     {
         if (Instance == null)
         {
@@ -47,17 +47,17 @@ public class TimeManager : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            
+
             if (updateCount < 4)
             {
                 if (updateCount == 3)
-                {                
+                {
                     time.SendEvents();
                 }
                 updateCount++;
             }
         }
-        
+
         switch (time.currentTimeState)
         {
             case TimeState.Playing:

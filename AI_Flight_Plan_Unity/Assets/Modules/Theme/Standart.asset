@@ -24,7 +24,7 @@ MonoBehaviour:
   pauseIcon: {fileID: 2800000, guid: 99a25307ccbc5284bb33bb196959ea2a, type: 3}
   Hover: {r: 2.9960785, g: 0.74979687, b: 0, a: 1}
   Select: {r: 2.9960785, g: 1.6360046, b: 0, a: 1}
-  Preview: {r: 0, g: 1.3515064, b: 2.9960785, a: 1}
+  Preview: {r: 0, g: 1.2516212, b: 5.9921565, a: 1}
   tubeEdgeColor_nonCollided: {r: 0, g: 1.2516212, b: 5.9921565, a: 1}
   tubeSurfaceColor_nonCollided: {r: 0, g: 0.3062613, b: 1, a: 0.2}
   tubeEdgeColor_collided: {r: 5.9921565, g: 0.9986928, b: 0, a: 1}

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-[ExecuteAlways]
+//[ExecuteAlways]
 public class ControlPoint : MonoBehaviour, ISelectable, IEditable
 {
     [SerializeField] private Vector3 closestPointToSpline;

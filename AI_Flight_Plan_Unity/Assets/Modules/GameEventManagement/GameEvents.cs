@@ -5,27 +5,28 @@ using UnityEngine;
 public class GameEvents : MonoBehaviour
 {
     public static GameEvents Instance;
+    private bool isInitialized = false;
 
-    private void OnEnable()
+    void OnEnable()
     {
-        if (Instance == null)
+        if (isInitialized) return;
+        if (!Application.isPlaying)
         {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Debug.LogWarning("A ThemeManager already exists in the scene. Removing duplicate.", this);
-#if UNITY_EDITOR
-            // Safe to remove component immediately in editor
-            DestroyImmediate(this);
-#else
-            Destroy(this);
-#endif
-            return;
+            AssignData();
         }
     }
+    void OnDisable()
+    {
+        isInitialized = false;
+    }
+
     private void Awake()
     {
+        AssignData();
+    }
+    private void AssignData()
+    {
+        isInitialized = true;
         if (Instance == null)
         {
             Instance = this;
@@ -56,8 +57,8 @@ public class GameEvents : MonoBehaviour
         OnTimeStateChanged?.Invoke(_val);
     }
 
-    public event Action<float,float> OnStartEndTimeChanged;
-    public void StartEndTimeChanged(float _startTime,float _endTime)
+    public event Action<float, float> OnStartEndTimeChanged;
+    public void StartEndTimeChanged(float _startTime, float _endTime)
     {
         OnStartEndTimeChanged?.Invoke(_startTime, _endTime);
     }
@@ -162,6 +163,6 @@ public class GameEvents : MonoBehaviour
     public void AbsoluteRestrictedAreaCreated(AbsoluteRestrictedAreaFactory _val)
     {
         OnAbsoluteRestrictedAreaCreated?.Invoke(_val);
-    }   
+    }
 
 }

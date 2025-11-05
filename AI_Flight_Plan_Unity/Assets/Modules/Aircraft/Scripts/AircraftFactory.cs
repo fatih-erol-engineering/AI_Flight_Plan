@@ -64,7 +64,8 @@ public class AircraftFactory : MonoBehaviour
         CheckAssignment(ctrl);
         aircraftList.Add(ctrl);
         ctrl.id = aircraftList.Count;
-        ctrl.SetTime(time);
+        ctrl.trajectory.startTime = time;
+        // ctrl.SetTime(time);
         selectedAircraft = ctrl;
         aircraftSpawnFlag = true;
 

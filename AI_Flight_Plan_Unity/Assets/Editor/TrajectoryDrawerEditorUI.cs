@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(TrajectoryDrawer))]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class TrajectoryDrawerEditorUI : Editor
 {
     public override void OnInspectorGUI()

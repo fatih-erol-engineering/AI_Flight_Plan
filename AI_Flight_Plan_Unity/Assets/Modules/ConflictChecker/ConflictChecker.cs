@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-[ExecuteAlways]
+
 public class ConflictChecker : MonoBehaviour
 {
     [SerializeField] private AircraftFactory aircraftFactory;
@@ -14,7 +14,7 @@ public class ConflictChecker : MonoBehaviour
     {
         CheckConflicts();
     }
-    void OnEnable()
+    void Awake()
     {
         if (!_eventsBound && GameEvents.Instance != null)
         {
@@ -189,13 +189,13 @@ public class ConflictChecker : MonoBehaviour
 
     public void CheckConflicts()
     {
-        if (allTraj !=null)
+        if (allTraj != null)
         {
-            
+
             foreach (TrajectoryDrawer traj in allTraj)
             {
                 if (traj != null)
-                {                
+                {
                     foreach (BSplineDrawer bSplineDrawer in traj.bSplineDrawerArray)
                     {
                         if (bSplineDrawer != null)
@@ -204,12 +204,12 @@ public class ConflictChecker : MonoBehaviour
                             {
                                 if (segment != null)
                                 {
-                                    segment.SetIsCollided(false);                            
+                                    segment.SetIsCollided(false);
                                 }
                             }
                         }
                     }
-                }   
+                }
             }
         }
         CheckTrajConflicts();

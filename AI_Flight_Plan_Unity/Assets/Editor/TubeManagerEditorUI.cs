@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(TubeManager))]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class TubeManagerEditorUI : Editor
 {
     // local editor field (keeps value while editor session active)

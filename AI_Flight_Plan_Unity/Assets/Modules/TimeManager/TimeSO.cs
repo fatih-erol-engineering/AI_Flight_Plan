@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "TimeSO", menuName = "ScriptableObjects/TimeSO", order = 1)]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class TimeSO : ScriptableObject
 {
     public TimeState currentTimeState = TimeState.Paused;
@@ -11,7 +11,7 @@ public class TimeSO : ScriptableObject
     public float endTime = 10f;
     public float timeScale = 1f;
 
-    void OnEnable()
+    void Awake()
     {
         SetTimeState(currentTimeState, true);
         SetCurrentTime(currentTime, true);

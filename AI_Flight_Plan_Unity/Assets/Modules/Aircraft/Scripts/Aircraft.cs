@@ -2,12 +2,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
 
-[ExecuteAlways]
+//[ExecuteAlways]
 public class Aircraft : MonoBehaviour, ISelectable, IEditable
 {
     [Header("Aircraft Settings")]
     public int id;
-    public TimeGame time;
 
     public AircraftProperties aircraftProperties;
     public TrajectoryDrawer trajectory;
@@ -39,10 +38,10 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
 
     [SerializeField] private NeonWave neonWave;
 
-    void Update()
-    {
-        SetDeltaTime(deltaTime, true);
-    }
+    // void Update()
+    // {
+    //     SetDeltaTime(deltaTime, true);
+    // }
     // public void SetNeonWaveActive(bool _isActive, bool isImmediate = false)
     // {
     //     if (_neonWaveActive != _isActive)
@@ -54,14 +53,16 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
 
     private bool _eventsBound;
 
-    void OnEnable()
+    void Awake()
     {
         AssignData();
         if (!_eventsBound && GameEvents.Instance != null)
         {
             GameEvents.Instance.OnEditableEnter += OnEditableEnter;
             GameEvents.Instance.OnEditableExit += OnEditableExit;
-            GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;            
+            GameEvents.Instance.OnTimeChanged += MoveAircraftWithTime;
+            GameEvents.Instance.OnWaypointPositionChanged += (_wp, _oldPos) => MoveAircraftWithTime(TimeManager.Instance.time.currentTime);
+            GameEvents.Instance.OnWaypointTimeChanged += (_wp, _oldTime) => MoveAircraftWithTime(TimeManager.Instance.time.currentTime);
             _eventsBound = true;
         }
     }
@@ -72,6 +73,8 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
             GameEvents.Instance.OnEditableEnter -= OnEditableEnter;
             GameEvents.Instance.OnEditableExit -= OnEditableExit;
             GameEvents.Instance.OnTimeChanged -= MoveAircraftWithTime;
+            GameEvents.Instance.OnWaypointPositionChanged -= (_wp, _oldPos) => MoveAircraftWithTime(TimeManager.Instance.time.currentTime);
+            GameEvents.Instance.OnWaypointTimeChanged -= (_wp, _oldTime) => MoveAircraftWithTime(TimeManager.Instance.time.currentTime);
             _eventsBound = false;
         }
     }
@@ -126,13 +129,13 @@ public class Aircraft : MonoBehaviour, ISelectable, IEditable
         }
     }
 
-    public void SetTime(TimeGame _time, bool isImmediate = false)
-    {
-        if (time != _time || isImmediate)
-        {
-            time = _time;
-        }
-    }
+    // public void SetTime(TimeGame _time, bool isImmediate = false)
+    // {
+    //     if (time != _time || isImmediate)
+    //     {
+    //         time = _time;
+    //     }
+    // }
     public void SetDeltaTime(TimeGame _deltaTime, bool isImmediate = false)
     {
         if (deltaTime != _deltaTime || isImmediate)

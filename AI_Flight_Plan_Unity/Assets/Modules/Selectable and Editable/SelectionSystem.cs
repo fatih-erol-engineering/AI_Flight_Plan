@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-// [ExecuteAlways]
+// //[ExecuteAlways]
 // [DefaultExecutionOrder(-999)] // 
 public class SelectionSystem : MonoBehaviour
 {

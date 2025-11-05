@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[ExecuteAlways]
+
 public class TrajectoryDrawer : MonoBehaviour
 {
     [SerializeField] private Aircraft aircraft;
@@ -25,8 +25,12 @@ public class TrajectoryDrawer : MonoBehaviour
 
     public void AssignData()
     {
-        startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
-        endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;
+        if (waypointContainer.childCount != 0)
+        {
+            startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
+            endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;
+        }
+
         int waypointCount = waypointContainer.childCount;
         waypointPositions_AfterCreation = new Vector3[waypointCount];
         for (int i = 0; i < waypointCount; i++)
@@ -35,7 +39,7 @@ public class TrajectoryDrawer : MonoBehaviour
         }
         isBinded = false;
     }
-    public void OnEnable()
+    public void Awake()
     {
         if (isReadyToUpdate)
         {
@@ -58,19 +62,13 @@ public class TrajectoryDrawer : MonoBehaviour
             GameEvents.Instance.OnStartEndTimeChanged -= UpdateColorWithTotalTime;
             GameEvents.Instance.OnWaypointTimeChanged -= (wp, oldTime) => OnWaypointTimeChanged(wp);
             isBinded = false;
-        }        
+        }
     }
     public void OnWaypointTimeChanged(Waypoint waypoint)
-    {        
-        startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
-        endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;  
-        UpdateColorWithTotalTime(TimeManager.Instance.time.startTime, TimeManager.Instance.time.endTime);
-    }
-    void Awake()
     {
-        Clear();
-        AssignData();
-        Create();
+        startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
+        endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;
+        UpdateColorWithTotalTime(TimeManager.Instance.time.startTime, TimeManager.Instance.time.endTime);
     }
     public void SetAircraft(Aircraft _aircraft)
     {
@@ -95,7 +93,7 @@ public class TrajectoryDrawer : MonoBehaviour
             // }
         }
     }
-    public void UpdateColorWithTotalTime(float _totalStartTime,float _totalEndTime)
+    public void UpdateColorWithTotalTime(float _totalStartTime, float _totalEndTime)
     {
 
         // for (int i = 0; i < bSplineDrawerArray.Length; i++)
@@ -118,8 +116,8 @@ public class TrajectoryDrawer : MonoBehaviour
 
             float endVal = Mathf.Lerp(0, 1, (bSplineDrawer.endTime.second - _totalStartTime) / (_totalEndTime - _totalStartTime));
             Color _endColor = Color.Lerp(startColor, endColor, endVal);
-            bSplineDrawer.SetStartColor(_startColor,true);
-            bSplineDrawer.SetEndColor(_endColor,true);
+            bSplineDrawer.SetStartColor(_startColor, true);
+            bSplineDrawer.SetEndColor(_endColor, true);
         }
     }
 

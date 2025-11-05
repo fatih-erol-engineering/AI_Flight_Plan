@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(BSplineDrawer))]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class BSplineDrawerEditorUI : Editor
 {
     public override void OnInspectorGUI()

@@ -7,20 +7,23 @@ public class ThemeManager : MonoBehaviour
 
     [field: SerializeField]
     public Theme theme { get; private set; }
+    private bool isInitialized = false;
 
-    private void OnEnable()
+    private void Awake()
     {
         AssignData();
     }
-
-    private void OnDisable()
+    private void OnEnable()
     {
-        if (Instance == this)
-            Instance = null;
+        if (!isInitialized)
+        {
+            AssignData();
+        }
     }
 
     private void AssignData()
     {
+        if (isInitialized) return;
         if (Instance == null)
         {
             Instance = this;
@@ -38,5 +41,6 @@ public class ThemeManager : MonoBehaviour
             Destroy(this);
 #endif
         }
+        isInitialized = true;
     }
 }

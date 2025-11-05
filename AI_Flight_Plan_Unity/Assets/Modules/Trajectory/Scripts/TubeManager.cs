@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [ExecuteAlways]
-
 public class TubeManager : MonoBehaviour
 {
 
@@ -11,7 +10,6 @@ public class TubeManager : MonoBehaviour
     [SerializeField] private Vector3 endPosition;
 
     [Header("Appearance Properties")]
-    [SerializeField] private Theme currentTheme;
     [SerializeField, ColorUsage(true, true)] private Color edgeColor;
     [SerializeField] private Color surfaceColor;
     [SerializeField] private float edgeSize;
@@ -27,28 +25,45 @@ public class TubeManager : MonoBehaviour
     [SerializeField, HideInInspector] MaterialPropertyBlock mpb;
     [SerializeField, HideInInspector] Renderer rend;
 
+    private bool isDataAssigned = false;
 
 
     private void Awake()
     {
-        rend = GetComponent<Renderer>();
-        if (material == null)
-        {
-            material = rend.sharedMaterial;
-        }
-        mpb = new MaterialPropertyBlock();
-        rend.GetPropertyBlock(mpb);
-        OnValidate();
+        EnsureAssigned();   // sadece cache et
+        // Initialize()'ı burada çağırmak yerine OnEnable'da yapmak,
+        // enable/disable döngülerinde daha tutarlı olur.
     }
-    void OnValidate()
+
+    private void OnEnable()
     {
-        rend = GetComponent<Renderer>();
-        if (material == null)
-        {
-            material = rend.sharedMaterial;
-        }
-        mpb = new MaterialPropertyBlock();
+        Initialize();       // değerleri uygula
+    }
+    private void OnDisable()
+    {
+        isDataAssigned = false; // değerleri uygula
+    }
+
+
+    public void EnsureAssigned()
+    {
+        if (isDataAssigned) return;
+
+        if (!rend) rend = GetComponent<Renderer>();
+        if (mpb == null) mpb = new MaterialPropertyBlock();
+
+        isDataAssigned = (rend != null && mpb != null);
+    }
+
+    private void Initialize()
+    {
+        EnsureAssigned();
+        if (!isDataAssigned) return;
+
+        // Var olan block’u çek (başkası yazdıysa kaybetme)
         rend.GetPropertyBlock(mpb);
+
+        // Senin setter’ların mpb üzerinde çalışıyorsa true/immediate ile uygula
         SetEdgeColor(edgeColor, true);
         SetSurfaceColor(surfaceColor, true);
         SetEdgeSize(edgeSize, true);
@@ -57,10 +72,16 @@ public class TubeManager : MonoBehaviour
         SetIsCollided(isCollided, true);
         SetStartPosition(startPosition, true);
         SetEndPosition(endPosition, true);
+
+        // Eğer setter’ların içinde SetPropertyBlock yapmıyorsan:
+        // rend.SetPropertyBlock(mpb);
     }
+
+
 
     void UpdateColorWithTheme()
     {
+        Theme currentTheme = null;
         if (ThemeManager.Instance != null)
         {
             currentTheme = ThemeManager.Instance.theme;
@@ -76,10 +97,6 @@ public class TubeManager : MonoBehaviour
             }
             SetEdgeSize(currentTheme.tubeEdgeSize);
         }
-        else
-        {
-            currentTheme = null;
-        }
     }
 
 
@@ -87,6 +104,8 @@ public class TubeManager : MonoBehaviour
     {
         if (edgeColor != _color || isImmediate)
         {
+
+            if (!isDataAssigned) EnsureAssigned();
             edgeColor = _color;
             rend.GetPropertyBlock(mpb);
             mpb.SetColor(EdgeColorID, edgeColor);
@@ -98,6 +117,7 @@ public class TubeManager : MonoBehaviour
     {
         if (_color != surfaceColor || isImmediate)
         {
+            if (!isDataAssigned) EnsureAssigned();
             surfaceColor = _color;
             rend.GetPropertyBlock(mpb);
             mpb.SetColor(BaseColorID, surfaceColor);
@@ -109,6 +129,7 @@ public class TubeManager : MonoBehaviour
     {
         if (edgeSize != _size || isImmediate)
         {
+            if (!isDataAssigned) EnsureAssigned();
             edgeSize = _size;
             rend.GetPropertyBlock(mpb);
             mpb.SetFloat(EdgeSizeID, edgeSize);
@@ -119,6 +140,7 @@ public class TubeManager : MonoBehaviour
     {
         if (length != _val || isImmediate)
         {
+            if (!isDataAssigned) EnsureAssigned();
             length = _val;
             rend.GetPropertyBlock(mpb);
             mpb.SetFloat(LengthID, length);
@@ -129,6 +151,7 @@ public class TubeManager : MonoBehaviour
     {
         if (radius != _val || isImmediate)
         {
+            if (!isDataAssigned) EnsureAssigned();
             radius = _val;
             rend.GetPropertyBlock(mpb);
             mpb.SetFloat(RadiusID, radius);
@@ -139,6 +162,7 @@ public class TubeManager : MonoBehaviour
     {
         if (isCollided != _val || isImmediate)
         {
+            if (!isDataAssigned) EnsureAssigned();
             isCollided = _val;
             UpdateColorWithTheme();
         }
@@ -152,6 +176,7 @@ public class TubeManager : MonoBehaviour
     {
         if (startPosition != _val || isImmediate)
         {
+            if (!isDataAssigned) EnsureAssigned();
             startPosition = _val;
             SetLengthWithStartAndEndPositions();
         }
@@ -160,12 +185,14 @@ public class TubeManager : MonoBehaviour
     {
         if (endPosition != _val || isImmediate)
         {
+            if (!isDataAssigned) EnsureAssigned();
             endPosition = _val;
             SetLengthWithStartAndEndPositions();
         }
     }
     public void SetLengthWithStartAndEndPositions()
     {
+        if (!isDataAssigned) EnsureAssigned();
         Vector3 a = startPosition;
         Vector3 b = endPosition;
         Vector3 dir = b - a;
@@ -182,6 +209,7 @@ public class TubeManager : MonoBehaviour
 
     public bool CheckPositionInsideOrNot(Vector3 vector3)
     {
+        if (!isDataAssigned) EnsureAssigned();
         bool isInside = false;
         Vector3 def1 = endPosition - startPosition;
         Vector3 def2 = vector3 - startPosition;

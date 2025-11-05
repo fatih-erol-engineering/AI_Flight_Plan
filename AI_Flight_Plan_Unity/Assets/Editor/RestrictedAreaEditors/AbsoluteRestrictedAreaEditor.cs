@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(AbsoluteRestrictedAreaFactory))]
-[ExecuteAlways]
+//[ExecuteAlways]
 public class AbsoluteRestrictedAreaEditor : Editor
 {
     Vector3 position = Vector3.zero;
@@ -12,7 +12,7 @@ public class AbsoluteRestrictedAreaEditor : Editor
         DrawDefaultInspector();
         AbsoluteRestrictedAreaFactory myScript = (AbsoluteRestrictedAreaFactory)target;
 
-        position = EditorGUILayout.Vector3Field("Position", position);  
+        position = EditorGUILayout.Vector3Field("Position", position);
         radius = EditorGUILayout.FloatField("Radius", radius);
 
         if (GUILayout.Button("Spawn"))
@@ -22,7 +22,7 @@ public class AbsoluteRestrictedAreaEditor : Editor
         if (GUILayout.Button("Clear"))
         {
             myScript.Clear();
-        
-        }        
+
+        }
     }
 }
