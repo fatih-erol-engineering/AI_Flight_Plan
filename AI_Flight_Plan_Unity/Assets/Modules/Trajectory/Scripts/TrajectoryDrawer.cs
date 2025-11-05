@@ -66,6 +66,9 @@ public class TrajectoryDrawer : MonoBehaviour
     }
     public void OnWaypointTimeChanged(Waypoint waypoint)
     {
+        if (waypointContainer == null) return;
+
+        if (waypointContainer.childCount == 0) return;
         startTime = waypointContainer.GetChild(0).GetComponent<Waypoint>().time;
         endTime = waypointContainer.GetChild(waypointContainer.childCount - 1).GetComponent<Waypoint>().time;
         UpdateColorWithTotalTime(TimeManager.Instance.time.startTime, TimeManager.Instance.time.endTime);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.Barracuda;
 
 public class ConflictChecker : MonoBehaviour
 {
@@ -56,6 +57,125 @@ public class ConflictChecker : MonoBehaviour
         StopCoroutine(SolveRestrictedAreaConflictsCoroutine());
         StartCoroutine(SolveRestrictedAreaConflictsCoroutine());
     }
+
+    public void SolveConflictsWithAI()
+    {
+        CurveSegment _tempSegment;
+        foreach (CollisionInfo conflict in all_collisionInfoList)
+        {
+            float randNum = Random.Range(0f, 1f);
+            // if (randNum < 0.5f)
+            // {
+            _tempSegment = conflict.segment1;
+            conflict.segment1 = conflict.segment2;
+            conflict.segment2 = _tempSegment;
+            // }
+        }
+        StopCoroutine(SolveConflictsCoroutineWithAI());
+        StartCoroutine(SolveConflictsCoroutineWithAI());
+
+        StopCoroutine(SolveRestrictedAreaConflictsCoroutine());
+        StartCoroutine(SolveRestrictedAreaConflictsCoroutine());
+        // StopCoroutine(SolveRestrictedAreaConflictsCoroutineWithAI());
+        // StartCoroutine(SolveRestrictedAreaConflictsCoroutineWithAI());
+    }
+
+
+
+    IEnumerator SolveConflictsCoroutineWithAI()
+    {
+        int maxIterations = 200; // güvenlik sınırı
+        int iteration = 0;
+        while (!areAllConflictsResolved() && iteration < maxIterations)
+        {
+            // snapshot al — listeyi değiştirirsek iterasyon etkilenmesin
+            var conflictsSnapshot = all_collisionInfoList.ToArray();
+
+            for (int i = 0; i < conflictsSnapshot.Length; i++)
+            {
+                var collision = conflictsSnapshot[i];
+
+                // Position Adjustment
+                float dist = 1f;
+                var s1 = collision.segment2;
+                var s2 = collision.segment1;
+                Vector3 _dir = CylinderIntersectNormal(s1.tubeManager.GetStartPosition(), s1.tubeManager.GetEndPosition(), s1.tubeManager.GetRadius(), s2.tubeManager.GetStartPosition(), s2.tubeManager.GetEndPosition(), s2.tubeManager.GetRadius());
+
+
+                float randNum2 = Random.Range(-1f, 1f);
+                float randNum3 = Random.Range(-1f, 1f);
+                float randNum4 = Random.Range(-1f, 1f);
+                Vector3 _randDir1 = (_dir + new Vector3(randNum2, randNum3, randNum4) * 1f).normalized;
+
+
+
+                randNum2 = Random.Range(-1f, 1f);
+                randNum3 = Random.Range(-1f, 1f);
+                randNum4 = Random.Range(-1f, 1f);
+                Vector3 _randDir2 = (_dir + new Vector3(randNum2, randNum3, randNum4) * 1f).normalized;
+
+                float randNum = Random.Range(0f, 1f);
+                if (randNum < 0.25f)
+                {
+                    _randDir1 = -_randDir1;
+                    _randDir2 = -_randDir2;
+                }
+
+                Vector3 deltaPos1 = dist * _randDir1 * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                // Vector3 deltaPos2 = dist * _randDir2 * s2.aircraft.timeOrPositionChangeVal * s2.aircraft.nonEditableOrEditableVal * (-1f);
+                Vector3 deltaPos2 = dist * _randDir2 * s2.aircraft.timeOrPositionChangeVal * s2.aircraft.nonEditableOrEditableVal * (-1f);
+
+                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + deltaPos1);
+                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + deltaPos1);
+
+                s2.controlPoint1.SetPosition(s2.controlPoint1.transform.position + deltaPos2);
+                s2.controlPoint2?.SetPosition(s2.controlPoint2.transform.position + deltaPos2);
+
+                // Time Adjustment
+                float deltaTime = 0.1f; // saniye
+                s1 = collision.segment1;
+                s2 = collision.segment2;
+
+                float timeAdjustmentS1 = deltaTime * (1f - s1.aircraft.timeOrPositionChangeVal) * (s1.aircraft.nonEditableOrEditableVal);
+                float timeAdjustmentS2 = deltaTime * (1f - s2.aircraft.timeOrPositionChangeVal) * (s2.aircraft.nonEditableOrEditableVal) * (-1f);
+
+                s1.aircraft.AddDeltaTime(new TimeGame(timeAdjustmentS1));
+                s2.aircraft.AddDeltaTime(new TimeGame(timeAdjustmentS2));
+
+            }
+
+            CheckTrajConflicts(); // güncelle
+            iteration++;
+            yield return null;
+        }
+
+        if (iteration >= maxIterations)
+            Debug.LogWarning($"[{GetType().Name}] SolveConflictsCoroutine stopped after {maxIterations} iterations (possible unresolved conflicts).");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     IEnumerator SolveConflictsCoroutine()
     {
         int maxIterations = 200; // güvenlik sınırı
@@ -271,20 +391,28 @@ public class ConflictChecker : MonoBehaviour
     public void ClearConflicts()
     {
     }
-    public static Vector3 CylinderIntersectNormal(
+    public Vector3 CylinderIntersectNormal(
        Vector3 startA, Vector3 endA, float radiusA,
        Vector3 startB, Vector3 endB, float radiusB)
     {
         // --- 1. Eksen yön vektörlerini ve uzunlukları hesapla
         Vector3 uA = (endA - startA);
         Vector3 uB = (endB - startB);
-        float lenA = uA.magnitude;
-        float lenB = uB.magnitude;
         uA.Normalize();
         uB.Normalize();
+        Vector3 midA = (startA + endA) * 0.5f;
+        Vector3 midB = (startB + endB) * 0.5f;
 
-        // --- 2. Eksenler arası en kısa mesafeyi bul
         Vector3 n = Vector3.Cross(uA, uB);
+        Vector3 v = midB - midA;
+        float d = Vector3.Dot(n, v);
+        n *= Mathf.Sign(d) * (-1f);
+        if ((midB - midA).magnitude < 0.2f)
+        {
+            int value = Random.Range(0, 2) * 2 - 1;
+            n *= (float)value;
+        }
+        // --- 2. Eksenler arası en kısa mesafeyi bul
         return n.normalized;
     }
 

@@ -18,6 +18,10 @@ public class ConflictCheckerEditorUI : Editor
         {
             myScript.SolveConflicts();
         }
+        if (GUILayout.Button("Solve with AI"))
+        {
+            myScript.SolveConflictsWithAI();
+        }
         if (GUILayout.Button("Clear Conflicts"))
         {
             myScript.ClearConflicts();
