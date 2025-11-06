@@ -63,8 +63,8 @@ public class ConflictChecker : MonoBehaviour
         StopCoroutine(SolveConflictsCoroutineWithAI());
         StartCoroutine(SolveConflictsCoroutineWithAI());
 
-        StopCoroutine(SolveRestrictedAreaConflictsCoroutine());
-        StartCoroutine(SolveRestrictedAreaConflictsCoroutine());
+        StopCoroutine(SolveRestrictedAreaConflictsCoroutineWithAI());
+        StartCoroutine(SolveRestrictedAreaConflictsCoroutineWithAI());
     }
 
 
@@ -141,28 +141,6 @@ public class ConflictChecker : MonoBehaviour
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     IEnumerator SolveConflictsCoroutine()
     {
         int maxIterations = 200; // güvenlik sınırı
@@ -215,7 +193,7 @@ public class ConflictChecker : MonoBehaviour
     }
     IEnumerator SolveRestrictedAreaConflictsCoroutine()
     {
-        int maxIterations = 200; // güvenlik sınırı
+        int maxIterations = 400; // güvenlik sınırı
         int iteration = 0;
         while (!areAllRestrictedAreaConflictsResolved() && iteration < maxIterations)
         {
@@ -228,7 +206,7 @@ public class ConflictChecker : MonoBehaviour
 
                 var s1 = collision.segment;
                 var s2 = collision.restrictedArea;
-                float dist = s2.radius / 200f;
+                float dist = s2.radius / 500f;
 
 
                 Vector3 deltaPos1 = s2.transform.position - s1.startPoint.position;
@@ -248,6 +226,78 @@ public class ConflictChecker : MonoBehaviour
                 Vector3 movePos1 = deltaPos1.normalized * distUnit1 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
                 Vector3 movePos2 = deltaPos2.normalized * distUnit2 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
                 Vector3 movePos3 = _dir3 * dist * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+
+                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + movePos3);
+                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + movePos3);
+                s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + movePos1);
+                s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + movePos2);
+            }
+
+            CheckRestrictedAreaConflicts(); // güncelle
+            iteration++;
+            yield return null;
+        }
+
+        if (iteration >= maxIterations)
+            Debug.LogWarning($"[{GetType().Name}] SolveConflictsCoroutine stopped after {maxIterations} iterations (possible unresolved conflicts).");
+    }
+
+
+        IEnumerator SolveRestrictedAreaConflictsCoroutineWithAI()
+    {
+        int maxIterations = 400; // güvenlik sınırı
+        int iteration = 0;
+        while (!areAllRestrictedAreaConflictsResolved() && iteration < maxIterations)
+        {
+            // snapshot al — listeyi değiştirirsek iterasyon etkilenmesin
+            var conflictsSnapshot = all_collisionInfoRestrictedAreaList.ToArray();
+
+            for (int i = 0; i < conflictsSnapshot.Length; i++)
+            {
+                var collision = conflictsSnapshot[i];
+
+                var s1 = collision.segment;
+                var s2 = collision.restrictedArea;
+                float dist = s2.radius / 500f;
+
+
+                Vector3 deltaPos1 = s2.transform.position - s1.startPoint.position;
+                Vector3 deltaPos2 = s2.transform.position - s1.endPoint.position;
+                Vector3 _dir3;
+                float dist1 = deltaPos1.magnitude;//Ters oran var
+                float dist2 = deltaPos2.magnitude;
+                float dist3 = DistancePointToLine(s2.transform.position, s1.startPoint.position, s1.endPoint.position, out _dir3);
+                float distTotal = dist1 + dist2;
+
+                float t1 = dist1 / distTotal;
+                float t2 = dist2 / distTotal;
+
+                float distUnit1 = dist * t2;
+                float distUnit2 = dist * t1;
+
+                
+                float randNum2 = Random.Range(-1f, 1f);
+                float randNum3 = Random.Range(-1f, 1f);
+                float randNum4 = Random.Range(-1f, 1f);
+                Vector3 _randDir1 = (deltaPos1.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 5f).normalized;
+
+                
+                randNum2 = Random.Range(-1f, 1f);
+                randNum3 = Random.Range(-1f, 1f);
+                randNum4 = Random.Range(-1f, 1f);
+                Vector3 _randDir2 = (deltaPos2.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 5f).normalized;
+
+                randNum2 = Random.Range(-1f, 1f);
+                randNum3 = Random.Range(-1f, 1f);
+                randNum4 = Random.Range(-1f, 1f);
+                Vector3 _randDir3 = (_dir3.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 5f).normalized;
+
+
+
+
+                Vector3 movePos1 = _randDir1 * distUnit1 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 movePos2 = _randDir2 * distUnit2 * (-1f) * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
+                Vector3 movePos3 = _randDir3 * dist * s1.aircraft.timeOrPositionChangeVal * s1.aircraft.nonEditableOrEditableVal;
 
                 s1.controlPoint1.SetPosition(s1.controlPoint1.transform.position + movePos3);
                 s1.controlPoint2?.SetPosition(s1.controlPoint2.transform.position + movePos3);

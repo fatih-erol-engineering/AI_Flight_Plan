@@ -23,6 +23,10 @@ public class TimeManager : MonoBehaviour
         AssignData();
         updateCount = 0;
     }
+    void Start()
+    {
+        GameEvents.Instance.StartEndTimeChanged(time.startTime, time.endTime);
+    }
     void AssignData()
     {
         if (Instance == null)
@@ -39,6 +43,7 @@ public class TimeManager : MonoBehaviour
         isInitialized = true;
         time.startTime = 0f;
         time.endTime = 1f;
+        GameEvents.Instance.StartEndTimeChanged(time.startTime, time.endTime);
     }
     void OnDestroy()
     {
