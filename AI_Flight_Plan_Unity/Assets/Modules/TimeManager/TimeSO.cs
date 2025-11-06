@@ -26,11 +26,12 @@ public class TimeSO : ScriptableObject
         if (currentTimeState != _val || isImmediate)
         {
             currentTimeState = _val;
-            GameEvents.Instance.TimeStateChanged(currentTimeState);
+            if (GameEvents.Instance != null) GameEvents.Instance.TimeStateChanged(currentTimeState);
         }
     }
     public void SendEvents()
     {
+        if (GameEvents.Instance != null) return;
         GameEvents.Instance.TimeStateChanged(currentTimeState);
         GameEvents.Instance.TimeChanged(currentTime);
         GameEvents.Instance.StartEndTimeChanged(startTime, endTime);

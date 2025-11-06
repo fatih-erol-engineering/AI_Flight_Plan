@@ -99,10 +99,17 @@ public class Waypoint : MonoBehaviour, ISelectable, IEditable
     public void OnHoverExit()
     {
         if (isSelected) return;
-        SetHightlightColor(originalColor);
-        SetHightlightEmissionColor(originalEmissionColor);
-        SetLineRendererColor(originalColor);
-        SetLineRendererEmissionColor(originalEmissionColor);
+        try
+        {
+            SetHightlightColor(originalColor);
+            SetHightlightEmissionColor(originalEmissionColor);
+            SetLineRendererColor(originalColor);
+            SetLineRendererEmissionColor(originalEmissionColor);
+        }
+        catch (System.Exception)
+        {
+            //ignore
+        }
     }
     public void OnSelect()
     {

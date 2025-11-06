@@ -44,6 +44,19 @@ public class GameEvents : MonoBehaviour
         }
     }
 
+    // Tube Events
+    public event Action OnTubeHide;
+    public void TubeHide()
+    {
+        OnTubeHide?.Invoke();
+    }
+    public event Action OnTubeShow;
+    public void TubeShow()
+    {
+        OnTubeShow?.Invoke();
+    }
+
+
     // Time Manager Events
     public event Action<float> OnTimeChanged;
     public void TimeChanged(float _val)

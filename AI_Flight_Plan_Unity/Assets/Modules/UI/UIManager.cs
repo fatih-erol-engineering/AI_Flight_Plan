@@ -10,12 +10,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private ConflictChecker conflictChecker;
     public UIDocument uIDocument;
     [SerializeField] private AircraftPropertiesRegistry aircraftPropertiesRegistry;
-    private VisualElement root, mainMenuRoot, createRoot, conflictSolverRoot, conflictAircraftListRoot;
+    private VisualElement root, mainMenuRoot, createRoot, conflictSolverRoot, conflictAircraftListRoot, settingsRoot;
     [SerializeField] private VisualTreeAsset aircraftConflictFoldoutTemplate;
     private CustomToggleButtonGroup mainMenuTBG, createTBG;
     private CustomAircraftDropdownMenu fixedWingDDM, rotorDDM;
     private Toggle createTBtn, listenTBtn, solveTBtn, settingsTBtn, rotorTBtn, fixedWingTBtn;
-    private Button solveConflictAIBtn, solveConflictRuleBasedBtn;
+    private Button solveConflictAIBtn, solveConflictRuleBasedBtn, showTubesBtn, hideTubesBtn;
     public MainGameMode gameModeUI { get; private set; }
     public bool restartRequestUI { get; private set; }
     private List<AircraftConflictManager> aircraftConflictManagers;
@@ -73,6 +73,10 @@ public class UIManager : MonoBehaviour
         conflictSolverRoot = root.Q<VisualElement>("conflictSolverRoot");
         CheckAssignment(conflictSolverRoot, "conflictSolverRoot");
 
+
+        settingsRoot = root.Q<VisualElement>("settingsRoot");
+        CheckAssignment(settingsRoot, "settingsRoot");
+
         conflictAircraftListRoot = root.Q<VisualElement>("conflictAircraftListRoot");
         CheckAssignment(conflictAircraftListRoot, "conflictAircraftListRoot");
 
@@ -112,8 +116,15 @@ public class UIManager : MonoBehaviour
         solveConflictRuleBasedBtn = root.Q<Button>("solveConflictRuleBasedBtn");
         CheckAssignment(solveConflictRuleBasedBtn, "solveConflictRuleBasedBtn");
 
+        hideTubesBtn = root.Q<Button>("hideTubesBtn");
+        CheckAssignment(hideTubesBtn, "hideTubesBtn");
+
+        showTubesBtn = root.Q<Button>("showTubesBtn");
+        CheckAssignment(showTubesBtn, "showTubesBtn");
+
         createTBtn.RegisterValueChangedCallback(_ => createTBtnClick());
         solveTBtn.RegisterValueChangedCallback(_ => solveTBtnClick());
+        settingsTBtn.RegisterValueChangedCallback(_ => settingsTBtnClick());
         rotorTBtn.RegisterValueChangedCallback(_ => rotorTBtnChange());
         fixedWingTBtn.RegisterValueChangedCallback(_ => fixedWingTBtnChange());
 
@@ -122,6 +133,8 @@ public class UIManager : MonoBehaviour
 
         solveConflictRuleBasedBtn.clicked += solveConflictRuleBasedBtnClick;
         solveConflictAIBtn.clicked += solveConflictAIBtnClick;
+        showTubesBtn.clicked += () => GameEvents.Instance.TubeShow();
+        hideTubesBtn.clicked += () => GameEvents.Instance.TubeHide();
 
         // Custom Toggle Button Groups must be declared after Registering Value Changed Callbacks
         mainMenuTBG = new CustomToggleButtonGroup(root.Q<VisualElement>("mainMenuTBG"), true);
@@ -192,6 +205,18 @@ public class UIManager : MonoBehaviour
         else
         {
             conflictSolverRoot.AddToClassList("popupHidden");
+        }
+    }
+
+    void settingsTBtnClick()
+    {
+        if (settingsTBtn.value)
+        {
+            settingsRoot.RemoveFromClassList("popupHidden");
+        }
+        else
+        {
+            settingsRoot.AddToClassList("popupHidden");
         }
     }
     public void SetGameMode(MainGameMode gameMode)

@@ -370,7 +370,7 @@ public class ConflictChecker : MonoBehaviour
         for (int i = 0; i < all_collisionInfoRestrictedAreaList.Count; i++)
         {
             all_collisionInfoRestrictedAreaList[i].segment.SetIsCollided(true, true);
-            all_collisionInfoRestrictedAreaList[i].restrictedArea.SetIsCollided(true, true);
+            // all_collisionInfoRestrictedAreaList[i].restrictedArea.SetIsCollided(true, true);
         }
     }
 

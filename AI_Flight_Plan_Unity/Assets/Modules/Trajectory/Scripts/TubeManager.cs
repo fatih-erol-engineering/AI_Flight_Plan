@@ -42,6 +42,14 @@ public class TubeManager : MonoBehaviour
     private void OnDisable()
     {
         isDataAssigned = false; // değerleri uygula
+        GameEvents.Instance.OnTubeShow -= ShowTube;
+        GameEvents.Instance.OnTubeHide -= HideTube;
+    }
+    private void OnDestroy()
+    {
+        isDataAssigned = false; // değerleri uygula
+        GameEvents.Instance.OnTubeShow -= ShowTube;
+        GameEvents.Instance.OnTubeHide -= HideTube;
     }
 
 
@@ -53,6 +61,8 @@ public class TubeManager : MonoBehaviour
         if (mpb == null) mpb = new MaterialPropertyBlock();
 
         isDataAssigned = (rend != null && mpb != null);
+        GameEvents.Instance.OnTubeShow += ShowTube;
+        GameEvents.Instance.OnTubeHide += HideTube;
     }
 
     private void Initialize()
@@ -225,6 +235,14 @@ public class TubeManager : MonoBehaviour
             }
         }
         return isInside;
+    }
+    public void HideTube()
+    {
+        rend.enabled = false;
+    }
+    public void ShowTube()
+    {
+        rend.enabled = true;
     }
     public Vector3 GetStartPosition()
     {
