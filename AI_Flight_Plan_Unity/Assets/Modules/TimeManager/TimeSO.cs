@@ -42,7 +42,8 @@ public class TimeSO : ScriptableObject
         if (currentTime != _val || isImmediate)
         {
             currentTime = Mathf.Clamp(_val, startTime, endTime);
-            GameEvents.Instance.TimeChanged(currentTime);
+            if (GameEvents.Instance != null)  GameEvents.Instance.TimeChanged(currentTime);
+           
         }
     }
     public void SetStartTime(float _val, bool isImmediate = false)
@@ -50,7 +51,7 @@ public class TimeSO : ScriptableObject
         if (startTime != _val || isImmediate)
         {
             startTime = _val;
-            GameEvents.Instance.StartEndTimeChanged(startTime, endTime);
+            if (GameEvents.Instance != null)GameEvents.Instance.StartEndTimeChanged(startTime, endTime);
         }
     }
     public void SetEndTime(float _val, bool isImmediate = false)
@@ -58,7 +59,7 @@ public class TimeSO : ScriptableObject
         if (endTime != _val || isImmediate)
         {
             endTime = _val;
-            GameEvents.Instance.StartEndTimeChanged(startTime, endTime);
+            if (GameEvents.Instance != null)GameEvents.Instance.StartEndTimeChanged(startTime, endTime);
         }
     }
     public void SetTimeScale(float _val, bool isImmediate = false)
@@ -66,7 +67,7 @@ public class TimeSO : ScriptableObject
         if (timeScale != _val || isImmediate)
         {
             timeScale = _val;
-            GameEvents.Instance.TimeScaleChanged(timeScale);
+            if (GameEvents.Instance != null)GameEvents.Instance.TimeScaleChanged(timeScale);
         }
     }
 

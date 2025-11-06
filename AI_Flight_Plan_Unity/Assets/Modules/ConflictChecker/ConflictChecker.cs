@@ -258,7 +258,7 @@ public class ConflictChecker : MonoBehaviour
 
                 var s1 = collision.segment;
                 var s2 = collision.restrictedArea;
-                float dist = s2.radius / 500f;
+                float dist = s2.radius / 300f;
 
 
                 Vector3 deltaPos1 = s2.transform.position - s1.startPoint.position;
@@ -279,18 +279,18 @@ public class ConflictChecker : MonoBehaviour
                 float randNum2 = Random.Range(-1f, 1f);
                 float randNum3 = Random.Range(-1f, 1f);
                 float randNum4 = Random.Range(-1f, 1f);
-                Vector3 _randDir1 = (deltaPos1.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 5f).normalized;
+                Vector3 _randDir1 = (deltaPos1.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 2f).normalized;
 
                 
                 randNum2 = Random.Range(-1f, 1f);
                 randNum3 = Random.Range(-1f, 1f);
                 randNum4 = Random.Range(-1f, 1f);
-                Vector3 _randDir2 = (deltaPos2.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 5f).normalized;
+                Vector3 _randDir2 = (deltaPos2.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 2f).normalized;
 
                 randNum2 = Random.Range(-1f, 1f);
                 randNum3 = Random.Range(-1f, 1f);
                 randNum4 = Random.Range(-1f, 1f);
-                Vector3 _randDir3 = (_dir3.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 5f).normalized;
+                Vector3 _randDir3 = (_dir3.normalized + new Vector3(randNum2, randNum3, randNum4).normalized * 2f).normalized;
 
 
 
